@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Debug - InnoBridge</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #fcb82e;
+            color: #000;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #f59e0b;
+        }
+
+        .message {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .error {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c00;
+        }
+
+        .success {
+            background: #efe;
+            border: 1px solid #cfc;
+            color: #0c0;
+        }
+
+        .info {
+            background: #eef;
+            border: 1px solid #ccf;
+            color: #00c;
+        }
+
+        .debug {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Login Debug Page</h1>
+        <p>Use this page to test login and see detailed debug information.</p>
+
+        <div id="errorMsg" class="message error"></div>
+        <div id="successMsg" class="message success"></div>
+        <div id="infoMsg" class="message info"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="email" name="email" value="admin@mirakle.local" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" name="password" value="admin123" required>
+            </div>
+
+            <button type="submit">Test Login</button>
+        </form>
+
+        <div id="debugInfo" class="debug"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('loginForm');
+        const errorMsg = document.getElementById('errorMsg');
+        const successMsg = document.getElementById('successMsg');
+        const infoMsg = document.getElementById('infoMsg');
+        const debugInfo = document.getElementById('debugInfo');
+
+        function showMessage(element, message) {
+            element.textContent = message;
+            element.style.display = 'block';
+        }
+
+        function hideMessages() {
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+            infoMsg.style.display = 'none';
+        }
+
+        function addDebug(text) {
+            debugInfo.textContent += text + '\n';
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessages();
+            debugInfo.textContent = '';
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            addDebug(`[${new Date().toLocaleTimeString()}] Starting login attempt...`);
+            addDebug(`Email: ${email}`);
+            addDebug(`Password: ${'*'.repeat(password.length)}`);
+
+            const formData = new FormData(form);
+            addDebug(`\nSending POST request to: /auth/login`);
+
+            try {
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                addDebug(`\nResponse received:`);
+                addDebug(`Status: ${response.status} ${response.statusText}`);
+                addDebug(`Redirected: ${response.redirected}`);
+                addDebug(`URL: ${response.url}`);
+                addDebug(`Content-Type: ${response.headers.get('content-type')}`);
+
+                if (response.redirected || response.status === 302) {
+                    showMessage(successMsg, '✓ Login successful! Redirecting...');
+                    addDebug(`\n[SUCCESS] Redirecting to: ${response.url}`);
+                    setTimeout(() => {
+                        window.location.href = response.url;
+                    }, 1000);
+                } else if (response.ok) {
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && contentType.includes('application/json')) {
+                        const data = await response.json();
+                        addDebug(`\nJSON Response: ${JSON.stringify(data, null, 2)}`);
+
+                        if (data.success) {
+                            showMessage(successMsg, '✓ Login successful! Redirecting...');
+                            addDebug(`\n[SUCCESS] Role: ${data.role}`);
+                            setTimeout(() => {
+                                if (data.role === 'admin') {
+                                    window.location.href = '/admin';
+                                } else if (data.role === 'startup' || data.role === 'founder') {
+                                    window.location.href = '/startup';
+                                } else if (data.role === 'corporate') {
+                                    window.location.href = '/corporate-dealflow';
+                                } else if (data.role === 'connector' || data.role === 'enabler') {
+                                    window.location.href = '/connector';
+                                } else {
+                                    window.location.href = '/';
+                                }
+                            }, 1000);
+                        } else {
+                            showMessage(errorMsg, '✗ ' + (data.error || 'Login failed'));
+                            addDebug(`\n[ERROR] ${data.error || 'Login failed'}`);
+                        }
+                    } else {
+                        const text = await response.text();
+                        addDebug(`\nHTML Response (first 200 chars): ${text.substring(0, 200)}`);
+                        showMessage(infoMsg, 'Received HTML response instead of JSON');
+                    }
+                } else if (response.status === 401) {
+                    showMessage(errorMsg, '✗ Invalid email or password');
+                    addDebug(`\n[ERROR] 401 Unauthorized - Invalid credentials`);
+                } else if (response.status === 403) {
+                    showMessage(errorMsg, '✗ Account disabled');
+                    addDebug(`\n[ERROR] 403 Forbidden - Account disabled`);
+                } else {
+                    const text = await response.text();
+                    showMessage(errorMsg, '✗ Login failed. Please try again.');
+                    addDebug(`\n[ERROR] Unexpected status: ${response.status}`);
+                    addDebug(`Response body: ${text.substring(0, 200)}`);
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showMessage(errorMsg, '✗ An error occurred: ' + error.message);
+                addDebug(`\n[EXCEPTION] ${error.message}`);
+                addDebug(`Stack: ${error.stack}`);
+            }
+        });
+
+        // Auto-fill for testing
+        addDebug('[INFO] Debug page loaded');
+        addDebug('[INFO] Pre-filled with test credentials: admin@mirakle.local / admin123');
+        addDebug('[INFO] Click "Test Login" to attempt login\n');
+    </script>
+</body>
+
+</html>

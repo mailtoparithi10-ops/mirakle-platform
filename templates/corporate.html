@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InnoBridge for Corporates - Enterprise Innovation</title>
+    <meta name="description"
+        content="Scout, connect to, and manage startups with ease. The all-in-one platform for corporate innovation teams.">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Page Specific Overrides */
+        .corporate-hero {
+            padding-top: 140px;
+            padding-bottom: 80px;
+            text-align: center;
+            background: radial-gradient(circle at 50% 0%, rgba(252, 184, 46, 0.1), transparent 60%);
+        }
+
+        .feature-box {
+            background: white;
+            border: 1px solid var(--border-primary);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: left;
+            transition: all 0.3s ease;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border-color: var(--accent-primary);
+        }
+
+        .dashboard-preview {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-top: 3rem;
+            width: 100%;
+            max-width: 1000px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background Pattern -->
+    <div class="bg-pattern"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">I</div>
+                <div class="logo-text">INNO<span class="accent">BRIDGE</span></div>
+            </a>
+
+            <nav class="nav-menu">
+                <a href="about.html" class="nav-link">ABOUT</a>
+                <a href="products.html" class="nav-link">PRODUCTS</a>
+                <a href="opportunities.html" class="nav-link">OPPORTUNITIES</a>
+                <a href="blog.html" class="nav-link">BLOG</a>
+                <a href="contact.html" class="nav-link">CONTACT</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="/login" class="nav-btn secondary">LOG IN</a>
+                <a href="signup.html" class="nav-btn primary">GET STARTED</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="corporate-hero">
+        <div class="hero-container" style="flex-direction: column; gap: 2rem;">
+            <div class="hero-badge">
+                <span>FOR ENTERPRISES</span>
+            </div>
+
+            <h1 class="hero-title" style="font-size: 3.5rem; max-width: 900px; margin: 0 auto;">
+                ACCELERATE <span class="text-gradient">CORPORATE INNOVATION</span>
+            </h1>
+
+            <p class="hero-subtitle" style="margin: 1.5rem auto;">
+                The operating system for your innovation department. Scout startups, manage dealflow, and run
+                world-class programs.
+            </p>
+
+            <div class="hero-actions" style="justify-content: center;">
+                <a href="signup.html" class="hero-btn primary">START SCOUTING</a>
+                <a href="#solutions" class="hero-btn secondary">VIEW SOLUTIONS</a>
+            </div>
+
+            <div class="hero-visual" style="margin-top: 3rem; width: 100%; max-width: 1000px;">
+                <img src="https://placehold.co/1000x500/f8f9fa/fcb82e?text=Corporate+Innovation+Dashboard"
+                    alt="Corporate Dashboard"
+                    style="width: 100%; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05);">
+            </div>
+        </div>
+    </section>
+
+    <!-- Solutions Section -->
+    <section class="features" id="solutions">
+        <div class="features-container">
+            <div class="section-header">
+                <h2 class="section-title">ENTERPRISE SOLUTIONS</h2>
+                <p class="section-subtitle">Everything you need to manage your innovation pipeline.</p>
+            </div>
+
+            <div class="features-grid">
+                <!-- Solution 1 -->
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="fas fa-search" style="font-size: 24px;"></i>
+                    </div>
+                    <h3 class="feature-title">Global Scouting</h3>
+                    <p class="feature-description">
+                        Access our database of 12,000+ verified startups. Use AI filters to find the perfect match for
+                        your technology needs.
+                    </p>
+                </div>
+
+                <!-- Solution 2 -->
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="fas fa-tasks" style="font-size: 24px;"></i>
+                    </div>
+                    <h3 class="feature-title">Program Management</h3>
+                    <p class="feature-description">
+                        Launch and manage innovation challenges, hackathons, and accelerators with our white-labeled
+                        portal.
+                    </p>
+                </div>
+
+                <!-- Solution 3 -->
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="fas fa-filter" style="font-size: 24px;"></i>
+                    </div>
+                    <h3 class="feature-title">Dealflow Pipeline</h3>
+                    <p class="feature-description">
+                        Track startups from application to PoC. Collaborate with your team, rate startups, and manage
+                        documents.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="features" style="background: #fff; padding: 80px 2rem;">
+        <div class="features-container">
+            <div class="hero-container" style="align-items: center;">
+                <div class="hero-content">
+                    <h2 class="section-title" style="text-align: left;">TRUSTED BY LEADERS</h2>
+                    <p class="section-subtitle" style="text-align: left; margin: 0 0 2rem 0;">
+                        Join 300+ forward-thinking companies using InnoBridge to drive their innovation strategy.
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: #fcb82e;">4,000+</div>
+                            <p style="color: #666;">Programs Hosted</p>
+                        </div>
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: #fcb82e;">12k+</div>
+                            <p style="color: #666;">Startups Connected</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-visual" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                    <div
+                        style="background: #f8f9fa; height: 100px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #ccc;">
+                        LOGO</div>
+                    <div
+                        style="background: #f8f9fa; height: 100px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #ccc;">
+                        LOGO</div>
+                    <div
+                        style="background: #f8f9fa; height: 100px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #ccc;">
+                        LOGO</div>
+                    <div
+                        style="background: #f8f9fa; height: 100px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #ccc;">
+                        LOGO</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-container">
+            <h2 class="cta-title">TRANSFORM YOUR INNOVATION STRATEGY</h2>
+            <p class="cta-description">
+                Schedule a demo to see how InnoBridge can accelerate your corporate innovation.
+            </p>
+            <div class="cta-actions">
+                <a href="signup.html" class="hero-btn primary">START SCOUTING</a>
+                <a href="request_demo.html" class="hero-btn secondary">REQUEST DEMO</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">INNOBRIDGE</div>
+            <p class="footer-text">
+                © 2025 InnoBridge. All rights reserved. | Connecting Innovation • Bridging Futures
+            </p>
+            <div style="margin-top: 2rem; display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center;">
+                <a href="connector.html" style="color: #666; text-decoration: none;">InnoBridge Connector</a>
+                <a href="startup_portal.html" style="color: #666; text-decoration: none;">For Startups</a>
+                <a href="corporate.html" style="color: #666; text-decoration: none;">For Corporates</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/index.js"></script>
+</body>
+
+</html>

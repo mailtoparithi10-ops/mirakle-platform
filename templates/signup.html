@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - InnoBridge</title>
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .auth-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Left Side - Content Section */
+        .auth-left {
+            flex: 1;
+            background: white;
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .left-content {
+            position: relative;
+            z-index: 10;
+            max-width: 600px;
+        }
+
+        /* Floating elements */
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.12;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, rgba(252, 184, 46, 0.15), rgba(245, 158, 11, 0.1));
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(252, 184, 46, 0.08));
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            bottom: 10%;
+            left: 10%;
+            animation: float 15s infinite ease-in-out reverse;
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, rgba(252, 184, 46, 0.1), rgba(245, 158, 11, 0.15));
+            border-radius: 50%;
+            top: 50%;
+            left: -50px;
+            animation: float 18s infinite ease-in-out;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-30px) rotate(10deg);
+            }
+        }
+
+        .auth-logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1a1410;
+            margin-bottom: 2.5rem;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .auth-logo .accent {
+            color: #7c2d12;
+        }
+
+        .hero-title {
+            font-size: 2.75rem;
+            font-weight: 800;
+            color: #1a1410;
+            line-height: 1.3;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: #422006;
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            color: #422006;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(26, 20, 16, 0.15);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7c2d12;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Right Side - Form Section */
+        .auth-right {
+            flex: 1;
+            background: #f59e0b;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 550px;
+            padding: 2rem 0;
+        }
+
+        .form-header {
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-subtitle {
+            color: #718096;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #fcb82e;
+            box-shadow: 0 0 0 4px rgba(252, 184, 46, 0.1);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #718096;
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: #fcb82e;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #fcb82e 0%, #f59e0b 100%);
+            border: #000;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(252, 184, 46, 0.4);
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(252, 184, 46, 0.6);
+        }
+
+        .auth-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error {
+            background: #fed7d7;
+            border: 1px solid #fc8181;
+            color: #c53030;
+        }
+
+        .success {
+            background: #c6f6d5;
+            border: 1px solid #68d391;
+            color: #2f855a;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #1a1410;
+        }
+
+        .auth-link {
+            color: #1a1410;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .auth-link:hover {
+            color: #422006;
+            text-decoration: underline;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            border-top-color: #000;
+            animation: spin 0.6s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .role-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .role-option {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .role-option:hover {
+            border-color: #fcb82e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(252, 184, 46, 0.2);
+        }
+
+        .role-option.selected {
+            border-color: #fcb82e;
+            background: rgba(252, 184, 46, 0.05);
+        }
+
+        .role-option input[type="radio"] {
+            display: none;
+        }
+
+        .role-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .role-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .terms {
+            font-size: 0.85rem;
+            color: #01050a;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .terms a {
+            color: #01050a;
+            text-decoration: none;
+        }
+
+        .terms a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .auth-wrapper {
+                flex-direction: column;
+            }
+
+            .auth-left {
+                padding: 3rem 2rem;
+            }
+
+            .hero-title {
+                font-size: 2.25rem;
+            }
+
+            .auth-right {
+                padding: 3rem 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .auth-left {
+                padding: 2rem 1.5rem;
+            }
+
+            .hero-title {
+                font-size: 1.75rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .auth-right {
+                padding: 2rem 1.5rem;
+            }
+
+            .features-list {
+                display: none;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .role-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Back to Home Button */
+        .back-home {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 1000;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #f59e0b;
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-home:hover {
+            background: white;
+            border-color: #fcb82e;
+            color: #f59e0b;
+            transform: translateX(-3px);
+            box-shadow: 0 4px 12px rgba(252, 184, 46, 0.2);
+        }
+
+        .back-home i {
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .back-home {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="index.html" class="back-home">
+        <i class="fas fa-arrow-left"></i>
+        Back to Home
+    </a>
+    <div class="auth-wrapper">
+        <!-- Left Side - Content -->
+        <div class="auth-left">
+            <div class="floating-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+            </div>
+            <div class="left-content">
+                <a href="/" class="auth-logo">INNO<span class="accent">BRIDGE</span></a>
+
+                <h1 class="hero-title">Join the innovation ecosystem</h1>
+                <p class="hero-subtitle">Connect with startups, corporates, and enablers to drive innovation forward.
+                </p>
+
+                <ul class="features-list">
+                    <li class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <span>Connect with global innovation partners</span>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <span>Access powerful collaboration tools</span>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <span>Participate in innovation challenges</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Right Side - Form -->
+        <div class="auth-right">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2 class="form-title">Create Account</h2>
+                    <p class="form-subtitle">Join the innovation ecosystem today</p>
+                </div>
+
+                <div id="errorMsg" class="message error"></div>
+                <div id="successMsg" class="message success"></div>
+
+                <form id="signupForm">
+                    <!-- Role Selection -->
+                    <div class="role-selector">
+                        <label class="role-option" onclick="selectRole('startup')">
+                            <input type="radio" name="role" value="startup" required>
+                            <div class="role-icon">🚀</div>
+                            <div class="role-label">Startup</div>
+                        </label>
+                        <label class="role-option" onclick="selectRole('corporate')">
+                            <input type="radio" name="role" value="corporate" required>
+                            <div class="role-icon">🏢</div>
+                            <div class="role-label">Corporate</div>
+                        </label>
+                        <label class="role-option" onclick="selectRole('connector')">
+                            <input type="radio" name="role" value="connector" required>
+                            <div class="role-icon">🤝</div>
+                            <div class="role-label">Connector</div>
+                        </label>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">First Name</label>
+                            <input type="text" name="firstName" class="form-input" required placeholder="John">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" name="lastName" class="form-input" required placeholder="Doe">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" name="email" class="form-input" required placeholder="name@company.com"
+                            autocomplete="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Company / Organization</label>
+                        <input type="text" name="company" class="form-input" required placeholder="Your company name">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <div class="password-wrapper">
+                                <input type="password" name="password" id="password" class="form-input" required
+                                    placeholder="••••••••" autocomplete="new-password" style="padding-right: 45px;">
+                                <button type="button" class="password-toggle"
+                                    onclick="togglePassword('password', 'toggleIcon1')">
+                                    <i id="toggleIcon1" class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirm Password</label>
+                            <div class="password-wrapper">
+                                <input type="password" name="confirmPassword" id="confirmPassword" class="form-input"
+                                    required placeholder="••••••••" autocomplete="new-password"
+                                    style="padding-right: 45px;">
+                                <button type="button" class="password-toggle"
+                                    onclick="togglePassword('confirmPassword', 'toggleIcon2')">
+                                    <i id="toggleIcon2" class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="auth-btn" id="submitBtn">
+                        <span id="btnText">Create Account</span>
+                    </button>
+
+                    <div class="terms">
+                        By signing up, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy
+                            Policy</a>
+                    </div>
+                </form>
+
+                <div class="auth-footer">
+                    Already have an account? <a href="/login" class="auth-link">Sign in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedRole = null;
+
+        function selectRole(role) {
+            selectedRole = role;
+            document.querySelectorAll('.role-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+        }
+
+        function togglePassword(inputId, iconId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleIcon = document.getElementById(iconId);
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        const form = document.getElementById('signupForm');
+        const errorMsg = document.getElementById('errorMsg');
+        const successMsg = document.getElementById('successMsg');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                errorMsg.textContent = '✗ Passwords do not match';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            if (!selectedRole) {
+                errorMsg.textContent = '✗ Please select a role';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            submitBtn.disabled = true;
+            btnText.innerHTML = 'Creating account<span class="spinner"></span>';
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/auth/register', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        successMsg.textContent = '✓ Account created! Redirecting...';
+                        successMsg.style.display = 'block';
+                        setTimeout(() => {
+                            // Determine redirect URL based on role
+                            let redirectUrl = '/';
+                            if (data.role === 'startup' || data.role === 'founder') redirectUrl = '/startup';
+                            else if (data.role === 'corporate') redirectUrl = '/corporate';
+                            else if (data.role === 'connector' || data.role === 'enabler') redirectUrl = '/connector';
+
+                            // Add welcome parameter for the dashboard to show the thank you message
+                            redirectUrl += '?welcome=true';
+
+                            window.location.href = redirectUrl;
+                        }, 1500);
+                    } else {
+                        errorMsg.textContent = '✗ ' + (data.error || 'Registration failed');
+                        errorMsg.style.display = 'block';
+                    }
+                } else {
+                    const data = await response.json();
+                    errorMsg.textContent = '✗ ' + (data.error || 'Registration failed');
+                    errorMsg.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Signup error:', error);
+                errorMsg.textContent = '✗ An error occurred. Please try again.';
+                errorMsg.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                btnText.textContent = 'Create Account';
+            }
+        });
+    </script>
+</body>
+
+</html>

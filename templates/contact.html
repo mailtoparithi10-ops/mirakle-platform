@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - InnoBridge</title>
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .contact-hero {
+            padding: 160px 2rem 100px;
+            text-align: center;
+            background: radial-gradient(circle at 50% 0%, rgba(252, 184, 46, 0.15), transparent 70%);
+        }
+
+        .contact-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .contact-info {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-primary);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+
+        .info-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(252, 184, 46, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d97706;
+            font-size: 1.25rem;
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .info-content h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+
+        .info-content p,
+        .info-content a {
+            color: #6b7280;
+            line-height: 1.6;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .info-content a:hover {
+            color: var(--accent-primary);
+        }
+
+        .social-widgets {
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .social-grid {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-5px);
+        }
+
+        .social-linkedin {
+            background: #0077b5;
+        }
+
+        .social-instagram {
+            background: #e1306c;
+        }
+
+        .social-twitter {
+            background: #1da1f2;
+        }
+
+        .social-facebook {
+            background: #1877f2;
+        }
+
+        .social-whatsapp {
+            background: #25d366;
+        }
+
+        .map-container {
+            border-radius: 20px;
+            overflow: hidden;
+            height: 100%;
+            min-height: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+        }
+
+        @media (max-width: 768px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background Pattern -->
+    <div class="bg-pattern"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">I</div>
+                <div class="logo-text">INNO<span class="accent">BRIDGE</span></div>
+            </a>
+
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link">HOME</a>
+                <a href="about.html" class="nav-link">ABOUT</a>
+                <a href="products.html" class="nav-link">PRODUCTS</a>
+                <a href="opportunities.html" class="nav-link">OPPORTUNITIES</a>
+                <a href="blog.html" class="nav-link">BLOG</a>
+                <a href="contact.html" class="nav-link active">CONTACT</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="login.html" class="nav-btn secondary">LOG IN</a>
+                <a href="signup.html" class="nav-btn primary">GET STARTED</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="contact-hero">
+        <h1 class="hero-title">GET IN <span class="text-gradient">TOUCH</span></h1>
+        <p class="hero-subtitle">
+            Have questions? We'd love to hear from you. Reach out to our team.
+        </p>
+    </section>
+
+    <!-- Main Content -->
+    <div class="contact-container">
+        <!-- Contact Details -->
+        <div class="contact-info">
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="info-content">
+                    <h3>Our Headquarters</h3>
+                    <p>123 Innovation Drive, Tech Park<br>Silicon Valley, CA 94025, USA</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-phone-alt"></i></div>
+                <div class="info-content">
+                    <h3>Phone Number</h3>
+                    <a href="tel:+15551234567">+1 (555) 123-4567</a>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-envelope"></i></div>
+                <div class="info-content">
+                    <h3>Email Address</h3>
+                    <a href="mailto:hello@innobridge.com">hello@innobridge.com</a>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fab fa-whatsapp"></i></div>
+                <div class="info-content">
+                    <h3>WhatsApp</h3>
+                    <a href="https://wa.me/15551234567" target="_blank">Chat with us</a>
+                </div>
+            </div>
+
+            <!-- Social Widgets -->
+            <div class="social-widgets">
+                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Connect With Us</h3>
+                <div class="social-grid">
+                    <a href="#" class="social-btn social-linkedin" title="LinkedIn"><i
+                            class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-btn social-instagram" title="Instagram"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-btn social-twitter" title="X (Twitter)"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-btn social-facebook" title="Facebook"><i
+                            class="fab fa-facebook-f"></i></a>
+                    <a href="https://wa.me/15551234567" class="social-btn social-whatsapp" title="WhatsApp"><i
+                            class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map (Placeholder) -->
+        <div class="map-container">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3168.628236556408!2d-122.08625158469247!3d37.42206597982567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fba02425dad8f%3A0x6c296c66619367e0!2sGoogleplex!5e0!3m2!1sen!2sus!4v1614123456789!5m2!1sen!2sus"
+                width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
+            </iframe>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">INNOBRIDGE</div>
+            <p class="footer-text">
+                © 2025 InnoBridge. All rights reserved. | Connecting Innovation • Bridging Futures
+            </p>
+        </div>
+    </footer>
+
+    <script src="/static/js/index.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request a Demo - InnoBridge</title>
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .demo-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 600px;
+            padding: 3rem;
+            border: 1px solid var(--border-primary);
+        }
+
+        .demo-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .demo-logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            display: inline-block;
+            text-decoration: none;
+            color: black;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(252, 184, 46, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #fcb82e, #f59e0b);
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(252, 184, 46, 0.3);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            color: #111827;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="demo-card">
+        <div class="demo-header">
+            <a href="/" class="demo-logo">INNO<span style="color: #fcb82e;">BRIDGE</span></a>
+            <h2 style="font-size: 1.75rem; margin-bottom: 0.5rem;">Request a Demo</h2>
+            <p style="color: #666;">See how InnoBridge can transform your innovation strategy.</p>
+        </div>
+
+        <form action="/submit-demo" method="POST">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label class="form-label">First Name</label>
+                    <input type="text" name="first_name" class="form-input" required placeholder="Jane">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" name="last_name" class="form-input" required placeholder="Doe">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Work Email</label>
+                <input type="email" name="email" class="form-input" required placeholder="jane@company.com">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Company Name</label>
+                <input type="text" name="company" class="form-input" required placeholder="Acme Corp">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">I am interested in...</label>
+                <select name="interest" class="form-select" required>
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="corporate_innovation">Corporate Innovation Suite</option>
+                    <option value="startup_programs">Startup Programs</option>
+                    <option value="connector_platform">Connector Platform</option>
+                    <option value="investment">Investment Opportunities</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Message (Optional)</label>
+                <textarea name="message" class="form-textarea"
+                    placeholder="Tell us about your specific needs..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Schedule Demo</button>
+        </form>
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+    </div>
+</body>
+
+</html>

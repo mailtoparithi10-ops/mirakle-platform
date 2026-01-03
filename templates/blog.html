@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InnoBridge Blog - Insights & News</title>
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .blog-hero {
+            padding: 160px 2rem 80px;
+            text-align: center;
+            background: radial-gradient(circle at 50% 0%, rgba(252, 184, 46, 0.15), transparent 70%);
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-primary);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border-color: var(--accent-primary);
+        }
+
+        .blog-image {
+            height: 200px;
+            background: #f3f4f6;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blog-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-category {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+            color: #111827;
+        }
+
+        .blog-excerpt {
+            font-size: 0.95rem;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .blog-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 1rem;
+            border-top: 1px solid #f3f4f6;
+            font-size: 0.85rem;
+            color: #9ca3af;
+        }
+
+        .read-more {
+            color: #111827;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .read-more:hover {
+            color: var(--accent-primary);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background Pattern -->
+    <div class="bg-pattern"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">I</div>
+                <div class="logo-text">INNO<span class="accent">BRIDGE</span></div>
+            </a>
+
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link">HOME</a>
+                <a href="about.html" class="nav-link">ABOUT</a>
+                <a href="products.html" class="nav-link">PRODUCTS</a>
+                <a href="opportunities.html" class="nav-link">OPPORTUNITIES</a>
+                <a href="blog.html" class="nav-link active">BLOG</a>
+                <a href="contact.html" class="nav-link">CONTACT</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="login.html" class="nav-btn secondary">LOG IN</a>
+                <a href="signup.html" class="nav-btn primary">GET STARTED</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="blog-hero">
+        <h1 class="hero-title">INNOBRIDGE <span class="text-gradient">INSIGHTS</span></h1>
+
+        <p class="hero-subtitle">
+            Trends, stories, and strategies from the global startup ecosystem.
+        </p>
+    </section>
+
+    <!-- Blog Grid -->
+    <section class="blog-grid">
+        <!-- Article 1 -->
+        <article class="blog-card">
+            <div class="blog-image">
+                <img src="https://placehold.co/600x400/f3f4f6/fcb82e?text=Startup+Growth" alt="Startup Growth">
+            </div>
+            <div class="blog-content">
+                <div class="blog-category">Startup Strategy</div>
+                <h2 class="blog-title">5 Key Strategies for Scaling Your Startup in 2025</h2>
+                <p class="blog-excerpt">
+                    Discover the essential tactics that high-growth startups are using to navigate the current market
+                    landscape and secure funding.
+                </p>
+                <div class="blog-meta">
+                    <span>Dec 5, 2025</span>
+                    <a href="#" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </article>
+
+        <!-- Article 2 -->
+        <article class="blog-card">
+            <div class="blog-image">
+                <img src="https://placehold.co/600x400/f3f4f6/fcb82e?text=Corporate+Innovation"
+                    alt="Corporate Innovation">
+            </div>
+            <div class="blog-content">
+                <div class="blog-category">Corporate Innovation</div>
+                <h2 class="blog-title">Why Open Innovation is the Future of Enterprise</h2>
+                <p class="blog-excerpt">
+                    How leading corporations are leveraging startup partnerships to drive digital transformation and
+                    stay ahead of the curve.
+                </p>
+                <div class="blog-meta">
+                    <span>Dec 2, 2025</span>
+                    <a href="#" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </article>
+
+        <!-- Article 3 -->
+        <article class="blog-card">
+            <div class="blog-image">
+                <img src="https://placehold.co/600x400/f3f4f6/fcb82e?text=Ecosystem+Building" alt="Ecosystem Building">
+            </div>
+            <div class="blog-content">
+                <div class="blog-category">Ecosystem</div>
+                <h2 class="blog-title">Building Resilient Startup Ecosystems in Emerging Markets</h2>
+                <p class="blog-excerpt">
+                    A deep dive into how local connectors are bridging the gap between talent and capital in developing
+                    regions.
+                </p>
+                <div class="blog-meta">
+                    <span>Nov 28, 2025</span>
+                    <a href="#" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </article>
+
+        <!-- Article 4 -->
+        <article class="blog-card">
+            <div class="blog-image">
+                <img src="https://placehold.co/600x400/f3f4f6/fcb82e?text=Investment+Trends" alt="Investment Trends">
+            </div>
+            <div class="blog-content">
+                <div class="blog-category">Investment</div>
+                <h2 class="blog-title">The Shift in VC Funding: What Founders Need to Know</h2>
+                <p class="blog-excerpt">
+                    Analyzing the latest venture capital trends and what investors are looking for in seed and Series A
+                    rounds this year.
+                </p>
+                <div class="blog-meta">
+                    <span>Nov 20, 2025</span>
+                    <a href="#" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </article>
+
+        <!-- Article 5 -->
+        <article class="blog-card">
+            <div class="blog-image">
+                <img src="https://placehold.co/600x400/f3f4f6/fcb82e?text=Tech+Spotlight" alt="Tech Spotlight">
+            </div>
+            <div class="blog-content">
+                <div class="blog-category">Technology</div>
+                <h2 class="blog-title">The Rise of GreenTech: Opportunities for Innovators</h2>
+                <p class="blog-excerpt">
+                    Sustainability is no longer just a buzzword. Explore the massive opportunities opening up in the
+                    CleanTech sector.
+                </p>
+                <div class="blog-meta">
+                    <span>Nov 15, 2025</span>
+                    <a href="#" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </article>
+
+        <!-- Article 6 -->
+        <article class="blog-card">
+            <div class="blog-image">
+                <img src="https://placehold.co/600x400/f3f4f6/fcb82e?text=Community" alt="Community">
+            </div>
+            <div class="blog-content">
+                <div class="blog-category">Community</div>
+                <h2 class="blog-title">Connector Spotlight: Sarah Chen from Singapore</h2>
+                <p class="blog-excerpt">
+                    Meet the super-connector who has facilitated over 50 successful startup-corporate partnerships in
+                    Southeast Asia.
+                </p>
+                <div class="blog-meta">
+                    <span>Nov 10, 2025</span>
+                    <a href="#" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">INNOBRIDGE</div>
+            <p class="footer-text">
+                © 2025 InnoBridge. All rights reserved. | Connecting Innovation • Bridging Futures
+            </p>
+            <div style="margin-top: 2rem; display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center;">
+                <a href="connector.html" style="color: #666; text-decoration: none;">InnoBridge Connector</a>
+                <a href="startup_portal.html" style="color: #666; text-decoration: none;">For Startups</a>
+                <a href="corporate.html" style="color: #666; text-decoration: none;">For Corporates</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/index.js"></script>
+</body>
+
+</html>

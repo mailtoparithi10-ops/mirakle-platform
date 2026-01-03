@@ -1,0 +1,504 @@
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #ffffff;
+        min-height: 100vh;
+        display: flex;
+    }
+
+    .sidebar {
+        width: 240px;
+        background: #000000;
+        padding: 0;
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+    }
+
+    .main-content {
+        margin-left: 240px;
+        flex: 1;
+        background: white;
+        min-height: 100vh;
+        border-radius: 20px 0 0 20px;
+        overflow: hidden;
+    }
+
+    .user-profile {
+        padding: 2rem;
+        text-align: center;
+        color: white;
+        border-bottom: 1px solid rgba(252, 184, 46, 0.3);
+    }
+
+    .user-avatar-large {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #fcb82e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 2rem;
+        font-weight: bold;
+        color: #000000;
+        border: 3px solid #fcb82e;
+    }
+
+    .user-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .user-email {
+        font-size: 0.9rem;
+        opacity: 0.8;
+        margin-bottom: 1rem;
+    }
+
+    .edit-profile-btn {
+        background: #fcb82e;
+        color: #000000;
+        border: 1px solid #fcb82e;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+    }
+
+    .edit-profile-btn:hover {
+        background: #e5a629;
+        transform: translateY(-1px);
+    }
+
+    .nav-menu {
+        padding: 1rem 0;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem 2rem;
+        color: white;
+        transition: all 0.3s;
+        cursor: pointer;
+        border: none;
+        background: none;
+        width: 100%;
+        font-size: 1rem;
+        text-align: left;
+    }
+
+    .nav-item:hover {
+        background: #fcb82e;
+        color: #000000;
+    }
+
+    .nav-item.active {
+        background: #fcb82e;
+        border-right: 3px solid #fcb82e;
+        color: #000000;
+    }
+
+    .nav-item i {
+        margin-right: 1rem;
+        width: 20px;
+        font-size: 1.1rem;
+    }
+
+    .nav-item .badge,
+    .nav-item .rewards-badge {
+        margin-left: auto;
+        background: #fcb82e;
+        color: #000000;
+        padding: 0.2rem 0.6rem;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+
+    .logout-btn {
+        margin: 2rem;
+        background: #fcb82e;
+        border: none;
+        color: #000000;
+        padding: 0.8rem 1.5rem;
+        border-radius: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .logout-btn:hover {
+        background: #e5a629;
+        transform: translateY(-1px);
+    }
+
+    .dashboard-header {
+        padding: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+        background: white;
+    }
+
+    .dashboard-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #000000;
+        margin-bottom: 0.5rem;
+    }
+
+    .dashboard-subtitle {
+        color: #666666;
+        font-size: 1rem;
+    }
+
+    .dashboard-content {
+        padding: 2rem;
+        background: #ffffff;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid;
+        transition: transform 0.2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .stat-card.referrals {
+        border-left-color: #fcb82e;
+    }
+
+    .stat-card.earnings {
+        border-left-color: #000000;
+    }
+
+    .stat-card.ranking {
+        border-left-color: #fcb82e;
+    }
+
+    .stat-card.shares {
+        border-left-color: #000000;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: #000000;
+    }
+
+    .stat-label {
+        color: #666666;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .content-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #000000;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .back-btn {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #fcb82e;
+        color: #000000;
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        z-index: 1000;
+    }
+
+    .back-btn:hover {
+        background: #e5a629;
+        transform: translateY(-2px);
+    }
+
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        background: #fcb82e;
+        color: #000000;
+    }
+
+    .status-completed {
+        background: #000000;
+        color: #fcb82e;
+    }
+
+    .status-in_progress {
+        background: #666666;
+        color: #ffffff;
+    }
+
+    .referral-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .referral-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(252, 184, 46, 0.3);
+    }
+
+    .referral-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .referral-company {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #000000;
+    }
+
+    .referral-amount {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #fcb82e;
+    }
+
+    .referral-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .referral-detail {
+        text-align: center;
+    }
+
+    .referral-detail-label {
+        font-size: 0.8rem;
+        color: #666666;
+        margin-bottom: 0.25rem;
+    }
+
+    .referral-detail-value {
+        font-weight: 600;
+        color: #000000;
+    }
+
+    .rewards-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .rewards-card {
+        background: #000000;
+        color: white;
+        padding: 1.5rem;
+        border-radius: 15px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .rewards-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(252, 184, 46, 0.1) 0%, transparent 70%);
+    }
+
+    .rewards-card-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .rewards-value {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: #fcb82e;
+    }
+
+    .rewards-label {
+        opacity: 0.9;
+        font-size: 0.9rem;
+    }
+
+    .rewards-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .rewards-table th,
+    .rewards-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .rewards-table th {
+        background: #f7fafc;
+        font-weight: 600;
+        color: #000000;
+    }
+
+    .reward-type {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .reward-referral {
+        background: #fcb82e;
+        color: #000000;
+    }
+
+    .reward-bonus {
+        background: #000000;
+        color: #fcb82e;
+    }
+
+    .alert {
+        padding: 0.75rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+    }
+
+    .alert-success {
+        background: #fcb82e;
+        color: #000000;
+        border: 1px solid #e5a629;
+    }
+
+    .alert-error {
+        background: #000000;
+        color: #fcb82e;
+        border: 1px solid #1a1a1a;
+    }
+
+    .cash-out-btn {
+        background: #000000;
+        color: #fcb82e;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .cash-out-btn:hover {
+        background: #1a1a1a;
+        transform: translateY(-2px);
+    }
+
+    .mobile-menu-btn {
+        display: none;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: #fcb82e;
+        color: #000000;
+        border: none;
+        padding: 0.75rem;
+        border-radius: 10px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        z-index: 1001;
+    }
+
+    @media (max-width: 768px) {
+        .sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .main-content {
+            margin-left: 0;
+        }
+
+        .stats-grid,
+        .rewards-summary {
+            grid-template-columns: 1fr;
+        }
+
+        .dashboard-content {
+            padding: 1rem;
+        }
+
+        .mobile-menu-btn {
+            display: block;
+        }
+    }

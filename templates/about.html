@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About InnoBridge - Our Mission</title>
+    <meta name="description"
+        content="Connecting the world's innovation ecosystem. Learn about our mission, values, and the team behind InnoBridge.">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .about-hero {
+            padding: 160px 2rem 80px;
+            text-align: center;
+            background: radial-gradient(circle at 50% 0%, rgba(252, 184, 46, 0.15), transparent 70%);
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .about-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #4b5563;
+            margin-bottom: 2rem;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .team-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid var(--border-primary);
+            transition: transform 0.3s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .team-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #9ca3af;
+        }
+
+        .values-section {
+            background: #f9fafb;
+            padding: 6rem 2rem;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .value-card {
+            padding: 2rem;
+        }
+
+        .value-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(252, 184, 46, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d97706;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background Pattern -->
+    <div class="bg-pattern"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">I</div>
+                <div class="logo-text">INNO<span class="accent">BRIDGE</span></div>
+            </a>
+
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link">HOME</a>
+                <a href="about.html" class="nav-link">ABOUT</a>
+                <a href="products.html" class="nav-link">PRODUCTS</a>
+                <a href="opportunities.html" class="nav-link">OPPORTUNITIES</a>
+                <a href="blog.html" class="nav-link">BLOG</a>
+                <a href="contact.html" class="nav-link">CONTACT</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="login.html" class="nav-btn secondary">LOG IN</a>
+                <a href="signup.html" class="nav-btn primary">GET STARTED</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="about-hero">
+        <div class="hero-badge">
+            <span>OUR MISSION</span>
+        </div>
+        <h1 class="hero-title">
+            BRIDGING THE <span class="text-gradient">INNOVATION GAP</span>
+        </h1>
+        <p class="hero-subtitle">
+            We are on a mission to democratize access to innovation resources and connect the world's most promising
+            startups with global opportunities.
+        </p>
+    </section>
+
+    <!-- Main Content -->
+    <section class="about-content">
+        <div class="about-text">
+            <p>
+                InnoBridge was founded with a simple belief: talent is distributed equally, but opportunity is not.
+                We are building the digital infrastructure to connect the fragmented global innovation ecosystem.
+            </p>
+            <p>
+                Whether you are a startup looking for funding, a corporation seeking innovation, or a connector helping
+                others succeed,
+                InnoBridge provides the tools and network you need to thrive.
+            </p>
+        </div>
+    </section>
+
+    <!-- Values -->
+    <section class="values-section">
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="value-icon"><i class="fas fa-globe"></i></div>
+                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Global First</h3>
+                <p style="color: #666;">We believe in a borderless world where innovation knows no boundaries.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><i class="fas fa-handshake"></i></div>
+                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Trust & Transparency</h3>
+                <p style="color: #666;">We build meaningful connections based on verified data and mutual trust.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><i class="fas fa-bolt"></i></div>
+                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Impact Driven</h3>
+                <p style="color: #666;">We focus on creating tangible value and real-world impact for our community.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">INNOBRIDGE</div>
+            <p class="footer-text">
+                © 2025 InnoBridge. All rights reserved. | Connecting Innovation • Bridging Futures
+            </p>
+            <div style="margin-top: 2rem; display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center;">
+                <a href="connector.html" style="color: #666; text-decoration: none;">InnoBridge Connector</a>
+                <a href="startup_portal.html" style="color: #666; text-decoration: none;">For Startups</a>
+                <a href="corporate.html" style="color: #666; text-decoration: none;">For Corporates</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/index.js"></script>
+</body>
+
+</html>

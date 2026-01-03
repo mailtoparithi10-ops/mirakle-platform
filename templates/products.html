@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InnoBridge Products - Our Ecosystem</title>
+    <meta name="description"
+        content="Explore the InnoBridge product suite: Connector Platform, Startup Portal, and Corporate Innovation Suite.">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .products-hero {
+            padding: 160px 2rem 100px;
+            text-align: center;
+            background: radial-gradient(circle at 50% 0%, rgba(252, 184, 46, 0.15), transparent 70%);
+        }
+
+        .product-section {
+            padding: 100px 2rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .product-section:last-child {
+            border-bottom: none;
+        }
+
+        .product-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .product-content {
+            text-align: left;
+        }
+
+        .product-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(252, 184, 46, 0.1);
+            color: #d97706;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .product-description {
+            font-size: 1.1rem;
+            color: #4b5563;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2.5rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            color: #374151;
+        }
+
+        .feature-item i {
+            color: #10b981;
+            margin-right: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .product-visual {
+            position: relative;
+        }
+
+        .product-image {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .product-image:hover {
+            transform: translateY(-10px);
+        }
+
+        /* Alternate layout for even sections */
+        .product-section:nth-child(even) .product-container {
+            direction: rtl;
+        }
+
+        .product-section:nth-child(even) .product-content {
+            direction: ltr;
+        }
+
+        @media (max-width: 968px) {
+            .product-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .product-section:nth-child(even) .product-container {
+                direction: ltr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background Pattern -->
+    <div class="bg-pattern"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">I</div>
+                <div class="logo-text">INNO<span class="accent">BRIDGE</span></div>
+            </a>
+
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link">HOME</a>
+                <a href="about.html" class="nav-link">ABOUT</a>
+                <a href="products.html" class="nav-link">PRODUCTS</a>
+                <a href="opportunities.html" class="nav-link">OPPORTUNITIES</a>
+                <a href="blog.html" class="nav-link">BLOG</a>
+                <a href="contact.html" class="nav-link">CONTACT</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="login.html" class="nav-btn secondary">LOG IN</a>
+                <a href="signup.html" class="nav-btn primary">GET STARTED</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="products-hero">
+        <div class="hero-badge">
+            <span>OUR ECOSYSTEM</span>
+        </div>
+        <h1 class="hero-title">
+            ONE PLATFORM <span class="text-gradient">ENDLESS POSSIBILITIES</span>
+        </h1>
+        <p class="hero-subtitle">
+            Three powerful platforms connected by one mission: To democratize innovation globally.
+        </p>
+    </section>
+
+    <!-- Product 1: Connector Platform -->
+    <section class="product-section">
+        <div class="product-container">
+            <div class="product-content">
+                <div class="product-badge">FOR CONNECTORS</div>
+                <h2 class="product-title">InnoBridge Connector</h2>
+                <p class="product-description">
+                    Turn your network into net worth. The Connector Platform empowers ecosystem builders to monetize
+                    their connections by referring startups to global opportunities.
+                </p>
+                <ul class="feature-list">
+                    <li class="feature-item"><i class="fas fa-check-circle"></i> Earn success fees for valid referrals
+                    </li>
+                    <li class="feature-item"><i class="fas fa-check-circle"></i> Track your impact with real-time
+                        analytics</li>
+                    <li class="feature-item"><i class="fas fa-check-circle"></i> Access exclusive global programs</li>
+                    <li class="feature-item"><i class="fas fa-check-circle"></i> Build your reputation as a
+                        super-connector</li>
+                </ul>
+                <a href="connector.html" class="hero-btn primary">START EARNING</a>
+            </div>
+            <div class="product-visual">
+                <img src="https://placehold.co/600x400/f8f9fa/fcb82e?text=Connector+Dashboard" alt="Connector Platform"
+                    class="product-image">
+            </div>
+        </div>
+    </section>
+
+    <!-- Product 2: Startup Portal -->
+    <section class="product-section">
+        <div class="product-container">
+            <div class="product-content">
+                <div class="product-badge">FOR STARTUPS</div>
+                <h2 class="product-title">Startup Portal</h2>
+                <p class="product-description">
+                    Your gateway to global growth. Access funding, acceleration programs, and corporate pilots through a
+                    single, unified profile.
+                </p>
+                <ul class="feature-list">
+                    <li class="feature-item"><i class="fas fa-check-circle"></i> One profile for all applications</li>
+                    <li class="feature-item"><i class="fas fa-check-circle"></i> AI-matched opportunities</li>
+                    <li class="feature-item"><i class="fas fa-check-circle"></i> Direct connection to corporate partners
+                    </li>
+                    <li class="feature-item"><i class="fas fa-check-circle"></i> Document vault for due diligence</li>
+                </ul>
+                <a href="startup_portal.html" class="hero-btn primary">JOIN AS STARTUP</a>
+            </div>
+            <div class="product-visual">
+                <img src="https://placehold.co/600x400/f8f9fa/fcb82e?text=Startup+Portal" alt="Startup Portal"
+                    class="product-image">
+            </div>
+        </div>
+    </section>
+
+    <!-- Product 3: Corporate Innovation -->
+    <section class="product-section">
+        <div class="product-container">
+            <div class="product-content">
+                <div class="product-badge">FOR CORPORATES</div>
+                <h2 class="product-title">Corporate Innovation Suite</h2>
+                <p class="product-description">
+                    The operating system for open innovation. Scout startups, manage deal flow, and launch challenges
+                    with enterprise-grade tools.
+                </p>
+                <ul class="feature-list">
+                    <li class="feature-item"><i class="fas fa-check-circle"></i> Access 12,000+ verified startups</li>
+                    <li class="feature-item"><i class="fas fa-check-circle"></i> Launch white-labeled challenges</li>
+                    <li class="feature-item"><i class="fas fa-check-circle"></i> Collaborative evaluation tools</li>
+                    <li class="feature-item"><i class="fas fa-check-circle"></i> Automated deal flow pipeline</li>
+                </ul>
+                <a href="request_demo.html" class="hero-btn primary">REQUEST DEMO</a>
+            </div>
+            <div class="product-visual">
+                <img src="https://placehold.co/600x400/f8f9fa/fcb82e?text=Corporate+Suite" alt="Corporate Suite"
+                    class="product-image">
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="cta-container">
+            <h2 class="cta-title">READY TO GET STARTED?</h2>
+            <p class="cta-description">
+                Join the world's fastest-growing decentralized innovation ecosystem.
+            </p>
+            <div class="cta-actions">
+                <a href="signup.html" class="hero-btn primary">CREATE ACCOUNT</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">INNOBRIDGE</div>
+            <p class="footer-text">
+                © 2025 InnoBridge. All rights reserved. | Connecting Innovation • Bridging Futures
+            </p>
+            <div style="margin-top: 2rem; display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center;">
+                <a href="connector.html" style="color: #666; text-decoration: none;">InnoBridge Connector</a>
+                <a href="startup_portal.html" style="color: #666; text-decoration: none;">For Startups</a>
+                <a href="corporate.html" style="color: #666; text-decoration: none;">For Corporates</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/index.js"></script>
+</body>
+
+</html>

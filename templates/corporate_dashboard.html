@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporate Dashboard - InnoBridge</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reusing the high-quality styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #000000;
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            margin-left: 240px;
+            flex: 1;
+            background: white;
+            min-height: 100vh;
+            border-radius: 20px 0 0 20px;
+            overflow: hidden;
+        }
+
+        .user-profile {
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            border-bottom: 1px solid rgba(252, 184, 46, 0.3);
+        }
+
+        .user-avatar-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, #fcb82e, #f97316);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #000000;
+            border: 3px solid #fcb82e;
+        }
+
+        .user-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-email {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .nav-menu {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: white;
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            background: none;
+            width: 100%;
+            font-size: 1rem;
+            text-align: left;
+            border: none;
+        }
+
+        .nav-item:hover {
+            background: #fcb82e;
+            color: #000000;
+        }
+
+        .nav-item.active {
+            background: #fcb82e;
+            border-right: 3px solid #fcb82e;
+            color: #000000;
+        }
+
+        .nav-item i {
+            margin-right: 1rem;
+            width: 20px;
+            font-size: 1.1rem;
+        }
+
+        .logout-btn {
+            margin: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            color: #f8fafc;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            font-weight: 600;
+            width: calc(100% - 2rem);
+        }
+
+        .logout-btn:hover {
+            background: #e5a629;
+            transform: translateY(-1px);
+        }
+
+        .dashboard-header {
+            padding: 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-subtitle {
+            color: #666666;
+            font-size: 1rem;
+        }
+
+        .dashboard-content {
+            padding: 1.5rem 2rem 2rem 2rem;
+            overflow-y: auto;
+            height: calc(100vh - 88px);
+            background: #f9fafb;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+        }
+
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #020617;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-icon.gold {
+            background: rgba(252, 184, 46, 0.15);
+            color: #fbbf24;
+        }
+
+        .card-icon.blue {
+            background: rgba(59, 130, 246, 0.12);
+            color: #3b82f6;
+        }
+
+        .card-icon.green {
+            background: rgba(34, 197, 94, 0.12);
+            color: #22c55e;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .table-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            background: #f9fafb;
+            font-size: 0.8rem;
+            color: #6b7280;
+            text-transform: uppercase;
+        }
+
+        .status-pill {
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-pill.review {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-pill.matched {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+                border-radius: 0;
+            }
+
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+            }
+
+            .user-profile {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="user-profile">
+            <div class="user-avatar-large">C</div>
+            <div class="user-name" id="userName">{{ current_user.name }}</div>
+            <div class="user-email">innovate@corp.com</div>
+        </div>
+        <nav class="nav-menu">
+            <button class="nav-item active" onclick="showSection('overview')">
+                <i class="fa-solid fa-chart-pie"></i> Overview
+            </button>
+            <button class="nav-item" onclick="showSection('startups')">
+                <i class="fa-solid fa-rocket"></i> Scout Startups
+            </button>
+            <button class="nav-item" onclick="showSection('dealflow')">
+                <i class="fa-solid fa-handshake"></i> Deal Flow
+            </button>
+            <button class="nav-item" onclick="showSection('settings')">
+                <i class="fa-solid fa-gear"></i> Settings
+            </button>
+        </nav>
+        <button class="logout-btn" onclick="window.location.href='/logout'">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </button>
+    </aside>
+
+    <main class="main-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">Corporate Dashboard</div>
+            <div class="dashboard-subtitle">Manage innovation challenges and scout for startups.</div>
+        </div>
+
+        <div class="dashboard-content">
+            <!-- OVERVIEW SECTION -->
+            <section id="overview" class="section active">
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Potential Matches</div>
+                                <div class="card-value">12</div>
+                            </div>
+                            <div class="card-icon gold"><i class="fa-solid fa-bolt"></i></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Active Pilots</div>
+                                <div class="card-value">4</div>
+                            </div>
+                            <div class="card-icon green"><i class="fa-solid fa-play"></i></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Deal Flow Value</div>
+                                <div class="card-value">$2.4M</div>
+                            </div>
+                            <div class="card-icon blue"><i class="fa-solid fa-dollar-sign"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <div class="table-title">Recent Startup Matches</div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Startup Name</th>
+                                <th>Sector</th>
+                                <th>Match Score</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>NeuroTech AI</td>
+                                <td>HealthTech</td>
+                                <td>98%</td>
+                                <td><span class="status-pill matched">Matched</span></td>
+                                <td><button style="cursor:pointer">Connect</button></td>
+                            </tr>
+                            <tr>
+                                <td>CleanEnergy Systems</td>
+                                <td>CleanTech</td>
+                                <td>92%</td>
+                                <td><span class="status-pill review">In Review</span></td>
+                                <td><button style="cursor:pointer">View</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- STARTUPS SECTION -->
+            <section id="startups" class="section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <div>
+                        <h2 style="font-size: 1.5rem; font-weight: 700;">Scout Startups</h2>
+                        <p style="color: #666;">Discover high-growth startups matching your innovation thesis.</p>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <input type="text" placeholder="Search startups..."
+                            style="padding: 0.5rem 1rem; border: 1px solid #e2e8f0; border-radius: 8px; width: 250px;">
+                        <button
+                            style="padding: 0.5rem 1rem; background: #000; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                            <i class="fa-solid fa-filter"></i> Filters
+                        </button>
+                    </div>
+                </div>
+
+                <div class="cards-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+                    <!-- Startup Card 1 -->
+                    <div class="card" style="padding: 0; overflow: hidden; border: 1px solid #e2e8f0;">
+                        <div
+                            style="height: 100px; background: linear-gradient(135deg, #3b82f6, #2563eb); position: relative;">
+                            <div
+                                style="width: 60px; height: 60px; background: white; border-radius: 12px; position: absolute; bottom: -30px; left: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-weight: 700; font-size: 1.2rem;">
+                                N
+                            </div>
+                        </div>
+                        <div style="padding: 40px 20px 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                <h3 style="font-size: 1.1rem; font-weight: 700;">NeuroTech AI</h3>
+                                <span class="status-pill matched">98% Match</span>
+                            </div>
+                            <p style="color: #666; font-size: 0.9rem; margin: 0.5rem 0 1rem; line-height: 1.5;">
+                                AI-driven neural interface for healthcare diagnostics and early detection.
+                            </p>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                                <span
+                                    style="background:#f1f5f9; color:#475569; padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">HealthTech</span>
+                                <span
+                                    style="background:#f1f5f9; color:#475569; padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">Series
+                                    A</span>
+                                <span
+                                    style="background:#f1f5f9; color:#475569; padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">AI</span>
+                            </div>
+                            <button
+                                style="width: 100%; padding: 0.75rem; background: #fcb82e; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">View
+                                Profile</button>
+                        </div>
+                    </div>
+
+                    <!-- Startup Card 2 -->
+                    <div class="card" style="padding: 0; overflow: hidden; border: 1px solid #e2e8f0;">
+                        <div
+                            style="height: 100px; background: linear-gradient(135deg, #10b981, #059669); position: relative;">
+                            <div
+                                style="width: 60px; height: 60px; background: white; border-radius: 12px; position: absolute; bottom: -30px; left: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-weight: 700; font-size: 1.2rem;">
+                                E
+                            </div>
+                        </div>
+                        <div style="padding: 40px 20px 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                <h3 style="font-size: 1.1rem; font-weight: 700;">EcoLogic</h3>
+                                <span class="status-pill matched">92% Match</span>
+                            </div>
+                            <p style="color: #666; font-size: 0.9rem; margin: 0.5rem 0 1rem; line-height: 1.5;">
+                                Sustainable supply chain tracking using blockchain technology.
+                            </p>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                                <span
+                                    style="background:#f1f5f9; color:#475569; padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">CleanTech</span>
+                                <span
+                                    style="background:#f1f5f9; color:#475569; padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">Seed</span>
+                                <span
+                                    style="background:#f1f5f9; color:#475569; padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">SaaS</span>
+                            </div>
+                            <button
+                                style="width: 100%; padding: 0.75rem; background: #fcb82e; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">View
+                                Profile</button>
+                        </div>
+                    </div>
+
+                    <!-- Startup Card 3 -->
+                    <div class="card" style="padding: 0; overflow: hidden; border: 1px solid #e2e8f0;">
+                        <div
+                            style="height: 100px; background: linear-gradient(135deg, #6366f1, #4f46e5); position: relative;">
+                            <div
+                                style="width: 60px; height: 60px; background: white; border-radius: 12px; position: absolute; bottom: -30px; left: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-weight: 700; font-size: 1.2rem;">
+                                Q
+                            </div>
+                        </div>
+                        <div style="padding: 40px 20px 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                <h3 style="font-size: 1.1rem; font-weight: 700;">QuantumBit</h3>
+                                <span class="status-pill" style="background: #e2e8f0; color: #475569;">85% Match</span>
+                            </div>
+                            <p style="color: #666; font-size: 0.9rem; margin: 0.5rem 0 1rem; line-height: 1.5;">
+                                Next-gen quantum encryption for enterprise security.
+                            </p>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                                <span
+                                    style="background:#f1f5f9; color:#475569; padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">Cyber</span>
+                                <span
+                                    style="background:#f1f5f9; color:#475569; padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">DeepTech</span>
+                                <span
+                                    style="background:#f1f5f9; color:#475569; padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">Pre-Seed</span>
+                            </div>
+                            <button
+                                style="width: 100%; padding: 0.75rem; background: #fcb82e; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">View
+                                Profile</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DEALFLOW SECTION -->
+            <section id="dealflow" class="section">
+                <div style="margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: 700;">Deal Flow Pipeline</h2>
+                    <p style="color: #666;">Track and manage your interactions with startups.</p>
+                </div>
+
+                <div
+                    style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; overflow-x: auto; padding-bottom: 1rem;">
+                    <!-- Column: New -->
+                    <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; min-width: 250px;">
+                        <div
+                            style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e2e8f0;">
+                            <h3 style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: #64748b;">
+                                New Leads</h3>
+                            <span
+                                style="background: #e2e8f0; color: #64748b; padding: 2px 6px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">3</span>
+                        </div>
+
+                        <div
+                            style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: grab;">
+                            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span
+                                    style="background: #dbeafe; color: #1e40af; font-size: 0.7rem; font-weight: 600; padding: 2px 6px; border-radius: 4px;">FinTech</span>
+                            </div>
+                            <h4 style="font-weight: 600; margin-bottom: 0.25rem;">PayFlow</h4>
+                            <p style="font-size: 0.8rem; color: #64748b;">Cross-border payment infrastructure.</p>
+                        </div>
+
+                        <div
+                            style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: grab;">
+                            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span
+                                    style="background: #fce7f3; color: #9d174d; font-size: 0.7rem; font-weight: 600; padding: 2px 6px; border-radius: 4px;">Retail</span>
+                            </div>
+                            <h4 style="font-weight: 600; margin-bottom: 0.25rem;">ShopAI</h4>
+                            <p style="font-size: 0.8rem; color: #64748b;">AI shopping assistant.</p>
+                        </div>
+                    </div>
+
+                    <!-- Column: Contacted -->
+                    <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; min-width: 250px;">
+                        <div
+                            style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #fcb82e;">
+                            <h3 style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: #64748b;">
+                                Contacted</h3>
+                            <span
+                                style="background: #fff7ed; color: #c2410c; padding: 2px 6px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">2</span>
+                        </div>
+
+                        <div
+                            style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: grab;">
+                            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span
+                                    style="background: #ecfccb; color: #3f6212; font-size: 0.7rem; font-weight: 600; padding: 2px 6px; border-radius: 4px;">AgriTech</span>
+                            </div>
+                            <h4 style="font-weight: 600; margin-bottom: 0.25rem;">FarmSense</h4>
+                            <p style="font-size: 0.8rem; color: #64748b;">Meeting scheduled Dec 12</p>
+                        </div>
+                    </div>
+
+                    <!-- Column: Due Diligence -->
+                    <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; min-width: 250px;">
+                        <div
+                            style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #3b82f6;">
+                            <h3 style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: #64748b;">
+                                Due Diligence</h3>
+                            <span
+                                style="background: #eff6ff; color: #1d4ed8; padding: 2px 6px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">1</span>
+                        </div>
+
+                        <div
+                            style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: grab;">
+                            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span
+                                    style="background: #e0e7ff; color: #3730a3; font-size: 0.7rem; font-weight: 600; padding: 2px 6px; border-radius: 4px;">DeepTech</span>
+                            </div>
+                            <h4 style="font-weight: 600; margin-bottom: 0.25rem;">NeuroTech AI</h4>
+                            <p style="font-size: 0.8rem; color: #64748b;">Reviewing technical data room.</p>
+                        </div>
+                    </div>
+
+                    <!-- Column: Pilot/POC -->
+                    <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; min-width: 250px;">
+                        <div
+                            style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #22c55e;">
+                            <h3 style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: #64748b;">
+                                Pilot / POC</h3>
+                            <span
+                                style="background: #f0fdf4; color: #15803d; padding: 2px 6px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">1</span>
+                        </div>
+
+                        <div
+                            style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: grab;">
+                            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span
+                                    style="background: #fee2e2; color: #991b1b; font-size: 0.7rem; font-weight: 600; padding: 2px 6px; border-radius: 4px;">Logistics</span>
+                            </div>
+                            <h4 style="font-weight: 600; margin-bottom: 0.25rem;">LogiChain</h4>
+                            <p style="font-size: 0.8rem; color: #64748b;">Pilot phase: Month 2 of 3</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SETTINGS SECTION -->
+            <section id="settings" class="section">
+                <h2>Settings</h2>
+                <p>Manage corporate profile...</p>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const activeBtn = Array.from(document.querySelectorAll('.nav-item')).find(btn => btn.getAttribute('onclick').includes(sectionId));
+            if (activeBtn) activeBtn.classList.add('active');
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('welcome') === 'true') {
+                setTimeout(() => {
+                    alert("Thank you for registering, {{ current_user.name }}!");
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }, 100);
+            }
+        });
+    </script>
+</body>
+
+</html>

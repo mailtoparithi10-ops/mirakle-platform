@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - InnoBridge</title>
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .auth-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .auth-left {
+            flex: 1;
+            background: #f59e0b;
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .auth-right {
+            flex: 1;
+            background: white;
+            padding: 0rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .bg-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(252, 184, 46, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(252, 184, 46, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* Floating elements */
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.15;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, rgba(252, 184, 46, 0.3), rgba(245, 158, 11, 0.2));
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(252, 184, 46, 0.15));
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            bottom: 10%;
+            left: 10%;
+            animation: float 15s infinite ease-in-out reverse;
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, rgba(252, 184, 46, 0.2), rgba(245, 158, 11, 0.3));
+            border-radius: 50%;
+            top: 50%;
+            left: -50px;
+            animation: float 18s infinite ease-in-out;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-30px) rotate(10deg);
+            }
+        }
+
+        .left-content {
+            position: relative;
+            z-index: 10;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .auth-logo {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1a1410;
+            margin-bottom: 2rem;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .auth-logo .accent {
+            color: #7c2d12;
+        }
+
+        .hero-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1a1410;
+            line-height: 1.4;
+            margin-bottom: 1.2rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+            color: #422006;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(252, 184, 46, 0.15);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fcb82e;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .feature-item span {
+            color: #422006;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .form-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-subtitle {
+            color: #718096;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #fcb82e;
+            box-shadow: 0 0 0 4px rgba(252, 184, 46, 0.1);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #718096;
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: #fcb82e;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: -0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .forgot-password a {
+            font-size: 0.85rem;
+            color: #fcb82e;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: #f59e0b;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #fcb82e 0%, #f59e0b 100%);
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(252, 184, 46, 0.4);
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(252, 184, 46, 0.6);
+        }
+
+        .auth-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error {
+            background: #fed7d7;
+            border: 1px solid #fc8181;
+            color: #c53030;
+        }
+
+        .success {
+            background: #c6f6d5;
+            border: 1px solid #68d391;
+            color: #2f855a;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .auth-link {
+            color: #fcb82e;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .auth-link:hover {
+            color: #f59e0b;
+            text-decoration: underline;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            border-top-color: #000;
+            animation: spin 0.6s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Trust badges */
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .trust-badge {
+            text-align: center;
+            color: #718096;
+            font-size: 0.75rem;
+        }
+
+        .trust-badge i {
+            font-size: 1.5rem;
+            color: #fcb82e;
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .auth-wrapper {
+                flex-direction: column;
+            }
+
+            .auth-left {
+                padding: 3rem 2rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .auth-right {
+                padding: 3rem 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .auth-left {
+                padding: 2rem 1.5rem;
+            }
+
+            .hero-title {
+                font-size: 1.65rem;
+            }
+
+            .hero-subtitle {
+                font-size: 0.95rem;
+            }
+
+            .auth-right {
+                padding: 2rem 1.5rem;
+            }
+
+            .features-list {
+                display: none;
+            }
+        }
+
+        /* Back to Home Button */
+        .back-home {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 1000;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            color: #1a1410;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-home:hover {
+            background: white;
+            border-color: #fcb82e;
+            color: #f59e0b;
+            transform: translateX(-3px);
+            box-shadow: 0 4px 12px rgba(252, 184, 46, 0.2);
+        }
+
+        .back-home i {
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .back-home {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="index.html" class="back-home">
+        <i class="fas fa-arrow-left"></i>
+        Back to Home
+    </a>
+    <div class="auth-wrapper">
+        <!-- Left Side - Content -->
+        <div class="auth-left">
+            <div class="bg-pattern"></div>
+            <div class="floating-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+            </div>
+
+            <div class="left-content">
+                <a href="/" class="auth-logo">INNO<span class="accent">BRIDGE</span></a>
+
+                <h1 class="hero-title">Ready to launch your innovation program?</h1>
+                <p class="hero-subtitle">Connect with startups, corporates, and enablers in the innovation ecosystem.
+                </p>
+
+                <ul class="features-list">
+                    <li class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <span>Launch startup, student, or employee innovation programs</span>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <span>Tap into a global network of 10M+ innovators</span>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <span>Get expert support from our project managers</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Right Side - Form -->
+        <div class="auth-right">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2 class="form-title">Welcome Back</h2>
+                    <p class="form-subtitle">Sign in to access your dashboard</p>
+                </div>
+
+                <div id="errorMsg" class="message error"></div>
+                <div id="successMsg" class="message success"></div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" id="email" name="email" class="form-input" required
+                            placeholder="name@company.com" autocomplete="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" name="password" class="form-input" required
+                                placeholder="••••••••" autocomplete="current-password" style="padding-right: 45px;">
+                            <button type="button" class="password-toggle" onclick="togglePassword()">
+                                <i id="toggleIcon" class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="forgot-password">
+                        <a href="#" class="auth-link">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="auth-btn" id="submitBtn">
+                        <span id="btnText">Sign In</span>
+                    </button>
+                </form>
+
+                <!-- Trust Badges -->
+                <div class="trust-badges">
+                    <div class="trust-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>Secure</div>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-lock"></i>
+                        <div>Encrypted</div>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-check-circle"></i>
+                        <div>Verified</div>
+                    </div>
+                </div>
+
+                <div class="auth-footer">
+                    Don't have an account? <a href="signup.html" class="auth-link">Create account</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        const form = document.getElementById('loginForm');
+        const errorMsg = document.getElementById('errorMsg');
+        const successMsg = document.getElementById('successMsg');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+
+            submitBtn.disabled = true;
+            btnText.innerHTML = 'Signing in<span class="spinner"></span>';
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.redirected || response.status === 302) {
+                    successMsg.textContent = '✓ Login successful! Redirecting...';
+                    successMsg.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = response.url;
+                    }, 500);
+                } else if (response.ok) {
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && contentType.includes('application/json')) {
+                        const data = await response.json();
+                        if (data.success) {
+                            successMsg.textContent = '✓ Login successful! Redirecting...';
+                            successMsg.style.display = 'block';
+                            setTimeout(() => {
+                                if (data.role === 'admin') {
+                                    window.location.href = '/admin';
+                                } else if (data.role === 'startup' || data.role === 'founder') {
+                                    window.location.href = '/startup';
+                                } else if (data.role === 'corporate') {
+                                    window.location.href = '/corporate';
+                                } else if (data.role === 'connector' || data.role === 'enabler') {
+                                    window.location.href = '/connector';
+                                } else {
+                                    window.location.href = '/';
+                                }
+                            }, 500);
+                        } else {
+                            errorMsg.textContent = '✗ ' + (data.error || 'Login failed');
+                            errorMsg.style.display = 'block';
+                        }
+                    } else {
+                        window.location.href = response.url;
+                    }
+                } else if (response.status === 401) {
+                    errorMsg.textContent = '✗ Invalid email or password';
+                    errorMsg.style.display = 'block';
+                } else if (response.status === 403) {
+                    errorMsg.textContent = '✗ Account disabled';
+                    errorMsg.style.display = 'block';
+                } else {
+                    const errorText = await response.text();
+                    console.error('Login failed:', response.status, errorText);
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        alert(`Login Failed: ${errorJson.error || 'Unknown error'}`);
+                        errorMsg.textContent = '✗ ' + (errorJson.error || 'Login failed');
+                    } catch (e) {
+                        alert(`Login Failed (Status ${response.status}): ${errorText.substring(0, 100)}`);
+                        errorMsg.textContent = '✗ Login failed. Status: ' + response.status;
+                    }
+                    errorMsg.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Network/System Error: ' + error.message);
+                errorMsg.textContent = '✗ Error: ' + error.message;
+                errorMsg.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                btnText.textContent = 'Sign In';
+            }
+        });
+    </script>
+</body>
+
+</html>

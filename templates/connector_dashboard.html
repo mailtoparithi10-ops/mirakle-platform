@@ -1,0 +1,4206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enabler Dashboard - InnoBridge</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #000000;
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            margin-left: 240px;
+            flex: 1;
+            background: white;
+            min-height: 100vh;
+            border-radius: 20px 0 0 20px;
+            overflow: hidden;
+        }
+
+        .user-profile {
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            border-bottom: 1px solid rgba(252, 184, 46, 0.3);
+        }
+
+        .user-avatar-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, #fcb82e, #f97316);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #000000;
+            border: 3px solid #fcb82e;
+        }
+
+        .user-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-email {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .edit-profile-btn {
+            background: #fcb82e;
+            color: #000000;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .edit-profile-btn:hover {
+            background: #e5a629;
+            transform: translateY(-1px);
+        }
+
+        .nav-menu {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: white;
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            background: none;
+            width: 100%;
+            font-size: 1rem;
+            text-align: left;
+        }
+
+        .nav-item:hover {
+            background: #fcb82e;
+            color: #000000;
+        }
+
+        .nav-item.active {
+            background: #fcb82e;
+            border-right: 3px solid #fcb82e;
+            color: #000000;
+        }
+
+        .nav-item i {
+            margin-right: 1rem;
+            width: 20px;
+            font-size: 1.1rem;
+        }
+
+        .nav-item .badge,
+        .nav-item .rewards-badge {
+            margin-left: auto;
+            background: #fcb82e;
+            color: #000000;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .nav-item .badge-outline {
+            background: transparent;
+            border: 1px solid #fcb82e;
+            color: #fcb82e;
+        }
+
+        .logout-btn {
+            margin: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            color: #f8fafc;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: #e5a629;
+            transform: translateY(-1px);
+        }
+
+        .dashboard-header {
+            padding: 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-subtitle {
+            color: #666666;
+            font-size: 1rem;
+        }
+
+        .dashboard-content {
+            padding: 1.5rem 2rem 2rem 2rem;
+            overflow-y: auto;
+            height: calc(100vh - 88px);
+            background: #f9fafb;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #020617;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-subtext {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        .trend-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            color: #16a34a;
+        }
+
+        .trend-down {
+            color: #dc2626;
+        }
+
+        .trend-neutral {
+            color: #6b7280;
+        }
+
+        .trend-indicator i {
+            font-size: 0.9rem;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-icon.gold {
+            background: rgba(252, 184, 46, 0.15);
+            color: #fbbf24;
+        }
+
+        .card-icon.green {
+            background: rgba(34, 197, 94, 0.12);
+            color: #22c55e;
+        }
+
+        .card-icon.blue {
+            background: rgba(59, 130, 246, 0.12);
+            color: #3b82f6;
+        }
+
+        .card-icon.purple {
+            background: rgba(168, 85, 247, 0.12);
+            color: #a855f7;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: #f9fafb;
+            color: #4b5563;
+            gap: 0.35rem;
+        }
+
+        .pill-dot {
+            width: 0.4rem;
+            height: 0.4rem;
+            border-radius: 999px;
+        }
+
+        .pill-dot.green {
+            background: #22c55e;
+        }
+
+        .pill-dot.blue {
+            background: #3b82f6;
+        }
+
+        .pill-dot.amber {
+            background: #fbbf24;
+        }
+
+        .pill-dot.red {
+            background: #ef4444;
+        }
+
+        .pill-dot.slate {
+            background: #64748b;
+        }
+
+        .pill-outline {
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            background: transparent;
+        }
+
+        .badge-soft {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(15, 23, 42, 0.03);
+            color: #0f172a;
+            gap: 0.35rem;
+        }
+
+        .badge-soft.gold {
+            color: #f59e0b;
+            background: rgba(245, 158, 11, 0.12);
+        }
+
+        .badge-soft.blue {
+            color: #2563eb;
+            background: rgba(37, 99, 235, 0.12);
+        }
+
+        .badge-soft.green {
+            color: #16a34a;
+            background: rgba(22, 163, 74, 0.12);
+        }
+
+        .badge-soft.slate {
+            color: #475569;
+            background: rgba(148, 163, 184, 0.18);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .section-header-main {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #020617;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-subtitle {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 0.9rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            background: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #111827;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: #fcb82e;
+            border-color: #fbbf24;
+            color: #000000;
+        }
+
+        .btn-primary:hover {
+            background: #e5a629;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border-color: rgba(148, 163, 184, 0.6);
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            background: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        .btn-icon:hover {
+            background: #f9fafb;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.7rem;
+            font-size: 0.8rem;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .table-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #111827;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .table-subtitle {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 0.15rem;
+        }
+
+        .table-filters {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .filter-pill {
+            border-radius: 999px;
+            padding: 0.35rem 0.8rem;
+            font-size: 0.8rem;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            color: #4b5563;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .filter-pill.active {
+            background: #111827;
+            color: #f9fafb;
+            border-color: #111827;
+        }
+
+        .filter-dot {
+            width: 0.4rem;
+            height: 0.4rem;
+            border-radius: 999px;
+            background: #22c55e;
+        }
+
+        .search-input {
+            position: relative;
+        }
+
+        .search-input input {
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            padding: 0.4rem 0.9rem 0.4rem 2rem;
+            font-size: 0.8rem;
+            outline: none;
+        }
+
+        .search-input i {
+            position: absolute;
+            left: 0.7rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        thead tr {
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th,
+        td {
+            padding: 0.75rem 1.25rem;
+            text-align: left;
+        }
+
+        th {
+            font-size: 0.8rem;
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #111827;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-pill.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-pill.completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pill.in-progress {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-pill.failed {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .table-footer {
+            padding: 0.85rem 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #6b7280;
+            background: #f9fafb;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .pagination-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            cursor: pointer;
+            background: white;
+        }
+
+        .pagination-btn.active {
+            background: #111827;
+            color: white;
+            border-color: #111827;
+        }
+
+        .empty-state {
+            padding: 2rem 1.5rem;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .empty-state-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 999px;
+            background: #f9fafb;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.4rem;
+        }
+
+        .empty-state-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: #111827;
+        }
+
+        .empty-state-text {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.35rem;
+        }
+
+        .chip {
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            font-size: 0.75rem;
+            color: #475569;
+            background: #f9fafb;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .chip i {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+
+        .layout-split {
+            display: grid;
+            grid-template-columns: 2fr 1.25fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-group {
+            display: grid;
+            grid-template-columns: 1.2fr 1.2fr 1.2fr;
+            gap: 1rem;
+            margin-top: 0.6rem;
+        }
+
+        .progress-item {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            border-radius: 999px;
+            background: #e5e7eb;
+            overflow: hidden;
+            margin: 0.2rem 0 0.35rem 0;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 999px;
+        }
+
+        .progress-bar-fill.gold {
+            background: linear-gradient(90deg, #facc15, #f97316);
+        }
+
+        .progress-bar-fill.blue {
+            background: linear-gradient(90deg, #60a5fa, #2563eb);
+        }
+
+        .progress-bar-fill.green {
+            background: linear-gradient(90deg, #4ade80, #16a34a);
+        }
+
+        .timeline {
+            padding: 0.4rem 0 0.2rem 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 0.8rem;
+            padding: 0.6rem 0;
+            position: relative;
+        }
+
+        .timeline-marker-wrap {
+            position: relative;
+            padding-top: 0.1rem;
+        }
+
+        .timeline-marker {
+            width: 9px;
+            height: 9px;
+            border-radius: 999px;
+            border: 2px solid #facc15;
+            background: #fef9c3;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 12px;
+            left: 4px;
+            width: 1px;
+            background: #e5e7eb;
+            bottom: -0.4rem;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.1rem;
+        }
+
+        .timeline-meta {
+            font-size: 0.75rem;
+            color: #6b7280;
+            display: flex;
+            gap: 0.35rem;
+            align-items: center;
+        }
+
+        .timeline-tags {
+            margin-top: 0.25rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+        }
+
+        .timeline-tag {
+            padding: 0.15rem 0.4rem;
+            border-radius: 999px;
+            background: #f9fafb;
+            font-size: 0.7rem;
+            color: #6b7280;
+            border: 1px solid #e5e7eb;
+        }
+
+        .timeline-badge {
+            padding: 0.15rem 0.45rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .timeline-badge.gold {
+            background: rgba(245, 158, 11, 0.1);
+            color: #b45309;
+        }
+
+        .timeline-badge.blue {
+            background: rgba(37, 99, 235, 0.12);
+            color: #1d4ed8;
+        }
+
+        .timeline-badge.green {
+            background: rgba(22, 163, 74, 0.12);
+            color: #15803d;
+        }
+
+        .level-card {
+            background: #020617;
+            color: white;
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.6);
+        }
+
+        .level-card::before {
+            content: "";
+            position: absolute;
+            inset: -40%;
+            background: radial-gradient(circle at top left, rgba(252, 211, 77, 0.23), transparent 55%), radial-gradient(circle at bottom right, rgba(248, 250, 252, 0.12), transparent 60%);
+            opacity: 1;
+            pointer-events: none;
+        }
+
+        .level-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 1.1rem;
+        }
+
+        .level-main-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .level-badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #e5e7eb;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .level-badge i {
+            font-size: 0.7rem;
+            color: #eab308;
+        }
+
+        .level-number-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.7rem;
+            border-radius: 999px;
+            background: rgba(24, 24, 27, 0.9);
+            border: 1px solid rgba(82, 82, 91, 0.9);
+            font-size: 0.8rem;
+            font-weight: 600;
+            gap: 0.35rem;
+            color: #e4e4e7;
+        }
+
+        .level-number-badge span {
+            font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.85rem;
+        }
+
+        .level-number-badge i {
+            color: #22c55e;
+            font-size: 0.75rem;
+        }
+
+        .level-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.8rem;
+            color: #e5e7eb;
+            opacity: 0.95;
+            margin-top: 0.1rem;
+        }
+
+        .level-rating i {
+            color: #facc15;
+        }
+
+        .level-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: #9ca3af;
+            margin-top: 0.3rem;
+        }
+
+        .level-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .level-meta i {
+            font-size: 0.7rem;
+            opacity: 0.9;
+        }
+
+        .xp-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(75, 85, 99, 0.8);
+            font-size: 0.7rem;
+            gap: 0.25rem;
+            color: #e5e7eb;
+        }
+
+        .xp-badge span {
+            font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.8rem;
+            color: #fbbf24;
+        }
+
+        .xp-badge i {
+            font-size: 0.7rem;
+            color: #22c55e;
+        }
+
+        .level-progress {
+            margin-top: 1.35rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .level-progress-labels {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.4rem;
+            font-size: 0.8rem;
+            color: #e5e7eb;
+        }
+
+        .curr-level {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .curr-level span {
+            font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.85rem;
+            color: #fcd34d;
+        }
+
+        .next-level {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .next-level i {
+            font-size: 0.8rem;
+            color: #facc15;
+        }
+
+        .level-progress-bar {
+            width: 100%;
+            height: 8px;
+            border-radius: 999px;
+            background: rgba(31, 41, 55, 0.9);
+            overflow: hidden;
+            border: 1px solid rgba(55, 65, 81, 0.9);
+            box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.85);
+        }
+
+        .level-progress-fill {
+            height: 100%;
+            width: 60%;
+            background: linear-gradient(90deg, #f59e0b, #f97316, #facc15);
+            box-shadow: 0 0 15px rgba(250, 204, 21, 0.6);
+            border-radius: 999px;
+            position: relative;
+            overflow: visible;
+        }
+
+        .level-progress-fill::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translate(45%, -50%);
+            width: 16px;
+            height: 16px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 30%, #fefce8, #f59e0b 45%, #b45309);
+            box-shadow: 0 0 18px rgba(250, 204, 21, 0.8);
+            border: 2px solid rgba(15, 23, 42, 0.9);
+        }
+
+        .level-progress-caption {
+            margin-top: 0.5rem;
+            font-size: 0.78rem;
+            color: #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .level-progress-caption span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .level-progress-caption span i {
+            font-size: 0.7rem;
+            color: #facc15;
+        }
+
+        .level-milestones {
+            margin-top: 1.2rem;
+            display: grid;
+            grid-template-columns: 1.3fr 1.3fr;
+            gap: 1rem;
+        }
+
+        .milestone-item {
+            padding: 0.7rem 0.75rem;
+            border-radius: 0.9rem;
+            border: 1px solid rgba(51, 65, 85, 0.85);
+            background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.6), #020617);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .milestone-item::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.13), transparent 55%);
+            opacity: 1;
+            pointer-events: none;
+        }
+
+        .milestone-label {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .milestone-label i {
+            font-size: 0.7rem;
+            color: #facc15;
+        }
+
+        .milestone-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #e5e7eb;
+            display: flex;
+            align-items: baseline;
+            gap: 0.25rem;
+        }
+
+        .milestone-value span {
+            font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.9rem;
+        }
+
+        .milestone-tag {
+            margin-top: 0.35rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.7rem;
+            color: #d1d5db;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 0.18rem 0.45rem;
+            border-radius: 999px;
+            border: 1px solid rgba(55, 65, 81, 0.85);
+        }
+
+        .milestone-tag i {
+            font-size: 0.65rem;
+            color: #22c55e;
+        }
+
+        .level-footer {
+            margin-top: 1rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(51, 65, 85, 0.85);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #9ca3af;
+            position: relative;
+            z-index: 1;
+        }
+
+        .level-footer span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .level-footer span i {
+            font-size: 0.7rem;
+        }
+
+        .level-footer .cta-link {
+            color: #facc15;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .level-footer .cta-link i {
+            font-size: 0.75rem;
+        }
+
+        .level-orbit {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.25;
+        }
+
+        .level-orbit-ring {
+            position: absolute;
+            border-radius: 999px;
+            border: 1px dashed rgba(148, 163, 184, 0.6);
+        }
+
+        .level-orbit-ring:nth-child(1) {
+            inset: 12% 8% 52% 45%;
+            transform: rotate(-8deg);
+        }
+
+        .level-orbit-ring:nth-child(2) {
+            inset: 35% 52% 10% 5%;
+            transform: rotate(14deg);
+        }
+
+        .level-orbit-ring:nth-child(3) {
+            inset: 18% 26% 24% 36%;
+            transform: rotate(-22deg);
+        }
+
+        .level-orbit-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: #facc15;
+            position: absolute;
+            box-shadow: 0 0 12px rgba(250, 204, 21, 0.8);
+        }
+
+        .level-orbit-dot.dot-1 {
+            top: 18%;
+            left: 62%;
+        }
+
+        .level-orbit-dot.dot-2 {
+            top: 58%;
+            right: 22%;
+        }
+
+        .level-orbit-dot.dot-3 {
+            bottom: 18%;
+            left: 32%;
+        }
+
+        .insights-card {
+            background: white;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            padding: 1.3rem 1.4rem;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
+        }
+
+        .insights-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.9rem;
+        }
+
+        .insights-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #111827;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .insights-badge {
+            padding: 0.15rem 0.45rem;
+            border-radius: 999px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            font-size: 0.7rem;
+            color: #6b7280;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .insights-badge i {
+            font-size: 0.7rem;
+            color: #f97316;
+        }
+
+        .insights-list {
+            display: grid;
+            gap: 0.4rem;
+        }
+
+        .insight-item {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: #4b5563;
+        }
+
+        .insight-bullet {
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .insight-text {
+            flex: 1;
+        }
+
+        .insight-highlight {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .insights-footer {
+            margin-top: 0.75rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .link-inline {
+            color: #2563eb;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .link-inline i {
+            font-size: 0.75rem;
+        }
+
+        .insights-labels {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+
+        .label-chip {
+            padding: 0.18rem 0.45rem;
+            border-radius: 999px;
+            border: 1px dashed #e5e7eb;
+            font-size: 0.7rem;
+            color: #6b7280;
+            background: #f9fafb;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .label-chip i {
+            font-size: 0.7rem;
+            color: #9ca3af;
+        }
+
+        .pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-top: 0.5rem;
+        }
+
+        .mini-pill {
+            padding: 0.18rem 0.4rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            font-size: 0.7rem;
+            color: #64748b;
+            background: #f9fafb;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .mini-pill i {
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+
+        .mini-pill.highlight {
+            border-style: dashed;
+            border-color: #fbbf24;
+            background: #fffbeb;
+            color: #92400e;
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.75fr) minmax(0, 1.1fr);
+            gap: 1.5rem;
+            align-items: flex-start;
+        }
+
+        .metrics-summary {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.6rem;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #4b5563;
+        }
+
+        .metric-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .metric-label i {
+            font-size: 0.7rem;
+            color: #9ca3af;
+        }
+
+        .metric-value {
+            font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.8rem;
+            color: #111827;
+        }
+
+        .metric-tag {
+            padding: 0.16rem 0.45rem;
+            border-radius: 999px;
+            background: #f9fafb;
+            font-size: 0.7rem;
+            color: #6b7280;
+            border: 1px solid #e5e7eb;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .metric-tag i {
+            font-size: 0.7rem;
+            color: #22c55e;
+        }
+
+        .subtle-divider {
+            height: 1px;
+            background: linear-gradient(to right, rgba(226, 232, 240, 0.5), rgba(226, 232, 240, 1), rgba(226, 232, 240, 0.5));
+            margin: 1rem 0;
+        }
+
+        .section-note {
+            margin-top: 0.6rem;
+            font-size: 0.78rem;
+            color: #6b7280;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.35rem;
+        }
+
+        .section-note i {
+            font-size: 0.8rem;
+            color: #f59e0b;
+            margin-top: 0.1rem;
+        }
+
+        .section-tabs {
+            display: inline-flex;
+            padding: 0.22rem;
+            border-radius: 999px;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+        }
+
+        .section-tab {
+            border-radius: 999px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+            border: none;
+            background: transparent;
+            color: #6b7280;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .section-tab.active {
+            background: white;
+            color: #111827;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+        }
+
+        .section-tab i {
+            font-size: 0.8rem;
+        }
+
+        .pill-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.15rem 0.45rem;
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            font-size: 0.7rem;
+            color: #6b7280;
+        }
+
+        .pill-indicator span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.15rem;
+        }
+
+        .pill-indicator i {
+            font-size: 0.7rem;
+            color: #22c55e;
+        }
+
+        .highlight-box {
+            border-radius: 0.85rem;
+            border: 1px dashed rgba(148, 163, 184, 0.7);
+            background: #f9fafb;
+            padding: 0.7rem 0.75rem;
+            font-size: 0.78rem;
+            color: #4b5563;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 0.6rem;
+        }
+
+        .highlight-box span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .highlight-box span i {
+            font-size: 0.75rem;
+            color: #22c55e;
+        }
+
+        .highlight-box .link-inline {
+            font-size: 0.75rem;
+        }
+
+        .tier-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-top: 0.35rem;
+        }
+
+        .tier-badge {
+            padding: 0.16rem 0.45rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+            background: #f9fafb;
+            color: #4b5563;
+        }
+
+        .tier-badge i {
+            font-size: 0.7rem;
+        }
+
+        .tier-badge.gold {
+            border-color: #fbbf24;
+            background: #fffbeb;
+            color: #92400e;
+        }
+
+        .segmented-progress {
+            display: flex;
+            gap: 0.3rem;
+            margin-top: 0.4rem;
+        }
+
+        .segment {
+            flex: 1;
+            height: 4px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: #e5e7eb;
+            position: relative;
+        }
+
+        .segment-fill {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, #fbbf24, #f97316);
+        }
+
+        .segment.fill-low .segment-fill {
+            width: 35%;
+        }
+
+        .segment.fill-medium .segment-fill {
+            width: 65%;
+        }
+
+        .segment.fill-full .segment-fill {
+            width: 100%;
+        }
+
+        .segmented-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+
+        .referral-source-list {
+            margin-top: 0.6rem;
+            display: grid;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+            color: #4b5563;
+        }
+
+        .referral-source-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .referral-source-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .referral-source-label i {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .referral-source-metrics {
+            font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.78rem;
+            color: #111827;
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .referral-source-metrics span {
+            opacity: 0.85;
+        }
+
+        .referral-source-metrics span.highlight {
+            color: #f97316;
+        }
+
+        .referrals-summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .summary-item {
+            font-size: 0.78rem;
+            color: #6b7280;
+        }
+
+        .summary-item span {
+            display: block;
+        }
+
+        .summary-item strong {
+            font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.8rem;
+            color: #111827;
+        }
+
+        .pill-compact {
+            padding: 0.18rem 0.4rem;
+            border-radius: 999px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            font-size: 0.7rem;
+            color: #6b7280;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .pill-compact i {
+            font-size: 0.7rem;
+            color: #9ca3af;
+        }
+
+        .stats-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.4rem;
+            font-size: 0.78rem;
+            color: #6b7280;
+        }
+
+        .stats-row span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .stats-row span i {
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, rgba(226, 232, 240, 0.2), rgba(148, 163, 184, 0.7), rgba(226, 232, 240, 0.2));
+            margin: 1rem 0 0.9rem 0;
+        }
+
+        .tab-layout {
+            display: flex;
+            gap: 1.2rem;
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .tab-layout button {
+            background: none;
+            border: none;
+            padding: 0.5rem 0;
+            cursor: pointer;
+            position: relative;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .tab-layout button.active {
+            color: #111827;
+        }
+
+        .tab-layout button.active::after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #111827;
+            border-radius: 999px;
+        }
+
+        .metric-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .metric-chip {
+            padding: 0.18rem 0.45rem;
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            color: #4b5563;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .metric-chip i {
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+
+        .highlight-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: #22c55e;
+        }
+
+        .badge-mono {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.18rem 0.45rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.8);
+            font-size: 0.7rem;
+            color: #111827;
+            background: #f9fafb;
+        }
+
+        .badge-mono i {
+            font-size: 0.7rem;
+            color: #0f172a;
+            opacity: 0.7;
+        }
+
+        .badge-mono .muted {
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        .section-footer {
+            margin-top: 1rem;
+            font-size: 0.78rem;
+            color: #6b7280;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .section-footer span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .section-footer span i {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+
+        .section-footer a.link {
+            color: #2563eb;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .section-footer a.link i {
+            font-size: 0.75rem;
+        }
+
+        .pill-soft {
+            padding: 0.2rem 0.5rem;
+            border-radius: 999px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            font-size: 0.7rem;
+            color: #4b5563;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .pill-soft i {
+            font-size: 0.7rem;
+            color: #9ca3af;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.7rem;
+            margin-top: 0.6rem;
+            font-size: 0.8rem;
+            color: #4b5563;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .detail-label {
+            color: #6b7280;
+        }
+
+        .detail-value {
+            font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            color: #111827;
+        }
+
+        .info-banner {
+            border-radius: 0.85rem;
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            background: linear-gradient(to right, #f9fafb, #fefce8);
+            padding: 0.75rem 0.9rem;
+            font-size: 0.78rem;
+            color: #4b5563;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .info-banner i {
+            font-size: 0.85rem;
+            color: #eab308;
+        }
+
+        .info-banner a {
+            color: #2563eb;
+            font-weight: 500;
+        }
+
+        .toggle-group {
+            display: inline-flex;
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+            font-size: 0.78rem;
+        }
+
+        .toggle-btn {
+            padding: 0.25rem 0.7rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .toggle-btn.active {
+            background: #111827;
+            color: #f9fafb;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            font-size: 0.82rem;
+        }
+
+        .form-label {
+            color: #4b5563;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .form-label i {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+
+        .form-input,
+        .form-select {
+            border-radius: 0.6rem;
+            border: 1px solid #e5e7eb;
+            padding: 0.45rem 0.6rem;
+            font-size: 0.8rem;
+            outline: none;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            border-color: #111827;
+            box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.95);
+        }
+
+        .form-helper {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .toggle-label {
+            font-size: 0.8rem;
+            color: #4b5563;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .toggle-switch {
+            width: 36px;
+            height: 20px;
+            border-radius: 999px;
+            background: #e5e7eb;
+            border: 1px solid #d1d5db;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .toggle-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 999px;
+            background: white;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-switch.active {
+            background: #22c55e;
+            border-color: #22c55e;
+        }
+
+        .toggle-switch.active .toggle-thumb {
+            left: 18px;
+        }
+
+        .profile-avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #fbbf24, #f97316);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0f172a;
+            border: 2px solid rgba(15, 23, 42, 0.9);
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.2fr);
+            gap: 1.25rem;
+        }
+
+        .secondary-card {
+            background: white;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            padding: 1.25rem;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .profile-main {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .profile-text {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .profile-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .profile-meta {
+            font-size: 0.8rem;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .profile-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .profile-meta span i {
+            font-size: 0.7rem;
+            color: #9ca3af;
+        }
+
+        .profile-tag {
+            padding: 0.15rem 0.45rem;
+            border-radius: 999px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            font-size: 0.7rem;
+            color: #6b7280;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .pill-soft-gold {
+            padding: 0.18rem 0.45rem;
+            border-radius: 999px;
+            background: #fffbeb;
+            border: 1px solid #facc15;
+            font-size: 0.7rem;
+            color: #92400e;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .pill-soft-gold i {
+            font-size: 0.7rem;
+            color: #eab308;
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.6rem;
+            margin-top: 0.2rem;
+            font-size: 0.8rem;
+            color: #4b5563;
+        }
+
+        .profile-detail-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.4rem;
+        }
+
+        .profile-detail-label {
+            color: #6b7280;
+        }
+
+        .profile-detail-value {
+            font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            color: #111827;
+            font-size: 0.8rem;
+        }
+
+        .quick-actions {
+            margin-top: 0.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .quick-action-btn {
+            padding: 0.3rem 0.6rem;
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            font-size: 0.75rem;
+            color: #4b5563;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            cursor: pointer;
+        }
+
+        .quick-action-btn i {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+
+        .settings-list {
+            margin-top: 0.5rem;
+            display: grid;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+            color: #4b5563;
+        }
+
+        .settings-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0;
+            border-bottom: 1px dashed #e5e7eb;
+        }
+
+        .settings-row:last-child {
+            border-bottom: none;
+        }
+
+        .settings-label {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .settings-title {
+            font-weight: 500;
+        }
+
+        .settings-desc {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .alert-card {
+            margin-top: 0.8rem;
+            border-radius: 0.85rem;
+            border: 1px solid rgba(248, 180, 28, 0.6);
+            background: #fffbeb;
+            padding: 0.65rem 0.75rem;
+            font-size: 0.78rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.45rem;
+            color: #92400e;
+        }
+
+        .alert-card i {
+            font-size: 0.85rem;
+            margin-top: 0.05rem;
+        }
+
+        .referral-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1.25rem;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f9fafb;
+        }
+
+        .referral-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #111827;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .referral-title span {
+            font-size: 0.8rem;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        .referral-filters {
+            display: flex;
+            gap: 0.4rem;
+            align-items: center;
+        }
+
+        .badge-count {
+            padding: 0.1rem 0.4rem;
+            border-radius: 999px;
+            background: #111827;
+            color: #f9fafb;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .status-chip {
+            padding: 0.18rem 0.45rem;
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            font-size: 0.7rem;
+            color: #4b5563;
+            background: #f9fafb;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .status-chip i {
+            font-size: 0.7rem;
+            color: #9ca3af;
+        }
+
+        .label-light {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.4rem;
+            font-size: 0.78rem;
+            color: #6b7280;
+        }
+
+        .meta-row span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .meta-row span i {
+            font-size: 0.7rem;
+            color: #9ca3af;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .mini-stat {
+            padding: 0.55rem 0.6rem;
+            border-radius: 0.85rem;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            font-size: 0.78rem;
+            color: #4b5563;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .mini-stat span:first-child {
+            font-size: 0.7rem;
+            color: #6b7280;
+        }
+
+        .mini-stat span:last-child {
+            font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            color: #111827;
+            font-size: 0.85rem;
+        }
+
+        .label-muted {
+            font-size: 0.78rem;
+            color: #9ca3af;
+        }
+
+        .pill-status {
+            padding: 0.2rem 0.45rem;
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            font-size: 0.7rem;
+            color: #4b5563;
+            background: #f9fafb;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .pill-status span {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: #22c55e;
+        }
+
+        .pill-status.pending span {
+            background: #f97316;
+        }
+
+        .pill-status.paused span {
+            background: #e5e7eb;
+        }
+
+        .pill-status i {
+            font-size: 0.7rem;
+            color: #9ca3af;
+        }
+
+        .summary-card {
+            padding: 0.75rem 0.8rem;
+            border-radius: 0.85rem;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            font-size: 0.78rem;
+            color: #4b5563;
+            margin-top: 0.5rem;
+        }
+
+        .summary-card strong {
+            color: #111827;
+        }
+
+        .summary-card span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .summary-card span i {
+            font-size: 0.75rem;
+            color: #22c55e;
+        }
+
+        .kpi-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.45rem;
+            font-size: 0.78rem;
+            color: #6b7280;
+        }
+
+        .kpi-row span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .kpi-row span i {
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+
+        .section-caption {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            margin-top: 0.35rem;
+        }
+
+        .pill-slim {
+            padding: 0.15rem 0.4rem;
+            border-radius: 999px;
+            background: #f9fafb;
+            border: 1px dashed #e5e7eb;
+            font-size: 0.7rem;
+            color: #6b7280;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .pill-slim i {
+            font-size: 0.7rem;
+            color: #9ca3af;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #9ca3af;
+        }
+
+        .section-chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-top: 0.4rem;
+        }
+
+        .section-chip {
+            padding: 0.18rem 0.45rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            font-size: 0.7rem;
+            color: #4b5563;
+            background: #f9fafb;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .section-chip i {
+            font-size: 0.7rem;
+            color: #9ca3af;
+        }
+
+        @media (max-width: 1024px) {
+
+            .layout-split,
+            .section-grid,
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                display: flex;
+                flex-direction: row;
+                overflow-x: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+                border-radius: 0;
+            }
+
+            .user-profile {
+                display: none;
+            }
+
+            .nav-menu {
+                display: flex;
+                padding: 0.5rem;
+            }
+
+            .nav-item {
+                padding: 0.75rem 1rem;
+                border-left: none;
+                border-radius: 999px;
+                margin-right: 0.35rem;
+                white-space: nowrap;
+            }
+
+            .dashboard-content {
+                height: auto;
+                padding: 1rem;
+            }
+
+            .dashboard-header {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="user-profile">
+            <div class="user-avatar-large" id="userAvatar">U</div>
+            <div class="user-name" id="userName">{{ current_user.name }}</div>
+            <div class="user-email" id="userEmail">user@example.com</div>
+            <button class="edit-profile-btn" onclick="showSection('profile')">
+                <i class="fa-solid fa-user-pen"></i>
+                Edit Profile
+            </button>
+        </div>
+        <nav class="nav-menu">
+            <button class="nav-item active" onclick="showSection('overview')" id="tab-overview">
+                <i class="fa-solid fa-gauge-high"></i>
+                Overview
+                <span class="badge-outline">Live</span>
+            </button>
+            <button class="nav-item" onclick="showSection('referrals')" id="tab-referrals">
+                <i class="fa-solid fa-share-nodes"></i>
+                My Referrals
+                <span class="badge">12</span>
+            </button>
+            <button class="nav-item" onclick="showSection('rewards')" id="tab-rewards">
+                <i class="fa-solid fa-trophy"></i>
+                Rewards & Earnings
+                <span class="rewards-badge">New</span>
+            </button>
+            <button class="nav-item" onclick="showSection('analytics')" id="tab-analytics">
+                <i class="fa-solid fa-chart-line"></i>
+                Analytics
+            </button>
+            <button class="nav-item" onclick="showSection('profile')" id="tab-profile">
+                <i class="fa-solid fa-user"></i>
+                Profile & Settings
+            </button>
+        </nav>
+        <button class="logout-btn" onclick="window.location.href='/logout'">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Logout
+        </button>
+    </aside>
+
+    <main class="main-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title" id="sectionTitle">Connector Overview</div>
+            <div class="dashboard-subtitle" id="sectionSubtitle">Track your referrals, rewards, and impact across the
+                ecosystem</div>
+        </div>
+
+        <div class="dashboard-content">
+            <!-- OVERVIEW SECTION -->
+            <section id="overview" class="section active">
+                <div class="section-grid">
+                    <div>
+                        <div class="section-header">
+                            <div class="section-header-main">
+                                <div class="section-title">
+                                    <i class="fa-solid fa-gauge-high"></i>
+                                    Performance Overview
+                                </div>
+                                <div class="section-subtitle">
+                                    A snapshot of your referrals, earnings, and connector impact across InnoBridge.
+                                </div>
+                            </div>
+                            <div class="section-actions">
+                                <div class="section-tabs">
+                                    <button class="section-tab active">
+                                        <i class="fa-solid fa-calendar-week"></i>
+                                        Last 30 days
+                                    </button>
+                                    <button class="section-tab">
+                                        <i class="fa-regular fa-calendar"></i>
+                                        All time
+                                    </button>
+                                </div>
+                                <button class="btn-icon">
+                                    <i class="fa-solid fa-arrow-rotate-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="cards-grid">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div>
+                                        <div class="card-title">Total Referrals</div>
+                                        <div class="card-value" id="totalReferrals">28</div>
+                                    </div>
+                                    <div class="card-icon gold">
+                                        <i class="fa-solid fa-share-nodes"></i>
+                                    </div>
+                                </div>
+                                <div class="trend-indicator trend-up">
+                                    <i class="fa-solid fa-arrow-up-right"></i>
+                                    <span>+18% vs last month</span>
+                                </div>
+                                <div class="chip-row">
+                                    <span class="chip">
+                                        <i class="fa-solid fa-users"></i>
+                                        16 unique startups referred
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <div>
+                                        <div class="card-title">Confirmed Earnings</div>
+                                        <div class="card-value" id="totalEarnings">₹85,400</div>
+                                    </div>
+                                    <div class="card-icon green">
+                                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                                    </div>
+                                </div>
+                                <div class="trend-indicator trend-up">
+                                    <i class="fa-solid fa-arrow-up-right"></i>
+                                    <span>+₹12,800 this month</span>
+                                </div>
+                                <div class="chip-row">
+                                    <span class="chip">
+                                        <i class="fa-solid fa-circle-check"></i>
+                                        9 completed program rewards
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <div>
+                                        <div class="card-title">FLC Points</div>
+                                        <div class="card-value" id="totalPoints">3,420</div>
+                                    </div>
+                                    <div class="card-icon blue">
+                                        <i class="fa-solid fa-star-half-stroke"></i>
+                                    </div>
+                                </div>
+                                <div class="trend-indicator trend-neutral">
+                                    <i class="fa-solid fa-gauge-simple"></i>
+                                    <span>Level 3 • Connector</span>
+                                </div>
+                                <div class="chip-row">
+                                    <span class="chip">
+                                        <i class="fa-solid fa-arrow-up"></i>
+                                        580 points to next level
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <div>
+                                        <div class="card-title">Conversion Rate</div>
+                                        <div class="card-value">32%</div>
+                                    </div>
+                                    <div class="card-icon purple">
+                                        <i class="fa-solid fa-chart-simple"></i>
+                                    </div>
+                                </div>
+                                <div class="trend-indicator trend-up">
+                                    <i class="fa-solid fa-arrow-up-right"></i>
+                                    <span>+6% vs previous period</span>
+                                </div>
+                                <div class="chip-row">
+                                    <span class="chip">
+                                        <i class="fa-solid fa-circle-dot"></i>
+                                        9 / 28 referrals converted
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layout-split">
+                            <div class="table-container">
+                                <div class="table-header">
+                                    <div>
+                                        <div class="table-title">
+                                            <i class="fa-solid fa-rocket"></i>
+                                            Recent Referral Activity
+                                        </div>
+                                        <div class="table-subtitle">
+                                            Latest startups you've referred and their progress across programs.
+                                        </div>
+                                    </div>
+                                    <div class="table-filters">
+                                        <div class="filter-pill active">
+                                            <span class="filter-dot"></span>
+                                            Active
+                                        </div>
+                                        <div class="filter-pill">
+                                            Completed
+                                        </div>
+                                    </div>
+                                </div>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Startup</th>
+                                            <th>Program</th>
+                                            <th>Stage</th>
+                                            <th>Potential Reward</th>
+                                            <th>Last Update</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentReferralsBody">
+                                        <tr>
+                                            <td>
+                                                <div>NovaGrid Analytics</div>
+                                                <div class="label-muted">AI for energy optimization</div>
+                                            </td>
+                                            <td>
+                                                <span class="pill">
+                                                    <span class="pill-dot.blue"></span>
+                                                    Smart City Innovation Cohort
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="status-pill in-progress">In review</span>
+                                            </td>
+                                            <td>₹12,000</td>
+                                            <td>2 days ago</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div>FarmLink Labs</div>
+                                                <div class="label-muted">Agri supply-chain SaaS</div>
+                                            </td>
+                                            <td>
+                                                <span class="pill">
+                                                    <span class="pill-dot.green"></span>
+                                                    Retail Innovation Sprint
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="status-pill.completed">Completed</span>
+                                            </td>
+                                            <td>₹8,500</td>
+                                            <td>5 days ago</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div>MedSync Health</div>
+                                                <div class="label-muted">Remote patient monitoring</div>
+                                            </td>
+                                            <td>
+                                                <span class="pill">
+                                                    <span class="pill-dot.amber"></span>
+                                                    Healthcare Pilot Program
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="status-pill.pending">Shortlisted</span>
+                                            </td>
+                                            <td>₹15,000</td>
+                                            <td>1 week ago</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div>RouteX Logistics</div>
+                                                <div class="label-muted">Urban last-mile optimization</div>
+                                            </td>
+                                            <td>
+                                                <span class="pill">
+                                                    <span class="pill-dot.slate"></span>
+                                                    Mobility & Logistics Challenge
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="status-pill.in-progress">Pitch scheduled</span>
+                                            </td>
+                                            <td>₹10,000</td>
+                                            <td>1 week ago</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="table-footer">
+                                    <div>
+                                        Showing <strong>4</strong> of <strong>12</strong> active referrals
+                                    </div>
+                                    <div class="pagination">
+                                        <button class="pagination-btn">&lt;</button>
+                                        <button class="pagination-btn active">1</button>
+                                        <button class="pagination-btn">2</button>
+                                        <button class="pagination-btn">&gt;</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="level-card">
+                                <div class="level-orbit">
+                                    <div class="level-orbit-ring"></div>
+                                    <div class="level-orbit-ring"></div>
+                                    <div class="level-orbit-ring"></div>
+                                    <div class="level-orbit-dot dot-1"></div>
+                                    <div class="level-orbit-dot dot-2"></div>
+                                    <div class="level-orbit-dot dot-3"></div>
+                                </div>
+                                <div class="level-header">
+                                    <div>
+                                        <div class="level-main-title">
+                                            Level Progress
+                                            <span class="level-number-badge">
+                                                <span>LVL 3</span>
+                                                <i class="fa-solid fa-bolt"></i>
+                                            </span>
+                                        </div>
+                                        <div class="level-rating">
+                                            <i class="fa-solid fa-star"></i>
+                                            Trusted Connector • Top 18%
+                                        </div>
+                                        <div class="level-meta">
+                                            <span><i class="fa-solid fa-arrow-trend-up"></i> Growth streak: 5
+                                                weeks</span>
+                                            <span><i class="fa-regular fa-clock"></i> Joined 7 months ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="xp-badge">
+                                        XP
+                                        <span>3,420</span>
+                                        <i class="fa-solid fa-plus"></i>
+                                    </div>
+                                </div>
+                                <div class="level-progress">
+                                    <div class="level-progress-labels">
+                                        <div class="curr-level">
+                                            Current: <span>LVL 3</span>
+                                        </div>
+                                        <div class="next-level">
+                                            Next: LVL 4
+                                            <i class="fa-solid fa-location-arrow"></i>
+                                        </div>
+                                    </div>
+                                    <div class="level-progress-bar">
+                                        <div class="level-progress-fill"></div>
+                                    </div>
+                                    <div class="level-progress-caption">
+                                        <span>
+                                            <i class="fa-solid fa-circle-up"></i>
+                                            580 more XP to reach the next level
+                                        </span>
+                                        <span>
+                                            <i class="fa-solid fa-ranking-star"></i>
+                                            Unlock 12% higher reward multiplier
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="level-milestones">
+                                    <div class="milestone-item">
+                                        <div class="milestone-label">
+                                            <i class="fa-solid fa-diagram-project"></i>
+                                            Referral Milestones
+                                        </div>
+                                        <div class="milestone-value">
+                                            <span>9</span>
+                                            <span>completed programs</span>
+                                        </div>
+                                        <div class="milestone-tag">
+                                            <i class="fa-solid fa-circle-check"></i>
+                                            1 more to reach LVL 4
+                                        </div>
+                                    </div>
+                                    <div class="milestone-item">
+                                        <div class="milestone-label">
+                                            <i class="fa-solid fa-users-line"></i>
+                                            Network Activity
+                                        </div>
+                                        <div class="milestone-value">
+                                            <span>16</span>
+                                            active startups
+                                        </div>
+                                        <div class="milestone-tag">
+                                            <i class="fa-solid fa-bullseye"></i>
+                                            Focus: 3–4 high-fit matches / month
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="level-footer">
+                                    <span>
+                                        <i class="fa-solid fa-book-open-reader"></i>
+                                        Check <strong>Level Guide</strong> to maximize your rewards.
+                                    </span>
+                                    <span class="cta-link">
+                                        View levels
+                                        <i class="fa-solid fa-arrow-right-long"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="insights-card">
+                        <div class="insights-header">
+                            <div class="insights-title">
+                                <i class="fa-solid fa-lightbulb"></i>
+                                Impact Insights
+                            </div>
+                            <div class="insights-badge">
+                                <i class="fa-solid fa-sparkles"></i>
+                                AI-powered suggestions
+                            </div>
+                        </div>
+                        <div class="insights-list">
+                            <div class="insight-item">
+                                <div class="insight-bullet">
+                                    <i class="fa-solid fa-arrow-trend-up"></i>
+                                </div>
+                                <div class="insight-text">
+                                    <span class="insight-highlight">Fintech & healthtech programs</span> have the
+                                    highest conversion from your network in the past 90 days.
+                                </div>
+                            </div>
+                            <div class="insight-item">
+                                <div class="insight-bullet">
+                                    <i class="fa-solid fa-clock-rotate-left"></i>
+                                </div>
+                                <div class="insight-text">
+                                    Startups you refer within <span class="insight-highlight">72 hours of program
+                                        launch</span> are 2.3x more likely to be shortlisted.
+                                </div>
+                            </div>
+                            <div class="insight-item">
+                                <div class="insight-bullet">
+                                    <i class="fa-solid fa-bullseye"></i>
+                                </div>
+                                <div class="insight-text">
+                                    Focusing on <span class="insight-highlight">3–5 highly relevant startups per
+                                        program</span> yields better results than broad sharing.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="subtle-divider"></div>
+                        <div class="insights-footer">
+                            <div class="insights-labels">
+                                <span class="label-chip">
+                                    <i class="fa-solid fa-hashtag"></i>
+                                    DeepTech
+                                </span>
+                                <span class="label-chip">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    Multi-region
+                                </span>
+                                <span class="label-chip">
+                                    <i class="fa-solid fa-leaf"></i>
+                                    Impact-driven
+                                </span>
+                            </div>
+                            <div class="link-inline">
+                                View recommended programs
+                                <i class="fa-solid fa-arrow-right-long"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- REFERRALS SECTION -->
+            <section id="referrals" class="section">
+                <div class="section-header">
+                    <div class="section-header-main">
+                        <div class="section-title">
+                            <i class="fa-solid fa-share-nodes"></i>
+                            My Referrals
+                        </div>
+                        <div class="section-subtitle">
+                            Track every startup you've referred, across programs, statuses, and reward potential.
+                        </div>
+                    </div>
+                    <div class="section-actions">
+                        <div class="search-input">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" placeholder="Search by startup or program">
+                        </div>
+                        <button class="btn">
+                            <i class="fa-solid fa-filter"></i>
+                            Filters
+                        </button>
+                        <button class="btn-primary">
+                            <i class="fa-solid fa-plus"></i>
+                            Add referral
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="referral-header">
+                        <div class="referral-title">
+                            Referral pipeline
+                            <span>(sorted by latest activity)</span>
+                        </div>
+                        <div class="referral-filters">
+                            <span class="badge-count">28 total</span>
+                            <span class="status-chip">
+                                <i class="fa-solid fa-circle-dot"></i>
+                                Active: 14
+                            </span>
+                            <span class="status-chip">
+                                <i class="fa-solid fa-circle-check"></i>
+                                Completed: 9
+                            </span>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Startup</th>
+                                <th>Program</th>
+                                <th>Status</th>
+                                <th>Potential Reward</th>
+                                <th>Stage</th>
+                                <th>Last Activity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div>NovaGrid Analytics</div>
+                                    <div class="meta-row">
+                                        <span><i class="fa-solid fa-layer-group"></i> Climate & Energy</span>
+                                        <span><i class="fa-solid fa-location-dot"></i> Bengaluru</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="pill">
+                                        <span class="pill-dot.blue"></span>
+                                        Smart City Innovation Cohort
+                                    </span>
+                                    <div class="label-muted">Cohort 2025 • Batch 2</div>
+                                </td>
+                                <td>
+                                    <span class="status-pill in-progress">In review</span>
+                                </td>
+                                <td>₹12,000</td>
+                                <td>
+                                    <span class="pill-compact">
+                                        <i class="fa-solid fa-clipboard-list"></i>
+                                        Assessment
+                                    </span>
+                                </td>
+                                <td>2 days ago</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>FarmLink Labs</div>
+                                    <div class="meta-row">
+                                        <span><i class="fa-solid fa-wheat-awn"></i> AgriTech</span>
+                                        <span><i class="fa-solid fa-location-dot"></i> Coimbatore</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="pill">
+                                        <span class="pill-dot.green"></span>
+                                        Retail Innovation Sprint
+                                    </span>
+                                    <div class="label-muted">Pilot in progress</div>
+                                </td>
+                                <td>
+                                    <span class="status-pill completed">Completed</span>
+                                </td>
+                                <td>₹8,500</td>
+                                <td>
+                                    <span class="pill-compact">
+                                        <i class="fa-solid fa-flag-checkered"></i>
+                                        Program completed
+                                    </span>
+                                </td>
+                                <td>5 days ago</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>MedSync Health</div>
+                                    <div class="meta-row">
+                                        <span><i class="fa-solid fa-heart-pulse"></i> HealthTech</span>
+                                        <span><i class="fa-solid fa-location-dot"></i> Chennai</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="pill">
+                                        <span class="pill-dot.amber"></span>
+                                        Healthcare Pilot Program
+                                    </span>
+                                    <div class="label-muted">Interview round</div>
+                                </td>
+                                <td>
+                                    <span class="status-pill.pending">Shortlisted</span>
+                                </td>
+                                <td>₹15,000</td>
+                                <td>
+                                    <span class="pill-compact">
+                                        <i class="fa-solid fa-users-gear"></i>
+                                        Founder interview
+                                    </span>
+                                </td>
+                                <td>1 week ago</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>RouteX Logistics</div>
+                                    <div class="meta-row">
+                                        <span><i class="fa-solid fa-truck-fast"></i> Logistics</span>
+                                        <span><i class="fa-solid fa-location-dot"></i> Mumbai</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="pill">
+                                        <span class="pill-dot.slate"></span>
+                                        Mobility & Logistics Challenge
+                                    </span>
+                                    <div class="label-muted">PoC scoping</div>
+                                </td>
+                                <td>
+                                    <span class="status-pill in-progress">Pitch scheduled</span>
+                                </td>
+                                <td>₹10,000</td>
+                                <td>
+                                    <span class="pill-compact">
+                                        <i class="fa-solid fa-handshake-angle"></i>
+                                        Corporate pitch
+                                    </span>
+                                </td>
+                                <td>1 week ago</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>GreenLoop Circular</div>
+                                    <div class="meta-row">
+                                        <span><i class="fa-solid fa-recycle"></i> Climate & Circularity</span>
+                                        <span><i class="fa-solid fa-location-dot"></i> Hyderabad</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="pill">
+                                        <span class="pill-dot.green"></span>
+                                        Sustainability Innovation Grants
+                                    </span>
+                                    <div class="label-muted">Application submitted</div>
+                                </td>
+                                <td>
+                                    <span class="status-pill pending">Pending</span>
+                                </td>
+                                <td>₹7,000</td>
+                                <td>
+                                    <span class="pill-compact">
+                                        <i class="fa-solid fa-file-pen"></i>
+                                        Application review
+                                    </span>
+                                </td>
+                                <td>2 weeks ago</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="table-footer">
+                        <div>
+                            Showing <strong>5</strong> of <strong>28</strong> referrals
+                        </div>
+                        <div class="pagination">
+                            <button class="pagination-btn">&lt;</button>
+                            <button class="pagination-btn active">1</button>
+                            <button class="pagination-btn">2</button>
+                            <button class="pagination-btn">3</button>
+                            <button class="pagination-btn">&gt;</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-footer">
+                    <span>
+                        <i class="fa-solid fa-circle-info"></i>
+                        Tip: You can use tags and filters to group referrals by cohort, sector, or partner.
+                    </span>
+                    <a class="link">
+                        View referral guide
+                        <i class="fa-solid fa-arrow-right-long"></i>
+                    </a>
+                </div>
+            </section>
+
+            <!-- REWARDS SECTION -->
+            <section id="rewards" class="section">
+                <div class="section-grid">
+                    <div>
+                        <div class="section-header">
+                            <div class="section-header-main">
+                                <div class="section-title">
+                                    <i class="fa-solid fa-trophy"></i>
+                                    Rewards & Earnings
+                                </div>
+                                <div class="section-subtitle">
+                                    Monitor your payouts, pending rewards, and FLC points earned from successful
+                                    referrals.
+                                </div>
+                            </div>
+                            <div class="section-actions">
+                                <button class="btn">
+                                    <i class="fa-solid fa-download"></i>
+                                    Export
+                                </button>
+                                <button class="btn-primary">
+                                    <i class="fa-solid fa-wallet"></i>
+                                    Request payout
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="cards-grid">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div>
+                                        <div class="card-title">Available Balance</div>
+                                        <div class="card-value">₹32,600</div>
+                                    </div>
+                                    <div class="card-icon green">
+                                        <i class="fa-solid fa-wallet"></i>
+                                    </div>
+                                </div>
+                                <div class="trend-indicator trend-up">
+                                    <i class="fa-solid fa-arrow-up-right"></i>
+                                    <span>Ready for payout</span>
+                                </div>
+                                <div class="metrics-summary">
+                                    <div class="metric-row">
+                                        <div class="metric-label">
+                                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                                            Last payout
+                                        </div>
+                                        <div class="metric-value">₹15,000</div>
+                                    </div>
+                                    <div class="metric-row">
+                                        <div class="metric-label">
+                                            <i class="fa-solid fa-calendar-check"></i>
+                                            Last payout date
+                                        </div>
+                                        <div class="metric-value">12 Feb 2025</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <div>
+                                        <div class="card-title">Pending Rewards</div>
+                                        <div class="card-value">₹18,800</div>
+                                    </div>
+                                    <div class="card-icon.gold">
+                                        <i class="fa-solid fa-clock-rotate-left"></i>
+                                    </div>
+                                </div>
+                                <div class="trend-indicator trend-neutral">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    <span>Waiting for program completion</span>
+                                </div>
+                                <div class="metrics-summary">
+                                    <div class="metric-row">
+                                        <div class="metric-label">
+                                            <i class="fa-solid fa-diagram-project"></i>
+                                            Programs in progress
+                                        </div>
+                                        <div class="metric-value">6</div>
+                                    </div>
+                                    <div class="metric-row">
+                                        <div class="metric-label">
+                                            <i class="fa-solid fa-hourglass-half"></i>
+                                            Avg. time to payout
+                                        </div>
+                                        <div class="metric-value">42 days</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <div>
+                                        <div class="card-title">All-time Earnings</div>
+                                        <div class="card-value">₹1,24,200</div>
+                                    </div>
+                                    <div class="card-icon.blue">
+                                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                                    </div>
+                                </div>
+                                <div class="trend-indicator trend-up">
+                                    <i class="fa-solid fa-arrow-up-right"></i>
+                                    <span>Top 10% of connectors</span>
+                                </div>
+                                <div class="metrics-summary">
+                                    <div class="metric-row">
+                                        <div class="metric-label">
+                                            <i class="fa-solid fa-gift"></i>
+                                            Completed rewards
+                                        </div>
+                                        <div class="metric-value">31</div>
+                                    </div>
+                                    <div class="metric-row">
+                                        <div class="metric-label">
+                                            <i class="fa-solid fa-calendar"></i>
+                                            Active since
+                                        </div>
+                                        <div class="metric-value">Aug 2023</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <div>
+                                        <div class="card-title">Reward Mix</div>
+                                        <div class="card-value">62% cash</div>
+                                    </div>
+                                    <div class="card-icon.purple">
+                                        <i class="fa-solid fa-gift"></i>
+                                    </div>
+                                </div>
+                                <div class="segmented-progress">
+                                    <div class="segment fill-full">
+                                        <div class="segment-fill"></div>
+                                    </div>
+                                    <div class="segment fill-medium">
+                                        <div class="segment-fill"></div>
+                                    </div>
+                                    <div class="segment fill-low">
+                                        <div class="segment-fill"></div>
+                                    </div>
+                                </div>
+                                <div class="segmented-labels">
+                                    <span>Cash</span>
+                                    <span>Points</span>
+                                    <span>Perks</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <div class="table-header">
+                                <div>
+                                    <div class="table-title">
+                                        <i class="fa-solid fa-receipt"></i>
+                                        Reward & payout history
+                                    </div>
+                                    <div class="table-subtitle">
+                                        All completed rewards, bonus payouts, and FLC point adjustments.
+                                    </div>
+                                </div>
+                                <div class="table-filters">
+                                    <span class="filter-pill active">
+                                        All
+                                    </span>
+                                    <span class="filter-pill">
+                                        Cash
+                                    </span>
+                                    <span class="filter-pill">
+                                        Points
+                                    </span>
+                                    <span class="filter-pill">
+                                        Bonuses
+                                    </span>
+                                </div>
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                        <th>Amount</th>
+                                        <th>Balance</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>14 Mar 2025</td>
+                                        <td>
+                                            <span class="badge-soft.green">
+                                                <i class="fa-solid fa-indian-rupee-sign"></i>
+                                                Reward
+                                            </span>
+                                        </td>
+                                        <td>FarmLink Labs • Retail Innovation Sprint completion</td>
+                                        <td>+ ₹8,500</td>
+                                        <td>₹32,600</td>
+                                        <td>
+                                            <span class="status-pill.completed">Settled</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>05 Mar 2025</td>
+                                        <td>
+                                            <span class="badge-soft.blue">
+                                                <i class="fa-solid fa-coins"></i>
+                                                FLC Points
+                                            </span>
+                                        </td>
+                                        <td>Monthly activity bonus • 400 FLC points</td>
+                                        <td>+ 400 pts</td>
+                                        <td>3,420 pts</td>
+                                        <td>
+                                            <span class="status-pill.completed">Posted</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>12 Feb 2025</td>
+                                        <td>
+                                            <span class="badge-soft.gold">
+                                                <i class="fa-solid fa-wallet"></i>
+                                                Payout
+                                            </span>
+                                        </td>
+                                        <td>Payout to bank account ending • 2487</td>
+                                        <td>- ₹15,000</td>
+                                        <td>₹24,100</td>
+                                        <td>
+                                            <span class="status-pill.completed">Completed</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>28 Jan 2025</td>
+                                        <td>
+                                            <span class="badge-soft.green">
+                                                <i class="fa-solid fa-indian-rupee-sign"></i>
+                                                Reward
+                                            </span>
+                                        </td>
+                                        <td>NovaGrid Analytics • Smart City Innovation Cohort selection</td>
+                                        <td>+ ₹12,000</td>
+                                        <td>₹39,100</td>
+                                        <td>
+                                            <span class="status-pill.completed">Settled</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="table-footer">
+                                <div>
+                                    Showing latest <strong>4</strong> of <strong>40</strong> entries
+                                </div>
+                                <div class="pagination">
+                                    <button class="pagination-btn">&lt;</button>
+                                    <button class="pagination-btn active">1</button>
+                                    <button class="pagination-btn">2</button>
+                                    <button class="pagination-btn">&gt;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="secondary-card">
+                        <div class="section-label">Reward program</div>
+                        <div class="section-chip-row">
+                            <div class="section-chip">
+                                <i class="fa-solid fa-bolt"></i>
+                                Standard connector tier
+                            </div>
+                            <div class="section-chip">
+                                <i class="fa-solid fa-percent"></i>
+                                10–18% reward share
+                            </div>
+                        </div>
+
+                        <div class="section-divider"></div>
+
+                        <div class="metrics-summary">
+                            <div class="metric-row">
+                                <div class="metric-label">
+                                    <i class="fa-solid fa-indian-rupee-sign"></i>
+                                    Avg. reward per referral
+                                </div>
+                                <div class="metric-value">₹4,000</div>
+                            </div>
+                            <div class="metric-row">
+                                <div class="metric-label">
+                                    <i class="fa-solid fa-chart-line"></i>
+                                    Best performing sector
+                                </div>
+                                <div class="metric-value">Fintech</div>
+                            </div>
+                            <div class="metric-row">
+                                <div class="metric-label">
+                                    <i class="fa-solid fa-building"></i>
+                                    Active partners
+                                </div>
+                                <div class="metric-value">7</div>
+                            </div>
+                            <div class="metric-row">
+                                <div class="metric-label">
+                                    <i class="fa-solid fa-ranking-star"></i>
+                                    Network percentile
+                                </div>
+                                <div class="metric-value">Top 18%</div>
+                            </div>
+                        </div>
+
+                        <div class="subtle-divider"></div>
+
+                        <div class="referral-source-list">
+                            <div class="referral-source-item">
+                                <div class="referral-source-label">
+                                    <i class="fa-solid fa-users-line"></i>
+                                    Community & cohorts
+                                </div>
+                                <div class="referral-source-metrics">
+                                    <span class="highlight">16</span>
+                                    <span>referrals</span>
+                                </div>
+                            </div>
+                            <div class="referral-source-item">
+                                <div class="referral-source-label">
+                                    <i class="fa-solid fa-handshake-angle"></i>
+                                    1:1 introductions
+                                </div>
+                                <div class="referral-source-metrics">
+                                    <span class="highlight">9</span>
+                                    <span>referrals</span>
+                                </div>
+                            </div>
+                            <div class="referral-source-item">
+                                <div class="referral-source-label">
+                                    <i class="fa-solid fa-link"></i>
+                                    Shared referral links
+                                </div>
+                                <div class="referral-source-metrics">
+                                    <span class="highlight">3</span>
+                                    <span>referrals</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section-note">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span>
+                                Increase your rewards by focusing on programs with higher multipliers and matching
+                                startups with strong fit scores.
+                            </span>
+                        </div>
+
+                        <div class="highlight-box">
+                            <span>
+                                <i class="fa-solid fa-arrow-up-right-dots"></i>
+                                Unlock <strong>Pro Connector</strong> tier to earn higher percentages and early access
+                                to new programs.
+                            </span>
+                            <span class="link-inline">
+                                View tier benefits
+                                <i class="fa-solid fa-arrow-right-long"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ANALYTICS SECTION -->
+            <section id="analytics" class="section">
+                <div class="section-header">
+                    <div class="section-header-main">
+                        <div class="section-title">
+                            <i class="fa-solid fa-chart-line"></i>
+                            Connector Analytics
+                        </div>
+                        <div class="section-subtitle">
+                            Understand how your referrals perform over time and where your strongest impact comes from.
+                        </div>
+                    </div>
+                    <div class="section-actions">
+                        <div class="toggle-group">
+                            <button class="toggle-btn active">30D</button>
+                            <button class="toggle-btn">90D</button>
+                            <button class="toggle-btn">All</button>
+                        </div>
+                        <button class="btn">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            Open full analytics
+                        </button>
+                    </div>
+                </div>
+
+                <div class="two-column">
+                    <div class="card">
+                        <div class="section-label">Referral performance</div>
+                        <div class="tab-layout">
+                            <button class="active">By status</button>
+                            <button>By sector</button>
+                            <button>By program</button>
+                        </div>
+
+                        <div class="referrals-summary">
+                            <div class="summary-item">
+                                <span>Submitted</span>
+                                <strong>28</strong>
+                            </div>
+                            <div class="summary-item">
+                                <span>Shortlisted</span>
+                                <strong>14</strong>
+                            </div>
+                            <div class="summary-item">
+                                <span>Completed</span>
+                                <strong>9</strong>
+                            </div>
+                        </div>
+
+                        <div class="stats-row">
+                            <span>
+                                <i class="fa-solid fa-circle-up"></i>
+                                Conversion: 32%
+                            </span>
+                            <span>
+                                <i class="fa-solid fa-arrows-left-right"></i>
+                                Avg. programs per startup: 1.3
+                            </span>
+                            <span>
+                                <i class="fa-solid fa-stopwatch"></i>
+                                Avg. time to decision: 21 days
+                            </span>
+                        </div>
+
+                        <div class="segment">
+                            <div class="segment-fill"></div>
+                        </div>
+
+                        <div class="metric-chips">
+                            <span class="metric-chip">
+                                <span class="highlight-dot"></span>
+                                HealthTech: 48% conversion
+                            </span>
+                            <span class="metric-chip">
+                                <span class="highlight-dot"></span>
+                                FinTech: 36% conversion
+                            </span>
+                            <span class="metric-chip">
+                                <i class="fa-solid fa-earth-asia"></i>
+                                Multi-region referrals: 52%
+                            </span>
+                        </div>
+
+                        <div class="section-caption">
+                            Based on completed programs and confirmed selections across the last 90 days.
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="section-label">Ecosystem signals</div>
+                        <div class="section-note">
+                            <i class="fa-solid fa-signal"></i>
+                            Trends from startups, programs, and connectors similar to your activity.
+                        </div>
+
+                        <div class="metric-chips">
+                            <span class="badge-mono">
+                                <i class="fa-solid fa-fire"></i>
+                                <span>Emerging focus: Climate & sustainability programs</span>
+                            </span>
+                        </div>
+
+                        <div class="kpi-row">
+                            <span>
+                                <i class="fa-solid fa-calendar-week"></i>
+                                Best day to share: Tue–Thu
+                            </span>
+                            <span>
+                                <i class="fa-solid fa-clock"></i>
+                                Best time: 10am–1pm IST
+                            </span>
+                        </div>
+
+                        <div class="section-divider"></div>
+
+                        <div class="referral-source-list">
+                            <div class="referral-source-item">
+                                <div class="referral-source-label">
+                                    <i class="fa-solid fa-square-share-nodes"></i>
+                                    Top-performing channel
+                                </div>
+                                <div class="referral-source-metrics">
+                                    <span class="highlight">58%</span>
+                                    <span>via curated cohorts</span>
+                                </div>
+                            </div>
+                            <div class="referral-source-item">
+                                <div class="referral-source-label">
+                                    <i class="fa-solid fa-people-arrows"></i>
+                                    High-intent startups
+                                </div>
+                                <div class="referral-source-metrics">
+                                    <span class="highlight">3.1x</span>
+                                    <span>better outcome from 1:1 intros</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section-footer">
+                            <span>
+                                <i class="fa-solid fa-circle-info"></i>
+                                You can improve outcomes by aligning referrals to sector-specific programs and program
+                                maturity.
+                            </span>
+                            <a class="link">
+                                View connector playbook
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PROFILE SECTION -->
+            <section id="profile" class="section">
+                <div class="section-header">
+                    <div class="section-header-main">
+                        <div class="section-title">
+                            <i class="fa-solid fa-user"></i>
+                            Profile & Settings
+                        </div>
+                        <div class="section-subtitle">
+                            Manage your account information, notification preferences, and payout details.
+                        </div>
+                    </div>
+                    <div class="section-actions">
+                        <button class="btn">
+                            <i class="fa-solid fa-rotate"></i>
+                            Reset changes
+                        </button>
+                        <button class="btn-primary">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            Save changes
+                        </button>
+                    </div>
+                </div>
+
+                <div class="two-column">
+                    <div class="secondary-card">
+                        <div class="profile-header">
+                            <div class="profile-main">
+                                <div class="profile-avatar" id="profileAvatar">U</div>
+                                <div class="profile-text">
+                                    <div class="profile-name" id="profileName">User Name</div>
+                                    <div class="profile-meta">
+                                        <span>
+                                            <i class="fa-solid fa-badge-check"></i>
+                                            Verified connector
+                                        </span>
+                                        <span class="profile-tag">Connector • India</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="profile-actions">
+                                <button class="quick-action-btn">
+                                    <i class="fa-solid fa-camera"></i>
+                                    Update photo
+                                </button>
+                                <span class="pill-soft-gold">
+                                    <i class="fa-solid fa-ranking-star"></i>
+                                    Level 3
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="profile-details">
+                            <div class="profile-detail-item">
+                                <span class="profile-detail-label">Primary email</span>
+                                <span class="profile-detail-value">user@example.com</span>
+                            </div>
+                            <div class="profile-detail-item">
+                                <span class="profile-detail-label">Country</span>
+                                <span class="profile-detail-value">India</span>
+                            </div>
+                            <div class="profile-detail-item">
+                                <span class="profile-detail-label">Role</span>
+                                <span class="profile-detail-value">Ecosystem connector</span>
+                            </div>
+                            <div class="profile-detail-item">
+                                <span class="profile-detail-label">Joined</span>
+                                <span class="profile-detail-value">Aug 2023</span>
+                            </div>
+                        </div>
+
+                        <div class="quick-actions">
+                            <button class="quick-action-btn">
+                                <i class="fa-solid fa-pen"></i>
+                                Edit basic info
+                            </button>
+                            <button class="quick-action-btn">
+                                <i class="fa-solid fa-location-dot"></i>
+                                Update region
+                            </button>
+                            <button class="quick-action-btn">
+                                <i class="fa-solid fa-building"></i>
+                                Add organization
+                            </button>
+                        </div>
+
+                        <div class="subtle-divider"></div>
+
+                        <div class="settings-list">
+                            <div class="settings-row">
+                                <div class="settings-label">
+                                    <div class="settings-title">Public profile visibility</div>
+                                    <div class="settings-desc">Control whether startups and partners can discover you as
+                                        a connector.</div>
+                                </div>
+                                <div class="toggle-switch active">
+                                    <div class="toggle-thumb"></div>
+                                </div>
+                            </div>
+                            <div class="settings-row">
+                                <div class="settings-label">
+                                    <div class="settings-title">Show impact stats</div>
+                                    <div class="settings-desc">Display selected metrics (referrals, conversions) on your
+                                        public card.</div>
+                                </div>
+                                <div class="toggle-switch active">
+                                    <div class="toggle-thumb"></div>
+                                </div>
+                            </div>
+                            <div class="settings-row">
+                                <div class="settings-label">
+                                    <div class="settings-title">Make referrals anonymous</div>
+                                    <div class="settings-desc">Hide your name from startups on initial introductions if
+                                        required.</div>
+                                </div>
+                                <div class="toggle-switch">
+                                    <div class="toggle-thumb"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="secondary-card">
+                        <div class="info-banner">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span>
+                                To receive payouts, please ensure your banking details and KYC information are complete
+                                and up to date.
+                                <a href="#">View payout requirements</a>
+                            </span>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fa-solid fa-indian-rupee-sign"></i>
+                                    Preferred payout method
+                                </label>
+                                <select class="form-select">
+                                    <option>Bank transfer</option>
+                                    <option>UPI / instant payout</option>
+                                    <option>Wallet</option>
+                                </select>
+                                <div class="form-helper">
+                                    Payouts are usually processed within 5–7 business days after approval.
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fa-solid fa-building-columns"></i>
+                                    Bank account or UPI ID
+                                </label>
+                                <input class="form-input" placeholder="Enter account number or UPI ID">
+                                <div class="form-helper">
+                                    We encrypt and securely store payment details in compliance with local regulations.
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fa-solid fa-id-card"></i>
+                                    Legal / tax name
+                                </label>
+                                <input class="form-input" placeholder="Name for invoices and payout statements">
+                            </div>
+
+                            <div class="toggle-row">
+                                <div class="toggle-label">
+                                    Enable payout notifications
+                                    <span class="form-helper">Get alerts when rewards are confirmed and payouts are
+                                        processed.</span>
+                                </div>
+                                <div class="toggle-switch active">
+                                    <div class="toggle-thumb"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section-divider"></div>
+
+                        <div class="settings-list">
+                            <div class="settings-row">
+                                <div class="settings-label">
+                                    <div class="settings-title">Email notifications</div>
+                                    <div class="settings-desc">Program updates, new opportunities, and reward
+                                        confirmations.</div>
+                                </div>
+                                <div class="toggle-switch active">
+                                    <div class="toggle-thumb"></div>
+                                </div>
+                            </div>
+                            <div class="settings-row">
+                                <div class="settings-label">
+                                    <div class="settings-title">Digest summary</div>
+                                    <div class="settings-desc">Weekly summary of referrals and ecosystem signals.</div>
+                                </div>
+                                <div class="toggle-switch active">
+                                    <div class="toggle-thumb"></div>
+                                </div>
+                            </div>
+                            <div class="settings-row">
+                                <div class="settings-label">
+                                    <div class="settings-title">Product announcements</div>
+                                    <div class="settings-desc">New features for connectors and ecosystem tools.</div>
+                                </div>
+                                <div class="toggle-switch">
+                                    <div class="toggle-thumb"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert-card">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <div>
+                                Changing payout details may temporarily pause payouts until verification is complete.
+                                You’ll receive an email when verification is done.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            document.getElementById(sectionId).classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.getElementById('tab-' + sectionId).classList.add('active');
+
+            const sectionTitle = document.getElementById('sectionTitle');
+            const sectionSubtitle = document.getElementById('sectionSubtitle');
+
+            if (sectionId === 'overview') {
+                sectionTitle.textContent = 'Connector Overview';
+                sectionSubtitle.textContent = 'Track your referrals, rewards, and impact across the ecosystem';
+            } else if (sectionId === 'referrals') {
+                sectionTitle.textContent = 'My Referrals';
+                sectionSubtitle.textContent = 'Detailed view of all startups you have referred across programs.';
+            } else if (sectionId === 'rewards') {
+                sectionTitle.textContent = 'Rewards & Earnings';
+                sectionSubtitle.textContent = 'Monitor your earnings, pending rewards, and payout history.';
+            } else if (sectionId === 'analytics') {
+                sectionTitle.textContent = 'Connector Analytics';
+                sectionSubtitle.textContent = 'Understand which programs and sectors perform best for your referrals.';
+            } else if (sectionId === 'profile') {
+                sectionTitle.textContent = 'Profile & Settings';
+                sectionSubtitle.textContent = 'Manage your connector profile, preferences, and payout details.';
+            }
+        }
+
+        function logout() {
+            window.location.href = '/logout';
+        }
+    </script>
+    <script>
+        async function loadEnablerOverview() {
+            try {
+                const res = await fetch('/api/enabler/dashboard/overview');
+                const json = await res.json();
+
+                if (!json.success) {
+                    console.warn('Overview API failed:', json.message);
+                    return;
+                }
+
+                const data = json.data;
+                const summary = data.summary || {};
+
+                // Total referrals
+                const totalRefEl = document.getElementById('totalReferralsValue');
+                if (totalRefEl) {
+                    totalRefEl.textContent = summary.total_referrals ?? 0;
+                }
+
+                // Confirmed earnings (₹)
+                const earningsEl = document.getElementById('confirmedEarningsValue');
+                if (earningsEl) {
+                    const amt = summary.confirmed_earnings ?? 0;
+                    // Format as Indian currency style if supported
+                    try {
+                        earningsEl.textContent = '₹ ' + Number(amt).toLocaleString('en-IN');
+                    } catch {
+                        earningsEl.textContent = '₹ ' + amt;
+                    }
+                }
+
+                // FLC points
+                const pointsEl = document.getElementById('flcPointsValue');
+                if (pointsEl) {
+                    pointsEl.textContent = summary.flc_points ?? 0;
+                }
+
+                // Conversion rate (0.32 → 32%)
+                const convEl = document.getElementById('conversionRateValue');
+                if (convEl) {
+                    const conv = summary.conversion_rate ?? 0;
+                    const pct = Math.round(conv * 100);
+                    convEl.textContent = pct + '%';
+                }
+
+                // (Optional) You can also use data.level, data.recent_referrals, data.insights later
+
+            } catch (err) {
+                console.error('Error loading overview:', err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadEnablerOverview);
+    </script>
+    <script>
+        async function loadRewardsSummary() {
+            try {
+                const res = await fetch('/api/enabler/rewards/summary');
+                const json = await res.json();
+                if (!json.success) {
+                    console.warn('Rewards summary API failed:', json.message);
+                    return;
+                }
+
+                const data = json.data || {};
+
+                const availableEl = document.getElementById('rewardsAvailableBalance');
+                const pendingEl = document.getElementById('rewardsPending');
+                const allTimeEl = document.getElementById('rewardsAllTime');
+                const pointsEl = document.getElementById('rewardsPoints');
+                const avgEl = document.getElementById('rewardsAvgReward');
+
+                const formatMoney = (value) => {
+                    const n = Number(value || 0);
+                    try {
+                        return '₹ ' + n.toLocaleString('en-IN');
+                    } catch {
+                        return '₹ ' + n;
+                    }
+                };
+
+                if (availableEl) availableEl.textContent = formatMoney(data.available_balance);
+                if (pendingEl) pendingEl.textContent = formatMoney(data.pending_rewards);
+                if (allTimeEl) allTimeEl.textContent = formatMoney(data.all_time_earnings);
+                if (pointsEl) pointsEl.textContent = data.total_points ?? 0;
+                if (avgEl) avgEl.textContent = formatMoney(data.average_reward_per_completed_referral);
+            } catch (err) {
+                console.error('Error loading rewards summary:', err);
+            }
+        }
+
+        async function loadRewardsHistory(page = 1) {
+            try {
+                const typeSelect = document.getElementById('rewardTypeFilter');
+                const statusSelect = document.getElementById('rewardStatusFilter');
+
+                const type = typeSelect ? typeSelect.value : 'all';
+                const status = statusSelect ? statusSelect.value : 'all';
+
+                const url = new URL('/api/enabler/rewards/history', window.location.origin);
+                url.searchParams.set('page', page);
+                url.searchParams.set('per_page', 10);
+                url.searchParams.set('type', type);
+                url.searchParams.set('status', status);
+
+                const res = await fetch(url.toString());
+                const json = await res.json();
+
+                if (!json.success) {
+                    console.warn('Rewards history API failed:', json.message);
+                    return;
+                }
+
+                const data = json.data || {};
+                const items = data.items || [];
+
+                const tbody = document.getElementById('rewardsHistoryBody');
+                const emptyEl = document.getElementById('rewardsEmptyState');
+
+                if (!tbody) return;
+
+                tbody.innerHTML = '';
+
+                if (!items.length) {
+                    if (emptyEl) emptyEl.style.display = 'block';
+                    return;
+                } else {
+                    if (emptyEl) emptyEl.style.display = 'none';
+                }
+
+                const formatMoney = (value) => {
+                    const n = Number(value || 0);
+                    try {
+                        return '₹ ' + n.toLocaleString('en-IN');
+                    } catch {
+                        return '₹ ' + n;
+                    }
+                };
+
+                items.forEach(item => {
+                    const tr = document.createElement('tr');
+
+                    const createdDate = item.created_at ? String(item.created_at).slice(0, 10) : '-';
+                    const amountText = item.amount_money != null
+                        ? formatMoney(item.amount_money)
+                        : (item.amount_points != null ? (item.amount_points + ' pts') : '-');
+
+                    tr.innerHTML = `
+                <td>${createdDate}</td>
+                <td>${item.startup_name || '-'}</td>
+                <td>${item.program_name || '-'}</td>
+                <td>${(item.reward_type || '').toUpperCase()}</td>
+                <td>${amountText}</td>
+                <td>${item.status || '-'}</td>
+                <td>${item.payout_method || '-'}</td>
+            `;
+
+                    tbody.appendChild(tr);
+                });
+
+                // (Optional) simple pagination – if you have a container
+                const paginationContainer = document.getElementById('rewardsPagination');
+                if (paginationContainer && data.pagination) {
+                    const { page, total_pages } = data.pagination;
+                    paginationContainer.innerHTML = '';
+
+                    // simple "Page X of Y" text
+                    const info = document.createElement('div');
+                    info.textContent = `Page ${page} of ${total_pages}`;
+                    paginationContainer.appendChild(info);
+                }
+            } catch (err) {
+                console.error('Error loading rewards history:', err);
+            }
+        }
+
+        // Auto-load when page ready
+        document.addEventListener('DOMContentLoaded', function () {
+            loadRewardsSummary();
+            loadRewardsHistory(1);
+
+            const typeSelect = document.getElementById('rewardTypeFilter');
+            const statusSelect = document.getElementById('rewardStatusFilter');
+
+            if (typeSelect) {
+                typeSelect.addEventListener('change', () => loadRewardsHistory(1));
+            }
+            if (statusSelect) {
+                statusSelect.addEventListener('change', () => loadRewardsHistory(1));
+            }
+        });
+    </script>
+
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/main.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('welcome') === 'true') {
+                setTimeout(() => {
+                    alert("Thank you for registering, {{ current_user.name }}!");
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }, 100);
+            }
+        });
+    </script>
+</body>
+
+</html>

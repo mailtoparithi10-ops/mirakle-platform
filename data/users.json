@@ -1,0 +1,22 @@
+{
+  "deenavincya@gmail.com": {
+    "email": "deenavincya@gmail.com",
+    "password_hash": "pbkdf2:sha256:600000$rifwJE9qvEb4RqyI$75c707c992d42a741684aedf876eac82df31554b4084ec70ba1f080aa3902f11",
+    "first_name": "Deenavincya.J",
+    "last_name": "j",
+    "location": "coimbatore",
+    "created_at": "2025-09-13T13:05:58.101553",
+    "last_login": "2025-09-13T21:15:01.639597"
+  },
+  "admin@innobridge.com": {
+    "email": "admin@innobridge.com",
+    "password_hash": "pbkdf2:sha256:600000$lY9nuJj4ZTjdeuzP$22fbd2a54eb7294e2d7d3f5646a9d824855e5eada87642e3057ff39d8227e002",
+    "first_name": "admin",
+    "last_name": "user",
+    "location": "coimbatore",
+    "created_at": "2025-09-14T13:09:32.207318",
+    "last_login": null,
+    "role": "user",
+    "status": "active"
+  }
+}

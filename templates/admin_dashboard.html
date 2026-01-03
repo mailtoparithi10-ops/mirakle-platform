@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - InnoBridge</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/admin_dashboard.css">
+</head>
+
+<body>
+    <header class="admin-header">
+        <div class="admin-header-left">
+            <h1>
+                <i class="fas fa-tachometer-alt"></i>
+                Admin Dashboard
+                <div class="real-time-indicator"></div>
+            </h1>
+        </div>
+        <div class="admin-header-right">
+            <span class="welcome-text">Welcome back, Admin</span>
+            <button class="admin-btn" onclick="goToPlatform()">
+                <i class="fas fa-arrow-left"></i> Back to Platform
+            </button>
+            <button class="admin-btn danger" onclick="window.location.href='/logout'">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </header>
+
+    <div class="admin-main">
+        <aside class="admin-sidebar">
+            <a href="#" class="admin-nav-item active" onclick="showSection('dashboard')">
+                <i class="fas fa-chart-line"></i>
+                Dashboard Overview
+            </a>
+            <a href="#" class="admin-nav-item" onclick="showSection('users')">
+                <i class="fas fa-users"></i>
+                All Users
+            </a>
+            <a href="#" class="admin-nav-item" onclick="showSection('startups')">
+                <i class="fas fa-rocket"></i>
+                Startup Users
+            </a>
+            <a href="#" class="admin-nav-item" onclick="showSection('corporate')">
+                <i class="fas fa-building"></i>
+                Corporate Users
+            </a>
+            <a href="#" class="admin-nav-item" onclick="showSection('programs')">
+                <i class="fas fa-trophy"></i>
+                Programs
+            </a>
+        </aside>
+
+        <main class="admin-content">
+            <div class="welcome-banner">
+                <div class="banner-content">
+                    <div class="welcome-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div>
+                        <h2>Welcome to Admin Dashboard!</h2>
+                        <p>Monitor and manage your platform in real-time</p>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!-- DASHBOARD SECTION -->
+            <section id="dashboardSection">
+                <div class="stats-grid">
+                    <div class="stat-card users">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-trend">
+                                <i class="fas fa-arrow-up"></i>
+                                <span id="usersTrend">+0%</span>
+                            </div>
+                        </div>
+                        <div class="stat-title">Total Users</div>
+                        <div class="stat-value" id="totalUsers">0</div>
+                    </div>
+
+                    <div class="stat-card startups">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <div class="stat-trend">
+                                <i class="fas fa-arrow-up"></i>
+                                <span id="startupsTrend">+0%</span>
+                            </div>
+                        </div>
+                        <div class="stat-title">Startup Users</div>
+                        <div class="stat-value" id="totalStartups">0</div>
+                    </div>
+
+                    <div class="stat-card corporate">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="stat-trend">
+                                <i class="fas fa-arrow-up"></i>
+                                <span id="corporateTrend">+0%</span>
+                            </div>
+                        </div>
+                        <div class="stat-title">Corporate Users</div>
+                        <div class="stat-value" id="totalCorporate">0</div>
+                    </div>
+
+                    <div class="stat-card programs">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="stat-trend">
+                                <i class="fas fa-arrow-up"></i>
+                                <span id="programsTrend">+0%</span>
+                            </div>
+                        </div>
+                        <div class="stat-title">Active Programs</div>
+                        <div class="stat-value" id="totalPrograms">0</div>
+                    </div>
+                </div>
+
+                <div class="content-grid">
+                    <div class="content-card">
+                        <h3 class="card-title">
+                            <i class="fas fa-user-plus"></i>
+                            Recent User Registrations
+                        </h3>
+                        <div class="user-list" id="recentUsers">
+                            <div class="loading" style="margin: 20px auto;"></div>
+                            <p style="text-align: center; margin-top: 10px;">Loading recent users...</p>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <h3 class="card-title">
+                            <i class="fas fa-activity"></i>
+                            System Status
+                        </h3>
+                        <div id="systemStatus">
+                            <div style="padding: 20px; text-align: center;">
+                                <i class="fas fa-check-circle"
+                                    style="color: #48bb78; font-size: 24px; margin-bottom: 10px;"></i>
+                                <p style="color: #48bb78; font-weight: 600;">All Systems Operational</p>
+                                <div style="margin-top: 15px; font-size: 14px; color: #666;">
+                                    <p>Database: Connected</p>
+                                    <p>Real-time: Active</p>
+                                    <p>Last Update: <span id="lastUpdate">Now</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ALL USERS SECTION -->
+            <section id="usersSection" style="display: none;">
+                <h2 class="section-title">All Registered Users</h2>
+                <div class="content-card">
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" onclick="filterUsers('all')">
+                            All Users (<span id="allCount">0</span>)
+                        </button>
+                        <button class="filter-tab" onclick="filterUsers('startup')">
+                            Startups (<span id="startupCount">0</span>)
+                        </button>
+                        <button class="filter-tab" onclick="filterUsers('corporate')">
+                            Corporate (<span id="corporateCount">0</span>)
+                        </button>
+                        <button class="filter-tab" onclick="filterUsers('enabler')">
+                            Enablers (<span id="enablerCount">0</span>)
+                        </button>
+                    </div>
+                    <div id="allUsersList">
+                        <div class="loading" style="margin: 20px auto;"></div>
+                        <p style="text-align: center; margin-top: 10px;">Loading users...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STARTUP USERS SECTION -->
+            <section id="startupsSection" style="display: none;">
+                <h2 class="section-title">Startup Users</h2>
+                <div class="content-card">
+                    <div class="card-title">
+                        <i class="fas fa-rocket"></i>
+                        All Startup Registrations
+                    </div>
+                    <div id="startupUsersList">
+                        <div class="loading" style="margin: 20px auto;"></div>
+                        <p style="text-align: center; margin-top: 10px;">Loading startup users...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CORPORATE USERS SECTION -->
+            <section id="corporateSection" style="display: none;">
+                <h2 class="section-title">Corporate Users</h2>
+                <div class="content-card">
+                    <div class="card-title">
+                        <i class="fas fa-building"></i>
+                        All Corporate Registrations
+                    </div>
+                    <div id="corporateUsersList">
+                        <div class="loading" style="margin: 20px auto;"></div>
+                        <p style="text-align: center; margin-top: 10px;">Loading corporate users...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PROGRAMS SECTION -->
+            <section id="programsSection" style="display: none;">
+                <h2 class="section-title">Program Management</h2>
+                <div class="content-card">
+                    <h3 class="card-title">Active Programs</h3>
+                    <div id="programsList">
+                        <div style="text-align: center; padding: 40px;">
+                            <i class="fas fa-rocket" style="font-size: 48px; color: #a0aec0; margin-bottom: 15px;"></i>
+                            <p style="color: #a0aec0;">No programs created yet</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/js/admin_dashboard.js"></script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/main.js"></script>
+
+</body>
+
+</html>

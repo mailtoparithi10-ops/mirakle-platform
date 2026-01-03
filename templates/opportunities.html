@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>InnoBridge – Opportunities</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Explore live innovation opportunities – cohorts, challenges, pilots and corporate programs on InnoBridge.">
+    <link rel="icon"
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Page layout */
+        main {
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 1.5rem 4rem;
+        }
+
+        /* Hero / intro */
+        .opportunities-hero {
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+        }
+
+        .hero-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        #opportunitiesHeroTitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(1.8rem, 3vw, 2.4rem);
+            font-weight: 900;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
+
+        #opportunitiesHeroTitle span {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        #opportunitiesHeroSubtitle {
+            max-width: 640px;
+            font-size: 0.98rem;
+            color: var(--text-secondary);
+        }
+
+        #opportunitiesStatsText {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Filters bar */
+        .opportunities-filters {
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filters-card {
+            border-radius: 16px;
+            background: rgba(255, 248, 225, 0.7);
+            border: 1px solid rgba(252, 184, 46, 0.25);
+            padding: 1rem 1.25rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+            backdrop-filter: blur(12px);
+        }
+
+        #opportunitiesFilterForm {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) repeat(4, minmax(0, 1fr)) auto;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .filter-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+
+        .filter-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        .filter-input,
+        .filter-select {
+            width: 100%;
+            border-radius: 999px;
+            border: 1px solid var(--border-secondary);
+            padding: 6px 10px;
+            font-size: 0.85rem;
+            outline: none;
+            background: #fff;
+        }
+
+        .filter-input:focus,
+        .filter-select:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(252, 184, 46, 0.2);
+        }
+
+        .filter-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .filter-toggle input {
+            accent-color: var(--accent-primary);
+        }
+
+        /* List / grid */
+        .opportunities-list {
+            margin-top: 1.5rem;
+        }
+
+        #opportunitiesEmptyState {
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            border: 1px dashed var(--border-secondary);
+            background: var(--bg-secondary);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .opportunities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .opportunity-card {
+            border-radius: 16px;
+            padding: 1.25rem;
+            background: #ffffff;
+            border: 1px solid var(--border-primary);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 190px;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+        }
+
+        .opportunity-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.08);
+            border-color: rgba(252, 184, 46, 0.6);
+        }
+
+        .opportunity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .opportunity-title {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .opportunity-badge {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border-radius: 999px;
+            padding: 4px 8px;
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+
+        .status-open {
+            border-color: rgba(46, 204, 113, 0.4);
+            background: rgba(46, 204, 113, 0.08);
+            color: #12753c;
+        }
+
+        .status-closing_soon {
+            border-color: rgba(252, 184, 46, 0.6);
+            background: rgba(252, 184, 46, 0.12);
+            color: #8a5a00;
+        }
+
+        .status-in_progress {
+            border-color: rgba(52, 152, 219, 0.5);
+            background: rgba(52, 152, 219, 0.08);
+            color: #145a86;
+        }
+
+        .status-completed {
+            border-color: rgba(108, 117, 125, 0.4);
+            background: rgba(108, 117, 125, 0.08);
+            color: #495057;
+        }
+
+        .status-closed {
+            border-color: rgba(220, 53, 69, 0.4);
+            background: rgba(220, 53, 69, 0.08);
+            color: #842029;
+        }
+
+        .opportunity-host {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .opportunity-description {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .opportunity-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .chip {
+            font-size: 0.72rem;
+            border-radius: 999px;
+            padding: 3px 8px;
+            border: 1px solid var(--border-secondary);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+        }
+
+        .opportunity-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+
+        .opportunity-reward {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #0f5132;
+        }
+
+        .opportunity-reward span {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .btn-secondary {
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid var(--border-secondary);
+            background: #ffffff;
+            color: var(--text-secondary);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-primary);
+        }
+
+        /* Pagination */
+        #opportunitiesPagination {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .pagination-info {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .pagination-btn {
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 0.8rem;
+            border: 1px solid var(--border-secondary);
+            background: #ffffff;
+            cursor: pointer;
+        }
+
+        .pagination-btn[disabled] {
+            opacity: 0.4;
+            cursor: default;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            #opportunitiesFilterForm {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            #opportunitiesFilterForm {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-container {
+                padding-inline: 1rem;
+            }
+
+            .opportunity-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background Pattern -->
+    <div class="bg-pattern"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">I</div>
+                <div class="logo-text">INNO<span class="accent">BRIDGE</span></div>
+            </a>
+
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link">HOME</a>
+                <a href="about.html" class="nav-link">ABOUT</a>
+                <a href="products.html" class="nav-link">PRODUCTS</a>
+                <a href="opportunities.html" class="nav-link active">OPPORTUNITIES</a>
+                <a href="blog.html" class="nav-link">BLOG</a>
+                <a href="contact.html" class="nav-link">CONTACT</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="login.html" class="nav-btn secondary">LOG IN</a>
+                <a href="signup.html" class="nav-btn primary">GET STARTED</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-container">
+        <section class="opportunities-hero">
+            <div class="hero-header">
+                <h1 id="opportunitiesHeroTitle">
+                    <span>Explore live opportunities</span>
+                </h1>
+                <p id="opportunitiesHeroSubtitle">
+                    Discover cohorts, challenges and pilots from corporates, governments and ecosystem partners.
+                    Filter by sector, region and status to find the most relevant programs.
+                </p>
+                <p id="opportunitiesStatsText">
+                    Loading opportunities…
+                </p>
+            </div>
+        </section>
+
+        <!-- Filters -->
+        <div class="opportunities-filters">
+            <div class="filters-card">
+                <form id="opportunitiesFilterForm">
+                    <div class="filter-field">
+                        <label class="filter-label">Search</label>
+                        <input type="text" class="filter-input" id="opportunitiesSearchInput" placeholder="Keywords...">
+                    </div>
+                    <div class="filter-field">
+                        <label class="filter-label">Type</label>
+                        <select class="filter-select" id="opportunitiesTypeFilter">
+                            <option value="all">All Types</option>
+                            <option value="accelerator">Accelerator</option>
+                            <option value="grant">Grant</option>
+                            <option value="pilot">Pilot / PoC</option>
+                            <option value="investment">Investment</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label class="filter-label">Sector</label>
+                        <select class="filter-select" id="opportunitiesSectorFilter">
+                            <option value="all">All Sectors</option>
+                            <option value="fintech">Fintech</option>
+                            <option value="healthtech">Healthtech</option>
+                            <option value="agritech">Agritech</option>
+                            <option value="cleantech">Cleantech</option>
+                            <option value="enterprise">Enterprise</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label class="filter-label">Region</label>
+                        <select class="filter-select" id="opportunitiesRegionFilter">
+                            <option value="all">Global</option>
+                            <option value="north_america">North America</option>
+                            <option value="europe">Europe</option>
+                            <option value="asia">Asia</option>
+                            <option value="africa">Africa</option>
+                            <option value="latam">LatAm</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label class="filter-label">Status</label>
+                        <select class="filter-select" id="opportunitiesStatusFilter">
+                            <option value="all">All Status</option>
+                            <option value="published">Open</option>
+                            <option value="closing_soon">Closing Soon</option>
+                        </select>
+                    </div>
+                    <div class="filter-toggle">
+                        <input type="checkbox" id="opportunitiesRewardToggle" value="yes">
+                        <label for="opportunitiesRewardToggle">With Reward</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- List -->
+        <div class="opportunities-list">
+            <div id="opportunitiesEmptyState" style="display: none;">
+                No opportunities found matching your criteria.
+            </div>
+            <div class="opportunities-grid" id="opportunitiesList">
+                <!-- Cards injected here -->
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div id="opportunitiesPagination">
+            <div class="pagination-info" id="opportunitiesPaginationInfo">
+                Showing 0 opportunities
+            </div>
+            <div class="pagination-controls">
+                <button class="pagination-btn" id="opportunitiesPrevPage" disabled>Previous</button>
+                <button class="pagination-btn" id="opportunitiesNextPage" disabled>Next</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">INNOBRIDGE</div>
+            <p class="footer-text">
+                &copy; 2025 InnoBridge Platform. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        let opportunitiesCurrentPage = 1;
+        let opportunitiesTotalPages = 1;
+        let opportunitiesLoadingTimeout = null;
+
+        function getOpportunitiesFilters() {
+            const q = document.getElementById('opportunitiesSearchInput')?.value || '';
+            const type = document.getElementById('opportunitiesTypeFilter')?.value || 'all';
+            const sector = document.getElementById('opportunitiesSectorFilter')?.value || 'all';
+            const region = document.getElementById('opportunitiesRegionFilter')?.value || 'all';
+            const status = document.getElementById('opportunitiesStatusFilter')?.value || 'all';
+            const reward = document.getElementById('opportunitiesRewardToggle')?.checked ? 'yes' : 'no';
+
+            return { q, type, sector, region, status, has_reward: reward };
+        }
+
+        function createOpportunityCard(item) {
+            const card = document.createElement('div');
+            card.className = 'opportunity-card';
+
+            // Status logic
+            let statusClass = 'status-open';
+            let statusLabel = 'Open';
+            if (item.status === 'closing_soon') {
+                statusClass = 'status-closing_soon';
+                statusLabel = 'Closing Soon';
+            } else if (item.status === 'in_progress') {
+                statusClass = 'status-in_progress';
+                statusLabel = 'In Progress';
+            } else if (item.status === 'completed') {
+                statusClass = 'status-completed';
+                statusLabel = 'Completed';
+            } else if (item.status === 'closed') {
+                statusClass = 'status-closed';
+                statusLabel = 'Closed';
+            }
+
+            // Host line
+            const hostLine = item.owner_name ? item.owner_name + (item.owner_company ? ' (' + item.owner_company + ')' : '') : 'InnoBridge Partner';
+
+            // Chips
+            let chips = [];
+            if (item.type) chips.push(item.type);
+            if (item.sectors && item.sectors.length) chips.push(...item.sectors.slice(0, 2));
+            if (item.target_stages && item.target_stages.length) chips.push(...item.target_stages.slice(0, 1));
+
+            // Deadline
+            let deadlineText = '';
+            if (item.deadline) {
+                const d = new Date(item.deadline);
+                deadlineText = 'Due ' + d.toLocaleDateString();
+            }
+
+            // Reward
+            let rewardText = item.benefits ? 'Benefits available' : 'No specific reward';
+            if (item.benefits && item.benefits.length < 30) {
+                rewardText = item.benefits;
+            }
+
+            const connectorNote = '';
+
+            card.innerHTML = `
+                <div class="opportunity-header">
+                    <h3 class="opportunity-title">${item.title || 'Untitled program'}</h3>
+                    ${item.status ? `<span class="opportunity-badge ${statusClass}">${statusLabel}</span>` : ''}
+                </div>
+                ${hostLine ? `<p class="opportunity-host">Hosted by ${hostLine}</p>` : ''}
+                ${item.description ? `<p class="opportunity-description">${item.description.substring(0, 120)}${item.description.length > 120 ? '...' : ''}</p>` : ''}
+                <div class="opportunity-meta">
+                    ${chips.map(tag => `<span class="chip">${tag}</span>`).join('')}
+                    ${deadlineText ? `<span class="chip">${deadlineText}</span>` : ''}
+                </div>
+                <div class="opportunity-footer">
+                    <div class="opportunity-reward">
+                        ${rewardText}
+                        ${connectorNote ? `<br><span>${connectorNote}</span>` : ''}
+                    </div>
+                    <button class="btn-secondary" type="button">
+                        View details
+                    </button>
+                </div>
+            `;
+
+            // Event listener
+            const btn = card.querySelector('.btn-secondary');
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    // Navigate to opportunity details
+                    if (item.id) {
+                        window.location.href = `/opportunities/${item.id}`;
+                    }
+                });
+            }
+
+            return card;
+        }
+
+        async function loadOpportunities(page = 1) {
+            opportunitiesCurrentPage = page;
+
+            const filters = getOpportunitiesFilters();
+            const params = new URLSearchParams();
+
+            if (filters.q) params.set('q', filters.q);
+            if (filters.type && filters.type !== 'all') params.set('type', filters.type);
+            if (filters.sector && filters.sector !== 'all') params.set('sector', filters.sector);
+            if (filters.region && filters.region !== 'all') params.set('region', filters.region);
+            if (filters.status && filters.status !== 'all') params.set('status', filters.status);
+            if (filters.has_reward === 'yes') params.set('has_reward', 'yes');
+
+            params.set('page', String(page));
+            params.set('per_page', '9');
+
+            const url = `/api/opportunities?${params.toString()}`;
+
+            const statsText = document.getElementById('opportunitiesStatsText');
+            if (statsText) {
+                statsText.textContent = 'Loading opportunities…';
+            }
+
+            try {
+                const res = await fetch(url);
+                const json = await res.json();
+
+                if (!json.success) {
+                    console.warn('Opportunities API failed:', json.message);
+                    if (statsText) statsText.textContent = 'Unable to load opportunities right now.';
+                    return;
+                }
+
+                const data = json.data || {};
+                const items = data.items || [];
+                const pagination = data.pagination || { page: 1, per_page: 9, total_items: 0, total_pages: 1 };
+
+                opportunitiesTotalPages = pagination.total_pages || 1;
+
+                const listEl = document.getElementById('opportunitiesList');
+                const emptyEl = document.getElementById('opportunitiesEmptyState');
+                const pagInfoEl = document.getElementById('opportunitiesPaginationInfo');
+                const prevBtn = document.getElementById('opportunitiesPrevPage');
+                const nextBtn = document.getElementById('opportunitiesNextPage');
+
+                if (listEl) listEl.innerHTML = '';
+
+                if (!items.length) {
+                    if (emptyEl) emptyEl.style.display = 'block';
+                    if (pagInfoEl) pagInfoEl.textContent = 'No opportunities found.';
+                } else {
+                    if (emptyEl) emptyEl.style.display = 'none';
+
+                    items.forEach(item => {
+                        const card = createOpportunityCard(item);
+                        listEl.appendChild(card);
+                    });
+
+                    if (pagInfoEl) {
+                        pagInfoEl.textContent = `Showing ${items.length} of ${pagination.total_items || items.length} opportunities · Page ${pagination.page} of ${pagination.total_pages}`;
+                    }
+                }
+
+                if (prevBtn) {
+                    prevBtn.disabled = pagination.page <= 1;
+                }
+
+                if (nextBtn) {
+                    nextBtn.disabled = pagination.page >= pagination.total_pages;
+                }
+
+                if (statsText) {
+                    const total = pagination.total_items || items.length;
+                    statsText.textContent = `${total} active opportunities found`;
+                }
+
+            } catch (err) {
+                console.error('Error loading opportunities:', err);
+                if (statsText) statsText.textContent = 'Unable to load opportunities right now.';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial load
+            loadOpportunities(1);
+
+            // Debounced search
+            const searchInput = document.getElementById('opportunitiesSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', () => {
+                    if (opportunitiesLoadingTimeout) {
+                        clearTimeout(opportunitiesLoadingTimeout);
+                    }
+                    opportunitiesLoadingTimeout = setTimeout(() => {
+                        loadOpportunities(1);
+                    }, 400);
+                });
+            }
+
+            const typeSelect = document.getElementById('opportunitiesTypeFilter');
+            const sectorSelect = document.getElementById('opportunitiesSectorFilter');
+            const regionSelect = document.getElementById('opportunitiesRegionFilter');
+            const statusSelect = document.getElementById('opportunitiesStatusFilter');
+            const rewardToggle = document.getElementById('opportunitiesRewardToggle');
+
+            [typeSelect, sectorSelect, regionSelect, statusSelect, rewardToggle].forEach(el => {
+                if (!el) return;
+                el.addEventListener('change', () => loadOpportunities(1));
+            });
+
+            const prevBtn = document.getElementById('opportunitiesPrevPage');
+            const nextBtn = document.getElementById('opportunitiesNextPage');
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    if (opportunitiesCurrentPage > 1) {
+                        loadOpportunities(opportunitiesCurrentPage - 1);
+                    }
+                });
+            }
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    if (opportunitiesCurrentPage < opportunitiesTotalPages) {
+                        loadOpportunities(opportunitiesCurrentPage + 1);
+                    }
+                });
+            }
+        });
+    </script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startup Dashboard - InnoBridge</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reusing the high-quality styles from Enabler Dashboard */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #000000;
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            margin-left: 240px;
+            flex: 1;
+            background: white;
+            min-height: 100vh;
+            border-radius: 20px 0 0 20px;
+            overflow: hidden;
+        }
+
+        .user-profile {
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            border-bottom: 1px solid rgba(252, 184, 46, 0.3);
+        }
+
+        .user-avatar-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, #fcb82e, #f97316);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #000000;
+            border: 3px solid #fcb82e;
+        }
+
+        .user-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-email {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .edit-profile-btn {
+            background: #fcb82e;
+            color: #000000;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .edit-profile-btn:hover {
+            background: #e5a629;
+            transform: translateY(-1px);
+        }
+
+        .nav-menu {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: white;
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            background: none;
+            width: 100%;
+            font-size: 1rem;
+            text-align: left;
+        }
+
+        .nav-item:hover {
+            background: #fcb82e;
+            color: #000000;
+        }
+
+        .nav-item.active {
+            background: #fcb82e;
+            border-right: 3px solid #fcb82e;
+            color: #000000;
+        }
+
+        .nav-item i {
+            margin-right: 1rem;
+            width: 20px;
+            font-size: 1.1rem;
+        }
+
+        .nav-item .badge {
+            margin-left: auto;
+            background: #fcb82e;
+            color: #000000;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            margin: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            color: #f8fafc;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: #e5a629;
+            transform: translateY(-1px);
+        }
+
+        .dashboard-header {
+            padding: 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-subtitle {
+            color: #666666;
+            font-size: 1rem;
+        }
+
+        .dashboard-content {
+            padding: 1.5rem 2rem 2rem 2rem;
+            overflow-y: auto;
+            height: calc(100vh - 88px);
+            background: #f9fafb;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #020617;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-icon.gold {
+            background: rgba(252, 184, 46, 0.15);
+            color: #fbbf24;
+        }
+
+        .card-icon.green {
+            background: rgba(34, 197, 94, 0.12);
+            color: #22c55e;
+        }
+
+        .card-icon.blue {
+            background: rgba(59, 130, 246, 0.12);
+            color: #3b82f6;
+        }
+
+        .trend-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            color: #16a34a;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        thead tr {
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th,
+        td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+        }
+
+        th {
+            font-size: 0.8rem;
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        td {
+            color: #111827;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-pill.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-pill.active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pill.rejected {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        /* Program Card Styles */
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .program-card {
+            background: white;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .program-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border-color: #fcb82e;
+        }
+
+        .program-header {
+            height: 120px;
+            background: linear-gradient(135deg, #0f172a, #334155);
+            padding: 1.5rem;
+            color: white;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .program-logo {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .program-body {
+            padding: 1.5rem;
+        }
+
+        .program-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+
+        .program-company {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .program-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 0.25rem 0.5rem;
+            background: #f1f5f9;
+            color: #475569;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .apply-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #fcb82e;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .apply-btn:hover {
+            background: #f59e0b;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                display: flex;
+                overflow-x: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+                border-radius: 0;
+            }
+
+            .user-profile {
+                display: none;
+            }
+
+            .nav-menu {
+                display: flex;
+                padding: 0.5rem;
+            }
+
+            .nav-item {
+                padding: 0.75rem 1rem;
+                border-left: none;
+                margin-right: 0.5rem;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="user-profile">
+            <div class="user-avatar-large">S</div>
+            <div class="user-name">{{ current_user.name }}</div>
+            <div class="user-email">founder@startup.com</div>
+            <button class="edit-profile-btn">
+                <i class="fa-solid fa-pen"></i> Edit Profile
+            </button>
+        </div>
+        <nav class="nav-menu">
+            <button class="nav-item active" onclick="showSection('overview')">
+                <i class="fa-solid fa-gauge-high"></i> Overview
+            </button>
+            <button class="nav-item" onclick="showSection('applications')">
+                <i class="fa-solid fa-paper-plane"></i> Applications
+                <span class="badge">3</span>
+            </button>
+            <button class="nav-item" onclick="showSection('programs')">
+                <i class="fa-solid fa-compass"></i> Explore Programs
+            </button>
+            <button class="nav-item" onclick="showSection('documents')">
+                <i class="fa-solid fa-folder-open"></i> Documents
+            </button>
+            <button class="nav-item" onclick="showSection('settings')">
+                <i class="fa-solid fa-gear"></i> Settings
+            </button>
+        </nav>
+        <button class="logout-btn" onclick="window.location.href='/logout'">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </button>
+    </aside>
+
+    <main class="main-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">Startup Dashboard</div>
+            <div class="dashboard-subtitle">Manage your applications and discover new opportunities.</div>
+        </div>
+
+        <div class="dashboard-content">
+            <!-- OVERVIEW SECTION -->
+            <section id="overview" class="section active">
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Active Applications</div>
+                                <div class="card-value">3</div>
+                            </div>
+                            <div class="card-icon gold">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </div>
+                        </div>
+                        <div class="trend-indicator trend-up">
+                            <i class="fa-solid fa-arrow-up"></i>
+                            <span>1 in review</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Profile Views</div>
+                                <div class="card-value">128</div>
+                            </div>
+                            <div class="card-icon blue">
+                                <i class="fa-solid fa-eye"></i>
+                            </div>
+                        </div>
+                        <div class="trend-indicator trend-up">
+                            <i class="fa-solid fa-arrow-up"></i>
+                            <span>+12% this week</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Matches</div>
+                                <div class="card-value">5</div>
+                            </div>
+                            <div class="card-icon green">
+                                <i class="fa-solid fa-handshake"></i>
+                            </div>
+                        </div>
+                        <div class="trend-indicator trend-up">
+                            <i class="fa-solid fa-check"></i>
+                            <span>2 new corporate matches</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <div class="table-title">Recent Applications</div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Program Name</th>
+                                <th>Company</th>
+                                <th>Date Applied</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Global AI Challenge</td>
+                                <td>TechCorp AI</td>
+                                <td>Dec 01, 2025</td>
+                                <td><span class="status-pill pending">In Review</span></td>
+                            </tr>
+                            <tr>
+                                <td>Green Tech Pilot</td>
+                                <td>EcoFuture Ventures</td>
+                                <td>Nov 28, 2025</td>
+                                <td><span class="status-pill active">Shortlisted</span></td>
+                            </tr>
+                            <tr>
+                                <td>FinTech Series A</td>
+                                <td>Global VC</td>
+                                <td>Nov 15, 2025</td>
+                                <td><span class="status-pill rejected">Declined</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;">Recommended for You</h3>
+                <div class="programs-grid">
+                    <!-- Program 1 -->
+                    <div class="program-card">
+                        <div class="program-header">
+                            <div class="program-logo">H</div>
+                            <span
+                                style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;">ACCELERATOR</span>
+                        </div>
+                        <div class="program-body">
+                            <div class="program-title">HealthTech Innovators</div>
+                            <div class="program-company">MedLife Partners</div>
+                            <div class="program-tags">
+                                <span class="tag">HealthTech</span>
+                                <span class="tag">Seed Stage</span>
+                            </div>
+                            <button class="apply-btn">View Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Program 2 -->
+                    <div class="program-card">
+                        <div class="program-header">
+                            <div class="program-logo">S</div>
+                            <span
+                                style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;">POC</span>
+                        </div>
+                        <div class="program-body">
+                            <div class="program-title">Smart City Pilot</div>
+                            <div class="program-company">UrbanFuture</div>
+                            <div class="program-tags">
+                                <span class="tag">IoT</span>
+                                <span class="tag">Smart City</span>
+                            </div>
+                            <button class="apply-btn">View Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Program 3 -->
+                    <div class="program-card">
+                        <div class="program-header">
+                            <div class="program-logo">B</div>
+                            <span
+                                style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;">INCUBATOR</span>
+                        </div>
+                        <div class="program-body">
+                            <div class="program-title">Blockchain Builders</div>
+                            <div class="program-company">CryptoFund</div>
+                            <div class="program-tags">
+                                <span class="tag">Web3</span>
+                                <span class="tag">DeFi</span>
+                            </div>
+                            <button class="apply-btn">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- APPLICATIONS SECTION -->
+            <section id="applications" class="section">
+                <h2 style="margin-bottom: 1rem;">My Applications</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Program Name</th>
+                                <th>Company</th>
+                                <th>Date Applied</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Global AI Challenge</td>
+                                <td>TechCorp AI</td>
+                                <td>Dec 01, 2025</td>
+                                <td><span class="status-pill pending">In Review</span></td>
+                                <td><button
+                                        style="padding: 4px 8px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">View</button>
+                                </td>
+                            </tr>
+                            <!-- More rows... -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- PROGRAMS SECTION -->
+            <section id="programs" class="section">
+                <h2 style="margin-bottom: 1rem;">Explore Programs</h2>
+                <div class="programs-grid">
+                    <!-- Duplicate program cards here for demo -->
+                    <div class="program-card">
+                        <div class="program-header">
+                            <div class="program-logo">A</div>
+                            <span
+                                style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;">GRANT</span>
+                        </div>
+                        <div class="program-body">
+                            <div class="program-title">AgriTech Grant 2025</div>
+                            <div class="program-company">Global Food Initiative</div>
+                            <div class="program-tags">
+                                <span class="tag">AgriTech</span>
+                                <span class="tag">Sustainability</span>
+                            </div>
+                            <button class="apply-btn">Apply Now</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DOCUMENTS SECTION -->
+            <section id="documents" class="section">
+                <h2 style="margin-bottom: 1rem;">My Documents</h2>
+                <div
+                    style="background: white; padding: 2rem; border-radius: 1rem; border: 1px dashed #ccc; text-align: center;">
+                    <i class="fa-solid fa-cloud-arrow-up"
+                        style="font-size: 2rem; color: #ccc; margin-bottom: 1rem;"></i>
+                    <p>Drag and drop your Pitch Deck here</p>
+                    <button
+                        style="margin-top: 1rem; padding: 0.5rem 1rem; background: #f1f5f9; border: none; border-radius: 4px; cursor: pointer;">Browse
+                        Files</button>
+                </div>
+            </section>
+
+            <!-- SETTINGS SECTION -->
+            <section id="settings" class="section">
+                <h2 style="margin-bottom: 1rem;">Settings</h2>
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Profile Information</h3>
+                    <div style="display: grid; gap: 1rem;">
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Startup Name</label>
+                            <input type="text" value="Startup Inc."
+                                style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Website</label>
+                            <input type="text" value="https://startup.com"
+                                style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                        </div>
+                        <button
+                            style="width: max-content; padding: 0.5rem 1rem; background: #fcb82e; border: none; border-radius: 4px; font-weight: 600; cursor: pointer;">Save
+                            Changes</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+            // Show target section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Update nav state
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            // Find the button that calls this function with this sectionId
+            const activeBtn = Array.from(document.querySelectorAll('.nav-item')).find(btn => btn.getAttribute('onclick').includes(sectionId));
+            if (activeBtn) activeBtn.classList.add('active');
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('welcome') === 'true') {
+                setTimeout(() => {
+                    alert("Thank you for registering, {{ current_user.name }}!");
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }, 100);
+            }
+        });
+    </script>
+</body>
+
+</html>
