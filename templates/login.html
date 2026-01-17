@@ -477,104 +477,6 @@
                 font-size: 0.85rem;
             }
         }
-
-        /* Test Credentials Section */
-        .test-credentials {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background: #f8fafc;
-            border-radius: 12px;
-            border: 1px dashed #cbd5e0;
-        }
-
-        .test-credentials-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            color: #4a5568;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .test-users-grid {
-            display: grid;
-            gap: 0.75rem;
-        }
-
-        .test-user-item {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem;
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .test-user-item:hover {
-            border-color: #fcb82e;
-            transform: translateX(2px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .role-badge {
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            text-transform: uppercase;
-            width: 80px;
-            text-align: center;
-            margin-right: 1rem;
-        }
-
-        .role-badge.admin {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .role-badge.startup {
-            background: #e0e7ff;
-            color: #3730a3;
-        }
-
-        .role-badge.corporate {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .role-badge.connector {
-            background: #ffedd5;
-            color: #9a3412;
-        }
-
-        .user-details {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-
-        .user-details .email {
-            font-size: 0.85rem;
-            color: #2d3748;
-            font-weight: 500;
-        }
-
-        .user-details .pass {
-            font-size: 0.75rem;
-            color: #718096;
-        }
-
-        .action-icon {
-            color: #cbd5e0;
-            font-size: 0.8rem;
-        }
-
-        .test-user-item:hover .action-icon {
-            color: #fcb82e;
-        }
     </style>
 </head>
 
@@ -681,60 +583,13 @@
                     Don't have an account? <a href="signup.html" class="auth-link">Create account</a>
                 </div>
 
-                <!-- Test Credentials Section -->
-                <div class="test-credentials">
-                    <div class="test-credentials-header">
-                        <i class="fas fa-flask"></i>
-                        <span>Test Credentials (Click to fill)</span>
-                    </div>
-                    <div class="test-users-grid">
-                        <div class="test-user-item" onclick="fillCredentials('admin@test.com', 'admin123')">
-                            <span class="role-badge admin">Admin</span>
-                            <div class="user-details">
-                                <span class="email">admin@test.com</span>
-                                <span class="pass">pass: admin123</span>
-                            </div>
-                            <i class="fas fa-chevron-right action-icon"></i>
-                        </div>
-                        <div class="test-user-item" onclick="fillCredentials('startup@test.com', 'startup123')">
-                            <span class="role-badge startup">Startup</span>
-                            <div class="user-details">
-                                <span class="email">startup@test.com</span>
-                                <span class="pass">pass: startup123</span>
-                            </div>
-                            <i class="fas fa-chevron-right action-icon"></i>
-                        </div>
-                        <div class="test-user-item" onclick="fillCredentials('corporate@test.com', 'corporate123')">
-                            <span class="role-badge corporate">Corp</span>
-                            <div class="user-details">
-                                <span class="email">corporate@test.com</span>
-                                <span class="pass">pass: corporate123</span>
-                            </div>
-                            <i class="fas fa-chevron-right action-icon"></i>
-                        </div>
-                        <div class="test-user-item" onclick="fillCredentials('connector@test.com', 'connector123')">
-                            <span class="role-badge connector">Connect</span>
-                            <div class="user-details">
-                                <span class="email">connector@test.com</span>
-                                <span class="pass">pass: connector123</span>
-                            </div>
-                            <i class="fas fa-chevron-right action-icon"></i>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
 
     <script>
-        // Fill credentials helper
-        function fillCredentials(email, password) {
-            document.getElementById('email').value = email;
-            document.getElementById('password').value = password;
-            // Optional: highlight the fields to show they've been filled
-            document.getElementById('email').focus();
-            document.getElementById('password').focus();
-        }
+
 
         // Toggle password visibility
         function togglePassword() {
