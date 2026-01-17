@@ -192,6 +192,8 @@ def create_app():
 # -----------------------------------------
 # MAIN ENTRY POINT
 # -----------------------------------------
+# Expose app globally for Gunicorn (Render default)
+app = create_app()
+
 if __name__ == "__main__":
-    app = create_app()
     app.run(debug=True, port=5001)
