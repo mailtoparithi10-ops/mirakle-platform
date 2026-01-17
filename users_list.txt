@@ -1,0 +1,15 @@
+--------------------------------------------------
+ID    Name                 Email                          Role           
+--------------------------------------------------
+1     Admin User           admin@mirakle.local            admin          
+2     Priya Founder        priya@startup.in               founder        
+3     John Founder         john@startup.us                founder        
+4     Asha Connector       asha@connector.org             connector      
+5     Acme Corp            acme@corp.com                  corporate      
+6     VC Europe            vc@europe.vc                   corporate      
+7     Super Admin          admin@innobridge.com           admin          
+8     Admin User           admin@test.com                 admin          
+9     John Startup         startup@test.com               startup        
+10    Jane Corporate       corporate@test.com             corporate      
+11    Bob Connector        connector@test.com             connector      
+--------------------------------------------------

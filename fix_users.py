@@ -84,9 +84,8 @@ for user_data in test_users:
         print(f"✗ User {user_data['email']} already exists (ID: {existing[0]})")
         continue
     
-    # Hash password using werkzeug (same as passlib bcrypt)
-    from passlib.hash import bcrypt
-    password_hash = bcrypt.hash(user_data['password'])
+    # Hash password using werkzeug (same as models.py)
+    password_hash = generate_password_hash(user_data['password'])
     
     # Insert user
     cursor.execute("""
