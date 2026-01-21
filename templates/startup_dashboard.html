@@ -565,6 +565,26 @@
                     </div>
                 </div>
 
+                <!-- NEW CHART SECTION -->
+                <div
+                    style="background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="font-size: 1.1rem; font-weight: 700;">Profile Engagement</h3>
+                        <div style="display: flex; gap: 1rem;">
+                            <span
+                                style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: #666;">
+                                <span
+                                    style="display: block; width: 10px; height: 10px; background: #fcb82e; border-radius: 50%;"></span>
+                                Views
+                            </span>
+                        </div>
+                    </div>
+                    <div style="height: 300px; width: 100%;">
+                        <canvas id="startupChart"></canvas>
+                    </div>
+                </div>
+
                 <div class="table-container">
                     <div class="table-header">
                         <div class="table-title">Recent Applications</div>
@@ -729,45 +749,104 @@
 
             <!-- SETTINGS SECTION -->
             <section id="settings" class="section">
-                <h2 style="margin-bottom: 1rem;">Settings</h2>
-                <div class="card">
-                    <h3 style="margin-bottom: 1rem;">Profile Information</h3>
-                    <div style="display: grid; gap: 1rem;">
-                        <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Startup Name</label>
-                            <input type="text" value="Startup Inc."
-                                style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                <div style="margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: 700;">Account Settings</h2>
+                    <p style="color: #666;">Manage your startup profile and visibility.</p>
+                </div>
+
+                <div
+                    style="background: white; padding: 2rem; border-radius: 12px; border: 1px solid #e2e8f0; max-width: 800px;">
+                    <form>
+                        <h3
+                            style="margin-bottom: 1.5rem; font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">
+                            Basic Information</h3>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Startup
+                                    Name</label>
+                                <input type="text" value="Startup Inc."
+                                    style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Website</label>
+                                <input type="text" value="https://startup.com"
+                                    style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;">
+                            </div>
                         </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Website</label>
-                            <input type="text" value="https://startup.com"
-                                style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+
+                        <div style="margin-bottom: 2rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Short Pitch</label>
+                            <textarea rows="3"
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;">We are revolutionizing the industry with AI.</textarea>
                         </div>
-                        <button
-                            style="width: max-content; padding: 0.5rem 1rem; background: #fcb82e; border: none; border-radius: 4px; font-weight: 600; cursor: pointer;">Save
+
+                        <h3
+                            style="margin-bottom: 1.5rem; font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">
+                            Visibility</h3>
+
+                        <div
+                            style="margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <div style="font-weight: 600;">Profile Visibility</div>
+                                <div style="font-size: 0.9rem; color: #666;">Allow corporates and investors to view your
+                                    profile.</div>
+                            </div>
+                            <label class="switch"
+                                style="position: relative; display: inline-block; width: 50px; height: 26px;">
+                                <input type="checkbox" checked style="opacity: 0; width: 0; height: 0;">
+                                <span
+                                    style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #fcb82e; transition: .4s; border-radius: 34px;"></span>
+                                <span
+                                    style="position: absolute; content: ''; height: 20px; width: 20px; left: 26px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%;"></span>
+                            </label>
+                        </div>
+
+                        <button type="button"
+                            style="padding: 0.75rem 2rem; background: #000; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Save
                             Changes</button>
-                    </div>
+                    </form>
                 </div>
             </section>
         </div>
     </main>
 
-    <script>
-        function showSection(sectionId) {
-            // Hide all sections
-            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-            // Show target section
-            document.getElementById(sectionId).classList.add('active');
-
-            // Update nav state
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            // Find the button that calls this function with this sectionId
-            const activeBtn = Array.from(document.querySelectorAll('.nav-item')).find(btn => btn.getAttribute('onclick').includes(sectionId));
-            if (activeBtn) activeBtn.classList.add('active');
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Chart Init
+            const ctx = document.getElementById('startupChart');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'Profile Views',
+                            data: [5, 8, 12, 15, 10, 25, 30],
+                            borderColor: '#fcb82e',
+                            backgroundColor: 'rgba(252, 184, 46, 0.2)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('welcome') === 'true') {
                 setTimeout(() => {
@@ -776,6 +855,15 @@
                 }, 100);
             }
         });
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const activeBtn = Array.from(document.querySelectorAll('.nav-item')).find(btn => btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(sectionId));
+            if (activeBtn) activeBtn.classList.add('active');
+        }
     </script>
 </body>
 

@@ -1,12 +1,17 @@
 // Modal functions
+// Modal functions
 function openLoginModal() {
-    document.getElementById('loginModal').style.display = 'block';
+    const modal = document.getElementById('loginModal');
+    modal.classList.add('active');
+    modal.style.setProperty('display', 'flex', 'important');
     document.body.style.overflow = 'hidden';
     document.getElementById('loginEmail').focus();
 }
 
 function closeLoginModal() {
-    document.getElementById('loginModal').style.display = 'none';
+    const modal = document.getElementById('loginModal');
+    modal.classList.remove('active');
+    modal.style.display = 'none';
     document.body.style.overflow = 'auto';
     hideAlert('login');
     document.getElementById('loginForm').reset();
@@ -14,13 +19,17 @@ function closeLoginModal() {
 }
 
 function openSignupModal() {
-    document.getElementById('signupModal').style.display = 'block';
+    const modal = document.getElementById('signupModal');
+    modal.classList.add('active');
+    modal.style.setProperty('display', 'flex', 'important');
     document.body.style.overflow = 'hidden';
     document.getElementById('fullName').focus();
 }
 
 function closeSignupModal() {
-    document.getElementById('signupModal').style.display = 'none';
+    const modal = document.getElementById('signupModal');
+    modal.classList.remove('active');
+    modal.style.display = 'none';
     document.body.style.overflow = 'auto';
     hideAlert('signup');
     document.getElementById('signupForm').reset();
@@ -116,17 +125,34 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     setLoading(true, 'login');
 
     try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        const response = await fetch('/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ email, password })
+        });
 
-        // Mock successful login
-        showAlert('Authentication successful! Redirecting to dashboard...', 'success', 'login');
-        setTimeout(() => {
-            window.location.href = '/investor/dashboard'; // Assuming an investor dashboard exists or will exist
-        }, 1500);
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            showAlert('Authentication successful! Redirecting...', 'success', 'login');
+
+            // Redirect based on role
+            setTimeout(() => {
+                if (data.role === 'startup' || data.role === 'founder') window.location.href = '/startup';
+                else if (data.role === 'corporate') window.location.href = '/corporate';
+                else if (data.role === 'connector') window.location.href = '/connector';
+                else if (data.role === 'admin') window.location.href = '/admin';
+                else window.location.href = '/';
+            }, 1000);
+        } else {
+            showAlert(data.error || 'Login failed', 'error', 'login');
+        }
     } catch (error) {
         console.error('Login error:', error);
-        showAlert('Connection error. Please check your network and try again.', 'error', 'login');
+        showAlert('Connection error. Please check your network.', 'error', 'login');
     } finally {
         setLoading(false, 'login');
     }
@@ -174,13 +200,31 @@ document.getElementById('signupForm').addEventListener('submit', async function 
     setLoading(true, 'signup');
 
     try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        const response = await fetch('/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                name: fullName,
+                email: email,
+                password: password,
+                company: firmName,
+                role: 'corporate' // Register investors as 'corporate'
+            })
+        });
 
-        showAlert('Application submitted successfully! Our team will review your profile.', 'success', 'signup');
-        setTimeout(() => {
-            window.location.href = '/investor/dashboard';
-        }, 2000);
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            showAlert('Application submitted successfully! Redirecting...', 'success', 'signup');
+            setTimeout(() => {
+                window.location.href = '/corporate';
+            }, 1500);
+        } else {
+            showAlert(data.error || 'Registration failed', 'error', 'signup');
+        }
     } catch (error) {
         console.error('Signup error:', error);
         showAlert('Connection error. Please try again later.', 'error', 'signup');

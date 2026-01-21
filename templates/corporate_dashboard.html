@@ -349,7 +349,7 @@
                         <div class="card-header">
                             <div>
                                 <div class="card-title">Potential Matches</div>
-                                <div class="card-value">12</div>
+                                <div class="card-value">{{ total_startups }}</div>
                             </div>
                             <div class="card-icon gold"><i class="fa-solid fa-bolt"></i></div>
                         </div>
@@ -367,10 +367,24 @@
                         <div class="card-header">
                             <div>
                                 <div class="card-title">Deal Flow Value</div>
-                                <div class="card-value">$2.4M</div>
+                                <div class="card-value">{{ deal_flow_value }}</div>
                             </div>
                             <div class="card-icon blue"><i class="fa-solid fa-dollar-sign"></i></div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="table-container" style="padding: 1.5rem; margin-bottom: 2rem;">
+                    <div
+                        style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                        <h3 class="table-title">Performance Analytics</h3>
+                        <select style="padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc;">
+                            <option>Last 6 Months</option>
+                            <option>Last Year</option>
+                        </select>
+                    </div>
+                    <div style="height: 300px;">
+                        <canvas id="matchChart"></canvas>
                     </div>
                 </div>
 
@@ -383,26 +397,28 @@
                             <tr>
                                 <th>Startup Name</th>
                                 <th>Sector</th>
-                                <th>Match Score</th>
+                                <th>Stage</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for startup in recent_matches %}
                             <tr>
-                                <td>NeuroTech AI</td>
-                                <td>HealthTech</td>
-                                <td>98%</td>
-                                <td><span class="status-pill matched">Matched</span></td>
+                                <td>{{ startup.name }}</td>
+                                <td>
+                                    <!-- Parse sectors JSON if needed, or just show first -->
+                                    {{ startup.sectors if startup.sectors else 'General' }}
+                                </td>
+                                <td>{{ startup.stage or 'Seed' }}</td>
+                                <td><span class="status-pill matched">New</span></td>
                                 <td><button style="cursor:pointer">Connect</button></td>
                             </tr>
+                            {% else %}
                             <tr>
-                                <td>CleanEnergy Systems</td>
-                                <td>CleanTech</td>
-                                <td>92%</td>
-                                <td><span class="status-pill review">In Review</span></td>
-                                <td><button style="cursor:pointer">View</button></td>
+                                <td colspan="5" style="text-align:center; color:#888;">No startups found yet.</td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -629,24 +645,131 @@
 
             <!-- SETTINGS SECTION -->
             <section id="settings" class="section">
-                <h2>Settings</h2>
-                <p>Manage corporate profile...</p>
+                <div style="margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: 700;">Account Settings</h2>
+                    <p style="color: #666;">Manage your profile and notification preferences.</p>
+                </div>
+
+                <div
+                    style="background: white; padding: 2rem; border-radius: 12px; border: 1px solid #e2e8f0; max-width: 800px;">
+                    <form>
+                        <h3
+                            style="margin-bottom: 1.5rem; font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">
+                            Profile Information</h3>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Full
+                                    Name</label>
+                                <input type="text" value="{{ current_user.name }}"
+                                    style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Job
+                                    Title</label>
+                                <input type="text" value="Innovation Manager"
+                                    style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;">
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 2rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Company
+                                Email</label>
+                            <input type="email" value="innovate@corp.com"
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;">
+                        </div>
+
+                        <h3
+                            style="margin-bottom: 1.5rem; font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">
+                            Notifications</h3>
+
+                        <div
+                            style="margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <div style="font-weight: 600;">New Startup Matches</div>
+                                <div style="font-size: 0.9rem; color: #666;">Get notified when a new startup fits your
+                                    thesis.</div>
+                            </div>
+                            <label class="switch"
+                                style="position: relative; display: inline-block; width: 50px; height: 26px;">
+                                <input type="checkbox" checked style="opacity: 0; width: 0; height: 0;">
+                                <span
+                                    style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #fcb82e; transition: .4s; border-radius: 34px;"></span>
+                                <span
+                                    style="position: absolute; content: ''; height: 20px; width: 20px; left: 26px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%;"></span>
+                            </label>
+                        </div>
+
+                        <div
+                            style="margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <div style="font-weight: 600;">Deal Flow Updates</div>
+                                <div style="font-size: 0.9rem; color: #666;">Receive weekly digests of your deal flow
+                                    activity.</div>
+                            </div>
+                            <label class="switch"
+                                style="position: relative; display: inline-block; width: 50px; height: 26px;">
+                                <input type="checkbox" checked style="opacity: 0; width: 0; height: 0;">
+                                <span
+                                    style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #fcb82e; transition: .4s; border-radius: 34px;"></span>
+                                <span
+                                    style="position: absolute; content: ''; height: 20px; width: 20px; left: 26px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%;"></span>
+                            </label>
+                        </div>
+
+                        <button type="button"
+                            style="padding: 0.75rem 2rem; background: #000; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Save
+                            Changes</button>
+                    </form>
+                </div>
             </section>
         </div>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        function showSection(sectionId) {
-            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
-
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            const activeBtn = Array.from(document.querySelectorAll('.nav-item')).find(btn => btn.getAttribute('onclick').includes(sectionId));
-            if (activeBtn) activeBtn.classList.add('active');
-        }
-    </script>
-    <script>
+        // --- CHART INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', function () {
+            // Check if element exists before trying to get context
+            const ctx = document.getElementById('matchChart');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Startup Matches',
+                            data: [12, 19, 3, 5, 2, 30],
+                            borderColor: '#fcb82e',
+                            backgroundColor: 'rgba(252, 184, 46, 0.2)',
+                            tension: 0.4,
+                            fill: true
+                        }, {
+                            label: 'Deals Closed',
+                            data: [2, 3, 1, 0, 1, 5],
+                            borderColor: '#000',
+                            backgroundColor: 'transparent',
+                            tension: 0.4,
+                            borderDash: [5, 5]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('welcome') === 'true') {
                 setTimeout(() => {
@@ -655,6 +778,15 @@
                 }, 100);
             }
         });
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const activeBtn = Array.from(document.querySelectorAll('.nav-item')).find(btn => btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(sectionId));
+            if (activeBtn) activeBtn.classList.add('active');
+        }
     </script>
 </body>
 

@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - InnoBridge</title>
     <link rel="stylesheet" href="/static/css/index.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap"
         rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -14,6 +15,12 @@
             padding: 160px 2rem 100px;
             text-align: center;
             background: radial-gradient(circle at 50% 0%, rgba(252, 184, 46, 0.15), transparent 70%);
+        }
+
+        .contact-hero .hero-title,
+        .contact-hero .hero-subtitle {
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .contact-container {
@@ -129,6 +136,169 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
         }
 
+        /* Form Styles */
+        .contact-form-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #111827;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .flash-messages {
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background: #ecfdf5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        /* Global Hubs Section */
+        .global-hubs {
+            padding: 80px 2rem;
+            background: #f8f9fa;
+        }
+
+        .hubs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .office-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-primary);
+            transition: transform 0.3s ease;
+        }
+
+        .office-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .office-image {
+            height: 200px;
+            background: #eee;
+            position: relative;
+        }
+
+        .office-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .office-details {
+            padding: 1.5rem;
+        }
+
+        .office-city {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 80px 2rem;
+            background: white;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid #eee;
+            padding: 1.5rem 0;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #111827;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
         @media (max-width: 768px) {
             .contact-container {
                 grid-template-columns: 1fr;
@@ -144,23 +314,24 @@
     <!-- Header -->
     <header class="header">
         <div class="nav-container">
-            <a href="index.html" class="logo">
+            <a href="/" class="logo">
                 <div class="logo-icon">I</div>
                 <div class="logo-text">INNO<span class="accent">BRIDGE</span></div>
             </a>
 
             <nav class="nav-menu">
-                <a href="index.html" class="nav-link">HOME</a>
-                <a href="about.html" class="nav-link">ABOUT</a>
-                <a href="products.html" class="nav-link">PRODUCTS</a>
-                <a href="opportunities.html" class="nav-link">OPPORTUNITIES</a>
-                <a href="blog.html" class="nav-link">BLOG</a>
-                <a href="contact.html" class="nav-link active">CONTACT</a>
+                <a href="/" class="nav-link">HOME</a>
+                <a href="/about" class="nav-link">ABOUT</a>
+                <a href="/products" class="nav-link">PRODUCTS</a>
+                <a href="/opportunities" class="nav-link">OPPORTUNITIES</a>
+                <a href="/blog" class="nav-link">BLOG</a>
+                <a href="/contact" class="nav-link active">CONTACT</a>
+                <a href="/investor" class="nav-link">INVESTORS</a>
             </nav>
 
-            <div class="nav-actions">
-                <a href="login.html" class="nav-btn secondary">LOG IN</a>
-                <a href="signup.html" class="nav-btn primary">GET STARTED</a>
+            <div class="nav-actions" id="navActions">
+                <a href="/login" class="nav-btn secondary">LOG IN</a>
+                <a href="/signup" class="nav-btn primary">GET STARTED</a>
             </div>
         </div>
     </header>
@@ -181,7 +352,7 @@
                 <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
                 <div class="info-content">
                     <h3>Our Headquarters</h3>
-                    <p>123 Innovation Drive, Tech Park<br>Silicon Valley, CA 94025, USA</p>
+                    <p>InnoBridge Tower, 45 Future Ave<br>Tech District, Singapore 018935</p>
                 </div>
             </div>
 
@@ -189,7 +360,7 @@
                 <div class="info-icon"><i class="fas fa-phone-alt"></i></div>
                 <div class="info-content">
                     <h3>Phone Number</h3>
-                    <a href="tel:+15551234567">+1 (555) 123-4567</a>
+                    <a href="tel:+6567890123">+65 6789 0123</a>
                 </div>
             </div>
 
@@ -197,7 +368,7 @@
                 <div class="info-icon"><i class="fas fa-envelope"></i></div>
                 <div class="info-content">
                     <h3>Email Address</h3>
-                    <a href="mailto:hello@innobridge.com">hello@innobridge.com</a>
+                    <a href="mailto:contact@innobridge.com">contact@innobridge.com</a>
                 </div>
             </div>
 
@@ -205,7 +376,7 @@
                 <div class="info-icon"><i class="fab fa-whatsapp"></i></div>
                 <div class="info-content">
                     <h3>WhatsApp</h3>
-                    <a href="https://wa.me/15551234567" target="_blank">Chat with us</a>
+                    <a href="https://wa.me/6567890123" target="_blank">Chat with us</a>
                 </div>
             </div>
 
@@ -226,14 +397,127 @@
             </div>
         </div>
 
-        <!-- Map (Placeholder) -->
-        <div class="map-container">
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3168.628236556408!2d-122.08625158469247!3d37.42206597982567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fba02425dad8f%3A0x6c296c66619367e0!2sGoogleplex!5e0!3m2!1sen!2sus!4v1614123456789!5m2!1sen!2sus"
-                width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
-            </iframe>
+        <!-- Contact Form -->
+        <div class="contact-form-container">
+            {% with messages = get_flashed_messages(with_categories=true, category_filter=["success", "error"]) %}
+            {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <form action="/contact" method="POST">
+                <div class="form-group">
+                    <label for="name" class="form-label">Full Name</label>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="John Doe" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="john@example.com"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="subject" class="form-label">Subject</label>
+                    <input type="text" id="subject" name="subject" class="form-control" placeholder="How can we help?"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea id="message" name="message" class="form-control" rows="5"
+                        placeholder="Tell us more about your inquiry..." required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
         </div>
     </div>
+
+    <!-- Global Hubs -->
+    <section class="global-hubs">
+        <div class="hubs-grid">
+            <!-- Singapore Card -->
+            <div class="office-card">
+                <div class="office-image">
+                    <img src="https://placehold.co/600x400/f8f9fa/fcb82e?text=Singapore+HQ" alt="Singapore Office">
+                </div>
+                <div class="office-details">
+                    <div class="office-city">Singapore (HQ)</div>
+                    <p style="color:#666; font-size:0.9rem;">45 Future Ave, Tech District, 018935</p>
+                    <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid #eee;">
+                        <span style="font-size:0.8rem; font-weight:600; color:#fcb82e;">APAC REGION</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- San Francisco Card -->
+            <div class="office-card">
+                <div class="office-image">
+                    <img src="https://placehold.co/600x400/f8f9fa/10b981?text=San+Francisco" alt="SF Office">
+                </div>
+                <div class="office-details">
+                    <div class="office-city">San Francisco</div>
+                    <p style="color:#666; font-size:0.9rem;">500 Howard St, SoMa, CA 94105</p>
+                    <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid #eee;">
+                        <span style="font-size:0.8rem; font-weight:600; color:#10b981;">AMERICAS REGION</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- London Card -->
+            <div class="office-card">
+                <div class="office-image">
+                    <img src="https://placehold.co/600x400/f8f9fa/3b82f6?text=London" alt="London Office">
+                </div>
+                <div class="office-details">
+                    <div class="office-city">London</div>
+                    <p style="color:#666; font-size:0.9rem;">20 Fenchurch Str, London EC3M 3BY</p>
+                    <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid #eee;">
+                        <span style="font-size:0.8rem; font-weight:600; color:#3b82f6;">EMEA REGION</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="faq-container">
+            <h2
+                style="text-align: center; margin-bottom: 3rem; font-family: 'JetBrains Mono', monospace; font-size: 2rem;">
+                FREQUENTLY ASKED QUESTIONS</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">How fast can I expect a response? <i class="fas fa-chevron-down"
+                        style="color:#ccc;"></i></div>
+                <div class="faq-answer" style="margin-top: 0.5rem;">We typically respond to all inquiries within 24
+                    hours during business days. For urgent technical support, please use our dedicated support portal.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Do you work with early-stage startups? <i class="fas fa-chevron-down"
+                        style="color:#ccc;"></i></div>
+                <div class="faq-answer" style="margin-top: 0.5rem;">Yes! We support startups from Pre-Seed to Series B.
+                    Check out our Startup Portal for specific programs tailored to your stage.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How can corporates partner with InnoBridge? <i class="fas fa-chevron-down"
+                        style="color:#ccc;"></i></div>
+                <div class="faq-answer" style="margin-top: 0.5rem;">Corporates can join as Innovation Partners. Please
+                    fill out the form above with the subject "Corporate Partnership" and our deal flow team will be in
+                    touch.</div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer class="footer">

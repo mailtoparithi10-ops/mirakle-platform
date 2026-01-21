@@ -2701,6 +2701,26 @@
                             </div>
                         </div>
 
+                        <!-- NEW CHART SECTION -->
+                        <div
+                            style="background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <h3 style="font-size: 1.1rem; font-weight: 700;">Earnings Analytics</h3>
+                                <div style="display: flex; gap: 1rem;">
+                                    <span
+                                        style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: #666;">
+                                        <span
+                                            style="display: block; width: 10px; height: 10px; background: #22c55e; border-radius: 50%;"></span>
+                                        Confirmed Earnings (₹)
+                                    </span>
+                                </div>
+                            </div>
+                            <div style="height: 300px; width: 100%;">
+                                <canvas id="connectorChart"></canvas>
+                            </div>
+                        </div>
+
                         <div class="layout-split">
                             <div class="table-container">
                                 <div class="table-header">
@@ -4198,6 +4218,67 @@
                     alert("Thank you for registering, {{ current_user.name }}!");
                     window.history.replaceState({}, document.title, window.location.pathname);
                 }, 100);
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('connectorChart');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan'],
+                        datasets: [{
+                            label: 'Earnings (₹)',
+                            data: [12000, 15400, 21000, 18500, 24600, 35400],
+                            borderColor: '#22c55e',
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#22c55e'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    label: function (context) {
+                                        return '₹ ' + context.parsed.y.toLocaleString();
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    drawBorder: false,
+                                    color: 'rgba(0,0,0,0.05)'
+                                },
+                                ticks: {
+                                    callback: function (value) {
+                                        return '₹' + value / 1000 + 'k';
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
             }
         });
     </script>

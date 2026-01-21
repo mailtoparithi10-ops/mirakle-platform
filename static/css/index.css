@@ -407,7 +407,7 @@ body {
 }
 
 .hero-content {
-    max-width: 600px;
+    max-width: 800px;
 }
 
 /* Hero Badge */
@@ -463,6 +463,7 @@ body {
     text-transform: uppercase;
     position: relative;
     white-space: nowrap;
+    width: fit-content;
 }
 
 .hero-title::before {
@@ -614,7 +615,7 @@ body {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     min-height: 600px;
 }
 
@@ -1443,6 +1444,7 @@ body {
 
     .hero-visual {
         order: -1;
+        justify-content: center;
     }
 
     .device-mockup {

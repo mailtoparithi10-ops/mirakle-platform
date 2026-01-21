@@ -114,6 +114,7 @@ def create_app():
         return render_template("startup_dashboard.html")
 
     @app.route("/investor")
+    @app.route("/investor.html")
     def investor_page():
         return render_template("investor.html")
 
@@ -121,8 +122,25 @@ def create_app():
 
     @app.route("/corporate")
     @app.route("/corporate-dealflow")
+    @login_required
     def corporate_dealflow_page():
-        return render_template("corporate_dashboard.html")
+        # Only corporate or admin
+        if current_user.role not in ('corporate', 'admin'):
+            return render_template("403.html"), 403
+
+        from models import Startup
+        
+        # Real stats
+        total_startups = Startup.query.count()
+        recent_matches = Startup.query.order_by(Startup.created_at.desc()).limit(5).all()
+        
+        # Mock Deal Flow Value for now (or calculate if we had deal data)
+        deal_flow_value = "$2.4M"
+        
+        return render_template("corporate_dashboard.html", 
+                               total_startups=total_startups, 
+                               recent_matches=recent_matches,
+                               deal_flow_value=deal_flow_value)
 
     @app.route("/connector")
     @login_required
@@ -149,6 +167,9 @@ def create_app():
         return render_template("products.html")
 
     @app.route("/request-demo")
+    @app.route("/request-demo")
+    @app.route("/request_demo.html")
+    @app.route("/request_demo")
     def request_demo_page():
         return render_template("request_demo.html")
 
@@ -157,11 +178,42 @@ def create_app():
         # In a real app, we would save this to DB or send email
         return render_template("thank_you.html")
 
-    @app.route("/contact")
-    @app.route("/contact.html")
+    @app.route("/contact", methods=["GET", "POST"])
+    @app.route("/contact.html", methods=["GET", "POST"])
     def contact_page():
+        from flask import request, flash
+        from models import ContactMessage
+        
+        if request.method == "POST":
+            try:
+                name = request.form.get("name")
+                email = request.form.get("email")
+                subject = request.form.get("subject")
+                message = request.form.get("message")
+                
+                if not name or not email or not message:
+                    flash("Please fill in all required fields.", "error")
+                    return render_template("contact.html")
+                
+                new_message = ContactMessage(
+                    name=name,
+                    email=email,
+                    subject=subject,
+                    message=message
+                )
+                
+                db.session.add(new_message)
+                db.session.commit()
+                
+                flash("Thank you! Your message has been sent successfully.", "success")
+                return redirect("/contact")
+                
+            except Exception as e:
+                db.session.rollback()
+                flash("An error occurred. Please try again later.", "error")
+                print(f"Error sending message: {e}")
+                
         return render_template("contact.html")
-
     # Opportunity listing page (public)
     @app.route("/opportunities")
     @app.route("/opportunities.html")
@@ -180,7 +232,7 @@ def create_app():
 
     @app.errorhandler(404)
     def not_found(e):
-        return render_template("404.html"), 404
+        return redirect("/")
 
     @app.errorhandler(500)
     def server_error(e):

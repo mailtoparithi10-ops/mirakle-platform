@@ -8,7 +8,8 @@
     <meta name="description"
         content="InnoBridge is the largest decentralized startup ecosystem. Connect, Earn, Impact, and Grow with our three products that help establish better startup ecosystems globally.">
     <link rel="stylesheet" href="/static/css/index.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap"
         rel="stylesheet">
 </head>
 
@@ -32,41 +33,18 @@
             </a>
 
             <nav class="nav-menu">
-                <a href="about.html" class="nav-link">ABOUT</a>
-                <a href="products.html" class="nav-link">PRODUCTS</a>
-                <a href="opportunities.html" class="nav-link">OPPORTUNITIES</a>
-                <a href="blog.html" class="nav-link">BLOG</a>
-                <a href="contact.html" class="nav-link">CONTACT</a>
-                <a href="investor.html" class="nav-link">INVESTORS</a>
+                <a href="/about" class="nav-link">ABOUT</a>
+                <a href="/products" class="nav-link">PRODUCTS</a>
+                <a href="/opportunities" class="nav-link">OPPORTUNITIES</a>
+                <a href="/blog" class="nav-link">BLOG</a>
+                <a href="/contact" class="nav-link">CONTACT</a>
+                <a href="/investor" class="nav-link">INVESTORS</a>
             </nav>
 
             <div class="nav-actions" id="navActions">
-                <!-- Content will be updated by JS -->
-                <a href="login.html" class="nav-btn secondary">LOG IN</a>
-                <a href="signup.html" class="nav-btn primary">GET STARTED</a>
+                <a href="/login" class="nav-btn secondary">LOG IN</a>
+                <a href="/signup" class="nav-btn primary">GET STARTED</a>
             </div>
-
-            <script>
-                // Check login status dynamically to support static preview
-                fetch('/auth/status')
-                    .then(r => r.json())
-                    .then(data => {
-                        if (data.is_authenticated) {
-                            const nav = document.getElementById('navActions');
-                            let dashboardUrl = '/';
-                            if (data.role === 'startup' || data.role === 'founder') dashboardUrl = '/startup';
-                            else if (data.role === 'corporate') dashboardUrl = '/corporate';
-                            else if (data.role === 'connector') dashboardUrl = '/connector';
-                            else if (data.role === 'admin') dashboardUrl = '/admin';
-
-                            nav.innerHTML = `
-                                <a href="${dashboardUrl}" class="nav-btn secondary">DASHBOARD</a>
-                                <a href="/logout" class="nav-btn primary">LOG OUT</a>
-                            `;
-                        }
-                    })
-                    .catch(e => console.log('Running in static mode or auth check failed'));
-            </script>
         </div>
         </div>
     </header>

@@ -14,10 +14,21 @@
     <style>
         /* Page Specific Overrides */
         .startup-hero {
-            padding-top: 140px;
-            padding-bottom: 80px;
+            padding-top: 120px;
+            padding-bottom: 40px;
             text-align: center;
             background: radial-gradient(circle at 50% 0%, rgba(252, 184, 46, 0.1), transparent 60%);
+        }
+
+        /* Reduce generic section padding */
+        .features,
+        .cta {
+            padding: 60px 2rem !important;
+        }
+
+        /* Reduce header margin */
+        .section-header {
+            margin-bottom: 40px !important;
         }
 
         .benefit-card {
@@ -40,7 +51,8 @@
             gap: 1rem;
             overflow-x: auto;
             padding: 1rem;
-            margin-top: 2rem;
+            margin-top: 1rem;
+            /* Reduced from 2rem */
             scrollbar-width: none;
             /* Firefox */
         }
@@ -74,23 +86,24 @@
             </a>
 
             <nav class="nav-menu">
-                <a href="about.html" class="nav-link">ABOUT</a>
-                <a href="products.html" class="nav-link">PRODUCTS</a>
-                <a href="opportunities.html" class="nav-link">OPPORTUNITIES</a>
-                <a href="blog.html" class="nav-link">BLOG</a>
-                <a href="contact.html" class="nav-link">CONTACT</a>
+                <a href="/about" class="nav-link">ABOUT</a>
+                <a href="/products" class="nav-link">PRODUCTS</a>
+                <a href="/opportunities" class="nav-link">OPPORTUNITIES</a>
+                <a href="/blog" class="nav-link">BLOG</a>
+                <a href="/contact" class="nav-link">CONTACT</a>
+                <a href="/investor" class="nav-link">INVESTORS</a>
             </nav>
 
-            <div class="nav-actions">
+            <div class="nav-actions" id="navActions">
                 <a href="/login" class="nav-btn secondary">LOG IN</a>
-                <a href="signup.html" class="nav-btn primary">GET STARTED</a>
+                <a href="/signup" class="nav-btn primary">GET STARTED</a>
             </div>
         </div>
     </header>
 
     <!-- Hero Section -->
     <section class="startup-hero">
-        <div class="hero-container" style="flex-direction: column; gap: 2rem;">
+        <div class="hero-container" style="display: flex; flex-direction: column; gap: 2rem; align-items: center;">
             <div class="hero-badge">
                 <span>FOR FOUNDERS & STARTUPS</span>
             </div>

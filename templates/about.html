@@ -8,91 +8,302 @@
     <meta name="description"
         content="Connecting the world's innovation ecosystem. Learn about our mission, values, and the team behind InnoBridge.">
     <link rel="stylesheet" href="/static/css/index.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap"
         rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* Enhanced About Page Styles */
+        :root {
+            --gradient-text: linear-gradient(135deg, #000000, #434343);
+        }
+
         .about-hero {
-            padding: 160px 2rem 80px;
+            padding: 140px 2rem 60px;
             text-align: center;
-            background: radial-gradient(circle at 50% 0%, rgba(252, 184, 46, 0.15), transparent 70%);
+            background: radial-gradient(circle at 50% 0%, rgba(252, 184, 46, 0.1), transparent 60%);
+            position: relative;
+            overflow: hidden;
         }
 
-        .about-content {
-            max-width: 800px;
+        .about-hero .hero-badge {
+            margin-bottom: 1rem;
+        }
+
+        .about-hero .hero-title {
+            margin-bottom: 1rem;
+        }
+
+        .about-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(#fcb82e 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.15;
+            z-index: -1;
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        }
+
+        .section-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 4rem 2rem;
+            padding: 4rem 2rem 8rem;
+            /* Reduced top padding */
         }
 
-        .about-text {
+        @media (max-width: 900px) {
+            .section-split {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 3rem;
+                padding: 4rem 2rem;
+            }
+
+            .story-visual {
+                order: -1;
+            }
+        }
+
+        .section-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-primary);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-title-lg {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .text-body {
             font-size: 1.1rem;
             line-height: 1.8;
-            color: #4b5563;
-            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .story-visual {
+            height: 450px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 24px;
+            position: relative;
+            border: 1px solid var(--border-primary);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Stats Strip */
+        .stats-strip {
+            background: #111;
+            color: white;
+            padding: 5rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-strip::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.03) 1px, transparent 1px, transparent 10px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--accent-primary);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #999;
+            font-weight: 500;
+        }
+
+        /* Team Section */
+        .team-section {
+            padding: 4rem 2rem 8rem;
+            /* Reduced top padding */
+            background: var(--bg-primary);
         }
 
         .team-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 4rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 4rem auto 0;
         }
 
         .team-card {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
+            background: var(--bg-primary);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid var(--border-primary);
-            transition: transform 0.3s ease;
+            text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         .team-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transform: translateY(-10px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 40px rgba(252, 184, 46, 0.1);
         }
 
-        .team-avatar {
+        .member-avatar {
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            background: #f3f4f6;
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
             margin: 0 auto 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            color: #9ca3af;
+            font-size: 2.5rem;
+            color: var(--text-muted);
+            border: 4px solid var(--bg-primary);
+            box-shadow: 0 0 0 2px var(--border-primary);
+            transition: all 0.3s ease;
         }
 
+        .team-card:hover .member-avatar {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            background: #fff;
+        }
+
+        .member-name {
+            font-weight: 800;
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .member-role {
+            color: var(--accent-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .social-link {
+            color: var(--text-muted);
+            margin: 0 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .social-link:hover {
+            color: var(--accent-primary);
+        }
+
+        /* Values Section Refined */
         .values-section {
-            background: #f9fafb;
-            padding: 6rem 2rem;
+            background: var(--bg-secondary);
+            padding: 8rem 2rem;
+            position: relative;
         }
 
         .values-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            gap: 2.5rem;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .value-card {
-            padding: 2rem;
+            background: var(--bg-primary);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-primary);
+            transition: all 0.3s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
         }
 
         .value-icon {
-            width: 50px;
-            height: 50px;
-            background: rgba(252, 184, 46, 0.2);
-            border-radius: 12px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(252, 184, 46, 0.2), rgba(252, 184, 46, 0.1));
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #d97706;
             font-size: 1.5rem;
             margin-bottom: 1.5rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .cta-card {
+            background: linear-gradient(135deg, #1a1a1a, #000000);
+            border-radius: 30px;
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(252, 184, 46, 0.3), transparent 70%);
+            transform: translate(30%, -30%);
         }
     </style>
 </head>
@@ -116,11 +327,12 @@
                 <a href="opportunities.html" class="nav-link">OPPORTUNITIES</a>
                 <a href="blog.html" class="nav-link">BLOG</a>
                 <a href="contact.html" class="nav-link">CONTACT</a>
+                <a href="investor.html" class="nav-link">INVESTORS</a>
             </nav>
 
-            <div class="nav-actions">
-                <a href="login.html" class="nav-btn secondary">LOG IN</a>
-                <a href="signup.html" class="nav-btn primary">GET STARTED</a>
+            <div class="nav-actions" id="navActions">
+                <a href="/login" class="nav-btn secondary">LOG IN</a>
+                <a href="/signup" class="nav-btn primary">GET STARTED</a>
             </div>
         </div>
     </header>
@@ -130,47 +342,198 @@
         <div class="hero-badge">
             <span>OUR MISSION</span>
         </div>
-        <h1 class="hero-title">
-            BRIDGING THE <span class="text-gradient">INNOVATION GAP</span>
+        <h1 class="hero-title"
+            style="width: fit-content; max-width: 1000px; margin: 0 auto 1.5rem; line-height: 1.2; text-align: center; white-space: normal;">
+            WE ARE <span class="text-gradient">REWIRING THE DNA</span> OF GLOBAL INNOVATION
         </h1>
-        <p class="hero-subtitle">
-            We are on a mission to democratize access to innovation resources and connect the world's most promising
-            startups with global opportunities.
-        </p>
-    </section>
-
-    <!-- Main Content -->
-    <section class="about-content">
-        <div class="about-text">
-            <p>
-                InnoBridge was founded with a simple belief: talent is distributed equally, but opportunity is not.
-                We are building the digital infrastructure to connect the fragmented global innovation ecosystem.
+        <div class="hero-content-wrapper"
+            style="max-width: 1000px; margin: 0 auto; text-align: justify; text-align-last: center;">
+            <p class="text-body"
+                style="font-size: 1.25rem; font-weight: 500; color: var(--text-primary); margin-bottom: 1.5rem; line-height: 1.6;">
+                InnoBridge serves as the digital infrastructure connecting visionaries with the resources they need. We
+                bridge the critical gaps between groundbreaking ideas and market-ready execution.
             </p>
-            <p>
-                Whether you are a startup looking for funding, a corporation seeking innovation, or a connector helping
-                others succeed,
-                InnoBridge provides the tools and network you need to thrive.
+            <p class="text-body" style="font-size: 1.05rem; color: var(--text-secondary); line-height: 1.8;">
+                By leveraging advanced matchmaking intelligence and verified ecosystem data, we facilitate high-value
+                connections across the startup landscape. Whether enabling capital deployment or accelerating corporate
+                partnerships, we empower the global innovation economy to move faster and smarter.
             </p>
         </div>
     </section>
 
+    <!-- Our Story Section -->
+    <section class="section-split">
+        <div class="story-text">
+            <span class="section-tag">OUR JOURNEY</span>
+            <h2 class="section-title-lg">FROM A CAMPUS PROJECT TO GLOBAL INFRASTRUCTURE</h2>
+            <div class="text-body">
+                <p>
+                    InnoBridge wasn't founded in a boardroom. It started in 2023 as a simple tool to help university
+                    students find technical co-founders. We quickly realized the problem wasn't a lack of talent—it was
+                    a lack of <strong>visibility</strong>.
+                </p>
+                <p>
+                    Today, we've evolved into a comprehensive platform that serves the entire ecosystem. We don't just
+                    facilitate introductions; we provide the verified data, portfolio tools, and smart matching
+                    algorithms that power meaningful growth for startups, investors, and corporate innovators alike.
+                </p>
+            </div>
+            <div style="display: flex; gap: 40px; margin-top: 2rem;">
+                <div>
+                    <h4 style="font-size: 2.5rem; font-weight: 800; color: #000;">2023</h4>
+                    <span style="color: #666; font-size: 0.9rem;">Founded</span>
+                </div>
+                <div>
+                    <h4 style="font-size: 2.5rem; font-weight: 800; color: #000;">50+</h4>
+                    <span style="color: #666; font-size: 0.9rem;">Countries</span>
+                </div>
+            </div>
+        </div>
+        <div class="story-visual">
+            <!-- Abstract Visual -->
+            <div style="position: relative; width: 200px; height: 200px;">
+                <div style="position: absolute; inset: 0; border: 2px solid rgba(0,0,0,0.1); border-radius: 50%;"></div>
+                <div
+                    style="position: absolute; inset: 20px; border: 2px solid rgba(252, 184, 46, 0.4); border-radius: 50%;">
+                </div>
+                <div
+                    style="position: absolute; inset: 40px; border: 20px solid var(--accent-primary); border-radius: 50%; opacity: 0.2;">
+                </div>
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="#fcb82e"
+                    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                    <path d="M12 2L2 7v10c0 5.5 3.8 10.7 10 12 6.2-1.3 10-6.5 10-12V7l-10-5z" />
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Strip -->
+    <div class="stats-strip">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">12k+</div>
+                <div class="stat-label">Startups Onboarded</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">$150M</div>
+                <div class="stat-label">Capital Facilitated</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">4,000</div>
+                <div class="stat-label">Active Connectors</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">300+</div>
+                <div class="stat-label">Corp Partners</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Values -->
     <section class="values-section">
+        <div style="text-align: center; margin-bottom: 4rem;">
+            <span class="section-tag">OUR DNA</span>
+            <h2 class="section-title-lg">GUIDED BY PRINCIPLES</h2>
+            <p class="section-subtitle">The core values that drive our decision making every single day.</p>
+        </div>
+
         <div class="values-grid">
             <div class="value-card">
                 <div class="value-icon"><i class="fas fa-globe"></i></div>
                 <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Global First</h3>
-                <p style="color: #666;">We believe in a borderless world where innovation knows no boundaries.</p>
+                <p style="color: #666; line-height: 1.6;">Innovation isn't confined to Silicon Valley. We build for the
+                    founders in Nairobi, Bangalore, and São Paulo just as much as for those in SF.</p>
             </div>
             <div class="value-card">
-                <div class="value-icon"><i class="fas fa-handshake"></i></div>
-                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Trust & Transparency</h3>
-                <p style="color: #666;">We build meaningful connections based on verified data and mutual trust.</p>
+                <div class="value-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Radical Integrity</h3>
+                <p style="color: #666; line-height: 1.6;">Trust is the currency of networking. We verify every data
+                    point and ensure transparency in every interaction on our platform.</p>
             </div>
             <div class="value-card">
-                <div class="value-icon"><i class="fas fa-bolt"></i></div>
-                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Impact Driven</h3>
-                <p style="color: #666;">We focus on creating tangible value and real-world impact for our community.</p>
+                <div class="value-icon"><i class="fas fa-rocket"></i></div>
+                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Founder Obsessed</h3>
+                <p style="color: #666; line-height: 1.6;">We exist to make the hard journey of entrepreneurship slightly
+                    easier. If a feature doesn't help founders, we don't build it.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section">
+        <div style="text-align: center;">
+            <span class="section-tag">THE TEAM</span>
+            <h2 class="section-title-lg">MEET THE VISIONARIES</h2>
+            <p class="section-subtitle">A diverse team of builders, dreamers, and doers.</p>
+        </div>
+
+        <div class="team-grid">
+            <!-- Member 1 -->
+            <div class="team-card">
+                <div class="member-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-name">Alex Morgan</div>
+                <div class="member-role">CO-FOUNDER & CEO</div>
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">
+                    Former VC associate and 2x founder. Obsessed with market efficiency.
+                </p>
+                <div style="display: flex; justify-content: center;">
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <!-- Member 2 -->
+            <div class="team-card">
+                <div class="member-avatar">
+                    <i class="fas fa-user-astronaut"></i>
+                </div>
+                <div class="member-name">Sarah Chen</div>
+                <div class="member-role">CHIEF PRODUCT OFFICER</div>
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">
+                    Product veteran from TechNova. Building the future of automated deal flow.
+                </p>
+                <div style="display: flex; justify-content: center;">
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <!-- Member 3 -->
+            <div class="team-card">
+                <div class="member-avatar">
+                    <i class="fas fa-code"></i>
+                </div>
+                <div class="member-name">David Okonjo</div>
+                <div class="member-role">HEAD OF ENGINEERING</div>
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">
+                    Full-stack wizard. Scaling our matching algorithms to handle millions of nodes.
+                </p>
+                <div style="display: flex; justify-content: center;">
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="cta-card">
+            <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem;">READY TO MAKE AN IMPACT?</h2>
+            <p
+                style="font-size: 1.2rem; margin-bottom: 2.5rem; max-width: 600px; margin-left: auto; margin-right: auto; opacity: 0.9;">
+                Whether you're building the next unicorn or helping those who are, there is a place for you at
+                InnoBridge.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="signup.html" class="nav-btn primary" style="padding: 16px 32px; font-size: 1.1rem;">JOIN THE
+                    TEAM</a>
+                <a href="contact.html" class="nav-btn secondary"
+                    style="background-color: white; color: black; border: none; font-weight: 600; padding: 16px 32px; font-size: 1.1rem;">CONTACT
+                    US</a>
             </div>
         </div>
     </section>

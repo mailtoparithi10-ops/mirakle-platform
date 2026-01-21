@@ -5,8 +5,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Investor Intelligence Hub - InnoBridge</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap"
+        rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/corporate.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="/static/css/investor_fix.css">
+
 </head>
 
 <body>
@@ -29,13 +34,19 @@
             </a>
 
             <nav class="nav-menu">
-                <a href="index.html" class="nav-link">HOME</a>
-                <a href="about.html" class="nav-link">ABOUT</a>
-                <a href="products.html" class="nav-link">PRODUCTS</a>
-                <a href="opportunities.html" class="nav-link">OPPORTUNITIES</a>
-                <a href="blog.html" class="nav-link">BLOG</a>
-                <a href="contact.html" class="nav-link">CONTACT</a>
+                <a href="/" class="nav-link">HOME</a>
+                <a href="/about" class="nav-link">ABOUT</a>
+                <a href="/products" class="nav-link">PRODUCTS</a>
+                <a href="/opportunities" class="nav-link">OPPORTUNITIES</a>
+                <a href="/blog" class="nav-link">BLOG</a>
+                <a href="/contact" class="nav-link">CONTACT</a>
+                <a href="/investor" class="nav-link active">INVESTORS</a>
             </nav>
+
+            <div class="nav-actions" id="navActions">
+                <a href="/login" class="nav-btn secondary">LOG IN</a>
+                <a href="/signup" class="nav-btn primary">GET STARTED</a>
+            </div>
         </div>
     </header>
 
@@ -75,14 +86,69 @@
 
             <div class="hero-visual">
                 <div class="device-container">
-                    <div class="time-console">
-                        <div class="console-screen">
-                            <div class="screen-lines">
-                                &gt; INITIALIZING INVESTOR HUB...<br>
-                                &gt; SCANNING MARKET TRENDS...<br>
-                                &gt; IDENTIFYING UNICORNS: ACTIVE<br>
-                                &gt; RISK ASSESSMENT: OPTIMAL<br>
-                                &gt; ROI PROJECTION: CALCULATING...
+                    <!-- Orbital Rings -->
+                    <div class="orbital-ring orbit-1"></div>
+                    <div class="orbital-ring orbit-2"></div>
+                    <div class="orbital-ring orbit-3"></div>
+
+                    <!-- Orbital Dots -->
+                    <div class="orbit-dot dot-1"></div>
+                    <div class="orbit-dot dot-2"></div>
+                    <div class="orbit-dot dot-3"></div>
+
+                    <!-- Device Mockup -->
+                    <div class="device-mockup">
+                        <div class="device-screen">
+                            <div class="screen-header">
+                                <div class="screen-title">Investor Console</div>
+                                <div class="screen-dots">
+                                    <div class="screen-dot red"></div>
+                                    <div class="screen-dot yellow"></div>
+                                    <div class="screen-dot green"></div>
+                                </div>
+                            </div>
+                            <div class="screen-content">
+                                <!-- Card 1: New Deal Alert -->
+                                <div class="screen-card"
+                                    style="display: flex; flex-direction: column; justify-content: center;">
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                        <span
+                                            style="font-size: 9px; font-weight: 700; color: white; background: #fcb82e; padding: 2px 6px; border-radius: 4px;">NEW
+                                            OPP</span>
+                                        <span style="font-size: 9px; color: #999;">Active Now</span>
+                                    </div>
+                                    <div style="font-size: 13px; font-weight: 800; color: #000; margin-bottom: 2px;">
+                                        Quantum AI Labs</div>
+                                    <div style="font-size: 10px; color: #666;">Deep Tech • Series A • $10M</div>
+                                </div>
+
+                                <!-- Card 2: Portfolio Return -->
+                                <div class="screen-card"
+                                    style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-size: 10px; color: #666; margin-bottom: 2px;">Portfolio IRR
+                                        </div>
+                                        <div style="font-size: 16px; font-weight: 800; color: #000;">32.4%</div>
+                                    </div>
+                                    <div
+                                        style="background: rgba(40, 202, 66, 0.1); color: #28ca42; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px;">
+                                        +5.2% ↗
+                                    </div>
+                                </div>
+
+                                <!-- Card 3: Due Diligence Status -->
+                                <div class="screen-card" style="display: flex; align-items: center; gap: 12px;">
+                                    <div
+                                        style="width: 32px; height: 32px; background: rgba(0,0,0,0.05); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-file-signature" style="font-size: 14px; color: #333;"></i>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 12px; font-weight: 700; color: #000;">Term Sheet Sent
+                                        </div>
+                                        <div style="font-size: 9px; color: #666;">GreenTech Solutions</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -217,10 +283,11 @@
     </section>
 
     <!-- Why Choose InnoBridge -->
-    <section class="features" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+    <section class="features"
+        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important; color: white !important;">
         <div class="features-container">
             <div class="section-header">
-                <h2 class="section-title" style="color: white;">WHY CHOOSE INNOBRIDGE</h2>
+                <h2 class="section-title" style="color: white !important;">WHY CHOOSE INNOBRIDGE</h2>
                 <p class="section-subtitle" style="color: rgba(255,255,255,0.9);">
                     The most advanced platform for venture investors.
                 </p>
@@ -350,7 +417,7 @@
                     style="padding: 1.5rem; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
                     <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: #333;">How do I get started?</h3>
                     <p style="color: #666; line-height: 1.6;">
-                        Click "Request Access" above to submit your application. Our team will review and
+                        Click "Application Form" above to submit your application. Our team will review and
                         grant access within 48 hours for qualified investors.
                     </p>
                 </div>
@@ -364,7 +431,7 @@
             <h2 class="cta-title">JOIN THE TOP 1% OF INVESTORS</h2>
             <p class="cta-description">Connect with the next generation of industry leaders today.</p>
             <div class="cta-actions">
-                <button class="hero-btn primary" onclick="openSignupModal()">REQUEST ACCESS</button>
+                <button class="hero-btn primary" onclick="openSignupModal()">APPLICATION FORM</button>
                 <button class="hero-btn secondary" onclick="openLoginModal()">LOGIN</button>
             </div>
         </div>
