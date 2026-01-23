@@ -1,5 +1,6 @@
 # app.py (NEW CLEAN BACKEND)
 import os
+from datetime import datetime
 from flask import Flask, render_template, redirect
 from config import Config
 from extensions import db, migrate, login_manager
@@ -12,6 +13,10 @@ from routes.opportunities import bp as opportunities_bp
 from routes.applications import bp as applications_bp
 from routes.referrals import bp as referrals_bp
 from routes.admin import bp as admin_bp
+from routes.meetings import bp as meetings_bp
+
+
+from routes.enablers import bp as enablers_bp
 
 
 # -----------------------------------------
@@ -26,6 +31,14 @@ def create_app():
     migrate.init_app(app, db)
     login_manager.init_app(app)
 
+    # Add custom Jinja2 filters
+    @app.template_filter('strftime')
+    def strftime_filter(date, format='%B %d, %Y at %I:%M %p'):
+        """Custom strftime filter for Jinja2 templates"""
+        if date:
+            return date.strftime(format)
+        return ""
+
     # Register blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(startups_bp)
@@ -33,6 +46,8 @@ def create_app():
     app.register_blueprint(applications_bp)
     app.register_blueprint(referrals_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(meetings_bp)
+    app.register_blueprint(enablers_bp)
 
     # -----------------------------------------
     # PAGE ROUTES (NO UI CHANGES)
@@ -145,7 +160,7 @@ def create_app():
     @app.route("/connector")
     @login_required
     def connector_page():
-        if current_user.role not in ("connector", "admin"):
+        if current_user.role not in ("connector", "enabler", "admin"):
             return render_template("403.html"), 403
         return render_template("connector_dashboard.html")
 
@@ -214,6 +229,63 @@ def create_app():
                 print(f"Error sending message: {e}")
                 
         return render_template("contact.html")
+
+    # -----------------------------------------
+    # MEETING ROUTES
+    # -----------------------------------------
+    @app.route("/meeting/join/<meeting_room_id>")
+    @login_required
+    def meeting_join_page(meeting_room_id):
+        from models import Meeting, MeetingParticipant
+        
+        meeting = Meeting.query.filter_by(meeting_room_id=meeting_room_id).first_or_404()
+        
+        # Check if user has access
+        participant = MeetingParticipant.query.filter_by(
+            meeting_id=meeting.id,
+            user_id=current_user.id
+        ).first()
+        
+        if not participant:
+            return render_template("403.html"), 403
+        
+        return render_template("meeting_join.html", meeting=meeting, participant=participant)
+
+    @app.route("/meeting/room/<meeting_room_id>")
+    @login_required
+    def meeting_room_page(meeting_room_id):
+        from models import Meeting, MeetingParticipant
+        
+        meeting = Meeting.query.filter_by(meeting_room_id=meeting_room_id).first_or_404()
+        
+        # Check if user has access
+        participant = MeetingParticipant.query.filter_by(
+            meeting_id=meeting.id,
+            user_id=current_user.id
+        ).first()
+        
+        if not participant:
+            return render_template("403.html"), 403
+        
+        # Update participant status to joined
+        participant.joined_at = datetime.utcnow()
+        participant.attendance_status = "joined"
+        db.session.commit()
+        
+        return render_template("meeting_room.html", meeting=meeting, participant=participant)
+
+    @app.route("/admin/meetings")
+    @login_required
+    def admin_meetings_page():
+        if current_user.role != "admin":
+            return render_template("403.html"), 403
+        return render_template("admin_meetings.html")
+
+    @app.route("/test-meeting-inbox")
+    @login_required
+    def test_meeting_inbox():
+        return render_template("test_meeting_inbox.html")
+
     # Opportunity listing page (public)
     @app.route("/opportunities")
     @app.route("/opportunities.html")

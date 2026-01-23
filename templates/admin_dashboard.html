@@ -55,6 +55,15 @@
                 <i class="fas fa-trophy"></i>
                 Programs
             </a>
+            <a href="#" class="admin-nav-item" onclick="showSection('meetings')">
+                <i class="fas fa-video"></i>
+                Meetings
+            </a>
+            <a href="#" class="admin-nav-item" onclick="showSection('inbox')">
+                <i class="fas fa-envelope"></i>
+                Inbox <span
+                    style="margin-left:auto; background:#000; color:#fcb82e; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:800;">3</span>
+            </a>
         </aside>
 
         <main class="admin-content">
@@ -285,6 +294,128 @@
                     </div>
                 </div>
             </section>
+
+            <!-- MEETINGS SECTION -->
+            <section id="meetingsSection" style="display: none;">
+                <h2 class="section-title">Meeting Management</h2>
+                
+                <!-- Meeting Stats -->
+                <div class="stats-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card meetings">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-video"></i></div>
+                            <div class="stat-trend"><i class="fas fa-arrow-up"></i> <span id="meetingsTrend">+15%</span></div>
+                        </div>
+                        <div class="stat-title">Total Meetings</div>
+                        <div class="stat-value" id="totalMeetings">0</div>
+                    </div>
+                    
+                    <div class="stat-card upcoming">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+                            <div class="stat-trend"><i class="fas fa-clock"></i> <span id="upcomingTrend">Today</span></div>
+                        </div>
+                        <div class="stat-title">Upcoming</div>
+                        <div class="stat-value" id="upcomingMeetings">0</div>
+                    </div>
+                    
+                    <div class="stat-card participants">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-users"></i></div>
+                            <div class="stat-trend"><i class="fas fa-user-plus"></i> <span id="participantsTrend">Active</span></div>
+                        </div>
+                        <div class="stat-title">Participants</div>
+                        <div class="stat-value" id="totalParticipants">0</div>
+                    </div>
+                </div>
+
+                <!-- Create Meeting Button -->
+                <div style="margin-bottom: 2rem;">
+                    <button class="admin-btn primary" onclick="showCreateMeetingModal()" style="background: #4f46e5; padding: 12px 24px; border-radius: 8px; font-weight: 600;">
+                        <i class="fas fa-plus"></i> Create New Meeting
+                    </button>
+                </div>
+
+                <!-- Meetings List -->
+                <div class="content-card">
+                    <div class="card-header-flex">
+                        <h3 class="card-title">
+                            <i class="fas fa-video"></i>
+                            All Meetings
+                        </h3>
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" onclick="filterMeetings('all')">All</button>
+                            <button class="filter-tab" onclick="filterMeetings('upcoming')">Upcoming</button>
+                            <button class="filter-tab" onclick="filterMeetings('completed')">Completed</button>
+                            <button class="filter-tab" onclick="filterMeetings('cancelled')">Cancelled</button>
+                        </div>
+                    </div>
+                    <div id="meetingsList">
+                        <div class="loading" style="margin: 20px auto;"></div>
+                        <p style="text-align: center; margin-top: 10px;">Loading meetings...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- INBOX SECTION -->
+            <section id="inboxSection" style="display: none;">
+                <h2 class="section-title">Platform Communications</h2>
+                <div class="inbox-list">
+                    <!-- Alert 1 -->
+                    <div class="inbox-item unread" onclick="viewMessage('SR-102')">
+                        <div class="inbox-avatar avatar-system">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="inbox-info">
+                            <div class="inbox-meta">
+                                <span class="inbox-sender">Security Engine <span class="inbox-tag tag-high">High
+                                        Priority</span></span>
+                                <span class="inbox-time">12 mins ago</span>
+                            </div>
+                            <div class="inbox-subject">Failed Login Spikes Detected</div>
+                            <div class="inbox-preview">Our sentinel has detected an unusual pattern of failed login
+                                attempts from IP 192.168.1.45. Automated rate-limiting has been applied, but manual
+                                review is suggested.</div>
+                        </div>
+                    </div>
+
+                    <!-- Alert 2 -->
+                    <div class="inbox-item unread" onclick="viewMessage('UR-554')">
+                        <div class="inbox-avatar avatar-user">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="inbox-info">
+                            <div class="inbox-meta">
+                                <span class="inbox-sender">User Management <span
+                                        class="inbox-tag tag-new">New</span></span>
+                                <span class="inbox-time">2 hours ago</span>
+                            </div>
+                            <div class="inbox-subject">New Corporate Verification Required</div>
+                            <div class="inbox-preview">"Titan Logistics Corp" has requested platform verification. Their
+                                LinkedIn and company registration data has been pre-fetched for your final approval.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alert 3 -->
+                    <div class="inbox-item" onclick="viewMessage('MA-992')">
+                        <div class="inbox-avatar avatar-match">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <div class="inbox-info">
+                            <div class="inbox-meta">
+                                <span class="inbox-sender">Match Engine <span
+                                        class="inbox-tag tag-info">Info</span></span>
+                                <span class="inbox-time">Yesterday</span>
+                            </div>
+                            <div class="inbox-subject">Synchronization Batch Complete</div>
+                            <div class="inbox-preview">The weekly synchronization between startup milestones and
+                                corporate challenge requirements has successfully updated 42 matches across 12 programs.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -339,6 +470,335 @@
                 });
             }
         });
+
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = ['dashboard', 'users', 'startups', 'corporate', 'connectors', 'programs', 'meetings', 'inbox'];
+            sections.forEach(s => {
+                const el = document.getElementById(s + 'Section');
+                if (el) el.style.display = 'none';
+            });
+
+            // Show target
+            const target = document.getElementById(sectionId + 'Section');
+            if (target) target.style.display = 'block';
+
+            // Active Nav
+            document.querySelectorAll('.admin-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Find current button and set active
+            const btns = document.querySelectorAll('.admin-nav-item');
+            btns.forEach(btn => {
+                if (btn.getAttribute('onclick').includes(sectionId)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Load section-specific data
+            if (sectionId === 'meetings') {
+                loadMeetings();
+                loadMeetingStats();
+            }
+        }
+
+        function viewMessage(id) {
+            showToast(`Accessing secure platform logs for ${id}...`, "info");
+            setTimeout(() => {
+                showToast("Incident report decrypted. Opening log viewer.", "success");
+            }, 1000);
+        }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 40px;
+                right: 40px;
+                background: ${type === 'success' ? '#10b981' : '#3b82f6'};
+                color: white;
+                padding: 16px 28px;
+                border-radius: 16px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                z-index: 10000;
+                transform: translateY(100px);
+                transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                font-family: 'Outfit', sans-serif;
+                font-weight: 600;
+            `;
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i> <span>${msg}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.style.transform = 'translateY(0)', 100);
+            setTimeout(() => {
+                toast.style.transform = 'translateY(100px)';
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
+
+        // Meeting Management Functions
+        async function loadMeetings() {
+            try {
+                const response = await fetch('/api/meetings/');
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayMeetings(data.meetings);
+                } else {
+                    showToast('Failed to load meetings', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading meetings:', error);
+                showToast('Error loading meetings', 'error');
+            }
+        }
+
+        async function loadMeetingStats() {
+            try {
+                const response = await fetch('/api/meetings/stats');
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('totalMeetings').textContent = data.stats.total_meetings;
+                    document.getElementById('upcomingMeetings').textContent = data.stats.upcoming_meetings;
+                    document.getElementById('totalParticipants').textContent = data.stats.total_participants;
+                }
+            } catch (error) {
+                console.error('Error loading meeting stats:', error);
+            }
+        }
+
+        function displayMeetings(meetings) {
+            const container = document.getElementById('meetingsList');
+            
+            if (meetings.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <i class="fas fa-video" style="font-size: 48px; color: #a0aec0; margin-bottom: 15px;"></i>
+                        <p style="color: #a0aec0;">No meetings created yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = meetings.map(meeting => `
+                <div class="meeting-item" style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 12px; background: white;">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div style="flex: 1;">
+                            <h4 style="margin: 0 0 8px 0; font-weight: 600; color: #1a202c;">${meeting.title}</h4>
+                            <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">${meeting.description || 'No description'}</p>
+                            <div style="display: flex; gap: 16px; font-size: 13px; color: #666;">
+                                <span><i class="fas fa-calendar"></i> ${new Date(meeting.scheduled_at).toLocaleString()}</span>
+                                <span><i class="fas fa-clock"></i> ${meeting.duration_minutes} min</span>
+                                <span><i class="fas fa-users"></i> ${meeting.participant_count} participants</span>
+                                <span><i class="fas fa-shield-alt"></i> ${meeting.access_type.replace('_', ' ')}</span>
+                            </div>
+                            <div style="margin-top: 8px;">
+                                <span class="status-badge status-${meeting.status}" style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">
+                                    ${meeting.status.toUpperCase()}
+                                </span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="viewMeeting(${meeting.id})" style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button onclick="editMeeting(${meeting.id})" style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button onclick="deleteMeeting(${meeting.id})" style="padding: 6px 12px; border: 1px solid #ef4444; border-radius: 4px; background: white; color: #ef4444; cursor: pointer;">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showCreateMeetingModal() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; border-radius: 12px; padding: 24px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0; font-weight: 600;">Create New Meeting</h3>
+                        <button onclick="this.closest('.modal').remove()" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+                    </div>
+                    
+                    <form id="createMeetingForm">
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Meeting Title *</label>
+                            <input type="text" name="title" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Description</label>
+                            <textarea name="description" rows="3" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;"></textarea>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Date & Time *</label>
+                                <input type="datetime-local" name="scheduled_at" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Duration (minutes)</label>
+                                <input type="number" name="duration_minutes" value="60" min="15" max="480" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Access Type *</label>
+                            <select name="access_type" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">
+                                <option value="all_users">All Users</option>
+                                <option value="startup_only">Startup Users Only</option>
+                                <option value="corporate_only">Corporate Users Only</option>
+                                <option value="connector_only">Connector Users Only</option>
+                                <option value="specific_users">Specific Users</option>
+                            </select>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">Meeting Features</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" name="video_enabled" checked> Video Enabled
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" name="audio_enabled" checked> Audio Enabled
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" name="screen_sharing_enabled" checked> Screen Sharing
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" name="chat_enabled" checked> Chat Enabled
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" name="recording_enabled"> Recording Enabled
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" name="waiting_room_enabled"> Waiting Room
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                            <button type="button" onclick="this.closest('.modal').remove()" style="padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;">
+                                Cancel
+                            </button>
+                            <button type="submit" style="padding: 8px 16px; border: none; border-radius: 4px; background: #4f46e5; color: white; cursor: pointer; font-weight: 600;">
+                                Create Meeting
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            modal.className = 'modal';
+            document.body.appendChild(modal);
+            
+            // Handle form submission
+            document.getElementById('createMeetingForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await createMeeting(new FormData(e.target));
+                modal.remove();
+            });
+        }
+
+        async function createMeeting(formData) {
+            const meetingData = {
+                title: formData.get('title'),
+                description: formData.get('description'),
+                scheduled_at: formData.get('scheduled_at'),
+                duration_minutes: parseInt(formData.get('duration_minutes')),
+                access_type: formData.get('access_type'),
+                video_enabled: formData.has('video_enabled'),
+                audio_enabled: formData.has('audio_enabled'),
+                screen_sharing_enabled: formData.has('screen_sharing_enabled'),
+                chat_enabled: formData.has('chat_enabled'),
+                recording_enabled: formData.has('recording_enabled'),
+                waiting_room_enabled: formData.has('waiting_room_enabled')
+            };
+
+            try {
+                const response = await fetch('/api/meetings/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(meetingData)
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('Meeting created successfully!');
+                    loadMeetings();
+                    loadMeetingStats();
+                } else {
+                    showToast(data.error || 'Failed to create meeting', 'error');
+                }
+            } catch (error) {
+                console.error('Error creating meeting:', error);
+                showToast('Error creating meeting', 'error');
+            }
+        }
+
+        function filterMeetings(filter) {
+            // Update active tab
+            document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Filter logic would go here
+            loadMeetings(); // For now, just reload all meetings
+        }
+
+        function viewMeeting(meetingId) {
+            showToast(`Viewing meeting ${meetingId}`, 'info');
+        }
+
+        function editMeeting(meetingId) {
+            showToast(`Editing meeting ${meetingId}`, 'info');
+        }
+
+        async function deleteMeeting(meetingId) {
+            if (!confirm('Are you sure you want to delete this meeting?')) return;
+            
+            try {
+                const response = await fetch(`/api/meetings/${meetingId}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('Meeting deleted successfully!');
+                    loadMeetings();
+                    loadMeetingStats();
+                } else {
+                    showToast('Failed to delete meeting', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting meeting:', error);
+                showToast('Error deleting meeting', 'error');
+            }
+        }
     </script>
 
 </body>

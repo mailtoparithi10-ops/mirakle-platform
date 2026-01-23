@@ -339,6 +339,46 @@
             }
         }
 
+        /* Kanban Interaction Styles */
+        .kanban-column {
+            background: #f8fafc;
+            padding: 1.25rem;
+            border-radius: 16px;
+            min-width: 280px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px dashed transparent;
+            min-height: 450px;
+        }
+
+        .kanban-column.drag-over {
+            background: #f1f5f9;
+            border-color: #fcb82e;
+            transform: translateY(-4px);
+        }
+
+        .deal-card {
+            background: white;
+            padding: 1.25rem;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            cursor: grab;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+
+        .deal-card:active {
+            cursor: grabbing;
+            transform: scale(0.96) rotate(1deg);
+        }
+
+        .deal-card:hover {
+            border-color: #fcb82e;
+            box-shadow: 0 10px 20px -5px rgba(252, 184, 46, 0.15);
+            transform: translateY(-2px);
+        }
+
         .action-btn {
             padding: 6px 12px;
             background: #000;
@@ -391,6 +431,310 @@
         aside.sidebar {
             background: #0a0a0a;
         }
+
+        /* Toggle Switch Styles */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e2e8f0;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        input:checked+.slider {
+            background-color: #fcb82e;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #fcb82e;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Inbox Style */
+        .inbox-container {
+            background: white;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .inbox-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            gap: 1.5rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .inbox-item:hover {
+            background: #f8fafc;
+        }
+
+        .inbox-item.unread {
+            background: rgba(252, 184, 46, 0.03);
+            border-left: 4px solid #fcb82e;
+        }
+
+        .inbox-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: #64748b;
+            flex-shrink: 0;
+        }
+
+        .inbox-content {
+            flex: 1;
+        }
+
+        .inbox-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+
+        .inbox-sender {
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .inbox-time {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .inbox-subject {
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 0.25rem;
+        }
+
+        .inbox-preview {
+            font-size: 0.9rem;
+            color: #64748b;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .inbox-badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-startup {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-system {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-network {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        /* Meeting Inbox Styles */
+        .meeting-inbox {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .inbox-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .inbox-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .meeting-badge {
+            background: #ef4444;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .meeting-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .meeting-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .meeting-item:hover {
+            background: #f9fafb;
+            border-color: #e5e7eb;
+        }
+
+        .meeting-today {
+            background: #fef3c7;
+            border-color: #f59e0b;
+        }
+
+        .meeting-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: #4f46e5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .meeting-details {
+            flex: 1;
+        }
+
+        .meeting-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .meeting-time {
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .meeting-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 11px;
+        }
+
+        .time-until {
+            color: #059669;
+            font-weight: 500;
+        }
+
+        .participant-count {
+            color: #6b7280;
+        }
+
+        .meeting-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .join-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: none;
+            background: #10b981;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .join-btn:hover {
+            background: #059669;
+            transform: scale(1.05);
+        }
+
+        .empty-meetings {
+            text-align: center;
+            padding: 40px 20px;
+            color: #9ca3af;
+        }
+
+        .empty-meetings i {
+            font-size: 32px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .empty-meetings p {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .empty-meetings small {
+            font-size: 12px;
+        }
     </style>
 </head>
 
@@ -414,6 +758,10 @@
             <button class="nav-item" onclick="showSection('dealflow')">
                 <i class="fa-solid fa-handshake"></i> Deal Flow
             </button>
+            <button class="nav-item" onclick="showSection('inbox')">
+                <i class="fa-solid fa-envelope"></i> Inbox <span
+                    style="margin-left:auto; background:#fcb82e; color:#000; padding:2px 6px; border-radius:10px; font-size:0.7rem; font-weight:700;">2</span>
+            </button>
             <button class="nav-item" onclick="showSection('settings')">
                 <i class="fa-solid fa-gear"></i> Settings
             </button>
@@ -432,6 +780,11 @@
         <div class="dashboard-content">
             <!-- OVERVIEW SECTION -->
             <section id="overview" class="section active">
+                <!-- Meeting Inbox Widget -->
+                <div class="meeting-inbox" id="meetingInbox">
+                    <!-- Meeting inbox will be populated by JavaScript -->
+                </div>
+
                 <div class="cards-grid">
                     <div class="card">
                         <div class="card-header">
@@ -571,7 +924,7 @@
                                 <span
                                     style="background:#f1f5f9; color:#475569; padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">AI</span>
                             </div>
-                            <button
+                            <button onclick="handleViewProfile('NeuroTech AI')"
                                 style="width: 100%; padding: 0.75rem; background: #fcb82e; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">View
                                 Profile</button>
                         </div>
@@ -602,7 +955,7 @@
                                 <span
                                     style="background:#f1f5f9; color:#475569; padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">SaaS</span>
                             </div>
-                            <button
+                            <button onclick="handleViewProfile('EcoLogic')"
                                 style="width: 100%; padding: 0.75rem; background: #fcb82e; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">View
                                 Profile</button>
                         </div>
@@ -633,13 +986,59 @@
                                 <span
                                     style="background:#f1f5f9; color:#475569; padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:600;">Pre-Seed</span>
                             </div>
-                            <button
+                            <button onclick="handleViewProfile('QuantumBit')"
                                 style="width: 100%; padding: 0.75rem; background: #fcb82e; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">View
                                 Profile</button>
                         </div>
                     </div>
                 </div>
             </section>
+
+            <!-- PROGRAM MODAL -->
+            <div id="programModal"
+                style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:20000; align-items:center; justify-content:center;">
+                <div
+                    style="background:white; padding:2.5rem; border-radius:1.5rem; width:100%; max-width:600px; box-shadow:0 20px 40px rgba(0,0,0,0.2); position:relative;">
+                    <button onclick="closeProgramModal()"
+                        style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+                    <h2 style="margin-bottom:1.5rem; font-family:'Outfit',sans-serif;">Launch Innovation Program</h2>
+
+                    <div style="margin-bottom:1.5rem;">
+                        <label style="display:block; margin-bottom:0.5rem; font-weight:600;">Program Title</label>
+                        <input type="text" id="progTitle" placeholder="e.g. Sustainable Energy Challenge 2026"
+                            style="width:100%; padding:0.75rem; border:1px solid #ddd; border-radius:8px;">
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem;">
+                        <div>
+                            <label style="display:block; margin-bottom:0.5rem; font-weight:600;">Type</label>
+                            <select id="progType"
+                                style="width:100%; padding:0.75rem; border:1px solid #ddd; border-radius:8px;">
+                                <option>Accelerator</option>
+                                <option>POC / Pilot</option>
+                                <option>Grant</option>
+                                <option>Corporate VC</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display:block; margin-bottom:0.5rem; font-weight:600;">Days Left</label>
+                            <input type="number" id="progDays" value="30"
+                                style="width:100%; padding:0.75rem; border:1px solid #ddd; border-radius:8px;">
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom:2rem;">
+                        <label style="display:block; margin-bottom:0.5rem; font-weight:600;">Description</label>
+                        <textarea id="progDesc" rows="3" placeholder="Identify the core innovation challenge..."
+                            style="width:100%; padding:0.75rem; border:1px solid #ddd; border-radius:8px;"></textarea>
+                    </div>
+
+                    <button class="action-btn" onclick="submitNewProgram()"
+                        style="width:100%; padding:1rem; background:#000; color:#fcb82e; font-size:1rem;">
+                        <i class="fas fa-rocket"></i> Publish Program
+                    </button>
+                </div>
+            </div>
 
             <!-- PROGRAMS SECTION -->
             <section id="programs" class="section">
@@ -709,17 +1108,18 @@
                 <div
                     style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; overflow-x: auto; padding-bottom: 1rem;">
                     <!-- Column: New -->
-                    <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; min-width: 250px;">
+                    <div class="kanban-column" id="col-new" ondragover="allowDrop(event)"
+                        ondragleave="clearDragStyles(event)" ondrop="handleDrop(event, 'new')">
                         <div
                             style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e2e8f0;">
                             <h3 style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: #64748b;">
                                 New Leads</h3>
-                            <span
-                                style="background: #e2e8f0; color: #64748b; padding: 2px 6px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">3</span>
+                            <span id="count-new"
+                                style="background: #e2e8f0; color: #64748b; padding: 2px 6px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">2</span>
                         </div>
 
-                        <div
-                            style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: grab;">
+                        <div class="deal-card" draggable="true" ondragstart="handleDragStart(event, 'PayFlow', 'new')"
+                            onclick="viewDeal('PayFlow')">
                             <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
                                 <span
                                     style="background: #dbeafe; color: #1e40af; font-size: 0.7rem; font-weight: 600; padding: 2px 6px; border-radius: 4px;">FinTech</span>
@@ -728,8 +1128,8 @@
                             <p style="font-size: 0.8rem; color: #64748b;">Cross-border payment infrastructure.</p>
                         </div>
 
-                        <div
-                            style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: grab;">
+                        <div class="deal-card" draggable="true" ondragstart="handleDragStart(event, 'ShopAI', 'new')"
+                            onclick="viewDeal('ShopAI')">
                             <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
                                 <span
                                     style="background: #fce7f3; color: #9d174d; font-size: 0.7rem; font-weight: 600; padding: 2px 6px; border-radius: 4px;">Retail</span>
@@ -740,17 +1140,19 @@
                     </div>
 
                     <!-- Column: Contacted -->
-                    <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; min-width: 250px;">
+                    <div class="kanban-column" id="col-contacted" ondragover="allowDrop(event)"
+                        ondragleave="clearDragStyles(event)" ondrop="handleDrop(event, 'contacted')">
                         <div
                             style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #fcb82e;">
                             <h3 style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: #64748b;">
                                 Contacted</h3>
-                            <span
-                                style="background: #fff7ed; color: #c2410c; padding: 2px 6px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">2</span>
+                            <span id="count-contacted"
+                                style="background: #fff7ed; color: #c2410c; padding: 2px 6px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">1</span>
                         </div>
 
-                        <div
-                            style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: grab;">
+                        <div class="deal-card" draggable="true"
+                            ondragstart="handleDragStart(event, 'FarmSense', 'contacted')"
+                            onclick="viewDeal('FarmSense')">
                             <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
                                 <span
                                     style="background: #ecfccb; color: #3f6212; font-size: 0.7rem; font-weight: 600; padding: 2px 6px; border-radius: 4px;">AgriTech</span>
@@ -761,17 +1163,19 @@
                     </div>
 
                     <!-- Column: Due Diligence -->
-                    <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; min-width: 250px;">
+                    <div class="kanban-column" id="col-dd" ondragover="allowDrop(event)"
+                        ondragleave="clearDragStyles(event)" ondrop="handleDrop(event, 'dd')">
                         <div
                             style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #3b82f6;">
                             <h3 style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: #64748b;">
                                 Due Diligence</h3>
-                            <span
+                            <span id="count-dd"
                                 style="background: #eff6ff; color: #1d4ed8; padding: 2px 6px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">1</span>
                         </div>
 
-                        <div
-                            style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: grab;">
+                        <div class="deal-card" draggable="true"
+                            ondragstart="handleDragStart(event, 'NeuroTech AI', 'dd')"
+                            onclick="viewDeal('NeuroTech AI')">
                             <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
                                 <span
                                     style="background: #e0e7ff; color: #3730a3; font-size: 0.7rem; font-weight: 600; padding: 2px 6px; border-radius: 4px;">DeepTech</span>
@@ -782,17 +1186,18 @@
                     </div>
 
                     <!-- Column: Pilot/POC -->
-                    <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; min-width: 250px;">
+                    <div class="kanban-column" id="col-pilot" ondragover="allowDrop(event)"
+                        ondragleave="clearDragStyles(event)" ondrop="handleDrop(event, 'pilot')">
                         <div
                             style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #22c55e;">
                             <h3 style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: #64748b;">
                                 Pilot / POC</h3>
-                            <span
+                            <span id="count-pilot"
                                 style="background: #f0fdf4; color: #15803d; padding: 2px 6px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">1</span>
                         </div>
 
-                        <div
-                            style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); cursor: grab;">
+                        <div class="deal-card" draggable="true"
+                            ondragstart="handleDragStart(event, 'LogiChain', 'pilot')" onclick="viewDeal('LogiChain')">
                             <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
                                 <span
                                     style="background: #fee2e2; color: #991b1b; font-size: 0.7rem; font-weight: 600; padding: 2px 6px; border-radius: 4px;">Logistics</span>
@@ -851,13 +1256,10 @@
                                 <div style="font-size: 0.9rem; color: #666;">Get notified when a new startup fits your
                                     thesis.</div>
                             </div>
-                            <label class="switch"
-                                style="position: relative; display: inline-block; width: 50px; height: 26px;">
-                                <input type="checkbox" checked style="opacity: 0; width: 0; height: 0;">
-                                <span
-                                    style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #fcb82e; transition: .4s; border-radius: 34px;"></span>
-                                <span
-                                    style="position: absolute; content: ''; height: 20px; width: 20px; left: 26px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%;"></span>
+                            <label class="switch">
+                                <input type="checkbox" checked
+                                    onchange="handleNotifyToggle('Startup Matches', this.checked)">
+                                <span class="slider"></span>
                             </label>
                         </div>
 
@@ -868,13 +1270,10 @@
                                 <div style="font-size: 0.9rem; color: #666;">Receive weekly digests of your deal flow
                                     activity.</div>
                             </div>
-                            <label class="switch"
-                                style="position: relative; display: inline-block; width: 50px; height: 26px;">
-                                <input type="checkbox" checked style="opacity: 0; width: 0; height: 0;">
-                                <span
-                                    style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #fcb82e; transition: .4s; border-radius: 34px;"></span>
-                                <span
-                                    style="position: absolute; content: ''; height: 20px; width: 20px; left: 26px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%;"></span>
+                            <label class="switch">
+                                <input type="checkbox" checked
+                                    onchange="handleNotifyToggle('Deal Flow Updates', this.checked)">
+                                <span class="slider"></span>
                             </label>
                         </div>
 
@@ -884,10 +1283,75 @@
                     </form>
                 </div>
             </section>
+
+            <!-- INBOX SECTION -->
+            <section id="inbox" class="section">
+                <div style="margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: 700;">Notification Inbox</h2>
+                    <p style="color: #666;">Stay updated with startup activity and system alerts.</p>
+                </div>
+
+                <div class="inbox-container">
+                    <!-- Message 1 -->
+                    <div class="inbox-item unread" onclick="viewMessage(1)">
+                        <div class="inbox-avatar" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="inbox-content">
+                            <div class="inbox-header">
+                                <span class="inbox-sender">System Monitor <span
+                                        class="inbox-badge badge-system">Priority</span></span>
+                                <span class="inbox-time">10 mins ago</span>
+                            </div>
+                            <div class="inbox-subject">New Matching Startup Identified</div>
+                            <div class="inbox-preview">Our AI has identified "QuantumScale" as a 96% match for your
+                                Sustainable Supply Chain challenge. Click to review their pitch deck and technical
+                                specifications.</div>
+                        </div>
+                    </div>
+
+                    <!-- Message 2 -->
+                    <div class="inbox-item unread" onclick="viewMessage(2)">
+                        <div class="inbox-avatar" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="inbox-content">
+                            <div class="inbox-header">
+                                <span class="inbox-sender">NeuroTech AI <span class="inbox-badge badge-startup">New
+                                        Data</span></span>
+                                <span class="inbox-time">2 hours ago</span>
+                            </div>
+                            <div class="inbox-subject">Data Room Updated: Clinical Trial Results</div>
+                            <div class="inbox-preview">The founder of NeuroTech AI has uploaded new documentation
+                                regarding their Q4 clinical trial results in the Due Diligence room. Please review the
+                                updated milestones.</div>
+                        </div>
+                    </div>
+
+                    <!-- Message 3 -->
+                    <div class="inbox-item" onclick="viewMessage(3)">
+                        <div class="inbox-avatar" style="background: rgba(252, 184, 46, 0.1); color: #fcb82e;">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="inbox-content">
+                            <div class="inbox-header">
+                                <span class="inbox-sender">Network Admin <span
+                                        class="inbox-badge badge-network">Update</span></span>
+                                <span class="inbox-time">Yesterday</span>
+                            </div>
+                            <div class="inbox-subject">InnoBridge Platform Maintenance Complete</div>
+                            <div class="inbox-preview">The scheduled maintenance for the cross-platform synchronization
+                                engine has been successfully completed. All deal-flow interactions are now running at 2x
+                                speed.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/js/meetings.js"></script>
     <script>
         // Global State
         const state = {
@@ -989,7 +1453,123 @@
         }
 
         function showNewProgramModal() {
-            showToast("Innovation Program Builder v2.4 initialized. Ready for challenge parameters.", "info");
+            document.getElementById('programModal').style.display = 'flex';
+        }
+
+        function closeProgramModal() {
+            document.getElementById('programModal').style.display = 'none';
+        }
+
+        function submitNewProgram() {
+            const title = document.getElementById('progTitle').value;
+            const type = document.getElementById('progType').value;
+            const days = document.getElementById('progDays').value;
+
+            if (!title) {
+                showToast("Please enter a program title.", "info");
+                return;
+            }
+
+            const btn = event.target;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Launching Systems...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                showToast(`<b>${title}</b> has been published to the InnoBridge network!`, "success");
+
+                // Append to table
+                const tbody = document.querySelector('#programs table tbody');
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td style="font-weight: 600;">${title}</td>
+                    <td>0 Startups</td>
+                    <td>${days} Days</td>
+                    <td style="color: #64748b; font-weight: 700;">Just Launched</td>
+                    <td><span class="status-pill matched">Open</span></td>
+                `;
+                tbody.prepend(newRow);
+
+                closeProgramModal();
+                btn.innerHTML = '<i class="fas fa-rocket"></i> Publish Program';
+                btn.disabled = false;
+
+                // Clear inputs
+                document.getElementById('progTitle').value = '';
+                document.getElementById('progDesc').value = '';
+            }, 2000);
+        }
+
+        function handleNotifyToggle(setting, isEnabled) {
+            const status = isEnabled ? "enabled" : "disabled";
+            showToast(`<b>${setting}</b> notifications ${status}.`, "info");
+        }
+
+        function handleViewProfile(startupName) {
+            const originalBtn = event.target;
+            const originalText = originalBtn.innerText;
+            originalBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Loading Profile...';
+            originalBtn.disabled = true;
+
+            setTimeout(() => {
+                showToast(`Full profile synchronization for <b>${startupName}</b> successful. View expanded.`, "success");
+                originalBtn.innerHTML = originalText;
+                originalBtn.disabled = false;
+            }, 1000);
+        }
+
+        // DND Handlers
+        let draggedItem = null;
+        let sourceCol = null;
+
+        function handleDragStart(e, name, colId) {
+            draggedItem = e.target;
+            sourceCol = colId;
+            e.dataTransfer.setData('text/plain', name);
+            setTimeout(() => e.target.style.opacity = '0.5', 0);
+        }
+
+        function allowDrop(e) {
+            e.preventDefault();
+            const col = e.target.closest('.kanban-column');
+            if (col) col.classList.add('drag-over');
+        }
+
+        function clearDragStyles(e) {
+            const col = e.target.closest('.kanban-column');
+            if (col) col.classList.remove('drag-over');
+        }
+
+        function handleDrop(e, targetColId) {
+            e.preventDefault();
+            const col = e.target.closest('.kanban-column');
+            if (col) col.classList.remove('drag-over');
+
+            if (draggedItem && sourceCol !== targetColId) {
+                const name = e.dataTransfer.getData('text/plain');
+                col.appendChild(draggedItem);
+                draggedItem.style.opacity = '1';
+
+                showToast(`<b>${name}</b> moved to <b>${targetColId.toUpperCase()}</b> pipeline.`, "success");
+
+                // Update Counts (Mock)
+                const sCount = document.getElementById(`count-${sourceCol}`);
+                const tCount = document.getElementById(`count-${targetColId}`);
+                if (sCount) sCount.innerText = Math.max(0, parseInt(sCount.innerText) - 1);
+                if (tCount) tCount.innerText = parseInt(tCount.innerText) + 1;
+
+                sourceCol = targetColId;
+            }
+        }
+
+        function viewDeal(name) {
+            showToast(`Opening deep-dive analysis for <b>${name}</b>...`, "info");
+        }
+
+        function viewMessage(id) {
+            showToast("Syncing with secure communication server...", "info");
+            setTimeout(() => {
+                showToast("Message retrieved. Decryption successful.", "success");
+            }, 800);
         }
 
         function showSection(sectionId) {

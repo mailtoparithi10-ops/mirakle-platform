@@ -211,12 +211,86 @@ def seed_all_data():
             db.session.add(new_opp)
             programs_added += 1
     
+    # 3. SEED SAMPLE MEETINGS
+    from models import Meeting, MeetingParticipant
+    import string
+    import random
+    
+    def generate_meeting_room_id():
+        return ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+    
+    sample_meetings = [
+        {
+            "title": "Weekly Startup Pitch Session",
+            "description": "Present your startup to potential investors and get feedback",
+            "scheduled_at": datetime.utcnow() + timedelta(days=2, hours=14),
+            "duration_minutes": 90,
+            "access_type": "startup_only"
+        },
+        {
+            "title": "Corporate Innovation Roundtable",
+            "description": "Discuss emerging technologies and partnership opportunities",
+            "scheduled_at": datetime.utcnow() + timedelta(days=5, hours=10),
+            "duration_minutes": 60,
+            "access_type": "corporate_only"
+        },
+        {
+            "title": "All Hands Platform Update",
+            "description": "Monthly platform updates and community announcements",
+            "scheduled_at": datetime.utcnow() + timedelta(days=7, hours=16),
+            "duration_minutes": 45,
+            "access_type": "all_users"
+        }
+    ]
+    
+    meetings_added = 0
+    for m in sample_meetings:
+        if not Meeting.query.filter_by(title=m["title"]).first():
+            meeting_room_id = generate_meeting_room_id()
+            while Meeting.query.filter_by(meeting_room_id=meeting_room_id).first():
+                meeting_room_id = generate_meeting_room_id()
+            
+            new_meeting = Meeting(
+                created_by_id=current_user.id,
+                title=m["title"],
+                description=m["description"],
+                scheduled_at=m["scheduled_at"],
+                duration_minutes=m["duration_minutes"],
+                access_type=m["access_type"],
+                meeting_room_id=meeting_room_id,
+                meeting_password=''.join(random.choices(string.ascii_letters + string.digits, k=8)),
+                meeting_url=f"/meeting/join/{meeting_room_id}"
+            )
+            db.session.add(new_meeting)
+            db.session.flush()  # Get the meeting ID
+            
+            # Add participants based on access type
+            if m["access_type"] == "all_users":
+                users = User.query.filter_by(is_active=True).all()
+            elif m["access_type"] == "startup_only":
+                users = User.query.filter(User.role.in_(["startup", "founder"]), User.is_active == True).all()
+            elif m["access_type"] == "corporate_only":
+                users = User.query.filter_by(role="corporate", is_active=True).all()
+            else:
+                users = []
+            
+            for user in users:
+                participant = MeetingParticipant(
+                    meeting_id=new_meeting.id,
+                    user_id=user.id,
+                    is_moderator=(user.id == current_user.id)
+                )
+                db.session.add(participant)
+            
+            meetings_added += 1
+    
     db.session.commit()
     return jsonify({
         "success": True, 
-        "message": f"Successfully seeded {users_added} users and {programs_added} programs.",
+        "message": f"Successfully seeded {users_added} users, {programs_added} programs, and {meetings_added} meetings.",
         "users_added": users_added,
-        "programs_added": programs_added
+        "programs_added": programs_added,
+        "meetings_added": meetings_added
     })
 
 

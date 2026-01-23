@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Meeting - {{ meeting.title }}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .join-container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .meeting-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            color: white;
+            font-size: 32px;
+        }
+
+        .meeting-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+
+        .meeting-info {
+            color: #666;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .meeting-details {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .detail-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-icon {
+            width: 20px;
+            color: #4f46e5;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .feature-enabled {
+            color: #10b981;
+        }
+
+        .feature-disabled {
+            color: #ef4444;
+        }
+
+        .join-button {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 16px;
+        }
+
+        .join-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+        }
+
+        .back-link {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #4f46e5;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-scheduled {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-in_progress {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-completed {
+            background: #e5e7eb;
+            color: #374151;
+        }
+    </style>
+</head>
+<body>
+    <div class="join-container">
+        <div class="meeting-icon">
+            <i class="fas fa-video"></i>
+        </div>
+        
+        <h1 class="meeting-title">{{ meeting.title }}</h1>
+        
+        <p class="meeting-info">
+            {% if meeting.description %}
+                {{ meeting.description }}
+            {% else %}
+                You're invited to join this meeting
+            {% endif %}
+        </p>
+
+        <div class="meeting-details">
+            <div class="detail-row">
+                <i class="fas fa-calendar detail-icon"></i>
+                <span>{{ meeting.scheduled_at.strftime('%B %d, %Y at %I:%M %p') if meeting.scheduled_at else 'Not scheduled' }}</span>
+            </div>
+            <div class="detail-row">
+                <i class="fas fa-clock detail-icon"></i>
+                <span>{{ meeting.duration_minutes }} minutes</span>
+            </div>
+            <div class="detail-row">
+                <i class="fas fa-users detail-icon"></i>
+                <span>{{ meeting.participant_count }} participants</span>
+            </div>
+            <div class="detail-row">
+                <i class="fas fa-shield-alt detail-icon"></i>
+                <span>{{ meeting.access_type.replace('_', ' ').title() }}</span>
+            </div>
+            <div class="detail-row">
+                <i class="fas fa-info-circle detail-icon"></i>
+                <span class="status-badge status-{{ meeting.status }}">{{ meeting.status.replace('_', ' ').title() }}</span>
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-item {{ 'feature-enabled' if meeting.video_enabled else 'feature-disabled' }}">
+                <i class="fas {{ 'fa-video' if meeting.video_enabled else 'fa-video-slash' }}"></i>
+                <span>Video {{ 'Enabled' if meeting.video_enabled else 'Disabled' }}</span>
+            </div>
+            <div class="feature-item {{ 'feature-enabled' if meeting.audio_enabled else 'feature-disabled' }}">
+                <i class="fas {{ 'fa-microphone' if meeting.audio_enabled else 'fa-microphone-slash' }}"></i>
+                <span>Audio {{ 'Enabled' if meeting.audio_enabled else 'Disabled' }}</span>
+            </div>
+            <div class="feature-item {{ 'feature-enabled' if meeting.screen_sharing_enabled else 'feature-disabled' }}">
+                <i class="fas fa-desktop"></i>
+                <span>Screen Sharing {{ 'Enabled' if meeting.screen_sharing_enabled else 'Disabled' }}</span>
+            </div>
+            <div class="feature-item {{ 'feature-enabled' if meeting.chat_enabled else 'feature-disabled' }}">
+                <i class="fas fa-comments"></i>
+                <span>Chat {{ 'Enabled' if meeting.chat_enabled else 'Disabled' }}</span>
+            </div>
+        </div>
+
+        <button class="join-button" onclick="joinMeeting()">
+            <i class="fas fa-sign-in-alt"></i>
+            Join Meeting Now
+        </button>
+
+        <a href="/{{ current_user.role }}" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Back to Dashboard
+        </a>
+    </div>
+
+    <script>
+        function joinMeeting() {
+            // Update participant status and redirect to meeting room
+            fetch('/api/meetings/join/{{ meeting.meeting_room_id }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/meeting/room/{{ meeting.meeting_room_id }}';
+                } else {
+                    alert('Failed to join meeting: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error joining meeting:', error);
+                alert('Error joining meeting. Please try again.');
+            });
+        }
+    </script>
+</body>
+</html>

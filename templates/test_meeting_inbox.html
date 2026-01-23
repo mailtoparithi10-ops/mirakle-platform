@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Meeting Inbox</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .debug-info {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Meeting Inbox Test</h1>
+        
+        <div class="debug-info" id="debugInfo">
+            Loading debug information...
+        </div>
+        
+        <!-- Meeting Inbox Widget -->
+        <div class="meeting-inbox" id="meetingInbox">
+            <p>Meeting inbox loading...</p>
+        </div>
+    </div>
+
+    <script src="/static/js/meetings.js"></script>
+    <script>
+        // Debug information
+        function updateDebugInfo(message) {
+            const debugDiv = document.getElementById('debugInfo');
+            debugDiv.innerHTML += message + '<br>';
+            console.log(message);
+        }
+
+        // Override console.log to show in debug div
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            updateDebugInfo(args.join(' '));
+        };
+
+        // Test the meeting inbox
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDebugInfo('DOM loaded');
+            updateDebugInfo('Meeting inbox element: ' + (document.getElementById('meetingInbox') ? 'Found' : 'Not found'));
+            
+            // Test API directly
+            fetch('/api/meetings/my-meetings')
+                .then(response => {
+                    updateDebugInfo('API Response status: ' + response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    updateDebugInfo('API Response: ' + JSON.stringify(data, null, 2));
+                })
+                .catch(error => {
+                    updateDebugInfo('API Error: ' + error.message);
+                });
+        });
+    </script>
+</body>
+</html>

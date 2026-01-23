@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ meeting.title }} - Meeting Room</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .meeting-header {
+            background: #2d2d2d;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #404040;
+        }
+
+        .meeting-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .meeting-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .meeting-id {
+            background: #404040;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #ccc;
+        }
+
+        .meeting-time {
+            color: #10b981;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .participant-count {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .main-content {
+            display: flex;
+            height: calc(100vh - 60px);
+        }
+
+        .video-area {
+            flex: 1;
+            background: #000;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-placeholder {
+            text-align: center;
+            color: #666;
+        }
+
+        .video-placeholder i {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .participants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            padding: 20px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 100px;
+        }
+
+        .participant-video {
+            background: #2d2d2d;
+            border-radius: 12px;
+            aspect-ratio: 16/9;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+
+        .participant-video.speaking {
+            border-color: #10b981;
+        }
+
+        .participant-info {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .sidebar {
+            width: 320px;
+            background: #2d2d2d;
+            border-left: 1px solid #404040;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid #404040;
+        }
+
+        .sidebar-tab {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-tab.active {
+            background: #404040;
+            color: white;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .participant-list {
+            list-style: none;
+        }
+
+        .participant-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid #404040;
+        }
+
+        .participant-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #4f46e5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .participant-name {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .participant-status {
+            display: flex;
+            gap: 4px;
+        }
+
+        .status-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        .status-online {
+            background: #10b981;
+        }
+
+        .status-muted {
+            background: #ef4444;
+        }
+
+        .chat-area {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .chat-message {
+            margin-bottom: 12px;
+        }
+
+        .message-sender {
+            font-size: 12px;
+            color: #ccc;
+            margin-bottom: 4px;
+        }
+
+        .message-content {
+            background: #404040;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .chat-input {
+            padding: 16px;
+            border-top: 1px solid #404040;
+        }
+
+        .chat-input-field {
+            width: 100%;
+            background: #404040;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .chat-input-field::placeholder {
+            color: #999;
+        }
+
+        .controls-bar {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            background: rgba(45, 45, 45, 0.9);
+            padding: 16px 24px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn.mute {
+            background: #ef4444;
+            color: white;
+        }
+
+        .control-btn.video {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .control-btn.screen {
+            background: #10b981;
+            color: white;
+        }
+
+        .control-btn.leave {
+            background: #ef4444;
+            color: white;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .control-btn.disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        .control-btn.disabled:hover {
+            transform: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="meeting-header">
+        <div class="meeting-info">
+            <div class="meeting-title">{{ meeting.title }}</div>
+            <div class="meeting-id">ID: {{ meeting.meeting_room_id }}</div>
+            <div class="meeting-time" id="meetingTime">00:00</div>
+        </div>
+        <div class="header-controls">
+            <div class="participant-count">
+                <i class="fas fa-users"></i>
+                <span id="participantCount">{{ meeting.participant_count }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="video-area">
+            <div class="video-placeholder">
+                <i class="fas fa-video"></i>
+                <p>Video calling feature coming soon</p>
+                <p style="font-size: 14px; color: #999; margin-top: 8px;">
+                    This is a demo meeting room. In production, this would integrate with WebRTC or a service like Zoom/Teams.
+                </p>
+            </div>
+
+            <div class="participants-grid" id="participantsGrid">
+                <!-- Participant videos will be dynamically added here -->
+            </div>
+
+            <div class="controls-bar">
+                <button class="control-btn mute" id="muteBtn" onclick="toggleMute()" title="Mute/Unmute">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                
+                <button class="control-btn video {{ 'disabled' if not meeting.video_enabled }}" id="videoBtn" 
+                        onclick="toggleVideo()" title="Turn Video On/Off" 
+                        {{ 'disabled' if not meeting.video_enabled }}>
+                    <i class="fas fa-video"></i>
+                </button>
+                
+                <button class="control-btn screen {{ 'disabled' if not meeting.screen_sharing_enabled }}" id="screenBtn" 
+                        onclick="toggleScreenShare()" title="Share Screen" 
+                        {{ 'disabled' if not meeting.screen_sharing_enabled }}>
+                    <i class="fas fa-desktop"></i>
+                </button>
+                
+                <button class="control-btn leave" onclick="leaveMeeting()" title="Leave Meeting">
+                    <i class="fas fa-phone-slash"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="sidebar-tabs">
+                <button class="sidebar-tab active" onclick="showTab('participants')">
+                    <i class="fas fa-users"></i> Participants
+                </button>
+                {% if meeting.chat_enabled %}
+                <button class="sidebar-tab" onclick="showTab('chat')">
+                    <i class="fas fa-comments"></i> Chat
+                </button>
+                {% endif %}
+            </div>
+
+            <div class="sidebar-content">
+                <div id="participantsTab">
+                    <ul class="participant-list" id="participantsList">
+                        <!-- Participants will be loaded dynamically -->
+                    </ul>
+                </div>
+
+                {% if meeting.chat_enabled %}
+                <div id="chatTab" class="hidden">
+                    <div class="chat-area">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="chat-message">
+                                <div class="message-sender">System</div>
+                                <div class="message-content">Welcome to the meeting! Chat is enabled.</div>
+                            </div>
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" class="chat-input-field" placeholder="Type a message..." 
+                                   onkeypress="handleChatInput(event)">
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isMuted = false;
+        let isVideoOn = {{ 'true' if meeting.video_enabled else 'false' }};
+        let isScreenSharing = false;
+        let meetingStartTime = new Date();
+
+        // Initialize meeting
+        document.addEventListener('DOMContentLoaded', function() {
+            loadParticipants();
+            startMeetingTimer();
+            
+            // Simulate some participants for demo
+            setTimeout(() => {
+                addDemoParticipants();
+            }, 1000);
+        });
+
+        function startMeetingTimer() {
+            setInterval(() => {
+                const now = new Date();
+                const elapsed = Math.floor((now - meetingStartTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                document.getElementById('meetingTime').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function loadParticipants() {
+            // In a real implementation, this would fetch from the API
+            const participantsList = document.getElementById('participantsList');
+            participantsList.innerHTML = `
+                <li class="participant-item">
+                    <div class="participant-avatar">{{ current_user.name[0].upper() }}</div>
+                    <div class="participant-name">{{ current_user.name }} (You)</div>
+                    <div class="participant-status">
+                        <div class="status-icon status-online"></div>
+                    </div>
+                </li>
+            `;
+        }
+
+        function addDemoParticipants() {
+            const demoParticipants = [
+                { name: 'Sarah Chen', role: 'startup' },
+                { name: 'James Wilson', role: 'corporate' },
+                { name: 'Alex Rivet', role: 'connector' }
+            ];
+
+            const participantsList = document.getElementById('participantsList');
+            
+            demoParticipants.forEach((participant, index) => {
+                setTimeout(() => {
+                    const li = document.createElement('li');
+                    li.className = 'participant-item';
+                    li.innerHTML = `
+                        <div class="participant-avatar">${participant.name[0]}</div>
+                        <div class="participant-name">${participant.name}</div>
+                        <div class="participant-status">
+                            <div class="status-icon status-online"></div>
+                        </div>
+                    `;
+                    participantsList.appendChild(li);
+                    
+                    // Update participant count
+                    const count = document.getElementById('participantCount');
+                    count.textContent = parseInt(count.textContent) + 1;
+                }, index * 2000);
+            });
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            const btn = document.getElementById('muteBtn');
+            const icon = btn.querySelector('i');
+            
+            if (isMuted) {
+                icon.className = 'fas fa-microphone-slash';
+                btn.style.background = '#ef4444';
+            } else {
+                icon.className = 'fas fa-microphone';
+                btn.style.background = '#10b981';
+            }
+        }
+
+        function toggleVideo() {
+            if (!{{ 'true' if meeting.video_enabled else 'false' }}) return;
+            
+            isVideoOn = !isVideoOn;
+            const btn = document.getElementById('videoBtn');
+            const icon = btn.querySelector('i');
+            
+            if (isVideoOn) {
+                icon.className = 'fas fa-video';
+                btn.style.background = '#4f46e5';
+            } else {
+                icon.className = 'fas fa-video-slash';
+                btn.style.background = '#ef4444';
+            }
+        }
+
+        function toggleScreenShare() {
+            if (!{{ 'true' if meeting.screen_sharing_enabled else 'false' }}) return;
+            
+            isScreenSharing = !isScreenSharing;
+            const btn = document.getElementById('screenBtn');
+            
+            if (isScreenSharing) {
+                btn.style.background = '#f59e0b';
+                showToast('Screen sharing started');
+            } else {
+                btn.style.background = '#10b981';
+                showToast('Screen sharing stopped');
+            }
+        }
+
+        function leaveMeeting() {
+            if (confirm('Are you sure you want to leave the meeting?')) {
+                fetch('/api/meetings/leave/{{ meeting.meeting_room_id }}', {
+                    method: 'POST'
+                })
+                .then(() => {
+                    window.location.href = '/{{ current_user.role }}';
+                })
+                .catch(error => {
+                    console.error('Error leaving meeting:', error);
+                    window.location.href = '/{{ current_user.role }}';
+                });
+            }
+        }
+
+        function showTab(tabName) {
+            // Hide all tabs
+            document.getElementById('participantsTab').classList.add('hidden');
+            {% if meeting.chat_enabled %}
+            document.getElementById('chatTab').classList.add('hidden');
+            {% endif %}
+            
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.remove('hidden');
+            
+            // Update active tab button
+            document.querySelectorAll('.sidebar-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        {% if meeting.chat_enabled %}
+        function handleChatInput(event) {
+            if (event.key === 'Enter' && event.target.value.trim()) {
+                sendChatMessage(event.target.value.trim());
+                event.target.value = '';
+            }
+        }
+
+        function sendChatMessage(message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message';
+            messageDiv.innerHTML = `
+                <div class="message-sender">{{ current_user.name }}</div>
+                <div class="message-content">${message}</div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        {% endif %}
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: rgba(45, 45, 45, 0.9);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 10000;
+                backdrop-filter: blur(10px);
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

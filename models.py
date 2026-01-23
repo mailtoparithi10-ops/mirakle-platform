@@ -243,3 +243,130 @@ class ContactMessage(db.Model):
             "created_at": self.created_at.isoformat(),
             "is_read": self.is_read
         }
+
+
+# -----------------------------------------
+# MEETING MODEL
+# -----------------------------------------
+class Meeting(db.Model):
+    __tablename__ = "meetings"
+
+    id = db.Column(db.Integer, primary_key=True)
+    created_by_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    
+    title = db.Column(db.String(300), nullable=False)
+    description = db.Column(db.Text)
+    
+    # Meeting scheduling
+    scheduled_at = db.Column(db.DateTime, nullable=False)
+    duration_minutes = db.Column(db.Integer, default=60)
+    timezone = db.Column(db.String(50), default="UTC")
+    
+    # Meeting access control
+    access_type = db.Column(db.String(50), nullable=False)  
+    # 'all_users', 'startup_only', 'corporate_only', 'connector_only', 'specific_users'
+    
+    # Meeting features (Zoom-like capabilities)
+    video_enabled = db.Column(db.Boolean, default=True)
+    audio_enabled = db.Column(db.Boolean, default=True)
+    screen_sharing_enabled = db.Column(db.Boolean, default=True)
+    recording_enabled = db.Column(db.Boolean, default=False)
+    chat_enabled = db.Column(db.Boolean, default=True)
+    waiting_room_enabled = db.Column(db.Boolean, default=False)
+    
+    # Meeting room settings
+    meeting_room_id = db.Column(db.String(100), unique=True, nullable=False)
+    meeting_password = db.Column(db.String(50))
+    max_participants = db.Column(db.Integer, default=100)
+    
+    # Status and metadata
+    status = db.Column(db.String(50), default="scheduled")  
+    # scheduled, in_progress, completed, cancelled
+    
+    meeting_url = db.Column(db.String(500))
+    recording_url = db.Column(db.String(500))
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    created_by = db.relationship("User", backref="created_meetings")
+    participants = db.relationship("MeetingParticipant", backref="meeting", cascade="all, delete-orphan")
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "created_by_id": self.created_by_id,
+            "created_by_name": self.created_by.name if self.created_by else None,
+            "title": self.title,
+            "description": self.description,
+            "scheduled_at": self.scheduled_at.isoformat(),
+            "duration_minutes": self.duration_minutes,
+            "timezone": self.timezone,
+            "access_type": self.access_type,
+            "video_enabled": self.video_enabled,
+            "audio_enabled": self.audio_enabled,
+            "screen_sharing_enabled": self.screen_sharing_enabled,
+            "recording_enabled": self.recording_enabled,
+            "chat_enabled": self.chat_enabled,
+            "waiting_room_enabled": self.waiting_room_enabled,
+            "meeting_room_id": self.meeting_room_id,
+            "meeting_password": self.meeting_password,
+            "max_participants": self.max_participants,
+            "status": self.status,
+            "meeting_url": self.meeting_url,
+            "recording_url": self.recording_url,
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat(),
+            "participant_count": len(self.participants)
+        }
+
+
+# -----------------------------------------
+# MEETING PARTICIPANT MODEL
+# -----------------------------------------
+class MeetingParticipant(db.Model):
+    __tablename__ = "meeting_participants"
+
+    id = db.Column(db.Integer, primary_key=True)
+    meeting_id = db.Column(db.Integer, db.ForeignKey("meetings.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)  # Null for external participants
+    
+    # For external participants (non-registered users)
+    external_name = db.Column(db.String(100))
+    external_email = db.Column(db.String(120))
+    
+    # Participant permissions
+    can_share_screen = db.Column(db.Boolean, default=True)
+    can_use_chat = db.Column(db.Boolean, default=True)
+    is_moderator = db.Column(db.Boolean, default=False)
+    
+    # Participation tracking
+    joined_at = db.Column(db.DateTime)
+    left_at = db.Column(db.DateTime)
+    attendance_status = db.Column(db.String(50), default="invited")  
+    # invited, joined, left, no_show
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Relationships
+    user = db.relationship("User", backref="meeting_participations")
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "meeting_id": self.meeting_id,
+            "user_id": self.user_id,
+            "user_name": self.user.name if self.user else self.external_name,
+            "user_email": self.user.email if self.user else self.external_email,
+            "user_role": self.user.role if self.user else "external",
+            "external_name": self.external_name,
+            "external_email": self.external_email,
+            "can_share_screen": self.can_share_screen,
+            "can_use_chat": self.can_use_chat,
+            "is_moderator": self.is_moderator,
+            "joined_at": self.joined_at.isoformat() if self.joined_at else None,
+            "left_at": self.left_at.isoformat() if self.left_at else None,
+            "attendance_status": self.attendance_status,
+            "created_at": self.created_at.isoformat()
+        }
