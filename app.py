@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 from flask import Flask, render_template, redirect
 from config import Config
-from extensions import db, migrate, login_manager
+from extensions import db, migrate, login_manager, socketio
 from flask_login import login_required, current_user
 from auth import bp as auth_bp
 
@@ -30,6 +30,7 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
+    socketio.init_app(app)
 
     # Add custom Jinja2 filters
     @app.template_filter('strftime')
@@ -48,6 +49,9 @@ def create_app():
     app.register_blueprint(admin_bp)
     app.register_blueprint(meetings_bp)
     app.register_blueprint(enablers_bp)
+
+    # Import WebRTC signaling events
+    from routes import webrtc
 
     # -----------------------------------------
     # PAGE ROUTES (NO UI CHANGES)
@@ -246,6 +250,21 @@ def create_app():
             user_id=current_user.id
         ).first()
         
+        # If not a participant, check if user is admin (admins can join any meeting)
+        if not participant and current_user.role == "admin":
+            # Create participant entry for admin user
+            participant = MeetingParticipant(
+                meeting_id=meeting.id,
+                user_id=current_user.id,
+                is_moderator=True  # Admins are always moderators
+            )
+            db.session.add(participant)
+            try:
+                db.session.commit()
+            except Exception as e:
+                print(f"Error adding admin as participant: {e}")
+                db.session.rollback()
+        
         if not participant:
             return render_template("403.html"), 403
         
@@ -263,6 +282,21 @@ def create_app():
             meeting_id=meeting.id,
             user_id=current_user.id
         ).first()
+        
+        # If not a participant, check if user is admin (admins can join any meeting)
+        if not participant and current_user.role == "admin":
+            # Create participant entry for admin user
+            participant = MeetingParticipant(
+                meeting_id=meeting.id,
+                user_id=current_user.id,
+                is_moderator=True  # Admins are always moderators
+            )
+            db.session.add(participant)
+            try:
+                db.session.commit()
+            except Exception as e:
+                print(f"Error adding admin as participant: {e}")
+                db.session.rollback()
         
         if not participant:
             return render_template("403.html"), 403
@@ -320,4 +354,5 @@ def create_app():
 app = create_app()
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    from extensions import socketio
+    socketio.run(app, debug=True, port=5001, host='0.0.0.0')

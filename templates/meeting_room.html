@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ meeting.title }} - Meeting Room</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -85,6 +86,7 @@
         .video-placeholder {
             text-align: center;
             color: #666;
+            display: none; /* Hide placeholder when WebRTC is active */
         }
 
         .video-placeholder i {
@@ -103,6 +105,7 @@
             left: 20px;
             right: 20px;
             bottom: 100px;
+            overflow-y: auto;
         }
 
         .participant-video {
@@ -118,7 +121,13 @@
             border-color: #10b981;
         }
 
-        .participant-info {
+        .participant-video video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .participant-name {
             position: absolute;
             bottom: 8px;
             left: 8px;
@@ -129,6 +138,31 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            color: white;
+        }
+
+        .muted-indicator {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        /* Local video styling */
+        #localVideo {
+            width: 200px;
+            height: 150px;
+            position: absolute;
+            bottom: 120px;
+            right: 20px;
+            border-radius: 8px;
+            border: 2px solid #4f46e5;
+            object-fit: cover;
+            z-index: 1000;
         }
 
         .sidebar {
@@ -342,16 +376,21 @@
 
     <div class="main-content">
         <div class="video-area">
+            <!-- Local Video -->
+            <video id="localVideo" autoplay muted playsinline></video>
+            
+            <!-- Video Placeholder (hidden when WebRTC active) -->
             <div class="video-placeholder">
                 <i class="fas fa-video"></i>
-                <p>Video calling feature coming soon</p>
+                <p>Connecting to video call...</p>
                 <p style="font-size: 14px; color: #999; margin-top: 8px;">
-                    This is a demo meeting room. In production, this would integrate with WebRTC or a service like Zoom/Teams.
+                    Real WebRTC video calling is now active!
                 </p>
             </div>
 
+            <!-- Participants Grid for Remote Videos -->
             <div class="participants-grid" id="participantsGrid">
-                <!-- Participant videos will be dynamically added here -->
+                <!-- Remote participant videos will be added here dynamically -->
             </div>
 
             <div class="controls-bar">
@@ -392,7 +431,15 @@
             <div class="sidebar-content">
                 <div id="participantsTab">
                     <ul class="participant-list" id="participantsList">
-                        <!-- Participants will be loaded dynamically -->
+                        <!-- Current user -->
+                        <li class="participant-item">
+                            <div class="participant-avatar">{{ current_user.name[0].upper() }}</div>
+                            <div class="participant-name">{{ current_user.name }} (You)</div>
+                            <div class="participant-status">
+                                <div class="status-icon status-online"></div>
+                            </div>
+                        </li>
+                        <!-- Other participants will be added dynamically by WebRTC -->
                     </ul>
                 </div>
 
@@ -416,21 +463,24 @@
         </div>
     </div>
 
+    <script src="/static/js/webrtc-client.js"></script>
     <script>
-        let isMuted = false;
-        let isVideoOn = {{ 'true' if meeting.video_enabled else 'false' }};
-        let isScreenSharing = false;
+        // Global variables for WebRTC
+        window.meetingRoomId = '{{ meeting.meeting_room_id }}';
+        window.currentUserId = {{ current_user.id }};
+        window.currentUserRole = '{{ current_user.role }}';
+        
         let meetingStartTime = new Date();
 
-        // Initialize meeting
+        // Initialize meeting timer
         document.addEventListener('DOMContentLoaded', function() {
-            loadParticipants();
             startMeetingTimer();
             
-            // Simulate some participants for demo
-            setTimeout(() => {
-                addDemoParticipants();
-            }, 1000);
+            console.log('Meeting Room Initialized:', {
+                meetingId: window.meetingRoomId,
+                userId: window.currentUserId,
+                userRole: window.currentUserRole
+            });
         });
 
         function startMeetingTimer() {
@@ -442,109 +492,6 @@
                 document.getElementById('meetingTime').textContent = 
                     `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }, 1000);
-        }
-
-        function loadParticipants() {
-            // In a real implementation, this would fetch from the API
-            const participantsList = document.getElementById('participantsList');
-            participantsList.innerHTML = `
-                <li class="participant-item">
-                    <div class="participant-avatar">{{ current_user.name[0].upper() }}</div>
-                    <div class="participant-name">{{ current_user.name }} (You)</div>
-                    <div class="participant-status">
-                        <div class="status-icon status-online"></div>
-                    </div>
-                </li>
-            `;
-        }
-
-        function addDemoParticipants() {
-            const demoParticipants = [
-                { name: 'Sarah Chen', role: 'startup' },
-                { name: 'James Wilson', role: 'corporate' },
-                { name: 'Alex Rivet', role: 'connector' }
-            ];
-
-            const participantsList = document.getElementById('participantsList');
-            
-            demoParticipants.forEach((participant, index) => {
-                setTimeout(() => {
-                    const li = document.createElement('li');
-                    li.className = 'participant-item';
-                    li.innerHTML = `
-                        <div class="participant-avatar">${participant.name[0]}</div>
-                        <div class="participant-name">${participant.name}</div>
-                        <div class="participant-status">
-                            <div class="status-icon status-online"></div>
-                        </div>
-                    `;
-                    participantsList.appendChild(li);
-                    
-                    // Update participant count
-                    const count = document.getElementById('participantCount');
-                    count.textContent = parseInt(count.textContent) + 1;
-                }, index * 2000);
-            });
-        }
-
-        function toggleMute() {
-            isMuted = !isMuted;
-            const btn = document.getElementById('muteBtn');
-            const icon = btn.querySelector('i');
-            
-            if (isMuted) {
-                icon.className = 'fas fa-microphone-slash';
-                btn.style.background = '#ef4444';
-            } else {
-                icon.className = 'fas fa-microphone';
-                btn.style.background = '#10b981';
-            }
-        }
-
-        function toggleVideo() {
-            if (!{{ 'true' if meeting.video_enabled else 'false' }}) return;
-            
-            isVideoOn = !isVideoOn;
-            const btn = document.getElementById('videoBtn');
-            const icon = btn.querySelector('i');
-            
-            if (isVideoOn) {
-                icon.className = 'fas fa-video';
-                btn.style.background = '#4f46e5';
-            } else {
-                icon.className = 'fas fa-video-slash';
-                btn.style.background = '#ef4444';
-            }
-        }
-
-        function toggleScreenShare() {
-            if (!{{ 'true' if meeting.screen_sharing_enabled else 'false' }}) return;
-            
-            isScreenSharing = !isScreenSharing;
-            const btn = document.getElementById('screenBtn');
-            
-            if (isScreenSharing) {
-                btn.style.background = '#f59e0b';
-                showToast('Screen sharing started');
-            } else {
-                btn.style.background = '#10b981';
-                showToast('Screen sharing stopped');
-            }
-        }
-
-        function leaveMeeting() {
-            if (confirm('Are you sure you want to leave the meeting?')) {
-                fetch('/api/meetings/leave/{{ meeting.meeting_room_id }}', {
-                    method: 'POST'
-                })
-                .then(() => {
-                    window.location.href = '/{{ current_user.role }}';
-                })
-                .catch(error => {
-                    console.error('Error leaving meeting:', error);
-                    window.location.href = '/{{ current_user.role }}';
-                });
-            }
         }
 
         function showTab(tabName) {
@@ -567,21 +514,12 @@
         {% if meeting.chat_enabled %}
         function handleChatInput(event) {
             if (event.key === 'Enter' && event.target.value.trim()) {
-                sendChatMessage(event.target.value.trim());
+                // This function is now handled by WebRTC client
+                if (window.webrtcClient) {
+                    window.webrtcClient.sendChatMessage(event.target.value.trim());
+                }
                 event.target.value = '';
             }
-        }
-
-        function sendChatMessage(message) {
-            const chatMessages = document.getElementById('chatMessages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'chat-message';
-            messageDiv.innerHTML = `
-                <div class="message-sender">{{ current_user.name }}</div>
-                <div class="message-content">${message}</div>
-            `;
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
         {% endif %}
 

@@ -86,7 +86,7 @@ def create_meeting():
                 participant = MeetingParticipant(
                     meeting_id=meeting.id,
                     user_id=user.id,
-                    is_moderator=(user.id == current_user.id)
+                    is_moderator=(user.id == current_user.id or user.role == "admin")
                 )
                 db.session.add(participant)
         
@@ -99,23 +99,33 @@ def create_meeting():
             roles = role_mapping[data["access_type"]]
             users = User.query.filter(User.role.in_(roles), User.is_active == True).all()
             
-            for user in users:
+            # Always include admin users in any meeting
+            admin_users = User.query.filter_by(role="admin", is_active=True).all()
+            all_users = list(users) + [admin for admin in admin_users if admin not in users]
+            
+            for user in all_users:
                 participant = MeetingParticipant(
                     meeting_id=meeting.id,
                     user_id=user.id,
-                    is_moderator=(user.id == current_user.id)
+                    is_moderator=(user.id == current_user.id or user.role == "admin")
                 )
                 db.session.add(participant)
         
         elif data["access_type"] == "specific_users":
             user_ids = data.get("specific_user_ids", [])
-            for user_id in user_ids:
+            
+            # Always include admin users in specific meetings
+            admin_users = User.query.filter_by(role="admin", is_active=True).all()
+            admin_ids = [admin.id for admin in admin_users]
+            all_user_ids = list(set(user_ids + admin_ids))  # Remove duplicates
+            
+            for user_id in all_user_ids:
                 user = User.query.get(user_id)
                 if user and user.is_active:
                     participant = MeetingParticipant(
                         meeting_id=meeting.id,
                         user_id=user.id,
-                        is_moderator=(user.id == current_user.id)
+                        is_moderator=(user.id == current_user.id or user.role == "admin")
                     )
                     db.session.add(participant)
         
@@ -295,6 +305,21 @@ def join_meeting(meeting_room_id):
         meeting_id=meeting.id,
         user_id=current_user.id
     ).first()
+    
+    # If not a participant, check if user is admin (admins can join any meeting)
+    if not participant and current_user.role == "admin":
+        # Create participant entry for admin user
+        participant = MeetingParticipant(
+            meeting_id=meeting.id,
+            user_id=current_user.id,
+            is_moderator=True  # Admins are always moderators
+        )
+        db.session.add(participant)
+        try:
+            db.session.commit()
+        except Exception as e:
+            print(f"Error adding admin as participant: {e}")
+            db.session.rollback()
     
     if not participant:
         return jsonify({"error": "Access denied to this meeting"}), 403
