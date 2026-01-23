@@ -4,6 +4,7 @@ let currentStats = {
     totalUsers: 0,
     totalStartups: 0,
     totalCorporate: 0,
+    totalConnectors: 0,
     totalPrograms: 0
 };
 
@@ -18,12 +19,14 @@ async function loadDashboardStats() {
             animateStatChange('totalUsers', currentStats.totalUsers, stats.total_users);
             animateStatChange('totalStartups', currentStats.totalStartups, stats.total_startups);
             animateStatChange('totalCorporate', currentStats.totalCorporate, stats.total_corporate);
+            animateStatChange('totalConnectors', currentStats.totalConnectors, stats.total_connectors || 0);
             animateStatChange('totalPrograms', currentStats.totalPrograms, stats.total_programs);
 
             currentStats = {
                 totalUsers: stats.total_users,
                 totalStartups: stats.total_startups,
                 totalCorporate: stats.total_corporate,
+                totalConnectors: stats.total_connectors || 0,
                 totalPrograms: stats.total_programs
             };
         }
@@ -38,20 +41,29 @@ async function loadRecentUsers() {
         const response = await fetch('/api/admin/users');
         const data = await response.json();
 
-        if (data.success) {
-            users = data.users || [];
-            updateUserCounts();
-            renderRecentUsers();
+        // Handle both object with 'users' key and direct list return
+        if (data.success && data.users) {
+            users = data.users;
+        } else if (Array.isArray(data)) {
+            users = data;
+        } else {
+            users = [];
+        }
 
-            if (document.getElementById('usersSection').style.display !== 'none') {
-                renderFilteredUsers();
-            }
-            if (document.getElementById('startupsSection').style.display !== 'none') {
-                renderStartupUsers();
-            }
-            if (document.getElementById('corporateSection').style.display !== 'none') {
-                renderCorporateUsers();
-            }
+        updateUserCounts();
+        renderRecentUsers();
+
+        if (document.getElementById('usersSection').style.display !== 'none') {
+            renderFilteredUsers();
+        }
+        if (document.getElementById('startupsSection').style.display !== 'none') {
+            renderStartupUsers();
+        }
+        if (document.getElementById('corporateSection').style.display !== 'none') {
+            renderCorporateUsers();
+        }
+        if (document.getElementById('connectorsSection').style.display !== 'none') {
+            renderConnectorUsers();
         }
     } catch (error) {
         console.error('Error loading users:', error);
@@ -61,28 +73,27 @@ async function loadRecentUsers() {
 function updateUserCounts() {
     const counts = {
         all: users.length,
-        startup: users.filter(u => u.role === 'startup').length,
+        startup: users.filter(u => u.role === 'startup' || u.role === 'founder').length,
         corporate: users.filter(u => u.role === 'corporate').length,
-        enabler: users.filter(u => u.role === 'enabler').length
+        connector: users.filter(u => u.role === 'connector' || u.role === 'enabler').length,
+        admin: users.filter(u => u.role === 'admin').length
     };
 
     document.getElementById('allCount').textContent = counts.all;
     document.getElementById('startupCount').textContent = counts.startup;
     document.getElementById('corporateCount').textContent = counts.corporate;
-    document.getElementById('enablerCount').textContent = counts.enabler;
+    if (document.getElementById('connectorCount')) document.getElementById('connectorCount').textContent = counts.connector;
+    if (document.getElementById('adminCount')) document.getElementById('adminCount').textContent = counts.admin;
 }
 
 function getDisplayName(user) {
-    if (user.role === 'corporate' && user.corporate_name) {
-        return user.corporate_name;
-    }
+    if (user.name) return user.name;
+    if (user.full_name) return user.full_name;
+    if (user.corporate_name) return user.corporate_name;
+    if (user.company) return user.company;
 
     if (user.first_name && user.last_name) {
         return `${user.first_name} ${user.last_name}`;
-    }
-
-    if (user.full_name) {
-        return user.full_name;
     }
 
     if (user.username && user.username.includes('_')) {
@@ -90,7 +101,7 @@ function getDisplayName(user) {
         return parts.map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
     }
 
-    if (user.email && user.email.includes('@')) {
+    if (user.email) {
         const emailName = user.email.split('@')[0];
         if (emailName.includes('.')) {
             const parts = emailName.split('.');
@@ -103,39 +114,36 @@ function getDisplayName(user) {
 }
 
 function getUserInitials(user) {
-    if (user.first_name && user.last_name) {
-        return (user.first_name[0] + user.last_name[0]).toUpperCase();
-    }
-
-    if (user.full_name) {
-        const parts = user.full_name.split(' ');
+    // Priority 1: Use full name or name
+    const nameToUse = user.name || user.full_name || user.corporate_name;
+    if (nameToUse) {
+        const parts = nameToUse.split(' ');
         if (parts.length >= 2) {
             return (parts[0][0] + parts[1][0]).toUpperCase();
         }
-        return user.full_name.substring(0, 2).toUpperCase();
+        return nameToUse.substring(0, 2).toUpperCase();
     }
 
-    if (user.corporate_name) {
-        const parts = user.corporate_name.split(' ');
+    // Priority 2: Use email
+    if (user.email) {
+        const parts = user.email.split('@')[0].split('.');
         if (parts.length >= 2) {
             return (parts[0][0] + parts[1][0]).toUpperCase();
         }
-        return user.corporate_name.substring(0, 2).toUpperCase();
+        return user.email.substring(0, 2).toUpperCase();
     }
 
-    if (!user.username) return '??';
-
-    if (user.username.includes('@')) {
-        const emailPart = user.username.split('@')[0];
-        return emailPart.substring(0, 2).toUpperCase();
+    // Priority 3: Use username
+    if (user.username) {
+        if (user.username.includes('_')) {
+            const parts = user.username.split('_');
+            return (parts[0][0] + parts[1][0]).toUpperCase();
+        }
+        return user.username.substring(0, 2).toUpperCase();
     }
 
-    const parts = user.username.split('_');
-    if (parts.length >= 2) {
-        return (parts[0][0] + parts[1][0]).toUpperCase();
-    }
-
-    return user.username.substring(0, 2).toUpperCase();
+    // Final Fallback: Icon instead of '??'
+    return '<i class="fas fa-user" style="font-size: 0.8em;"></i>';
 }
 
 function renderRecentUsers() {
@@ -183,7 +191,13 @@ function renderFilteredUsers() {
 
     let filteredUsers = users;
     if (currentFilter !== 'all') {
-        filteredUsers = users.filter(u => u.role === currentFilter);
+        if (currentFilter === 'startup') {
+            filteredUsers = users.filter(u => u.role === 'startup' || u.role === 'founder');
+        } else if (currentFilter === 'connector') {
+            filteredUsers = users.filter(u => u.role === 'connector' || u.role === 'enabler');
+        } else {
+            filteredUsers = users.filter(u => u.role === currentFilter);
+        }
     }
 
     if (filteredUsers.length === 0) {
@@ -377,6 +391,67 @@ function renderCorporateUsers() {
     }).join('');
 }
 
+function renderConnectorUsers() {
+    const container = document.getElementById('connectorsUsersList');
+    const connectorUsers = users.filter(u => u.role === 'connector' || u.role === 'enabler');
+
+    if (connectorUsers.length === 0) {
+        container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-handshake"></i>
+                        <p>No connector users registered yet</p>
+                    </div>
+                `;
+        return;
+    }
+
+    const sortedUsers = [...connectorUsers].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+    container.innerHTML = sortedUsers.map(user => {
+        const initials = getUserInitials(user);
+        const timeAgo = formatTimeAgo(user.created_at);
+        const displayName = getDisplayName(user);
+
+        return `
+                    <div class="user-item">
+                        <div class="user-avatar connector">
+                            ${initials}
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name">${displayName}</div>
+                            <div class="user-role">${user.role.toUpperCase()} • Joined ${timeAgo}</div>
+                            <div class="user-details">
+                                <div class="user-detail-item">
+                                    <div class="user-detail-label">Email</div>
+                                    <div class="user-detail-value">${user.email}</div>
+                                </div>
+                                <div class="user-detail-item">
+                                    <div class="user-detail-label">Country</div>
+                                    <div class="user-detail-value">${user.country || 'N/A'}</div>
+                                </div>
+                                <div class="user-detail-item">
+                                    <div class="user-detail-label">User ID</div>
+                                    <div class="user-detail-value">#${user.id}</div>
+                                </div>
+                                <div class="user-detail-item">
+                                    <div class="user-detail-label">Registration Date</div>
+                                    <div class="user-detail-value">${new Date(user.created_at).toLocaleDateString()}</div>
+                                </div>
+                            </div>
+                            <div class="user-actions" style="margin-top: 10px; display: flex; gap: 10px;">
+                                <button onclick="editUser(${user.id})" style="padding: 5px 10px; background: #fcb82e; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Edit</button>
+                                <button onclick="deleteUser(${user.id})" style="padding: 5px 10px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Delete</button>
+                            </div>
+                        </div>
+                        <div class="user-status status-offline">
+                            <span class="status-dot"></span>
+                            Offline
+                        </div>
+                    </div>
+                `;
+    }).join('');
+}
+
 function filterUsers(filter) {
     currentFilter = filter;
 
@@ -429,7 +504,94 @@ function showSection(sectionName) {
             renderStartupUsers();
         } else if (sectionName === 'corporate') {
             renderCorporateUsers();
+        } else if (sectionName === 'connectors') {
+            renderConnectorUsers();
+        } else if (sectionName === 'programs') {
+            loadPrograms();
         }
+    }
+}
+
+async function loadPrograms() {
+    const container = document.getElementById('programsList');
+    container.innerHTML = '<div class="loading" style="margin: 20px auto;"></div><p style="text-align: center;">Loading programs...</p>';
+
+    try {
+        const response = await fetch('/api/admin/opportunities');
+        const data = await response.json();
+
+        if (data.success && data.opportunities) {
+            renderPrograms(data.opportunities);
+        }
+    } catch (error) {
+        console.error('Error loading programs:', error);
+        container.innerHTML = '<p style="text-align: center; color: #ef4444;">Failed to load programs.</p>';
+    }
+}
+
+function renderPrograms(programs) {
+    const container = document.getElementById('programsList');
+
+    if (!programs || programs.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px;">
+                <i class="fas fa-rocket" style="font-size: 48px; color: #a0aec0; margin-bottom: 15px;"></i>
+                <p style="color: #a0aec0; margin-bottom: 20px;">No programs created yet</p>
+                <button onclick="seedAllDemoData()" style="padding: 10px 20px; background: #4f46e5; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-magic"></i> Seed All Demo Data
+                </button>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = `
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem;">
+            <button onclick="seedAllDemoData()" style="font-size: 0.8rem; padding: 5px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer;">
+                <i class="fas fa-plus"></i> Add More Demos
+            </button>
+        </div>
+        <div class="programs-grid" style="display: grid; gap: 1.5rem;">
+            ${programs.map(p => `
+                <div class="program-card" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+                            <span style="background: ${p.status === 'published' ? '#f0fdf4' : '#fef2f2'}; color: ${p.status === 'published' ? '#166534' : '#991b1b'}; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">
+                                ${p.status}
+                            </span>
+                            <span style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                                ${p.type}
+                            </span>
+                        </div>
+                        <h4 style="font-size: 1.1rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">${p.title}</h4>
+                        <p style="color: #475569; font-size: 0.9rem; margin-bottom: 1rem; line-height: 1.5;">${p.description}</p>
+                        <div style="display: flex; gap: 1.5rem; font-size: 0.85rem; color: #64748b;">
+                            <span><i class="fas fa-gift" style="margin-right: 5px;"></i> ${p.benefits}</span>
+                            <span><i class="fas fa-calendar" style="margin-right: 5px;"></i> Deadline: ${new Date(p.deadline).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+async function seedAllDemoData() {
+    try {
+        const response = await fetch('/api/admin/seed-all-data', { method: 'POST' });
+        const data = await response.json();
+
+        if (data.success) {
+            showToast(data.message, 'success');
+            loadDashboardStats(); // Refresh stats
+            loadRecentUsers(); // Refresh user list
+            loadPrograms(); // Refresh programs list
+        } else {
+            showToast(data.message || 'Failed to seed data', 'error');
+        }
+    } catch (error) {
+        console.error('Error seeding data:', error);
+        showToast('Error seeding demo data', 'error');
     }
 }
 
@@ -461,39 +623,45 @@ function showToast(message, type = 'info') {
 }
 
 function goToPlatform() {
-    window.location.href = 'index.html';
-}
-
-function logout() {
-    if (confirm('Are you sure you want to logout?')) {
-        fetch('/logout', { method: 'GET' })
-            .then(() => {
-                window.location.href = '/';
-            })
-            .catch(() => {
-                window.location.href = '/';
-            });
-    }
+    window.location.href = '/';
 }
 
 function updateLastUpdateTime() {
-    document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+    const el = document.getElementById('lastUpdate');
+    if (el) el.textContent = new Date().toLocaleTimeString();
+}
+
+function updateLiveInsights() {
+    // Simulate concurrent users
+    const liveUsers = Math.floor(Math.random() * (45 - 12 + 1)) + 12;
+    const liveUsersEl = document.getElementById('liveUsers');
+    if (liveUsersEl) liveUsersEl.textContent = liveUsers;
+
+    // Simulate market trend
+    const marketTrendEl = document.getElementById('marketTrend');
+    if (marketTrendEl) {
+        const trends = ['Bullish (+2.4%)', 'Steady (+0.8%)', 'Very Bullish (+4.1%)', 'Growing (+1.2%)'];
+        marketTrendEl.textContent = trends[Math.floor(Math.random() * trends.length)];
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('Admin Dashboard loaded successfully!');
+    console.log('Admin Dashboard restored successfully!');
 
     loadDashboardStats();
     loadRecentUsers();
+    updateLiveInsights();
 
     setInterval(() => {
         loadDashboardStats();
         updateLastUpdateTime();
+        updateLiveInsights();
     }, 30000);
 
-    setInterval(loadRecentUsers, 60000);
+    // Random pings on the live map every few seconds
+    setInterval(updateLiveInsights, 8000);
 
-    showToast('Admin Dashboard loaded successfully!', 'success');
+    setInterval(loadRecentUsers, 60000);
 });
 
 async function deleteUser(id) {
@@ -505,7 +673,8 @@ async function deleteUser(id) {
 
         if (response.ok) {
             showToast('User deleted successfully', 'success');
-            loadRecentUsers(); // Reload list
+            loadRecentUsers();
+            loadDashboardStats();
         } else {
             showToast(data.error || 'Failed to delete user', 'error');
         }
@@ -519,8 +688,8 @@ async function editUser(id) {
     const user = users.find(u => u.id === id);
     if (!user) return;
 
-    const newName = prompt('Enter new name:', user.full_name || user.corporate_name || user.first_name || user.username);
-    if (newName === null) return; // Cancelled
+    const newName = prompt('Enter new name:', user.full_name || user.name || user.username);
+    if (newName === null) return;
 
     const newRole = prompt('Enter new role (startup/corporate/connector/admin):', user.role);
     if (newRole === null) return;
@@ -535,7 +704,8 @@ async function editUser(id) {
 
         if (response.ok) {
             showToast('User updated successfully', 'success');
-            loadRecentUsers(); // Reload list
+            loadRecentUsers();
+            loadDashboardStats();
         } else {
             showToast(data.error || 'Failed to update user', 'error');
         }

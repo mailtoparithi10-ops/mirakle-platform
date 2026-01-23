@@ -15,6 +15,16 @@
             padding: 160px 2rem 80px;
             text-align: center;
             background: radial-gradient(circle at 50% 0%, rgba(252, 184, 46, 0.15), transparent 70%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-title,
+        .hero-subtitle {
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .blog-grid {
@@ -154,7 +164,7 @@
         <!-- Article 1 -->
         <article class="blog-card">
             <div class="blog-image">
-                <img src="https://placehold.co/600x400/f3f4f6/fcb82e?text=Startup+Growth" alt="Startup Growth">
+                <img src="/static/images/startup_growth.png" alt="Startup Growth">
             </div>
             <div class="blog-content">
                 <div class="blog-category">Startup Strategy</div>
@@ -165,7 +175,8 @@
                 </p>
                 <div class="blog-meta">
                     <span>Dec 5, 2025</span>
-                    <a href="#" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
+                    <a href="javascript:void(0)" class="read-more" onclick="openArticle(1)">Read Article <i
+                            class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </article>
@@ -173,8 +184,7 @@
         <!-- Article 2 -->
         <article class="blog-card">
             <div class="blog-image">
-                <img src="https://placehold.co/600x400/f3f4f6/fcb82e?text=Corporate+Innovation"
-                    alt="Corporate Innovation">
+                <img src="/static/images/corporate_innovation.png" alt="Corporate Innovation">
             </div>
             <div class="blog-content">
                 <div class="blog-category">Corporate Innovation</div>
@@ -185,7 +195,8 @@
                 </p>
                 <div class="blog-meta">
                     <span>Dec 2, 2025</span>
-                    <a href="#" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
+                    <a href="javascript:void(0)" class="read-more" onclick="openArticle(2)">Read Article <i
+                            class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </article>
@@ -193,7 +204,7 @@
         <!-- Article 3 -->
         <article class="blog-card">
             <div class="blog-image">
-                <img src="https://placehold.co/600x400/f3f4f6/fcb82e?text=Ecosystem+Building" alt="Ecosystem Building">
+                <img src="/static/images/emerging_markets.png" alt="Ecosystem Building">
             </div>
             <div class="blog-content">
                 <div class="blog-category">Ecosystem</div>
@@ -204,7 +215,8 @@
                 </p>
                 <div class="blog-meta">
                     <span>Nov 28, 2025</span>
-                    <a href="#" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
+                    <a href="javascript:void(0)" class="read-more" onclick="openArticle(3)">Read Article <i
+                            class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </article>
@@ -212,7 +224,7 @@
         <!-- Article 4 -->
         <article class="blog-card">
             <div class="blog-image">
-                <img src="https://placehold.co/600x400/f3f4f6/fcb82e?text=Investment+Trends" alt="Investment Trends">
+                <img src="/static/images/vc_funding.png" alt="Investment Trends">
             </div>
             <div class="blog-content">
                 <div class="blog-category">Investment</div>
@@ -223,7 +235,8 @@
                 </p>
                 <div class="blog-meta">
                     <span>Nov 20, 2025</span>
-                    <a href="#" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
+                    <a href="javascript:void(0)" class="read-more" onclick="openArticle(4)">Read Article <i
+                            class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </article>
@@ -231,7 +244,7 @@
         <!-- Article 5 -->
         <article class="blog-card">
             <div class="blog-image">
-                <img src="https://placehold.co/600x400/f3f4f6/fcb82e?text=Tech+Spotlight" alt="Tech Spotlight">
+                <img src="/static/images/green_tech.png" alt="Tech Spotlight">
             </div>
             <div class="blog-content">
                 <div class="blog-category">Technology</div>
@@ -242,7 +255,8 @@
                 </p>
                 <div class="blog-meta">
                     <span>Nov 15, 2025</span>
-                    <a href="#" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
+                    <a href="javascript:void(0)" class="read-more" onclick="openArticle(5)">Read Article <i
+                            class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </article>
@@ -250,7 +264,7 @@
         <!-- Article 6 -->
         <article class="blog-card">
             <div class="blog-image">
-                <img src="https://placehold.co/600x400/f3f4f6/fcb82e?text=Community" alt="Community">
+                <img src="/static/images/connector_spotlight.png" alt="Community">
             </div>
             <div class="blog-content">
                 <div class="blog-category">Community</div>
@@ -261,11 +275,30 @@
                 </p>
                 <div class="blog-meta">
                     <span>Nov 10, 2025</span>
-                    <a href="#" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
+                    <a href="javascript:void(0)" class="read-more" onclick="openArticle(6)">Read Article <i
+                            class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </article>
     </section>
+
+    <!-- Article Modal -->
+    <div id="blogModal" class="modal-overlay">
+        <div class="modal-container">
+            <span class="modal-close" onclick="closeArticle()">&times;</span>
+            <div class="modal-image-container">
+                <img id="modalImage" src="" alt="Article Banner">
+            </div>
+            <div class="modal-content">
+                <div id="modalCategory" class="blog-category">Category</div>
+                <h2 id="modalTitle" class="blog-title" style="font-size: 2rem;">Title</h2>
+                <div id="modalMeta" class="blog-meta" style="border: none; padding: 0; margin-bottom: 2rem;">Date</div>
+                <div id="modalBody" class="blog-excerpt" style="font-size: 1.1rem; color: #374151;">
+                    <!-- Content will be injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -282,7 +315,203 @@
         </div>
     </footer>
 
+    <style>
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-container {
+            background: white;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            border-radius: 24px;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            transform: rotate(90deg);
+            background: #f3f4f6;
+        }
+
+        .modal-image-container {
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+        }
+
+        .modal-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-content {
+            padding: 3rem;
+        }
+    </style>
+
     <script src="/static/js/index.js"></script>
-</body>
+    <script>
+        const articles = {
+            1: {
+                title: "5 Key Strategies for Scaling Your Startup in 2025",
+                category: "Startup Strategy",
+                date: "Dec 5, 2025",
+                image: "/static/images/startup_growth.png",
+                content: `
+                    <p>Scaling a startup in 2025 requires a delicate balance of aggressive growth and fiscal prudence. As the market matures, investors are looking for sustainable unit economics over pure user acquisition. Here are the five strategies every founder needs to master:</p>
+                    <br>
+                    <h3>1. Profitability-First Growth</h3>
+                    <p>Gone are the days of growth at all costs. In 2025, the most successful startups are those that can demonstrate a clear path to profitability from day one. Focus on high-margin customer segments and lifetime value.</p>
+                    <br>
+                    <h3>2. AI-Native Operations</h3>
+                    <p>Scaling doesn't always mean hiring more people. Leveraging AI for customer support, coding, and marketing can help you scale your output without linear headcount growth.</p>
+                    <br>
+                    <h3>3. Hyper-Local Expansion</h3>
+                    <p>Instead of spreading thin across global markets, win one city or region at a time. Depth of market share often beats breadth in the early scaling phases.</p>
+                    <br>
+                    <h3>4. Community as a Moat</h3>
+                    <p>Build a platform that users love to talk about. A strong community reduces churn and lowers your Customer Acquisition Cost (CAC) through organic referrals.</p>
+                    <br>
+                    <h3>5. Talent Densification</h3>
+                    <p>Hire fewer, better people. One A-player is worth five B-players in a high-growth environment. Focus on culture and equity to retain top talent.</p>
+                `
+            },
+            2: {
+                title: "Why Open Innovation is the Future of Enterprise",
+                category: "Corporate Innovation",
+                date: "Dec 2, 2025",
+                image: "/static/images/corporate_innovation.png",
+                content: `
+                    <p>Corporate R&D is evolving. The traditional "closed doors" approach is being replaced by open innovation ecosystems where enterprises partner with startups to drive breakthrough discoveries.</p>
+                    <br>
+                    <p>As digital transformation accelerates, corporations are finding it increasingly difficult to keep up with the pace of technological change internally. By partnering with agile startups, they can test new technologies, enter new markets, and stay ahead of the competition without the overhead of massive internal projects.</p>
+                    <br>
+                    <p>Key benefits include reduced time-to-market, access to niche talent, and the ability to pivot faster in response to consumer demands.</p>
+                `
+            },
+            3: {
+                title: "Building Resilient Startup Ecosystems in Emerging Markets",
+                category: "Ecosystem",
+                date: "Nov 28, 2025",
+                image: "/static/images/emerging_markets.png",
+                content: `
+                    <p>Emerging markets are the next frontier for global innovation. However, building an ecosystem in these regions requires a different playbook than Silicon Valley or London.</p>
+                    <br>
+                    <p>Success in emerging markets depends on "connectors" — individuals and organizations that bridge the gap between local talent and global capital. These ecosystems must be resilient to economic volatility and infrastructure challenges.</p>
+                    <br>
+                    <p>We're seeing a massive rise in tech hubs across Southeast Asia, Africa, and Latin America, driven by mobile-first solutions and a young demographic eager for change.</p>
+                `
+            },
+            4: {
+                title: "The Shift in VC Funding: What Founders Need to Know",
+                category: "Investment",
+                date: "Nov 20, 2025",
+                image: "/static/images/vc_funding.png",
+                content: `
+                    <p>The venture capital landscape has shifted significantly. Investors are becoming more selective, focusing on startups that solve real, tangible problems with defensible technology.</p>
+                    <br>
+                    <p>For founders, this means the bar for Seed and Series A rounds is higher than ever. You need more than just a great idea; you need data, a strong team, and a clear understanding of your market dynamics. Valuation multiples have normalized, but there is still plenty of "dry powder" for the right opportunities.</p>
+                `
+            },
+            5: {
+                title: "The Rise of GreenTech: Opportunities for Innovators",
+                category: "Technology",
+                date: "Nov 15, 2025",
+                image: "/static/images/green_tech.png",
+                content: `
+                    <p>Sustainability is no longer a corporate social responsibility checkbox — it's a massive business opportunity. From carbon capture to sustainable fashion, GreenTech is attracting billions in investment.</p>
+                    <br>
+                    <p>Innovators who can solve the pressing environmental challenges of our time will build the next generation of decacorns. The convergence of hardware and software in the climate space is creating unique challenges and even greater rewards.</p>
+                `
+            },
+            6: {
+                title: "Connector Spotlight: Sarah Chen from Singapore",
+                category: "Community",
+                date: "Nov 10, 2025",
+                image: "/static/images/connector_spotlight.png",
+                content: `
+                    <p>Sarah Chen has become a household name in the Singapore startup scene. As a master connector, she has facilitated over 50 successful startup-corporate partnerships across Southeast Asia.</p>
+                    <br>
+                    <p>In this spotlight, we dive into Sarah's approach to ecosystem building. "It's all about trust," she says. "In this region, relationships are currency. My job is to ensure that both the startup and the corporate are speaking the same language before they ever walk into a meeting."</p>
+                `
+            }
+        };
+
+        function openArticle(id) {
+            const article = articles[id];
+            if (!article) return;
+
+            document.getElementById('modalTitle').textContent = article.title;
+            document.getElementById('modalCategory').textContent = article.category;
+            document.getElementById('modalMeta').textContent = article.date;
+            document.getElementById('modalImage').src = article.image;
+            document.getElementById('modalBody').innerHTML = article.content;
+
+            const modal = document.getElementById('blogModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scroll
+        }
+
+        function closeArticle() {
+            const modal = document.getElementById('blogModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = ''; // Restore scroll
+        }
+
+        // Close on clic outside
+        window.onclick = function (event) {
+            const modal = document.getElementById('blogModal');
+            if (event.target == modal) {
+                closeArticle();
+            }
+        }
+    </script>
 
 </html>

@@ -306,6 +306,91 @@
                 display: none;
             }
         }
+
+        /* Interactive Enhancements */
+        .live-pulse {
+            width: 10px;
+            height: 10px;
+            background: #fcb82e;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .live-pulse::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border-radius: 50%;
+            animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(.33);
+                opacity: 1;
+            }
+
+            80%,
+            100% {
+                transform: scale(3.5);
+                opacity: 0;
+            }
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            background: #000;
+            color: #fcb82e;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+            background: #333;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #000;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            transform: translateY(100px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .toast.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .toast.info {
+            border-left: 4px solid #3b82f6;
+        }
+
+        /* Sidebar user specific */
+        .user-avatar-large {
+            background: #000;
+            color: #fcb82e;
+            border-color: #fcb82e;
+        }
+
+        aside.sidebar {
+            background: #0a0a0a;
+        }
     </style>
 </head>
 
@@ -322,6 +407,9 @@
             </button>
             <button class="nav-item" onclick="showSection('startups')">
                 <i class="fa-solid fa-rocket"></i> Scout Startups
+            </button>
+            <button class="nav-item" onclick="showSection('programs')">
+                <i class="fa-solid fa-trophy"></i> My Programs
             </button>
             <button class="nav-item" onclick="showSection('dealflow')">
                 <i class="fa-solid fa-handshake"></i> Deal Flow
@@ -412,7 +500,8 @@
                                 </td>
                                 <td>{{ startup.stage or 'Seed' }}</td>
                                 <td><span class="status-pill matched">New</span></td>
-                                <td><button style="cursor:pointer">Connect</button></td>
+                                <td><button class="action-btn"
+                                        onclick="handleConnect('{{ startup.name }}')">Connect</button></td>
                             </tr>
                             {% else %}
                             <tr>
@@ -421,6 +510,20 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                </div>
+
+                <!-- LIVE INSIGHTS -->
+                <div class="cards-grid" style="grid-template-columns: 1fr;">
+                    <div class="card" style="border-left: 4px solid #fcb82e;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div class="live-pulse"></div>
+                            <div>
+                                <h4 style="font-weight: 700;">Live Market Insight</h4>
+                                <p style="font-size: 0.9rem; color: #666;" id="liveInsightText">Analyzing trending
+                                    sectors for Q1 2026...</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -535,6 +638,64 @@
                                 Profile</button>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            <!-- PROGRAMS SECTION -->
+            <section id="programs" class="section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <div>
+                        <h2 style="font-size: 1.5rem; font-weight: 700;">Innovation Programs</h2>
+                        <p style="color: #666;">Manage your accelerator, POC, and partnership challenges.</p>
+                    </div>
+                    <button class="action-btn" style="padding: 12px 20px; font-size: 14px;"
+                        onclick="showNewProgramModal()">
+                        <i class="fas fa-plus"></i> Launch New Program
+                    </button>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Program Engagement</h3>
+                        </div>
+                        <div style="height: 250px;">
+                            <canvas id="programGraph"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <div class="table-title">Active Challenges</div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Challenge Name</th>
+                                <th>Applicants</th>
+                                <th>Days Left</th>
+                                <th>Engagement</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 600;">Sustainable Supply Chain POC</td>
+                                <td>24 Startups</td>
+                                <td>12 Days</td>
+                                <td style="color: #166534; font-weight: 700;">High (+14%)</td>
+                                <td><span class="status-pill matched">Open</span></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">AI Logistics Pilot</td>
+                                <td>15 Startups</td>
+                                <td>Closed</td>
+                                <td style="color: #92400e; font-weight: 700;">Moderate</td>
+                                <td><span class="status-pill review">In Review</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
 
@@ -717,7 +878,7 @@
                             </label>
                         </div>
 
-                        <button type="button"
+                        <button type="button" onclick="saveSettings()"
                             style="padding: 0.75rem 2rem; background: #000; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Save
                             Changes</button>
                     </form>
@@ -728,9 +889,27 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // --- CHART INITIALIZATION ---
+        // Global State
+        const state = {
+            matchesCount: Number("{{ total_startups }}") || 24,
+            pilotsDone: 4,
+            isSyncing: true
+        };
+
         document.addEventListener('DOMContentLoaded', function () {
-            // Check if element exists before trying to get context
+            initMatchChart();
+            initProgramChart();
+            simulateRealTimeFeed();
+
+            // Welcome Toast
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('welcome') === 'true') {
+                showToast("Connected to InnoBridge Corporate Network. Systems active.", "info");
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        });
+
+        function initMatchChart() {
             const ctx = document.getElementById('matchChart');
             if (ctx) {
                 new Chart(ctx, {
@@ -738,54 +917,126 @@
                     data: {
                         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
                         datasets: [{
-                            label: 'Startup Matches',
-                            data: [12, 19, 3, 5, 2, 30],
+                            label: 'Startup Scouted',
+                            data: [12, 19, 14, 25, 22, 30],
                             borderColor: '#fcb82e',
-                            backgroundColor: 'rgba(252, 184, 46, 0.2)',
+                            backgroundColor: 'rgba(252, 184, 46, 0.1)',
+                            borderWidth: 3,
                             tension: 0.4,
-                            fill: true
-                        }, {
-                            label: 'Deals Closed',
-                            data: [2, 3, 1, 0, 1, 5],
-                            borderColor: '#000',
-                            backgroundColor: 'transparent',
-                            tension: 0.4,
-                            borderDash: [5, 5]
+                            fill: true,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#fff',
+                            pointBorderColor: '#fcb82e'
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom'
-                            }
-                        },
+                        plugins: { legend: { display: false } },
                         scales: {
-                            y: {
-                                beginAtZero: true
-                            }
+                            y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                            x: { grid: { display: false } }
                         }
                     }
                 });
             }
+        }
 
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('welcome') === 'true') {
-                setTimeout(() => {
-                    alert("Thank you for registering, {{ current_user.name }}!");
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                }, 100);
+        function initProgramChart() {
+            const ctx = document.getElementById('programGraph');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Applicants', 'In Review', 'Pilot Ready', 'Launched'],
+                        datasets: [{
+                            label: 'Metrics',
+                            data: [45, 12, 8, 4],
+                            backgroundColor: ['#000', '#333', '#fcb82e', '#f97316'],
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } }
+                    }
+                });
             }
-        });
+        }
+
+        function handleConnect(startupName) {
+            const btn = event.target;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Syncing...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                showToast(`Connection request sent to <b>${startupName}</b>. Negotiation room created.`, "success");
+                btn.innerHTML = '<i class="fas fa-check"></i> Requested';
+                btn.style.background = '#10b981';
+                btn.style.color = 'white';
+            }, 1200);
+        }
+
+        function saveSettings() {
+            const btn = event.target;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Applying...';
+
+            setTimeout(() => {
+                showToast("Organization visibility and notification rules updated.", "success");
+                btn.innerHTML = 'Save Changes';
+            }, 800);
+        }
+
+        function showNewProgramModal() {
+            showToast("Innovation Program Builder v2.4 initialized. Ready for challenge parameters.", "info");
+        }
 
         function showSection(sectionId) {
-            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
+            document.querySelectorAll('.section').forEach(el => {
+                el.style.display = 'none';
+                el.classList.remove('active');
+            });
+            const targetSect = document.getElementById(sectionId);
+            if (targetSect) {
+                targetSect.style.display = 'block';
+                targetSect.classList.add('active');
+            }
 
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             const activeBtn = Array.from(document.querySelectorAll('.nav-item')).find(btn => btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(sectionId));
             if (activeBtn) activeBtn.classList.add('active');
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-info-circle';
+            toast.innerHTML = `<i class="fas ${icon}" style="color: ${type === 'success' ? '#10b981' : '#fcb82e'}"></i> <span>${message}</span>`;
+            document.body.appendChild(toast);
+
+            setTimeout(() => toast.style.transform = 'translateY(0)', 100);
+            setTimeout(() => {
+                toast.style.transform = 'translateY(100px)';
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
+        }
+
+        function simulateRealTimeFeed() {
+            const insights = [
+                "Trending: AgriTech startups in Singapore showing 40% growth.",
+                "Global Match: 'CleanCycle AI' has achieved POC readiness.",
+                "Network Alert: New Fintech challenge launched by Competitor Group.",
+                "Strategy Update: AI Compliance is now a mandatory scouting tag."
+            ];
+
+            setInterval(() => {
+                if (Math.random() > 0.6) {
+                    const text = insights[Math.floor(Math.random() * insights.length)];
+                    document.getElementById('liveInsightText').innerText = text;
+                    document.getElementById('liveInsightText').style.animation = 'fadeIn 0.5s';
+                }
+            }, 25000);
         }
     </script>
 </body>

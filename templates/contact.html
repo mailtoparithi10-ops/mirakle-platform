@@ -12,7 +12,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .contact-hero {
-            padding: 160px 2rem 100px;
+            padding: 120px 2rem 80px;
             text-align: center;
             background: radial-gradient(circle at 50% 0%, rgba(252, 184, 46, 0.15), transparent 70%);
         }
@@ -24,44 +24,56 @@
         }
 
         .contact-container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem 4rem;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 0.7fr 1.3fr;
             gap: 4rem;
+            align-items: start;
+            position: relative;
+            z-index: 10;
         }
 
         .contact-info {
             background: white;
             padding: 2.5rem;
-            border-radius: 20px;
+            border-radius: 24px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--border-primary);
+            display: flex;
+            flex-direction: column;
         }
 
         .info-item {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
         .info-icon {
-            width: 50px;
-            height: 50px;
+            width: 54px;
+            height: 54px;
             background: rgba(252, 184, 46, 0.1);
-            border-radius: 12px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #d97706;
-            font-size: 1.25rem;
+            font-size: 1.4rem;
             margin-right: 1.5rem;
             flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .info-item:hover .info-icon {
+            background: var(--accent-primary);
+            color: black;
+            transform: scale(1.1) rotate(-5deg);
         }
 
         .info-content h3 {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
             color: #111827;
@@ -79,70 +91,51 @@
             color: var(--accent-primary);
         }
 
-        .social-widgets {
-            margin-top: 3rem;
-            text-align: center;
-        }
-
-        .social-grid {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 1.5rem;
-        }
-
-        .social-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.25rem;
-            transition: transform 0.3s ease;
-            text-decoration: none;
-        }
-
-        .social-btn:hover {
-            transform: translateY(-5px);
-        }
-
-        .social-linkedin {
-            background: #0077b5;
-        }
-
-        .social-instagram {
-            background: #e1306c;
-        }
-
-        .social-twitter {
-            background: #1da1f2;
-        }
-
-        .social-facebook {
-            background: #1877f2;
-        }
-
-        .social-whatsapp {
-            background: #25d366;
-        }
-
-        .map-container {
-            border-radius: 20px;
-            overflow: hidden;
-            height: 100%;
-            min-height: 400px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+        .world-clock {
+            font-size: 0.85rem;
+            color: #f59e0b;
+            font-weight: 600;
+            margin-top: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(245, 158, 11, 0.05);
+            padding: 4px 12px;
+            border-radius: 6px;
+            display: inline-block;
         }
 
         /* Form Styles */
         .contact-form-container {
             background: white;
             padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+            border-radius: 30px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--border-primary);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+
+        .contact-form-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 35px 90px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            color: #111827;
+            letter-spacing: -0.5px;
         }
 
         .form-group {
@@ -151,69 +144,105 @@
 
         .form-label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: #111827;
-            font-weight: 500;
+            margin-bottom: 0.6rem;
+            color: #374151;
+            font-weight: 600;
             font-size: 0.95rem;
         }
 
         .form-control {
             width: 100%;
-            padding: 0.75rem 1rem;
+            padding: 0.85rem 1.25rem;
             border: 1px solid #e5e7eb;
-            border-radius: 8px;
+            border-radius: 12px;
             font-family: inherit;
             font-size: 1rem;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #f9fafb;
         }
 
         .form-control:focus {
             outline: none;
             border-color: #f59e0b;
-            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+        }
+
+        .dept-selector {
+            margin-bottom: 2rem;
+        }
+
+        .dept-tags {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: 0.75rem;
+        }
+
+        .dept-tag {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            color: #6b7280;
+            padding: 0.7rem 1.4rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dept-tag:hover {
+            background: #ffffff;
+            border-color: #f59e0b;
+            color: #d97706;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
+        }
+
+        .dept-tag.active {
+            background: #f59e0b;
+            border-color: #f59e0b;
+            color: white;
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+            transform: scale(1.05);
         }
 
         .submit-btn {
             width: 100%;
-            padding: 1rem;
+            padding: 1.1rem;
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-weight: 600;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.05rem;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            box-shadow: 0 10px 25px rgba(217, 119, 6, 0.2);
         }
 
         .submit-btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(217, 119, 6, 0.3);
         }
 
-        .flash-messages {
-            margin-bottom: 2rem;
-            border-radius: 8px;
-            overflow: hidden;
+        .submit-btn:active {
+            transform: translateY(0);
         }
 
-        .alert {
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-left: 4px solid;
+        .submit-btn.loading {
+            opacity: 0.8;
+            pointer-events: none;
         }
 
-        .alert-success {
-            background: #ecfdf5;
-            border-color: #10b981;
-            color: #065f46;
-        }
-
-        .alert-error {
-            background: #fef2f2;
-            border-color: #ef4444;
-            color: #991b1b;
-        }
-
-        /* Global Hubs Section */
+        /* Office Cards */
         .global-hubs {
             padding: 80px 2rem;
             background: #f8f9fa;
@@ -221,97 +250,204 @@
 
         .hubs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .office-card {
             background: white;
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
             border: 1px solid var(--border-primary);
-            transition: transform 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .office-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05);
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+            border-color: var(--accent-primary);
         }
 
         .office-image {
-            height: 200px;
-            background: #eee;
+            height: 220px;
             position: relative;
+            overflow: hidden;
         }
 
         .office-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.6s ease;
         }
 
-        .office-details {
-            padding: 1.5rem;
+        .office-card:hover .office-image img {
+            transform: scale(1.1);
         }
 
-        .office-city {
-            font-size: 1.25rem;
+        .office-time-overlay {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: #111827;
+            font-family: 'JetBrains Mono', monospace;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* FAQ Section */
-        .faq-section {
-            padding: 80px 2rem;
-            background: white;
-        }
-
-        .faq-container {
-            max-width: 800px;
-            margin: 0 auto;
+        /* FAQ Accordion */
+        .faq-accordion {
+            max-width: 850px;
+            margin: 2rem auto 0;
         }
 
         .faq-item {
-            border-bottom: 1px solid #eee;
-            padding: 1.5rem 0;
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
 
-        .faq-item:last-child {
-            border-bottom: none;
+        .faq-item:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .faq-header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
         }
 
         .faq-question {
             font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
+            font-weight: 700;
             color: #111827;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        .faq-answer {
+        .faq-icon {
+            color: #9ca3af;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .faq-content {
+            padding: 0 2rem 1.5rem;
             color: #6b7280;
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
-        @media (max-width: 768px) {
+        .faq-item.active {
+            border-color: var(--accent-primary);
+            box-shadow: 0 10px 25px rgba(252, 184, 46, 0.1);
+        }
+
+        .faq-item.active .faq-header {
+            color: #d97706;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+            color: #d97706;
+        }
+
+        .faq-item.active .faq-body {
+            max-height: 300px;
+        }
+
+        /* Help Widget */
+        .help-widget {
+            position: fixed;
+            bottom: 2.5rem;
+            right: 2.5rem;
+            background: #111827;
+            color: white;
+            padding: 1rem 1.75rem;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            z-index: 1000;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: 600;
+        }
+
+        .help-widget:hover {
+            transform: translateY(-8px) scale(1.05);
+            background: #f59e0b;
+            color: black;
+        }
+
+        .flash-messages {
+            margin-bottom: 2rem;
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 500;
+            border-left: 5px solid transparent;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .alert-success {
+            border-left-color: #10b981;
+            background: #ecfdf5;
+            color: #065f46;
+        }
+
+        .alert-error {
+            border-left-color: #ef4444;
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        @media (max-width: 968px) {
             .contact-container {
                 grid-template-columns: 1fr;
+                gap: 2rem;
             }
         }
     </style>
 </head>
 
 <body>
-    <!-- Background Pattern -->
     <div class="bg-pattern"></div>
 
-    <!-- Header -->
     <header class="header">
         <div class="nav-container">
             <a href="/" class="logo">
@@ -329,14 +465,13 @@
                 <a href="/investor" class="nav-link">INVESTORS</a>
             </nav>
 
-            <div class="nav-actions" id="navActions">
+            <div class="nav-actions">
                 <a href="/login" class="nav-btn secondary">LOG IN</a>
                 <a href="/signup" class="nav-btn primary">GET STARTED</a>
             </div>
         </div>
     </header>
 
-    <!-- Hero -->
     <section class="contact-hero">
         <h1 class="hero-title">GET IN <span class="text-gradient">TOUCH</span></h1>
         <p class="hero-subtitle">
@@ -344,15 +479,15 @@
         </p>
     </section>
 
-    <!-- Main Content -->
     <div class="contact-container">
-        <!-- Contact Details -->
+        <!-- Vertical Column 1: Info -->
         <div class="contact-info">
             <div class="info-item">
                 <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
                 <div class="info-content">
                     <h3>Our Headquarters</h3>
                     <p>InnoBridge Tower, 45 Future Ave<br>Tech District, Singapore 018935</p>
+                    <div class="world-clock" id="clock-singapore">Local Time: Loading...</div>
                 </div>
             </div>
 
@@ -372,46 +507,51 @@
                 </div>
             </div>
 
-            <div class="info-item">
-                <div class="info-icon"><i class="fab fa-whatsapp"></i></div>
-                <div class="info-content">
-                    <h3>WhatsApp</h3>
-                    <a href="https://wa.me/6567890123" target="_blank">Chat with us</a>
-                </div>
-            </div>
 
-            <!-- Social Widgets -->
-            <div class="social-widgets">
-                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Connect With Us</h3>
-                <div class="social-grid">
-                    <a href="#" class="social-btn social-linkedin" title="LinkedIn"><i
-                            class="fab fa-linkedin-in"></i></a>
-                    <a href="#" class="social-btn social-instagram" title="Instagram"><i
-                            class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-btn social-twitter" title="X (Twitter)"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-btn social-facebook" title="Facebook"><i
-                            class="fab fa-facebook-f"></i></a>
-                    <a href="https://wa.me/15551234567" class="social-btn social-whatsapp" title="WhatsApp"><i
-                            class="fab fa-whatsapp"></i></a>
-                </div>
+
+            <div
+                style="padding: 1.75rem; background: #fefce8; border-radius: 16px; border: 1px dashed #f59e0b; margin-top: 2rem;">
+                <p style="font-size: 0.95rem; color: #854d0e; line-height: 1.6;">
+                    <i class="fas fa-bolt" style="margin-right: 0.75rem;"></i>
+                    <strong>Response Guarantee:</strong> Our dedicated success team responds within <strong>12 business
+                        hours</strong> for all verified platform users.
+                </p>
             </div>
         </div>
 
-        <!-- Contact Form -->
+        <!-- Vertical Column 2: Send Message -->
         <div class="contact-form-container">
-            {% with messages = get_flashed_messages(with_categories=true, category_filter=["success", "error"]) %}
-            {% if messages %}
-            <div class="flash-messages">
-                {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                    {{ message }}
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
-            {% endwith %}
+            <h2 class="form-title">Send a Message</h2>
 
-            <form action="/contact" method="POST">
+            <div class="dept-selector">
+                <label class="form-label">Who would you like to speak with?</label>
+                <div class="dept-tags">
+                    <button type="button" class="dept-tag" onclick="selectDept('Venture Capital Support')">VC
+                        Support</button>
+                    <button type="button" class="dept-tag"
+                        onclick="selectDept('Startup Partnerships')">Partnerships</button>
+                    <button type="button" class="dept-tag" onclick="selectDept('Technical Help')">Tech Support</button>
+                    <button type="button" class="dept-tag" onclick="selectDept('Media & Press')">Media</button>
+                </div>
+            </div>
+
+            <div class="jinja-ghost-check">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        <i
+                            class="fas {{ 'fa-check-circle' if category == 'success' else 'fa-exclamation-circle' }}"></i>
+                        <span>{{ message }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endwith %}
+            </div>
+
+            <form action="/contact" method="POST" id="contactForm">
                 <div class="form-group">
                     <label for="name" class="form-label">Full Name</label>
                     <input type="text" id="name" name="name" class="form-control" placeholder="John Doe" required>
@@ -432,94 +572,158 @@
                 <div class="form-group">
                     <label for="message" class="form-label">Message</label>
                     <textarea id="message" name="message" class="form-control" rows="5"
-                        placeholder="Tell us more about your inquiry..." required></textarea>
+                        placeholder="Tell us more about your inquiry..." required onkeyup="countChars(this)"></textarea>
+                    <div id="charCounter"
+                        style="text-align: right; font-size: 0.75rem; color: #9ca3af; margin-top: 0.5rem;">0 / 1000
+                        characters</div>
                 </div>
 
-                <button type="submit" class="submit-btn">Send Message</button>
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span>Send Message</span>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </form>
         </div>
     </div>
 
-    <!-- Global Hubs -->
     <section class="global-hubs">
+        <div style="text-align: center; margin-bottom: 4rem;">
+            <h2
+                style="font-family: 'JetBrains Mono', monospace; font-size: 2.2rem; font-weight: 800; letter-spacing: -1px;">
+                OUR GLOBAL NETWORK</h2>
+            <div
+                style="width: 60px; height: 4px; background: var(--accent-primary); margin: 1.5rem auto; border-radius: 2px;">
+            </div>
+        </div>
+
         <div class="hubs-grid">
-            <!-- Singapore Card -->
             <div class="office-card">
                 <div class="office-image">
-                    <img src="https://placehold.co/600x400/f8f9fa/fcb82e?text=Singapore+HQ" alt="Singapore Office">
+                    <img src="https://placehold.co/800x600/f8f9fa/fcb82e?text=Singapore+HQ" alt="Singapore Office">
+                    <div class="office-time-overlay" id="time-sg">00:00</div>
                 </div>
                 <div class="office-details">
                     <div class="office-city">Singapore (HQ)</div>
-                    <p style="color:#666; font-size:0.9rem;">45 Future Ave, Tech District, 018935</p>
-                    <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid #eee;">
-                        <span style="font-size:0.8rem; font-weight:600; color:#fcb82e;">APAC REGION</span>
+                    <p>InnoBridge Tower, 45 Future Ave, 018935</p>
+                    <div
+                        style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid #f3f4f6; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size:0.8rem; font-weight:700; color:#d97706; text-transform: uppercase;">APAC
+                            Region</span>
+                        <a href="#" class="office-link">Map <i class="fas fa-arrow-right"
+                                style="font-size: 0.7rem;"></i></a>
                     </div>
                 </div>
             </div>
 
-            <!-- San Francisco Card -->
             <div class="office-card">
                 <div class="office-image">
-                    <img src="https://placehold.co/600x400/f8f9fa/10b981?text=San+Francisco" alt="SF Office">
+                    <img src="https://placehold.co/800x600/f8f9fa/10b981?text=San+Francisco" alt="SF Office">
+                    <div class="office-time-overlay" id="time-sf">00:00</div>
                 </div>
                 <div class="office-details">
                     <div class="office-city">San Francisco</div>
-                    <p style="color:#666; font-size:0.9rem;">500 Howard St, SoMa, CA 94105</p>
-                    <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid #eee;">
-                        <span style="font-size:0.8rem; font-weight:600; color:#10b981;">AMERICAS REGION</span>
+                    <p>The Foundry, 500 Howard St, CA 94105</p>
+                    <div
+                        style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid #f3f4f6; display: flex; justify-content: space-between; align-items: center;">
+                        <span
+                            style="font-size:0.8rem; font-weight:700; color:#059669; text-transform: uppercase;">Americas</span>
+                        <a href="#" class="office-link">Map <i class="fas fa-arrow-right"
+                                style="font-size: 0.7rem;"></i></a>
                     </div>
                 </div>
             </div>
 
-            <!-- London Card -->
             <div class="office-card">
                 <div class="office-image">
-                    <img src="https://placehold.co/600x400/f8f9fa/3b82f6?text=London" alt="London Office">
+                    <img src="https://placehold.co/800x600/f8f9fa/3b82f6?text=London" alt="London Office">
+                    <div class="office-time-overlay" id="time-ldn">00:00</div>
                 </div>
                 <div class="office-details">
                     <div class="office-city">London</div>
-                    <p style="color:#666; font-size:0.9rem;">20 Fenchurch Str, London EC3M 3BY</p>
-                    <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid #eee;">
-                        <span style="font-size:0.8rem; font-weight:600; color:#3b82f6;">EMEA REGION</span>
+                    <p>The Walkie Talkie, 20 Fenchurch Str, EC3M</p>
+                    <div
+                        style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid #f3f4f6; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size:0.8rem; font-weight:700; color:#2563eb; text-transform: uppercase;">EMEA
+                            Region</span>
+                        <a href="#" class="office-link">Map <i class="fas fa-arrow-right"
+                                style="font-size: 0.7rem;"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FAQ Section -->
     <section class="faq-section">
         <div class="faq-container">
             <h2
-                style="text-align: center; margin-bottom: 3rem; font-family: 'JetBrains Mono', monospace; font-size: 2rem;">
+                style="text-align: center; margin-bottom: 3.5rem; font-family: 'JetBrains Mono', monospace; font-size: 2.2rem; font-weight: 800;">
                 FREQUENTLY ASKED QUESTIONS</h2>
 
-            <div class="faq-item">
-                <div class="faq-question">How fast can I expect a response? <i class="fas fa-chevron-down"
-                        style="color:#ccc;"></i></div>
-                <div class="faq-answer" style="margin-top: 0.5rem;">We typically respond to all inquiries within 24
-                    hours during business days. For urgent technical support, please use our dedicated support portal.
+            <div class="faq-accordion">
+                <div class="faq-item">
+                    <div class="faq-header" onclick="toggleFaq(this)">
+                        <span class="faq-question">How fast can I expect a response?</span>
+                        <i class="fas fa-plus faq-icon"></i>
+                    </div>
+                    <div class="faq-body">
+                        <div class="faq-content">
+                            Our team is committed to hyper-responsiveness. General inquiries are handled within 12-24
+                            hours. Enterprise clients with priority support often receive replies in under 4 hours
+                            during business days.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="faq-item">
-                <div class="faq-question">Do you work with early-stage startups? <i class="fas fa-chevron-down"
-                        style="color:#ccc;"></i></div>
-                <div class="faq-answer" style="margin-top: 0.5rem;">Yes! We support startups from Pre-Seed to Series B.
-                    Check out our Startup Portal for specific programs tailored to your stage.</div>
-            </div>
+                <div class="faq-item">
+                    <div class="faq-header" onclick="toggleFaq(this)">
+                        <span class="faq-question">Do you work with early-stage startups?</span>
+                        <i class="fas fa-plus faq-icon"></i>
+                    </div>
+                    <div class="faq-body">
+                        <div class="faq-content">
+                            Absolutely. We believe innovation happens at every stage. We have specialized tracks for
+                            Pre-Seed and Seed founders and provide the infrastructure to help them grow into Series A
+                            and beyond.
+                        </div>
+                    </div>
+                </div>
 
-            <div class="faq-item">
-                <div class="faq-question">How can corporates partner with InnoBridge? <i class="fas fa-chevron-down"
-                        style="color:#ccc;"></i></div>
-                <div class="faq-answer" style="margin-top: 0.5rem;">Corporates can join as Innovation Partners. Please
-                    fill out the form above with the subject "Corporate Partnership" and our deal flow team will be in
-                    touch.</div>
+                <div class="faq-item">
+                    <div class="faq-header" onclick="toggleFaq(this)">
+                        <span class="faq-question">How do I request a feature demo?</span>
+                        <i class="fas fa-plus faq-icon"></i>
+                    </div>
+                    <div class="faq-body">
+                        <div class="faq-content">
+                            The best way is to fill out the form above and select "Startup Partnerships" or "Venture
+                            Capital Support" based on your role. One of our regional leads will set up a personalized
+                            walk-through.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-header" onclick="toggleFaq(this)">
+                        <span class="faq-question">Is InnoBridge free for startups?</span>
+                        <i class="fas fa-plus faq-icon"></i>
+                    </div>
+                    <div class="faq-body">
+                        <div class="faq-content">
+                            Basic profile creation and community access are always free. Specialized matching algorithms
+                            and deep-dive analytics are part of our premium Startup Plus track.
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
+    <div class="help-widget"
+        onclick="alert('Our live support agents are currently assisting other users. Please leave a message!')">
+        <i class="fas fa-comment-dots"></i>
+        <span>Live Context Chat</span>
+    </div>
+
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-logo">INNOBRIDGE</div>
@@ -530,6 +734,80 @@
     </footer>
 
     <script src="/static/js/index.js"></script>
+    <script>
+        function selectDept(deptName) {
+            document.getElementById('subject').value = deptName;
+            document.querySelectorAll('.dept-tag').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.innerText === deptName || btn.innerText.includes(deptName.split(' ')[0])) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function countChars(obj) {
+            const maxLength = 1000;
+            const strLength = obj.value.length;
+            const charCount = document.getElementById("charCounter");
+            charCount.innerHTML = `${strLength} / ${maxLength} characters`;
+            charCount.style.color = strLength > maxLength ? "#ef4444" : "#9ca3af";
+        }
+
+        function updateClocks() {
+            const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+            const clocks = [
+                { id: 'time-sg', tz: 'Asia/Singapore', clockId: 'clock-singapore' },
+                { id: 'time-sf', tz: 'America/Los_Angeles' },
+                { id: 'time-ldn', tz: 'Europe/London' }
+            ];
+
+            clocks.forEach(c => {
+                const timeStr = new Intl.DateTimeFormat('en-US', { ...timeOptions, timeZone: c.tz }).format(new Date());
+                const el = document.getElementById(c.id);
+                if (el) el.innerHTML = timeStr;
+                if (c.clockId) {
+                    const clockEl = document.getElementById(c.clockId);
+                    if (clockEl) clockEl.innerHTML = `Local Time: ${timeStr}`;
+                }
+            });
+        }
+
+        setInterval(updateClocks, 1000);
+        updateClocks();
+
+        function toggleFaq(header) {
+            const item = header.parentElement;
+            const isActive = item.classList.contains('active');
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+            if (!isActive) item.classList.add('active');
+        }
+
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
+            const btn = document.getElementById('submitBtn');
+            const originalContent = btn.innerHTML;
+            btn.classList.add('loading');
+            btn.innerHTML = '<span>Sending Message...</span> <i class="fas fa-spinner fa-spin"></i>';
+
+            // Re-enable after 3 seconds for demo purposes if not handled by server redirect
+            setTimeout(() => {
+                if (btn.classList.contains('loading')) {
+                    btn.classList.remove('loading');
+                    btn.innerHTML = originalContent;
+                }
+            }, 3000);
+        });
+
+        // Hide raw Jinja if server is not rendering (Direct File Access)
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll('.jinja-ghost-check').forEach(el => {
+                {% raw %}
+                if (el.textContent.includes('{%') || el.textContent.includes('{{')) {
+                    el.style.display = 'none';
+                }
+                {% endraw %}
+            });
+        });
+    </script>
 </body>
 
 </html>
