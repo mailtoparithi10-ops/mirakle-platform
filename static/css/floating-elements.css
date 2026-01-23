@@ -1,0 +1,303 @@
+/* Floating Elements CSS - Dynamic Animations for InnoBridge Platform */
+
+/* Container for floating elements */
+.floating-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Base floating element styles */
+.floating-element {
+    position: absolute;
+    opacity: 0.1;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+/* Innovation Theme Elements */
+.float-lightbulb {
+    font-size: 24px;
+    color: #fcb82e;
+    animation: float-diagonal 15s infinite;
+}
+
+.float-rocket {
+    font-size: 28px;
+    color: #4f46e5;
+    animation: float-up 12s infinite;
+}
+
+.float-gear {
+    font-size: 20px;
+    color: #10b981;
+    animation: rotate-float 20s infinite;
+}
+
+.float-chart {
+    font-size: 22px;
+    color: #ef4444;
+    animation: float-wave 18s infinite;
+}
+
+.float-network {
+    font-size: 16px;
+    color: #8b5cf6;
+    animation: float-circle 25s infinite;
+}
+
+.float-code {
+    font-size: 18px;
+    color: #06b6d4;
+    animation: float-zigzag 14s infinite;
+}
+
+.float-coin {
+    font-size: 20px;
+    color: #f59e0b;
+    animation: float-bounce 16s infinite;
+}
+
+.float-connection {
+    width: 2px;
+    height: 60px;
+    background: linear-gradient(45deg, #fcb82e, transparent);
+    animation: float-line 22s infinite;
+}
+
+/* Geometric shapes */
+.float-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(252, 184, 46, 0.3);
+    animation: float-diagonal 20s infinite;
+}
+
+.float-triangle {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 14px solid rgba(79, 70, 229, 0.3);
+    animation: float-up 18s infinite;
+}
+
+.float-square {
+    width: 10px;
+    height: 10px;
+    background: rgba(16, 185, 129, 0.3);
+    transform: rotate(45deg);
+    animation: rotate-float 24s infinite;
+}
+
+/* Animation Keyframes */
+@keyframes float-up {
+    0% {
+        transform: translateY(100vh) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.1;
+    }
+    90% {
+        opacity: 0.1;
+    }
+    100% {
+        transform: translateY(-100px) translateX(50px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+@keyframes float-diagonal {
+    0% {
+        transform: translate(-100px, 100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.15;
+    }
+    90% {
+        opacity: 0.15;
+    }
+    100% {
+        transform: translate(100vw, -100px) rotate(180deg);
+        opacity: 0;
+    }
+}
+
+@keyframes float-wave {
+    0% {
+        transform: translateX(-100px) translateY(100vh);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.12;
+    }
+    25% {
+        transform: translateX(25vw) translateY(75vh);
+    }
+    50% {
+        transform: translateX(50vw) translateY(50vh);
+    }
+    75% {
+        transform: translateX(75vw) translateY(25vh);
+    }
+    90% {
+        opacity: 0.12;
+    }
+    100% {
+        transform: translateX(100vw) translateY(-100px);
+        opacity: 0;
+    }
+}
+
+@keyframes float-circle {
+    0% {
+        transform: translate(50vw, 100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.1;
+    }
+    25% {
+        transform: translate(75vw, 75vh) rotate(90deg);
+    }
+    50% {
+        transform: translate(25vw, 50vh) rotate(180deg);
+    }
+    75% {
+        transform: translate(75vw, 25vh) rotate(270deg);
+    }
+    90% {
+        opacity: 0.1;
+    }
+    100% {
+        transform: translate(50vw, -100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+@keyframes float-zigzag {
+    0% {
+        transform: translateX(0) translateY(100vh);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.1;
+    }
+    20% {
+        transform: translateX(20vw) translateY(80vh);
+    }
+    40% {
+        transform: translateX(-10vw) translateY(60vh);
+    }
+    60% {
+        transform: translateX(30vw) translateY(40vh);
+    }
+    80% {
+        transform: translateX(10vw) translateY(20vh);
+    }
+    90% {
+        opacity: 0.1;
+    }
+    100% {
+        transform: translateX(50vw) translateY(-100px);
+        opacity: 0;
+    }
+}
+
+@keyframes float-bounce {
+    0% {
+        transform: translateY(100vh) scale(1);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.12;
+    }
+    25% {
+        transform: translateY(75vh) scale(1.2);
+    }
+    50% {
+        transform: translateY(50vh) scale(0.8);
+    }
+    75% {
+        transform: translateY(25vh) scale(1.1);
+    }
+    90% {
+        opacity: 0.12;
+    }
+    100% {
+        transform: translateY(-100px) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes rotate-float {
+    0% {
+        transform: translateY(100vh) rotate(0deg) scale(1);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.1;
+    }
+    50% {
+        transform: translateY(50vh) rotate(180deg) scale(1.5);
+    }
+    90% {
+        opacity: 0.1;
+    }
+    100% {
+        transform: translateY(-100px) rotate(360deg) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes float-line {
+    0% {
+        transform: translateX(-100px) translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.08;
+    }
+    90% {
+        opacity: 0.08;
+    }
+    100% {
+        transform: translateX(100vw) translateY(-100px) rotate(90deg);
+        opacity: 0;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .floating-element {
+        opacity: 0.05;
+    }
+    
+    .float-lightbulb, .float-rocket, .float-gear, 
+    .float-chart, .float-network, .float-code, .float-coin {
+        font-size: 16px;
+    }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .floating-element {
+        animation: none;
+        opacity: 0.02;
+    }
+}
+
+/* Performance optimization */
+.floating-elements * {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
