@@ -1,0 +1,23 @@
+ID: 1 | Name: Admin User | Role: admin | Email: admin@mirakle.local
+ID: 2 | Name: Priya Founder | Role: founder | Email: priya@startup.in
+ID: 3 | Name: John Founder | Role: founder | Email: john@startup.us
+ID: 4 | Name: Asha Connector | Role: connector | Email: asha@connector.org
+ID: 5 | Name: Acme Corp | Role: corporate | Email: acme@corp.com
+ID: 6 | Name: VC Europe | Role: corporate | Email: vc@europe.vc
+ID: 7 | Name: Super Admin | Role: admin | Email: admin@innobridge.com
+ID: 8 | Name: Admin User | Role: admin | Email: admin@test.com
+ID: 9 | Name: John Startup | Role: startup | Email: startup@test.com
+ID: 10 | Name: Jane Corporate | Role: corporate | Email: corporate@test.com
+ID: 11 | Name: Bob Connector | Role: connector | Email: connector@test.com
+ID: 12 | Name: Sarah Chen | Role: startup | Email: sarah@futuretech.io
+ID: 13 | Name: Marcello Silva | Role: startup | Email: m.silva@greenpulse.com
+ID: 14 | Name: Alex Rivet | Role: connector | Email: alex@nexus.vc
+ID: 15 | Name: Elena Popova | Role: connector | Email: e.popova@innovate.ru
+ID: 16 | Name: James Wilson | Role: corporate | Email: j.wilson@megacorp.com
+ID: 17 | Name: Yuki Tanaka | Role: corporate | Email: tanaka@softbank-demo.jp
+ID: 18 | Name: Founder One | Role: founder | Email: founder1@test.com
+ID: 19 | Name: Enabler Pro | Role: enabler | Email: pro@enabler.io
+ID: 20 | Name: Test Startup User | Role: startup | Email: test@startup.com
+ID: 21 | Name: Test Corporate User | Role: corporate | Email: test@corporate.com
+ID: 22 | Name: Test Connector User | Role: connector | Email: test@connector.com
+ID: 23 | Name: Test Enabler User | Role: enabler | Email: test@enabler.com

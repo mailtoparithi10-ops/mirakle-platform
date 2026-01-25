@@ -376,6 +376,12 @@ def handle_get_meeting_stats(data):
             'meeting_room_id': meeting_room_id
         })
     else:
+        emit('meeting_stats', {
+            'participant_count': 0,
+            'participants': [],
+            'meeting_room_id': meeting_room_id
+        })
+
 @socketio.on('admin_mute_user')
 def handle_admin_mute_user(data):
     """Handle admin muting a user"""
