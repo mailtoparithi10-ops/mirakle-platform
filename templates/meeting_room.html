@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -86,7 +87,8 @@
         .video-placeholder {
             text-align: center;
             color: #666;
-            display: none; /* Hide placeholder when WebRTC is active */
+            display: none;
+            /* Hide placeholder when WebRTC is active */
         }
 
         .video-placeholder i {
@@ -150,6 +152,55 @@
             padding: 4px;
             border-radius: 4px;
             font-size: 12px;
+        }
+
+        /* Featured Video Styles */
+        .featured-video-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 180px;
+            background: #222;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 10;
+        }
+
+        .featured-video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .featured-participant-label {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .participants-grid.has-featured {
+            top: auto;
+            bottom: 90px;
+            height: 160px;
+            grid-template-columns: repeat(auto-flow, 200px);
+            grid-auto-flow: column;
+            overflow-x: auto;
+            padding: 10px;
+            justify-content: start;
+        }
+
+        .video-area.view-featured #localVideo {
+            bottom: 200px;
+            right: 20px;
         }
 
         /* Local video styling */
@@ -359,6 +410,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="meeting-header">
         <div class="meeting-info">
@@ -378,7 +430,7 @@
         <div class="video-area">
             <!-- Local Video -->
             <video id="localVideo" autoplay muted playsinline></video>
-            
+
             <!-- Video Placeholder (hidden when WebRTC active) -->
             <div class="video-placeholder">
                 <i class="fas fa-video"></i>
@@ -386,6 +438,12 @@
                 <p style="font-size: 14px; color: #999; margin-top: 8px;">
                     Real WebRTC video calling is now active!
                 </p>
+            </div>
+
+            <!-- Featured Video (Admin) -->
+            <div id="featuredVideoContainer" class="featured-video-container">
+                <div class="featured-participant-label" id="featuredLabel">Admin</div>
+                <!-- Video element injected here -->
             </div>
 
             <!-- Participants Grid for Remote Videos -->
@@ -397,19 +455,18 @@
                 <button class="control-btn mute" id="muteBtn" onclick="toggleMute()" title="Mute/Unmute">
                     <i class="fas fa-microphone"></i>
                 </button>
-                
-                <button class="control-btn video {{ 'disabled' if not meeting.video_enabled }}" id="videoBtn" 
-                        onclick="toggleVideo()" title="Turn Video On/Off" 
-                        {{ 'disabled' if not meeting.video_enabled }}>
+
+                <button class="control-btn video {{ 'disabled' if not meeting.video_enabled }}" id="videoBtn"
+                    onclick="toggleVideo()" title="Turn Video On/Off" {{ 'disabled' if not meeting.video_enabled }}>
                     <i class="fas fa-video"></i>
                 </button>
-                
-                <button class="control-btn screen {{ 'disabled' if not meeting.screen_sharing_enabled }}" id="screenBtn" 
-                        onclick="toggleScreenShare()" title="Share Screen" 
-                        {{ 'disabled' if not meeting.screen_sharing_enabled }}>
+
+                <button class="control-btn screen {{ 'disabled' if not meeting.screen_sharing_enabled }}" id="screenBtn"
+                    onclick="toggleScreenShare()" title="Share Screen" {{ 'disabled' if not
+                    meeting.screen_sharing_enabled }}>
                     <i class="fas fa-desktop"></i>
                 </button>
-                
+
                 <button class="control-btn leave" onclick="leaveMeeting()" title="Leave Meeting">
                     <i class="fas fa-phone-slash"></i>
                 </button>
@@ -453,8 +510,8 @@
                             </div>
                         </div>
                         <div class="chat-input">
-                            <input type="text" class="chat-input-field" placeholder="Type a message..." 
-                                   onkeypress="handleChatInput(event)">
+                            <input type="text" class="chat-input-field" placeholder="Type a message..."
+                                onkeypress="handleChatInput(event)">
                         </div>
                     </div>
                 </div>
@@ -469,13 +526,13 @@
         window.meetingRoomId = '{{ meeting.meeting_room_id }}';
         window.currentUserId = {{ current_user.id }};
         window.currentUserRole = '{{ current_user.role }}';
-        
+
         let meetingStartTime = new Date();
 
         // Initialize meeting timer
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             startMeetingTimer();
-            
+
             console.log('Meeting Room Initialized:', {
                 meetingId: window.meetingRoomId,
                 userId: window.currentUserId,
@@ -489,7 +546,7 @@
                 const elapsed = Math.floor((now - meetingStartTime) / 1000);
                 const minutes = Math.floor(elapsed / 60);
                 const seconds = elapsed % 60;
-                document.getElementById('meetingTime').textContent = 
+                document.getElementById('meetingTime').textContent =
                     `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }, 1000);
         }
@@ -500,10 +557,10 @@
             {% if meeting.chat_enabled %}
             document.getElementById('chatTab').classList.add('hidden');
             {% endif %}
-            
+
             // Show selected tab
             document.getElementById(tabName + 'Tab').classList.remove('hidden');
-            
+
             // Update active tab button
             document.querySelectorAll('.sidebar-tab').forEach(tab => {
                 tab.classList.remove('active');
@@ -538,11 +595,12 @@
             `;
             toast.textContent = message;
             document.body.appendChild(toast);
-            
+
             setTimeout(() => {
                 toast.remove();
             }, 3000);
         }
     </script>
 </body>
+
 </html>

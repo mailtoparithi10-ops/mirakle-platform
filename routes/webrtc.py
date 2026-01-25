@@ -376,8 +376,53 @@ def handle_get_meeting_stats(data):
             'meeting_room_id': meeting_room_id
         })
     else:
-        emit('meeting_stats', {
-            'participant_count': 0,
-            'participants': [],
-            'meeting_room_id': meeting_room_id
-        })
+@socketio.on('admin_mute_user')
+def handle_admin_mute_user(data):
+    """Handle admin muting a user"""
+    if not current_user.is_authenticated or current_user.role != 'admin':
+        return
+    
+    meeting_room_id = data.get('meeting_room_id')
+    target_user_id = data.get('target_user_id')
+    
+    if not meeting_room_id or not target_user_id:
+        return
+        
+    room_name = f'meeting_{meeting_room_id}'
+    
+    # Broadcast mute command to the target user/all users
+    emit('force_mute', {
+        'target_user_id': target_user_id,
+        'by_admin': True
+    }, room=room_name)
+    
+    # Also update UI state for everyone
+    emit('participant_audio_changed', {
+        'user_id': target_user_id,
+        'is_muted': True
+    }, room=room_name)
+
+
+@socketio.on('admin_kick_user')
+def handle_admin_kick_user(data):
+    """Handle admin kicking a user"""
+    if not current_user.is_authenticated or current_user.role != 'admin':
+        return
+    
+    meeting_room_id = data.get('meeting_room_id')
+    target_user_id = data.get('target_user_id')
+    
+    if not meeting_room_id or not target_user_id:
+        return
+        
+    room_name = f'meeting_{meeting_room_id}'
+    
+    # Broadcast kick command to all
+    emit('force_kick', {
+        'target_user_id': target_user_id,
+        'by_admin': True
+    }, room=room_name)
+    
+    # Actually remove them from backend tracking if needed
+    if meeting_room_id in active_participants:
+        active_participants[meeting_room_id].discard(target_user_id)
