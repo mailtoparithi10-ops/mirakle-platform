@@ -54,3 +54,42 @@ document.addEventListener("mousemove", (e) => {
     });
 });
 */
+
+// ==========================================
+// PLATFORM SECURITY & ANTI-SCREENSHOT DETERRENTS
+// ==========================================
+
+// 1. Disable Right Click (Context Menu)
+document.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+}, false);
+
+// 2. Blur Content when focus is lost (Deterrent for Mobile Screen Recording)
+const toggleSecurityBlur = (shouldBlur) => {
+    const main = document.querySelector('main') || document.body;
+    if (shouldBlur) {
+        main.classList.add('security-blur');
+    } else {
+        main.classList.remove('security-blur');
+    }
+};
+
+window.addEventListener('blur', () => toggleSecurityBlur(true));
+window.addEventListener('focus', () => toggleSecurityBlur(false));
+document.addEventListener('visibilitychange', () => {
+    toggleSecurityBlur(document.hidden);
+});
+
+// 3. Disable specific Keyboard Shortcuts (Cmd+S, PrintScreen, etc.)
+document.addEventListener('keydown', (e) => {
+    // Prevent Save (Ctrl+S / Cmd+S)
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+    }
+
+    // Alert on PrintScreen
+    if (e.key === 'PrintScreen') {
+        navigator.clipboard.writeText(""); // Clear clipboard
+        alert('Screenshots are discouraged on InnoBridge for data protection.');
+    }
+});

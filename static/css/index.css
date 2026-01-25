@@ -37,6 +37,28 @@ body {
     color: var(--text-primary);
     overflow-x: hidden;
     line-height: 1.6;
+
+    /* Platform Security: Deter Copy/Paste & Screenshots */
+    -webkit-touch-callout: none;
+    /* Disable long-press menu on mobile */
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Blur effect for when tab loses focus (deterrent for screen recording access) */
+.security-blur {
+    filter: blur(20px) grayscale(1);
+    transition: filter 0.3s ease;
+}
+
+@media print {
+    body {
+        display: none !important;
+        /* Hide content if trying to print to PDF/Image */
+    }
 }
 
 /* ================================
