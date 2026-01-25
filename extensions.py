@@ -7,6 +7,6 @@ from flask_socketio import SocketIO
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
-socketio = SocketIO(cors_allowed_origins="*", async_mode='eventlet')
+socketio = SocketIO(cors_allowed_origins="*")
 
 login_manager.login_view = 'auth.login'
