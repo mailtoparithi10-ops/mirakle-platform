@@ -5,7 +5,7 @@ import os
 from app import create_app
 from extensions import db
 from models import User, Startup, Opportunity, Application, Referral, Meeting, MeetingParticipant, ContactMessage
-from passlib.hash import bcrypt
+from werkzeug.security import generate_password_hash
 from datetime import datetime
 
 print("Initializing database...")
@@ -31,7 +31,7 @@ with app.app_context():
                 User(
                     name='Admin User',
                     email='admin@test.com',
-                    password_hash=bcrypt.hash('admin123'),
+                    password_hash=generate_password_hash('admin123'),
                     role='admin',
                     company='InnoBridge',
                     is_active=True
@@ -39,7 +39,7 @@ with app.app_context():
                 User(
                     name='John Startup',
                     email='startup@test.com',
-                    password_hash=bcrypt.hash('startup123'),
+                    password_hash=generate_password_hash('startup123'),
                     role='startup',
                     company='Test Startup Inc.',
                     is_active=True
@@ -47,7 +47,7 @@ with app.app_context():
                 User(
                     name='Jane Corporate',
                     email='corporate@test.com',
-                    password_hash=bcrypt.hash('corporate123'),
+                    password_hash=generate_password_hash('corporate123'),
                     role='corporate',
                     company='Test Corporation',
                     is_active=True
@@ -55,7 +55,7 @@ with app.app_context():
                 User(
                     name='Bob Connector',
                     email='connector@test.com',
-                    password_hash=bcrypt.hash('connector123'),
+                    password_hash=generate_password_hash('connector123'),
                     role='connector',
                     company='Connector Network',
                     is_active=True

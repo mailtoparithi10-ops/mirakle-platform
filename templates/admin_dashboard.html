@@ -303,31 +303,34 @@
             <!-- MEETINGS SECTION -->
             <section id="meetingsSection" style="display: none;">
                 <h2 class="section-title">Meeting Management</h2>
-                
+
                 <!-- Meeting Stats -->
                 <div class="stats-grid" style="margin-bottom: 2rem;">
                     <div class="stat-card meetings">
                         <div class="stat-header">
                             <div class="stat-icon"><i class="fas fa-video"></i></div>
-                            <div class="stat-trend"><i class="fas fa-arrow-up"></i> <span id="meetingsTrend">+15%</span></div>
+                            <div class="stat-trend"><i class="fas fa-arrow-up"></i> <span id="meetingsTrend">+15%</span>
+                            </div>
                         </div>
                         <div class="stat-title">Total Meetings</div>
                         <div class="stat-value" id="totalMeetings">0</div>
                     </div>
-                    
+
                     <div class="stat-card upcoming">
                         <div class="stat-header">
                             <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
-                            <div class="stat-trend"><i class="fas fa-clock"></i> <span id="upcomingTrend">Today</span></div>
+                            <div class="stat-trend"><i class="fas fa-clock"></i> <span id="upcomingTrend">Today</span>
+                            </div>
                         </div>
                         <div class="stat-title">Upcoming</div>
                         <div class="stat-value" id="upcomingMeetings">0</div>
                     </div>
-                    
+
                     <div class="stat-card participants">
                         <div class="stat-header">
                             <div class="stat-icon"><i class="fas fa-users"></i></div>
-                            <div class="stat-trend"><i class="fas fa-user-plus"></i> <span id="participantsTrend">Active</span></div>
+                            <div class="stat-trend"><i class="fas fa-user-plus"></i> <span
+                                    id="participantsTrend">Active</span></div>
                         </div>
                         <div class="stat-title">Participants</div>
                         <div class="stat-value" id="totalParticipants">0</div>
@@ -336,7 +339,8 @@
 
                 <!-- Create Meeting Button -->
                 <div style="margin-bottom: 2rem;">
-                    <button class="admin-btn primary" onclick="showCreateMeetingModal()" style="background: #4f46e5; padding: 12px 24px; border-radius: 8px; font-weight: 600;">
+                    <button class="admin-btn primary" onclick="showCreateMeetingModal()"
+                        style="background: #4f46e5; padding: 12px 24px; border-radius: 8px; font-weight: 600;">
                         <i class="fas fa-plus"></i> Create New Meeting
                     </button>
                 </div>
@@ -551,7 +555,7 @@
             try {
                 const response = await fetch('/api/meetings/');
                 const data = await response.json();
-                
+
                 if (data.success) {
                     displayMeetings(data.meetings);
                 } else {
@@ -567,7 +571,7 @@
             try {
                 const response = await fetch('/api/meetings/stats');
                 const data = await response.json();
-                
+
                 if (data.success) {
                     document.getElementById('totalMeetings').textContent = data.stats.total_meetings;
                     document.getElementById('upcomingMeetings').textContent = data.stats.upcoming_meetings;
@@ -580,7 +584,7 @@
 
         function displayMeetings(meetings) {
             const container = document.getElementById('meetingsList');
-            
+
             if (meetings.length === 0) {
                 container.innerHTML = `
                     <div style="text-align: center; padding: 40px;">
@@ -610,6 +614,11 @@
                             </div>
                         </div>
                         <div style="display: flex; gap: 8px;">
+                            <a href="${meeting.meeting_url}" style="text-decoration: none;">
+                                <button style="padding: 6px 12px; border: 1px solid #4f46e5; border-radius: 4px; background: #4f46e5; color: white; cursor: pointer;">
+                                    <i class="fas fa-video"></i> Join
+                                </button>
+                            </a>
                             <button onclick="viewMeeting(${meeting.id})" style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;">
                                 <i class="fas fa-eye"></i> View
                             </button>
@@ -639,7 +648,7 @@
                 align-items: center;
                 z-index: 10000;
             `;
-            
+
             modal.innerHTML = `
                 <div style="background: white; border-radius: 12px; padding: 24px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -715,10 +724,10 @@
                     </form>
                 </div>
             `;
-            
+
             modal.className = 'modal';
             document.body.appendChild(modal);
-            
+
             // Handle form submission
             document.getElementById('createMeetingForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -752,7 +761,7 @@
                 });
 
                 const data = await response.json();
-                
+
                 if (data.success) {
                     showToast('Meeting created successfully!');
                     loadMeetings();
@@ -770,7 +779,7 @@
             // Update active tab
             document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
             event.target.classList.add('active');
-            
+
             // Filter logic would go here
             loadMeetings(); // For now, just reload all meetings
         }
@@ -785,14 +794,14 @@
 
         async function deleteMeeting(meetingId) {
             if (!confirm('Are you sure you want to delete this meeting?')) return;
-            
+
             try {
                 const response = await fetch(`/api/meetings/${meetingId}`, {
                     method: 'DELETE'
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (data.success) {
                     showToast('Meeting deleted successfully!');
                     loadMeetings();
