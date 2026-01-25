@@ -1,221 +1,195 @@
 // Floating Elements JavaScript - Dynamic Animation System for InnoBridge Platform
+// Integrated with Startup Culture logic (Parallax, 3D Tilt, Reveal)
 
 class FloatingElementsManager {
     constructor() {
         this.container = null;
         this.elements = [];
         this.isActive = true;
+        this.ticking = false;
+
         this.elementTypes = {
             innovation: [
-                { icon: 'fas fa-lightbulb', class: 'float-lightbulb' },
-                { icon: 'fas fa-rocket', class: 'float-rocket' },
-                { icon: 'fas fa-cog', class: 'float-gear' },
-                { icon: 'fas fa-atom', class: 'float-network' }
+                { icon: 'fas fa-lightbulb' },
+                { icon: 'fas fa-rocket' },
+                { icon: 'fas fa-brain' },
+                { icon: 'fas fa-seedling' }, // Startup growth
+                { icon: 'fas fa-infinity' }  // Scalability
             ],
             business: [
-                { icon: 'fas fa-chart-line', class: 'float-chart' },
-                { icon: 'fas fa-coins', class: 'float-coin' },
-                { icon: 'fas fa-handshake', class: 'float-network' },
-                { icon: 'fas fa-trophy', class: 'float-bounce' }
+                { icon: 'fas fa-chart-line' },
+                { icon: 'fas fa-handshake' },
+                { icon: 'fas fa-briefcase' },
+                { icon: 'fas fa-user-friends' }, // Connection
+                { icon: 'fas fa-globe' }
             ],
             tech: [
-                { icon: 'fas fa-code', class: 'float-code' },
-                { icon: 'fas fa-microchip', class: 'float-gear' },
-                { icon: 'fas fa-wifi', class: 'float-network' },
-                { icon: 'fas fa-database', class: 'float-up' }
-            ],
-            shapes: [
-                { type: 'circle', class: 'float-circle' },
-                { type: 'triangle', class: 'float-triangle' },
-                { type: 'square', class: 'float-square' },
-                { type: 'line', class: 'float-connection' }
+                { icon: 'fas fa-code' },
+                { icon: 'fas fa-microchip' },
+                { icon: 'fas fa-database' },
+                { icon: 'fas fa-network-wired' },
+                { icon: 'fas fa-cube' } // Blockchain/Structure
             ]
         };
-        
+
         this.init();
     }
 
     init() {
-        // Check if user prefers reduced motion
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             this.isActive = false;
             return;
         }
 
         this.createContainer();
-        this.startAnimation();
-        
-        // Pause animations when page is not visible
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                this.pauseAnimations();
-            } else {
-                this.resumeAnimations();
+        this.generateInitialElements(15);
+        this.setupRevealObserver();
+        this.setupTiltEffect();
+        this.setupParallax();
+
+        // Spawn more periodically
+        setInterval(() => {
+            if (this.isActive && this.elements.length < 25) {
+                this.addElement();
             }
+        }, 3000);
+
+        document.addEventListener('visibilitychange', () => {
+            this.isActive = !document.hidden;
         });
     }
 
     createContainer() {
-        this.container = document.createElement('div');
-        this.container.className = 'floating-elements';
-        document.body.appendChild(this.container);
-    }
-
-    getPageTheme() {
-        const path = window.location.pathname;
-        
-        // Determine theme based on page
-        if (path.includes('startup') || path.includes('rocket') || path === '/') {
-            return 'innovation';
-        } else if (path.includes('corporate') || path.includes('investor')) {
-            return 'business';
-        } else if (path.includes('product') || path.includes('about')) {
-            return 'tech';
-        } else {
-            return 'mixed'; // Use all types
+        this.container = document.querySelector('.floating-elements');
+        if (!this.container) {
+            this.container = document.createElement('div');
+            this.container.className = 'floating-elements';
+            document.body.appendChild(this.container);
         }
     }
 
-    getElementsForTheme(theme) {
-        if (theme === 'mixed') {
-            return [
-                ...this.elementTypes.innovation,
-                ...this.elementTypes.business,
-                ...this.elementTypes.tech,
-                ...this.elementTypes.shapes
-            ];
-        }
-        
-        return [
-            ...this.elementTypes[theme],
-            ...this.elementTypes.shapes
-        ];
-    }
-
-    createElement(type) {
-        const element = document.createElement('div');
-        element.className = `floating-element ${type.class}`;
-        
-        if (type.icon) {
-            element.innerHTML = `<i class="${type.icon}"></i>`;
-        } else if (type.type === 'line') {
-            element.className += ' float-connection';
-        }
-        
-        // Random starting position
-        const startX = Math.random() * window.innerWidth;
-        const delay = Math.random() * 10; // Random delay up to 10 seconds
-        
-        element.style.left = startX + 'px';
-        element.style.animationDelay = delay + 's';
-        
-        return element;
-    }
-
-    addElement() {
-        if (!this.isActive || !this.container) return;
-        
-        const theme = this.getPageTheme();
-        const availableTypes = this.getElementsForTheme(theme);
-        const randomType = availableTypes[Math.floor(Math.random() * availableTypes.length)];
-        
-        const element = this.createElement(randomType);
-        this.container.appendChild(element);
-        this.elements.push(element);
-        
-        // Remove element after animation completes
-        const animationDuration = this.getAnimationDuration(randomType.class);
-        setTimeout(() => {
-            this.removeElement(element);
-        }, animationDuration * 1000);
-    }
-
-    removeElement(element) {
-        if (element && element.parentNode) {
-            element.parentNode.removeChild(element);
-            this.elements = this.elements.filter(el => el !== element);
+    generateInitialElements(count) {
+        for (let i = 0; i < count; i++) {
+            this.addElement(true); // Is initial (spread randomly across vertical)
         }
     }
 
-    getAnimationDuration(className) {
-        // Return animation duration in seconds based on class
-        const durations = {
-            'float-up': 12,
-            'float-diagonal': 15,
-            'float-wave': 18,
-            'float-circle': 25,
-            'float-zigzag': 14,
-            'float-bounce': 16,
-            'rotate-float': 20,
-            'float-line': 22
-        };
-        
-        for (const [key, duration] of Object.entries(durations)) {
-            if (className.includes(key)) {
-                return duration;
-            }
-        }
-        
-        return 15; // Default duration
+    getRandomColorClass() {
+        const colors = ['color-primary', 'color-secondary', 'color-success', 'color-danger', 'color-info', 'color-purple'];
+        return colors[Math.floor(Math.random() * colors.length)];
     }
 
-    startAnimation() {
-        if (!this.isActive) return;
-        
-        // Add initial elements
-        for (let i = 0; i < 3; i++) {
-            setTimeout(() => this.addElement(), i * 2000);
-        }
-        
-        // Continue adding elements periodically
-        this.intervalId = setInterval(() => {
-            if (this.elements.length < 8) { // Limit max elements
-                this.addElement();
-            }
-        }, 3000 + Math.random() * 4000); // Random interval 3-7 seconds
+    getRandomAutoMoveClass() {
+        const moves = ['move-auto-1', 'move-auto-2', 'move-auto-3'];
+        return moves[Math.floor(Math.random() * moves.length)];
     }
 
-    pauseAnimations() {
-        this.elements.forEach(element => {
-            element.style.animationPlayState = 'paused';
+    addElement(isInitial = false) {
+        if (!this.container) return;
+
+        const allTypes = [...this.elementTypes.innovation, ...this.elementTypes.business, ...this.elementTypes.tech];
+        const type = allTypes[Math.floor(Math.random() * allTypes.length)];
+
+        // Create wrapper for multi-layer animation
+        const wrapper = document.createElement('div');
+        wrapper.className = 'floating-shape';
+
+        // inner for the autonomous movement
+        const inner = document.createElement('div');
+        inner.className = `float-icon ${this.getRandomColorClass()} ${this.getRandomAutoMoveClass()}`;
+
+        // Randomly make it a bubble
+        if (Math.random() > 0.5) {
+            inner.classList.add('float-bubble');
+        }
+
+        inner.innerHTML = `<i class="${type.icon}"></i>`;
+        wrapper.appendChild(inner);
+
+        // Random Positioning
+        const startX = Math.random() * 100;
+        const startY = isInitial ? (Math.random() * 100) : 110; // Initial ones spread, new ones from bottom
+
+        wrapper.style.left = `${startX}vw`;
+        wrapper.style.top = `${startY}vh`;
+
+        const scale = 0.5 + Math.random() * 0.8;
+        wrapper.style.transform = `scale(${scale})`;
+
+        this.container.appendChild(wrapper);
+        this.elements.push({ wrapper, speed: 0.1 + Math.random() * 0.4 });
+
+        // Cleanup if not initial (initial ones stay, or use a long timeout)
+        if (!isInitial) {
+            setTimeout(() => {
+                this.removeElement(wrapper);
+            }, 60000);
+        }
+    }
+
+    removeElement(el) {
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+        this.elements = this.elements.filter(item => item.wrapper !== el);
+    }
+
+    // Parallax on Scroll (Subtle)
+    setupParallax() {
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            this.elements.forEach(item => {
+                const offset = scrollY * item.speed;
+                item.wrapper.style.marginTop = `-${offset}px`;
+            });
         });
     }
 
-    resumeAnimations() {
-        this.elements.forEach(element => {
-            element.style.animationPlayState = 'running';
+    setupRevealObserver() {
+        const fadeObserver = new IntersectionObserver(
+            entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        fadeObserver.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+        );
+
+        const selectors = '.feature-card, .product-section, .value-card, .team-card, .hero-content, .hero-visual';
+        document.querySelectorAll(selectors).forEach((el, index) => {
+            el.classList.add('fade-in-section');
+            el.style.transitionDelay = `${(index % 4) * 0.1}s`;
+            fadeObserver.observe(el);
+        });
+    }
+
+    setupTiltEffect() {
+        const tiltElements = document.querySelectorAll('.feature-card, .value-card, .team-card, .device-mockup');
+        tiltElements.forEach(el => {
+            el.classList.add('tilt-element');
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width - 0.5) * 20;
+                const y = ((e.clientY - rect.top) / rect.height - 0.5) * -20;
+                el.style.transform = `perspective(1000px) rotateX(${y}deg) rotateY(${x}deg) scale3d(1.05, 1.05, 1.05)`;
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+            });
         });
     }
 
     destroy() {
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
-        }
-        
-        if (this.container) {
-            this.container.remove();
-        }
-        
-        this.elements = [];
+        if (this.container) this.container.remove();
         this.isActive = false;
     }
 }
 
-// Initialize floating elements when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Only initialize on non-dashboard pages
-    const isDashboard = window.location.pathname.includes('dashboard') || 
-                       window.location.pathname.includes('admin') ||
-                       window.location.pathname.includes('meeting');
-    
-    if (!isDashboard) {
+document.addEventListener('DOMContentLoaded', () => {
+    const skipPages = ['dashboard', 'admin', 'meeting'];
+    const path = window.location.pathname;
+    if (!skipPages.some(p => path.includes(p))) {
         window.floatingElements = new FloatingElementsManager();
-    }
-});
-
-// Clean up when page unloads
-window.addEventListener('beforeunload', function() {
-    if (window.floatingElements) {
-        window.floatingElements.destroy();
     }
 });

@@ -22,6 +22,7 @@ def metrics():
     if require_admin():
         return require_admin()
 
+    from models import Lead
     return jsonify({
         "total_users": User.query.count(),
         "total_startups": User.query.filter_by(role='startup').count() + User.query.filter_by(role='founder').count(),
@@ -30,6 +31,7 @@ def metrics():
         "total_opportunities": Opportunity.query.count(),
         "total_applications": Application.query.count(),
         "total_referrals": Referral.query.count(),
+        "total_leads": Lead.query.count(),
         "countries": list({u.country for u in User.query.all() if u.country})
     })
 
@@ -39,6 +41,7 @@ def get_stats():
     if require_admin():
         return require_admin()
         
+    from models import Lead
     stats = {
         "total_users": User.query.count(),
         "total_startups": User.query.filter_by(role='startup').count() + User.query.filter_by(role='founder').count(),
@@ -46,7 +49,9 @@ def get_stats():
         "total_connectors": User.query.filter_by(role='connector').count() + User.query.filter_by(role='enabler').count(),
         "total_programs": Opportunity.query.count(),
         "total_applications": Application.query.count(),
-        "total_referrals": Referral.query.count()
+        "total_referrals": Referral.query.count(),
+        "total_leads": Lead.query.count(),
+        "total_admins": User.query.filter_by(role='admin').count()
     }
     
     return jsonify({"success": True, "stats": stats})
@@ -63,6 +68,33 @@ def get_users():
 
     users = User.query.all()
     return jsonify([u.to_dict() for u in users])
+
+
+# ---------------------------------------
+# GET ALL LEADS (Inquiries, Demos, Investors)
+# ---------------------------------------
+@bp.route("/leads", methods=["GET"])
+@login_required
+def get_leads():
+    if require_admin():
+        return require_admin()
+
+    from models import Lead
+    leads = Lead.query.order_by(Lead.created_at.desc()).all()
+    return jsonify([l.to_dict() for l in leads])
+
+
+@bp.route("/leads/<int:id>/read", methods=["PUT"])
+@login_required
+def mark_lead_read(id):
+    if require_admin():
+        return require_admin()
+
+    from models import Lead
+    lead = Lead.query.get_or_404(id)
+    lead.is_read = True
+    db.session.commit()
+    return jsonify({"success": True})
 
 
 # ---------------------------------------
@@ -189,6 +221,62 @@ def seed_all_data():
             "type": "challenge",
             "description": "Solving regional healthcare accessibility through mobile-first digital solutions.",
             "benefits": "Pilot with regional hospital networks",
+            "status": "published"
+        },
+        {
+            "title": "DeepTech Pioneer Program",
+            "type": "accelerator",
+            "description": "Unlocking breakthroughs in quantum computing and material sciences.",
+            "benefits": "Lab access + $100k investment",
+            "status": "published"
+        },
+        {
+            "title": "Web3 Innovation Grant",
+            "type": "grant",
+            "description": "Building the future of decentralized finance and identity on the blockchain.",
+            "benefits": "$25k non-equity grant",
+            "status": "published"
+        },
+        {
+            "title": "AgriTech Smart Farming Initiative",
+            "type": "pilot",
+            "description": "Scouting for IoT and AI solutions to optimize crop yields and reduce waste in agriculture.",
+            "benefits": "Implementation pilot + $40k funding",
+            "status": "published"
+        },
+        {
+            "title": "EdTech Catalyst Program",
+            "type": "accelerator",
+            "description": "Bridging the digital divide with innovative remote learning tools for rural schools.",
+            "benefits": "Mentorship + $30h grant",
+            "status": "published"
+        },
+        {
+            "title": "ClimateTech Carbon Challenge",
+            "type": "challenge",
+            "description": "Scouting for high-impact carbon capture and sequestration technologies.",
+            "benefits": "$500k prize pool + pilot opportunity",
+            "status": "published"
+        },
+        {
+            "title": "SpaceTech Orbit Challenge",
+            "type": "challenge",
+            "description": "Scouting for low-earth orbit satellite communication solutions and debris management.",
+            "benefits": "$200k prize + orbital testing slot",
+            "status": "published"
+        },
+        {
+            "title": "BioTech Health Accelerator",
+            "type": "accelerator",
+            "description": "A specialized program for drug discovery and genetic sequencing startups.",
+            "benefits": "Wet lab access + $150k seed investment",
+            "status": "published"
+        },
+        {
+            "title": "GovTech Digital Summit",
+            "type": "pilot",
+            "description": "Governments seeking digital identity and e-governance solutions for citizen services.",
+            "benefits": "National scale implementation + long-term contract",
             "status": "published"
         }
     ]

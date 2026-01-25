@@ -348,6 +348,109 @@
                 padding: 1rem;
             }
         }
+
+        /* Opportunity Modal Styles */
+        .opp-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .opp-modal-content {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .close-opp-modal {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+
+        .close-opp-modal:hover {
+            color: black;
+        }
+
+        .opp-detail-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: black;
+        }
+
+        .opp-detail-meta {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .opp-detail-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .opp-section-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .opp-section-content {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .opp-apply-btn {
+            display: inline-block;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            text-align: center;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            margin-top: 1rem;
+            transition: transform 0.2s;
+        }
+
+        .opp-apply-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 
@@ -472,7 +575,48 @@
                 <button class="pagination-btn" id="opportunitiesNextPage" disabled>Next</button>
             </div>
         </div>
+        </div>
     </main>
+
+    <!-- Opportunity Details Modal -->
+    <div id="oppDetailsModal" class="opp-modal">
+        <div class="opp-modal-content">
+            <span class="close-opp-modal" onclick="closeOppModal()">&times;</span>
+            <div id="oppModalLoader" style="text-align: center; padding: 3rem;">
+                <div class="loading"></div>
+            </div>
+            <div id="oppModalBody" style="display: none;">
+                <div class="opp-detail-header">
+                    <h2 id="modalOppTitle" class="opp-detail-title">Program Title</h2>
+                    <div id="modalOppMeta" class="opp-detail-meta">
+                        <!-- Tags inserted here -->
+                    </div>
+                </div>
+
+                <div class="opp-detail-section">
+                    <span class="opp-section-label">Description</span>
+                    <p id="modalOppDescription" class="opp-section-content"></p>
+                </div>
+
+                <div class="opp-detail-section">
+                    <span class="opp-section-label">Eligibility</span>
+                    <p id="modalOppEligibility" class="opp-section-content"></p>
+                </div>
+
+                <div class="opp-detail-section">
+                    <span class="opp-section-label">Benefits</span>
+                    <p id="modalOppBenefits" class="opp-section-content"></p>
+                </div>
+
+                <div class="opp-detail-section">
+                    <span class="opp-section-label">Deadline</span>
+                    <p id="modalOppDeadline" class="opp-section-content"></p>
+                </div>
+
+                <a href="/login" id="modalOppApplyBtn" class="opp-apply-btn">Apply Now</a>
+            </div>
+        </div>
+    </div>
 
     <footer class="footer">
         <div class="footer-content">
@@ -570,14 +714,63 @@
             const btn = card.querySelector('.btn-secondary');
             if (btn) {
                 btn.addEventListener('click', () => {
-                    // Navigate to opportunity details
-                    if (item.id) {
-                        window.location.href = `/opportunities/${item.id}`;
-                    }
+                    openOppModal(item.id);
                 });
             }
 
             return card;
+        }
+
+        async function openOppModal(id) {
+            const modal = document.getElementById('oppDetailsModal');
+            const loader = document.getElementById('oppModalLoader');
+            const body = document.getElementById('oppModalBody');
+
+            modal.style.display = 'flex';
+            loader.style.display = 'block';
+            body.style.display = 'none';
+
+            try {
+                const res = await fetch(`/api/opportunities/${id}`);
+                const opp = await res.json();
+
+                document.getElementById('modalOppTitle').textContent = opp.title || 'Untitled';
+                document.getElementById('modalOppDescription').textContent = opp.description || 'No description provided.';
+                document.getElementById('modalOppEligibility').textContent = opp.eligibility || 'Open to all qualified startups.';
+                document.getElementById('modalOppBenefits').textContent = opp.benefits || 'Standard program benefits apply.';
+
+                const deadline = opp.deadline ? new Date(opp.deadline).toLocaleDateString() : 'Rolling basis';
+                document.getElementById('modalOppDeadline').textContent = deadline;
+
+                // Meta tags
+                const metaContainer = document.getElementById('modalOppMeta');
+                metaContainer.innerHTML = '';
+                if (opp.type) metaContainer.innerHTML += `<span class="chip">${opp.type}</span>`;
+                if (opp.status) metaContainer.innerHTML += `<span class="opportunity-badge status-open">${opp.status.toUpperCase()}</span>`;
+
+                loader.style.display = 'none';
+                body.style.display = 'block';
+
+                // Update Apply logic
+                const applyBtn = document.getElementById('modalOppApplyBtn');
+                applyBtn.href = '/signup?intent=apply&program=' + id;
+
+            } catch (err) {
+                console.error('Error fetching opportunity:', err);
+                closeOppModal();
+            }
+        }
+
+        function closeOppModal() {
+            document.getElementById('oppDetailsModal').style.display = 'none';
+        }
+
+        // Close on outside click
+        window.onclick = function (event) {
+            const modal = document.getElementById('oppDetailsModal');
+            if (event.target == modal) {
+                closeOppModal();
+            }
         }
 
         async function loadOpportunities(page = 1) {
@@ -594,7 +787,7 @@
             if (filters.has_reward === 'yes') params.set('has_reward', 'yes');
 
             params.set('page', String(page));
-            params.set('per_page', '9');
+            params.set('per_page', '12');
 
             const url = `/api/opportunities?${params.toString()}`;
 

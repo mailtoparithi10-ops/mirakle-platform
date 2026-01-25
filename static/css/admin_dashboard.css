@@ -821,3 +821,124 @@ body {
 .admin-btn.primary:hover {
     background: #4338ca;
 }
+
+/* Leads Table Styles */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.admin-table th {
+    text-align: left;
+    padding: 15px;
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-bottom: 2px solid #edf2f7;
+}
+
+.admin-table td {
+    padding: 15px;
+    border-bottom: 1px solid #edf2f7;
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+.unread-row {
+    background: #fffdf5;
+}
+
+.unread-row::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: #fcb82e;
+}
+
+.btn-sm {
+    transition: all 0.2s;
+}
+
+.btn-sm:hover {
+    background: #e2e8f0 !important;
+    transform: scale(1.1);
+}
+
+.modal-backdrop {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Live Global Ping Animation */
+.map-ping {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #fcb82e;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10;
+    box-shadow: 0 0 15px #fcb82e;
+}
+
+.map-ping::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    border: 2px solid #fcb82e;
+    border-radius: 50%;
+    animation: map-pulse 2s ease-out infinite;
+}
+
+@keyframes map-pulse {
+    0% {
+        transform: scale(0.1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+.live-activity-ticker {
+    font-size: 11px;
+    font-weight: 700;
+    color: #4f46e5;
+    background: #f0f7ff;
+    padding: 4px 10px;
+    border-radius: 99px;
+    margin-top: 10px;
+    display: inline-block;
+    animation: slideInLeft 0.5s ease;
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}

@@ -43,7 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// Floating shapes movement based on mouse
+// Floating shapes movement based on mouse - Disabled to keep autonomous float consistent
+/*
 document.addEventListener("mousemove", (e) => {
     document.querySelectorAll(".floating-shape").forEach((shape, i) => {
         const speed = (i + 1) * 0.02;
@@ -52,3 +53,4 @@ document.addEventListener("mousemove", (e) => {
         shape.style.transform = `translate(${x}px, ${y}px)`;
     });
 });
+*/

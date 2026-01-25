@@ -5,47 +5,62 @@ let currentStats = {
     totalStartups: 0,
     totalCorporate: 0,
     totalConnectors: 0,
-    totalPrograms: 0
+    totalPrograms: 0,
+    totalAdmins: 0
 };
 
 async function loadDashboardStats() {
     try {
         const response = await fetch('/api/admin/stats');
+        if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
 
         if (data.success) {
             const stats = data.stats;
 
-            animateStatChange('totalUsers', currentStats.totalUsers, stats.total_users);
-            animateStatChange('totalStartups', currentStats.totalStartups, stats.total_startups);
-            animateStatChange('totalCorporate', currentStats.totalCorporate, stats.total_corporate);
-            animateStatChange('totalConnectors', currentStats.totalConnectors, stats.total_connectors || 0);
-            animateStatChange('totalPrograms', currentStats.totalPrograms, stats.total_programs);
+            // Update Overview Cards
+            if (document.getElementById('totalUsers')) animateStatChange('totalUsers', currentStats.totalUsers, stats.total_users || 0);
+            if (document.getElementById('totalStartups')) animateStatChange('totalStartups', currentStats.totalStartups, stats.total_startups || 0);
+            if (document.getElementById('totalCorporate')) animateStatChange('totalCorporate', currentStats.totalCorporate, stats.total_corporate || 0);
+            if (document.getElementById('totalConnectors')) animateStatChange('totalConnectors', currentStats.totalConnectors, stats.total_connectors || 0);
+            if (document.getElementById('totalPrograms')) animateStatChange('totalPrograms', currentStats.totalPrograms, stats.total_programs || 0);
+
+            // SYNC TABS (Below) - Ensuring match
+            const updateEl = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = val;
+            };
+            updateEl('allCount', stats.total_users || 0);
+            updateEl('startupCount', stats.total_startups || 0);
+            updateEl('corporateCount', stats.total_corporate || 0);
+            updateEl('connectorCount', stats.total_connectors || 0);
+            updateEl('adminCount', stats.total_admins || 0);
 
             currentStats = {
-                totalUsers: stats.total_users,
-                totalStartups: stats.total_startups,
-                totalCorporate: stats.total_corporate,
+                totalUsers: stats.total_users || 0,
+                totalStartups: stats.total_startups || 0,
+                totalCorporate: stats.total_corporate || 0,
                 totalConnectors: stats.total_connectors || 0,
-                totalPrograms: stats.total_programs
+                totalPrograms: stats.total_programs || 0,
+                totalAdmins: stats.total_admins || 0
             };
         }
     } catch (error) {
         console.error('Error loading stats:', error);
-        showToast('Error loading dashboard stats', 'error');
     }
 }
 
 async function loadRecentUsers() {
+    const containers = ['recentUsers', 'allUsersList', 'startupUsersList', 'corporateUsersList', 'connectorsUsersList'];
     try {
         const response = await fetch('/api/admin/users');
+        if (!response.ok) throw new Error('User fetch failed');
         const data = await response.json();
 
-        // Handle both object with 'users' key and direct list return
-        if (data.success && data.users) {
-            users = data.users;
-        } else if (Array.isArray(data)) {
+        if (Array.isArray(data)) {
             users = data;
+        } else if (data.success && data.users) {
+            users = data.users;
         } else {
             users = [];
         }
@@ -53,37 +68,44 @@ async function loadRecentUsers() {
         updateUserCounts();
         renderRecentUsers();
 
-        if (document.getElementById('usersSection').style.display !== 'none') {
-            renderFilteredUsers();
-        }
-        if (document.getElementById('startupsSection').style.display !== 'none') {
-            renderStartupUsers();
-        }
-        if (document.getElementById('corporateSection').style.display !== 'none') {
-            renderCorporateUsers();
-        }
-        if (document.getElementById('connectorsSection').style.display !== 'none') {
-            renderConnectorUsers();
-        }
+        const sections = ['users', 'startups', 'corporate', 'connectors'];
+        sections.forEach(s => {
+            const el = document.getElementById(s + 'Section');
+            if (el && el.style.display !== 'none') {
+                if (s === 'users') renderFilteredUsers();
+                if (s === 'startups') renderStartupUsers();
+                if (s === 'corporate') renderCorporateUsers();
+                if (s === 'connectors') renderConnectorUsers();
+            }
+        });
     } catch (error) {
         console.error('Error loading users:', error);
+        containers.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = '<p style="text-align:center; color:#ef4444; padding:20px;">Failed to load users. Please refresh.</p>';
+        });
     }
 }
 
 function updateUserCounts() {
     const counts = {
         all: users.length,
-        startup: users.filter(u => u.role === 'startup' || u.role === 'founder').length,
-        corporate: users.filter(u => u.role === 'corporate').length,
-        connector: users.filter(u => u.role === 'connector' || u.role === 'enabler').length,
-        admin: users.filter(u => u.role === 'admin').length
+        startup: users.filter(u => u && (u.role === 'startup' || u.role === 'founder')).length,
+        corporate: users.filter(u => u && u.role === 'corporate').length,
+        connector: users.filter(u => u && (u.role === 'connector' || u.role === 'enabler')).length,
+        admin: users.filter(u => u && u.role === 'admin').length
     };
 
-    document.getElementById('allCount').textContent = counts.all;
-    document.getElementById('startupCount').textContent = counts.startup;
-    document.getElementById('corporateCount').textContent = counts.corporate;
-    if (document.getElementById('connectorCount')) document.getElementById('connectorCount').textContent = counts.connector;
-    if (document.getElementById('adminCount')) document.getElementById('adminCount').textContent = counts.admin;
+    const updateEl = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+    };
+
+    updateEl('allCount', counts.all);
+    updateEl('startupCount', counts.startup);
+    updateEl('corporateCount', counts.corporate);
+    updateEl('connectorCount', counts.connector);
+    updateEl('adminCount', counts.admin);
 }
 
 function getDisplayName(user) {

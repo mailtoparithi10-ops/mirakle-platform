@@ -194,14 +194,41 @@ def create_app():
 
     @app.route("/submit-demo", methods=["POST"])
     def submit_demo():
-        # In a real app, we would save this to DB or send email
+        from flask import request, redirect
+        from models import Lead
+        import json
+        
+        try:
+            first_name = request.form.get("first_name")
+            last_name = request.form.get("last_name")
+            email = request.form.get("email")
+            company = request.form.get("company")
+            interest = request.form.get("interest")
+            message = request.form.get("message")
+            
+            new_lead = Lead(
+                type="demo",
+                name=f"{first_name} {last_name}",
+                email=email,
+                company=company,
+                subject=f"Demo Request: {interest}",
+                message=message,
+                extra_data=json.dumps({"interest": interest})
+            )
+            
+            db.session.add(new_lead)
+            db.session.commit()
+        except Exception as e:
+            print(f"Error saving demo lead: {e}")
+            db.session.rollback()
+            
         return render_template("thank_you.html")
 
     @app.route("/contact", methods=["GET", "POST"])
     @app.route("/contact.html", methods=["GET", "POST"])
     def contact_page():
         from flask import request, flash
-        from models import ContactMessage
+        from models import ContactMessage, Lead
         
         if request.method == "POST":
             try:
@@ -214,14 +241,25 @@ def create_app():
                     flash("Please fill in all required fields.", "error")
                     return render_template("contact.html")
                 
-                new_message = ContactMessage(
+                # Save to Legacy Table
+                contact_msg = ContactMessage(
                     name=name,
                     email=email,
                     subject=subject,
                     message=message
                 )
                 
-                db.session.add(new_message)
+                # Save to Unified Leads Table
+                lead_entry = Lead(
+                    type="contact",
+                    name=name,
+                    email=email,
+                    subject=subject,
+                    message=message
+                )
+                
+                db.session.add(contact_msg)
+                db.session.add(lead_entry)
                 db.session.commit()
                 
                 flash("Thank you! Your message has been sent successfully.", "success")

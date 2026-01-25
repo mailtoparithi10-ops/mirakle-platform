@@ -10,3 +10,5 @@ login_manager = LoginManager()
 socketio = SocketIO(cors_allowed_origins="*")
 
 login_manager.login_view = 'auth.login'
+login_manager.login_message = None
+login_manager.login_message_category = "info"

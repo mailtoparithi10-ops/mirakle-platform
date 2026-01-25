@@ -102,6 +102,21 @@ def register():
     user.set_password(password)
 
     db.session.add(user)
+    
+    # NEW: Log as a Lead for the Admin Dashboard (specifically for Investor Hub/Corporate Hub users)
+    if role in ('corporate', 'connector'):
+        from models import Lead
+        lead_type = 'investor' if role == 'corporate' else 'connector_app'
+        new_lead = Lead(
+            type=lead_type,
+            name=name,
+            email=email,
+            company=company,
+            subject=f"New {role.capitalize()} registration",
+            message=f"A new {role} user registered: {name} ({company})"
+        )
+        db.session.add(new_lead)
+
     db.session.commit()
 
     login_user(user)

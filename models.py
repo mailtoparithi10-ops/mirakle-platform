@@ -51,6 +51,7 @@ class User(UserMixin, db.Model):
             "country": self.country,
             "region": self.region,
             "company": self.company,
+            "created_at": self.created_at.isoformat() if self.created_at else None
         }
 
 
@@ -219,7 +220,44 @@ class Referral(db.Model):
 
 
 # -----------------------------------------
-# CONTACT MESSAGE MODEL
+# LEAD / INQUIRY MODEL
+# -----------------------------------------
+class Lead(db.Model):
+    __tablename__ = "leads"
+
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(50), nullable=False) # 'contact', 'demo', 'investor'
+    
+    name = db.Column(db.String(140), nullable=False)
+    email = db.Column(db.String(180), nullable=False)
+    company = db.Column(db.String(200))
+    subject = db.Column(db.String(200))
+    message = db.Column(db.Text)
+    
+    # JSON field for extra data (like 'interest' for demo)
+    extra_data = db.Column(db.Text) 
+    
+    status = db.Column(db.String(50), default="new") # 'new', 'contacted', 'resolved'
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    is_read = db.Column(db.Boolean, default=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "type": self.type,
+            "name": self.name,
+            "email": self.email,
+            "company": self.company,
+            "subject": self.subject,
+            "message": self.message,
+            "extra_data": json.loads(self.extra_data or "{}"),
+            "status": self.status,
+            "created_at": self.created_at.isoformat(),
+            "is_read": self.is_read
+        }
+
+# -----------------------------------------
+# CONTACT MESSAGE MODEL (Keeping for compatibility)
 # -----------------------------------------
 class ContactMessage(db.Model):
     __tablename__ = "contact_messages"

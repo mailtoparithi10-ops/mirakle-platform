@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - InnoBridge</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap/dist/css/jsvectormap.min.css">
     <link rel="stylesheet" href="/static/css/admin_dashboard.css">
 </head>
 
@@ -20,6 +21,9 @@
         </div>
         <div class="admin-header-right">
             <span class="welcome-text">Welcome back, Admin</span>
+            <button class="admin-btn" onclick="seedMockData()" style="background: #000; color: #fcb82e; border: none;">
+                <i class="fas fa-database"></i> Seed Mock Data
+            </button>
             <button class="admin-btn" onclick="goToPlatform()">
                 <i class="fas fa-arrow-left"></i> Back to Platform
             </button>
@@ -59,9 +63,13 @@
                 <i class="fas fa-video"></i>
                 Meetings
             </a>
+            <a href="#" class="admin-nav-item" onclick="showSection('leads')">
+                <i class="fas fa-hand-holding-heart"></i>
+                Leads & Inquiries
+            </a>
             <a href="#" class="admin-nav-item" onclick="showSection('inbox')">
                 <i class="fas fa-envelope"></i>
-                Inbox <span
+                Inbox <span id="inboxUnreadCount"
                     style="margin-left:auto; background:#000; color:#fcb82e; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:800;">3</span>
             </a>
         </aside>
@@ -85,6 +93,35 @@
 
             <!-- DASHBOARD SECTION -->
             <section id="dashboardSection">
+                <!-- TOP INSIGHTS SECTION -->
+                <div class="content-grid" style="grid-template-columns: 1fr 1.5fr; margin-bottom: 25px;">
+                    <div class="content-card side-insights-card">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-pie"></i>
+                            Live Insights
+                        </h3>
+                        <div class="insight-row">
+                            <span class="insight-label">Concurrent Users</span>
+                            <span class="insight-value" id="liveUsers">--</span>
+                        </div>
+                        <div class="insight-row">
+                            <span class="insight-label">Platform Health</span>
+                            <div class="health-bar-container">
+                                <div class="health-bar-fill" style="width: 98%;"></div>
+                            </div>
+                            <span class="insight-value">98.4%</span>
+                        </div>
+                    </div>
+
+                    <div class="content-card" style="padding: 20px;">
+                        <h3 class="card-title" style="margin-bottom: 15px;">
+                            <i class="fas fa-globe"></i>
+                            Global Activity Visualization
+                        </h3>
+                        <div id="worldMap" style="height: 250px; width: 100%;"></div>
+                    </div>
+                </div>
+
                 <div class="stats-grid">
                     <div class="stat-card users" onclick="showSection('users')">
                         <div class="stat-header">
@@ -169,7 +206,7 @@
                     </div>
                 </div>
 
-                <div class="content-grid">
+                <div class="content-grid" style="grid-template-columns: 1fr;">
                     <div class="content-card main-list-card">
                         <div class="card-header-flex">
                             <h3 class="card-title">
@@ -181,32 +218,6 @@
                         <div class="user-list" id="recentUsers">
                             <div class="loading" style="margin: 20px auto;"></div>
                             <p style="text-align: center; margin-top: 10px;">Syncing with network...</p>
-                        </div>
-                    </div>
-
-                    <div class="content-card side-insights-card">
-                        <h3 class="card-title">
-                            <i class="fas fa-chart-pie"></i>
-                            Live Insights
-                        </h3>
-                        <div class="insight-row">
-                            <span class="insight-label">Concurrent Users</span>
-                            <span class="insight-value" id="liveUsers">--</span>
-                        </div>
-                        <div class="insight-row">
-                            <span class="insight-label">Platform Health</span>
-                            <div class="health-bar-container">
-                                <div class="health-bar-fill" style="width: 98%;"></div>
-                            </div>
-                            <span class="insight-value">98.4%</span>
-                        </div>
-                        <div class="insight-row" style="margin-top: 1.5rem;">
-                            <span class="insight-label">Global Activity</span>
-                            <div class="activity-map-stub">
-                                <div class="ping-dot" style="top: 20%; left: 30%;"></div>
-                                <div class="ping-dot" style="top: 50%; left: 70%; animation-delay: 1s;"></div>
-                                <div class="ping-dot" style="top: 40%; left: 50%; animation-delay: 2s;"></div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -366,6 +377,48 @@
                 </div>
             </section>
 
+            <!-- LEADS SECTION -->
+            <section id="leadsSection" style="display: none;">
+                <h2 class="section-title">Leads & Inquiries</h2>
+
+                <div class="filter-tabs" style="margin-bottom: 2rem;">
+                    <button class="filter-tab active" onclick="filterLeads('all')">All Leads</button>
+                    <button class="filter-tab" onclick="filterLeads('demo')">Demo Requests</button>
+                    <button class="filter-tab" onclick="filterLeads('investor')">Investor Inquiries</button>
+                    <button class="filter-tab" onclick="filterLeads('contact')">Contact Messages</button>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-header-flex">
+                        <h3 class="card-title"><i class="fas fa-list"></i> Submission Log</h3>
+                        <div class="live-tag">REAL-TIME</div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Name</th>
+                                    <th>Email / Company</th>
+                                    <th>Details</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leadsTableBody">
+                                <!-- Populated by JS -->
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 40px;">
+                                        <div class="loading"></div>
+                                        <p>Searching for leads...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
             <!-- INBOX SECTION -->
             <section id="inboxSection" style="display: none;">
                 <h2 class="section-title">Platform Communications</h2>
@@ -429,6 +482,8 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap/dist/maps/world.js"></script>
     <script src="/static/js/admin_dashboard.js"></script>
     <script src="/static/js/api.js"></script>
     <script src="/static/js/auth.js"></script>
@@ -436,6 +491,97 @@
     <script src="/static/js/meetings.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // World Map Initialization
+            const map = new jsVectorMap({
+                selector: '#worldMap',
+                map: 'world',
+                draggable: true,
+                zoomButtons: true,
+                zoomOnScroll: false,
+                markers: [
+                    { name: 'Singapore (Hub)', coords: [1.3521, 103.8198] },
+                    { name: 'Brazil (Active)', coords: [-14.2350, -51.9253] },
+                    { name: 'France (Partner)', coords: [46.2276, 2.2137] },
+                    { name: 'USA (Growth)', coords: [37.0902, -95.7129] },
+                    { name: 'Japan (Corporate)', coords: [36.2048, 138.2529] },
+                    { name: 'Germany (Tech)', coords: [51.1657, 10.4515] },
+                    { name: 'UK (Innovation)', coords: [55.3781, -3.4360] },
+                    { name: 'India (Scale)', coords: [20.5937, 78.9629] }
+                ],
+                markerStyle: {
+                    initial: {
+                        fill: '#fcb82e',
+                        stroke: '#000',
+                        strokeWidth: 2,
+                        r: 6
+                    },
+                    hover: {
+                        fill: '#000',
+                        stroke: '#fcb82e'
+                    }
+                },
+                regionStyle: {
+                    initial: {
+                        fill: '#e2e8f0',
+                        stroke: '#cbd5e1',
+                        strokeWidth: 0.5
+                    },
+                    hover: {
+                        fill: '#cbd5e1'
+                    }
+                },
+                onMarkerTooltipShow: function (event, tooltip, code) {
+                    tooltip.text(`Active Node: ${tooltip.text()}`);
+                }
+            });
+
+            // --- FAKE LIVE ACTIVITY SIMULATION ---
+            function simulateLiveActivity() {
+                const mapContainer = document.getElementById('worldMap');
+                if (!mapContainer) return;
+
+                // 1. Create a random ping dot
+                const ping = document.createElement('div');
+                ping.className = 'map-ping';
+
+                // Random position within the map container (avoiding extreme edges)
+                const x = Math.random() * 80 + 10;
+                const y = Math.random() * 60 + 20;
+
+                ping.style.left = `${x}%`;
+                ping.style.top = `${y}%`;
+
+                mapContainer.appendChild(ping);
+
+                // 2. Add fake ticker entry
+                const locations = ['San Francisco', 'London', 'Mumbai', 'Tokyo', 'Berlin', 'Sao Paulo', 'Singapore', 'Dubai', 'Toronto'];
+                const actions = ['logged in', 'requested a demo', 'viewed opportunities', 'sent a message', 'created a program'];
+                const loc = locations[Math.floor(Math.random() * locations.length)];
+                const act = actions[Math.floor(Math.random() * actions.length)];
+
+                const ticker = document.createElement('div');
+                ticker.className = 'live-activity-ticker';
+                ticker.innerHTML = `<i class="fas fa-bolt"></i> Guest from ${loc} ${act}`;
+
+                const sidebar = document.querySelector('.side-insights-card');
+                if (sidebar) {
+                    const oldTicker = sidebar.querySelector('.live-activity-ticker');
+                    if (oldTicker) oldTicker.remove();
+                    sidebar.appendChild(ticker);
+                }
+
+                // Cleanup dot
+                setTimeout(() => {
+                    ping.style.opacity = '0';
+                    ping.style.transition = 'opacity 1s ease';
+                    setTimeout(() => ping.remove(), 1000);
+                }, 3000);
+            }
+
+            // Start simulation
+            setInterval(simulateLiveActivity, 5000);
+            setTimeout(simulateLiveActivity, 1000);
+
             const ctx = document.getElementById('adminChart');
             if (ctx) {
                 new Chart(ctx, {
@@ -483,7 +629,7 @@
 
         function showSection(sectionId) {
             // Hide all sections
-            const sections = ['dashboard', 'users', 'startups', 'corporate', 'connectors', 'programs', 'meetings', 'inbox'];
+            const sections = ['dashboard', 'users', 'startups', 'corporate', 'connectors', 'programs', 'meetings', 'leads', 'inbox'];
             sections.forEach(s => {
                 const el = document.getElementById(s + 'Section');
                 if (el) el.style.display = 'none';
@@ -501,7 +647,8 @@
             // Find current button and set active
             const btns = document.querySelectorAll('.admin-nav-item');
             btns.forEach(btn => {
-                if (btn.getAttribute('onclick').includes(sectionId)) {
+                const clickAttr = btn.getAttribute('onclick');
+                if (clickAttr && clickAttr.includes(sectionId)) {
                     btn.classList.add('active');
                 }
             });
@@ -511,6 +658,14 @@
                 loadMeetings();
                 loadMeetingStats();
             }
+            if (sectionId === 'leads') {
+                loadLeads();
+            }
+            if (sectionId === 'users') renderFilteredUsers();
+            if (sectionId === 'startups') renderStartupUsers();
+            if (sectionId === 'corporate') renderCorporateUsers();
+            if (sectionId === 'connectors') renderConnectorUsers();
+            if (sectionId === 'programs') loadPrograms();
         }
 
         function viewMessage(id) {
@@ -813,6 +968,140 @@
                 console.error('Error deleting meeting:', error);
                 showToast('Error deleting meeting', 'error');
             }
+        }
+
+        async function seedMockData() {
+            if (!confirm('This will seed the database with mock users and more programs. Continue?')) return;
+            try {
+                const response = await fetch('/api/admin/seed-all-data', { method: 'POST' });
+                const json = await response.json();
+                if (json.success) {
+                    showToast(json.message);
+                    setTimeout(() => window.location.reload(), 1500);
+                } else {
+                    showToast('Failed to seed data', 'error');
+                }
+            } catch (error) {
+                console.error('Error seeding data:', error);
+                showToast('Error seeding data', 'error');
+            }
+        }
+
+        // --- LEADS MANAGEMENT ---
+        let allLeads = [];
+
+        function filterLeads(type) {
+            document.querySelectorAll('#leadsSection .filter-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (type === 'all') {
+                displayLeads(allLeads);
+            } else {
+                displayLeads(allLeads.filter(l => l.type === type));
+            }
+        }
+
+        async function loadLeads() {
+            const tbody = document.getElementById('leadsTableBody');
+            try {
+                const response = await fetch('/api/admin/leads');
+                const leads = await response.json();
+                allLeads = leads;
+                displayLeads(leads);
+            } catch (error) {
+                console.error('Error loading leads:', error);
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Failed to load leads.</td></tr>';
+            }
+        }
+
+        function displayLeads(leads) {
+            const tbody = document.getElementById('leadsTableBody');
+            if (leads.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:40px; color:#a0aec0;">No leads found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = leads.map(lead => `
+                <tr class="${lead.is_read ? '' : 'unread-row'}" style="${lead.is_read ? '' : 'background: #fffdf5; font-weight: 600;'}">
+                    <td>
+                        <span class="badge" style="background: ${getLeadColor(lead.type)}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; text-transform: uppercase;">
+                            ${lead.type}
+                        </span>
+                    </td>
+                    <td>${lead.name}</td>
+                    <td>
+                        <div>${lead.email}</div>
+                        <div style="font-size: 11px; color: #666;">${lead.company || 'N/A'}</div>
+                    </td>
+                    <td>
+                        <div style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${lead.message}">
+                            <strong>${lead.subject || ''}</strong>: ${lead.message}
+                        </div>
+                    </td>
+                    <td>${new Date(lead.created_at).toLocaleDateString()}</td>
+                    <td>
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="viewLeadDetail(${lead.id})" class="btn-sm" style="background: #edf2f7; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button onclick="markLeadRead(${lead.id})" class="btn-sm" style="background: #edf2f7; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;" title="Mark as Read">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getLeadColor(type) {
+            switch (type) {
+                case 'demo': return '#4f46e5';
+                case 'investor': return '#10b981';
+                case 'contact': return '#fcb82e';
+                default: return '#718096';
+            }
+        }
+
+        async function markLeadRead(id) {
+            try {
+                await fetch(`/api/admin/leads/${id}/read`, { method: 'PUT' });
+                loadLeads();
+                showToast("Marked as read");
+            } catch (e) {
+                showToast("Error", "error");
+            }
+        }
+
+        function viewLeadDetail(id) {
+            const lead = allLeads.find(l => l.id === id);
+            if (!lead) return;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.5); display: flex; justify-content: center;
+                align-items: center; z-index: 10001;
+            `;
+            modal.innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 12px; width: 500px; max-width: 90%;">
+                    <h3 style="margin-top: 0;">Lead Details</h3>
+                    <hr>
+                    <p><strong>From:</strong> ${lead.name} (${lead.email})</p>
+                    <p><strong>Company:</strong> ${lead.company || 'N/A'}</p>
+                    <p><strong>Type:</strong> ${lead.type.toUpperCase()}</p>
+                    <p><strong>Subject:</strong> ${lead.subject || 'N/A'}</p>
+                    <div style="background: #f7fafc; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        ${lead.message}
+                    </div>
+                    ${lead.extra_data && Object.keys(lead.extra_data).length ? `<p><strong>Extra Info:</strong> ${JSON.stringify(lead.extra_data)}</p>` : ''}
+                    <div style="text-align: right;">
+                        <button onclick="this.closest('div.modal-backdrop').remove()" class="admin-btn">Close</button>
+                    </div>
+                </div>
+            `;
+            modal.className = 'modal-backdrop';
+            document.body.appendChild(modal);
+            markLeadRead(id);
         }
     </script>
 
