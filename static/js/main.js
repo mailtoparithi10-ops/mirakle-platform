@@ -30,6 +30,7 @@ window.addEventListener("scroll", () => {
 
 // Button loading animation globally
 document.addEventListener("DOMContentLoaded", () => {
+    // 1. Loading States
     document.querySelectorAll("a, button").forEach(btn => {
         btn.addEventListener("click", function () {
             if (this.classList.contains("no-load")) return;
@@ -40,6 +41,34 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 1800);
         });
     });
+
+    // 2. Mobile Menu Toggle
+    const mobileMenuBtn = document.querySelector(".mobile-menu-btn");
+    const navMenu = document.querySelector(".nav-menu");
+
+    if (mobileMenuBtn && navMenu) {
+        mobileMenuBtn.addEventListener("click", () => {
+            navMenu.classList.toggle("active");
+            // Toggle icon if FontAwesome is present
+            const icon = mobileMenuBtn.querySelector("i");
+            if (icon) {
+                icon.classList.toggle("fa-bars");
+                icon.classList.toggle("fa-times");
+            }
+        });
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll(".nav-link").forEach(link => {
+            link.addEventListener("click", () => {
+                navMenu.classList.remove("active");
+                const icon = mobileMenuBtn.querySelector("i");
+                if (icon) {
+                    icon.classList.add("fa-bars");
+                    icon.classList.remove("fa-times");
+                }
+            });
+        });
+    }
 });
 
 

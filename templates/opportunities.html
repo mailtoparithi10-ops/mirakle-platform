@@ -451,6 +451,22 @@
                 opacity: 1;
             }
         }
+
+        @media (max-width: 768px) {
+            .opp-modal-content {
+                padding: 1.5rem;
+                width: 95%;
+                margin: 1rem;
+            }
+
+            .opp-detail-title {
+                font-size: 1.5rem;
+            }
+
+            .opp-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 
@@ -479,6 +495,9 @@
             <div class="nav-actions" id="navActions">
                 <a href="/login" class="nav-btn secondary">LOG IN</a>
                 <a href="/signup" class="nav-btn primary">GET STARTED</a>
+                <button class="mobile-menu-btn" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
         </div>
     </header>

@@ -71,6 +71,7 @@ section {
     background: linear-gradient(135deg, #000, #444);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .hero-subtitle {
@@ -348,6 +349,35 @@ section {
     }
 
     .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Investor Mobile Optimization */
+@media (max-width: 768px) {
+    .hero {
+        padding: 120px 1.5rem 60px;
+        text-align: center;
+    }
+
+    .hero-title {
+        font-size: 2.25rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+        margin: 0 auto 2rem;
+    }
+
+    .features {
+        padding: 60px 1.5rem !important;
+    }
+
+    .feature-card {
+        padding: 2rem !important;
+    }
+
+    .benefit-grid {
         grid-template-columns: 1fr;
     }
 }

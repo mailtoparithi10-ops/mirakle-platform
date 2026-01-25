@@ -942,3 +942,55 @@ body {
         opacity: 1;
     }
 }
+
+/* Mobile Admin Optimization */
+@media (max-width: 768px) {
+    .admin-layout {
+        flex-direction: column;
+    }
+
+    .admin-sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        padding: 10px;
+        flex-direction: row;
+        overflow-x: auto;
+    }
+
+    .admin-nav-item {
+        white-space: nowrap;
+        padding: 10px 15px;
+    }
+
+    .admin-header {
+        padding: 0 15px;
+    }
+
+    .admin-header h1 span {
+        display: none;
+        /* Hide 'Dashboard' text to save space */
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    #worldMap {
+        height: 200px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-header-right .welcome-text {
+        display: none;
+    }
+}
