@@ -234,53 +234,93 @@ function renderFilteredUsers() {
 
     const sortedUsers = [...filteredUsers].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-    container.innerHTML = sortedUsers.map(user => {
+    container.innerHTML = `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
+        ${sortedUsers.map(user => {
         const initials = getUserInitials(user);
         const timeAgo = formatTimeAgo(user.created_at);
         const displayName = getDisplayName(user);
 
+        // Determine Theme Colors based on Role
+        let headerGradient = 'linear-gradient(90deg, #64748b, #94a3b8)'; // Default Gray
+        let badgeBg = '#f1f5f9';
+        let badgeColor = '#475569';
+        let badgeBorder = '#e2e8f0';
+
+        if (user.role === 'startup' || user.role === 'founder') {
+            headerGradient = 'linear-gradient(90deg, #fcb82e, #f59e0b)';
+            badgeBg = '#fff7ed';
+            badgeColor = '#c2410c';
+            badgeBorder = '#ffedd5';
+        } else if (user.role === 'connector' || user.role === 'enabler') {
+            headerGradient = 'linear-gradient(90deg, #2563eb, #3b82f6)';
+            badgeBg = '#eff6ff';
+            badgeColor = '#1e40af';
+            badgeBorder = '#dbeafe';
+        } else if (user.role === 'corporate') {
+            headerGradient = 'linear-gradient(90deg, #0f172a, #334155)';
+            badgeBg = '#f8fafc';
+            badgeColor = '#0f172a';
+            badgeBorder = '#e2e8f0';
+        } else if (user.role === 'admin') {
+            headerGradient = 'linear-gradient(90deg, #7e22ce, #a855f7)';
+            badgeBg = '#faf5ff';
+            badgeColor = '#6b21a8';
+            badgeBorder = '#f3e8ff';
+        }
+
         return `
-                    <div class="user-item">
-                        <div class="user-avatar ${user.role}">
-                            ${initials}
-                        </div>
-                        <div class="user-info">
-                            <div class="user-name">${displayName}</div>
-                            <div class="user-role">${user.role.toUpperCase()} • Joined ${timeAgo}</div>
-                            <div class="user-details">
-                                <div class="user-detail-item">
-                                    <div class="user-detail-label">Email</div>
-                                    <div class="user-detail-value">${user.email}</div>
-                                </div>
-                                ${user.phone_number ? `
-                                <div class="user-detail-item">
-                                    <div class="user-detail-label">Phone</div>
-                                    <div class="user-detail-value">${user.phone_number}</div>
-                                </div>
-                                ` : ''}
-                                ${user.corporate_name ? `
-                                <div class="user-detail-item">
-                                    <div class="user-detail-label">Company</div>
-                                    <div class="user-detail-value">${user.corporate_name}</div>
-                                </div>
-                                ` : ''}
-                                <div class="user-detail-item">
-                                    <div class="user-detail-label">User ID</div>
-                                    <div class="user-detail-value">#${user.id}</div>
-                                </div>
-                            </div>
-                            <div class="user-actions" style="margin-top: 10px; display: flex; gap: 10px;">
-                                <button onclick="editUser(${user.id})" style="padding: 5px 10px; background: #fcb82e; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Edit</button>
-                                <button onclick="deleteUser(${user.id})" style="padding: 5px 10px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Delete</button>
-                            </div>
-                        </div>
-                        <div class="user-status status-offline">
-                            <span class="status-dot"></span>
-                            Offline
+            <div class="user-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: ${headerGradient};"></div>
+                
+                <div style="display: flex; align-items: flex-start; margin-bottom: 1.25rem;">
+                    <div class="user-avatar ${user.role}" style="width: 56px; height: 56px; font-size: 1.25rem; margin-right: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                        ${initials}
+                    </div>
+                    <div>
+                        <div class="user-name" style="font-size: 1.1rem; margin-bottom: 0.25rem;">${displayName}</div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="background: ${badgeBg}; color: ${badgeColor}; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; border: 1px solid ${badgeBorder}; text-transform: uppercase;">${user.role}</span>
+                            <span style="font-size: 0.8rem; color: #94a3b8;">• Joined ${timeAgo}</span>
                         </div>
                     </div>
-                `;
-    }).join('');
+                </div>
+
+                <div class="user-details-grid" style="background: #f8fafc; padding: 1rem; border-radius: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; font-size: 0.85rem;">
+                    <div>
+                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Email</div>
+                        <div style="color: #334155; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.email}</div>
+                    </div>
+                    
+                    ${user.corporate_name ? `
+                    <div>
+                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Company</div>
+                        <div style="color: #334155; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.corporate_name}</div>
+                    </div>` : ''}
+
+                    ${user.country ? `
+                    <div>
+                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Country</div>
+                        <div style="color: #334155; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.country}</div>
+                    </div>` : ''}
+
+                    <div>
+                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">User ID</div>
+                        <div style="color: #334155; font-weight: 600;">#${user.id}</div>
+                    </div>
+                </div>
+
+                <div class="user-actions" style="display: flex; gap: 10px; border-top: 1px solid #f1f5f9; padding-top: 1.25rem;">
+                    <button onclick="editUser(${user.id})" style="flex: 1; padding: 8px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; color: #475569; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                        <i class="fas fa-pen"></i> Edit
+                    </button>
+                    <button onclick="deleteUser(${user.id})" style="flex: 1; padding: 8px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; cursor: pointer; font-weight: 600; color: #e11d48; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('')}
+    </div>`;
 }
 
 function renderStartupUsers() {
@@ -299,49 +339,60 @@ function renderStartupUsers() {
 
     const sortedUsers = [...startupUsers].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-    container.innerHTML = sortedUsers.map(user => {
+    container.innerHTML = `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
+        ${sortedUsers.map(user => {
         const initials = getUserInitials(user);
         const timeAgo = formatTimeAgo(user.created_at);
         const displayName = getDisplayName(user);
 
         return `
-                    <div class="user-item">
-                        <div class="user-avatar startup">
-                            ${initials}
-                        </div>
-                        <div class="user-info">
-                            <div class="user-name">${displayName}</div>
-                            <div class="user-role">STARTUP • Joined ${timeAgo}</div>
-                            <div class="user-details">
-                                <div class="user-detail-item">
-                                    <div class="user-detail-label">Email</div>
-                                    <div class="user-detail-value">${user.email}</div>
-                                </div>
-                                <div class="user-detail-item">
-                                    <div class="user-detail-label">Username</div>
-                                    <div class="user-detail-value">${user.username}</div>
-                                </div>
-                                <div class="user-detail-item">
-                                    <div class="user-detail-label">User ID</div>
-                                    <div class="user-detail-value">#${user.id}</div>
-                                </div>
-                                <div class="user-detail-item">
-                                    <div class="user-detail-label">Registration Date</div>
-                                    <div class="user-detail-value">${new Date(user.created_at).toLocaleDateString()}</div>
-                                </div>
-                            </div>
-                            <div class="user-actions" style="margin-top: 10px; display: flex; gap: 10px;">
-                                <button onclick="editUser(${user.id})" style="padding: 5px 10px; background: #fcb82e; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Edit</button>
-                                <button onclick="deleteUser(${user.id})" style="padding: 5px 10px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Delete</button>
-                            </div>
-                        </div>
-                        <div class="user-status status-offline">
-                            <span class="status-dot"></span>
-                            Offline
+            <div class="user-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: linear-gradient(90deg, #fcb82e, #f59e0b);"></div>
+                
+                <div style="display: flex; align-items: flex-start; margin-bottom: 1.25rem;">
+                    <div class="user-avatar startup" style="width: 56px; height: 56px; font-size: 1.25rem; margin-right: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                        ${initials}
+                    </div>
+                    <div>
+                        <div class="user-name" style="font-size: 1.1rem; margin-bottom: 0.25rem;">${displayName}</div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="background: #fff7ed; color: #c2410c; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; border: 1px solid #ffedd5;">STARTUP</span>
+                            <span style="font-size: 0.8rem; color: #94a3b8;">• Joined ${timeAgo}</span>
                         </div>
                     </div>
-                `;
-    }).join('');
+                </div>
+
+                <div class="user-details-grid" style="background: #f8fafc; padding: 1rem; border-radius: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; font-size: 0.85rem;">
+                    <div>
+                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Email</div>
+                        <div style="color: #334155; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.email}</div>
+                    </div>
+                    <div>
+                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">User ID</div>
+                        <div style="color: #334155; font-weight: 600;">#${user.id}</div>
+                    </div>
+                    <div>
+                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Username</div>
+                        <div style="color: #334155; font-weight: 600;">${user.username || 'N/A'}</div>
+                    </div>
+                    <div>
+                         <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Registered</div>
+                        <div style="color: #334155; font-weight: 600;">${new Date(user.created_at).toLocaleDateString()}</div>
+                    </div>
+                </div>
+
+                <div class="user-actions" style="display: flex; gap: 10px; border-top: 1px solid #f1f5f9; padding-top: 1.25rem;">
+                    <button onclick="editUser(${user.id})" style="flex: 1; padding: 8px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; color: #475569; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                        <i class="fas fa-pen"></i> Edit
+                    </button>
+                    <button onclick="deleteUser(${user.id})" style="flex: 1; padding: 8px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; cursor: pointer; font-weight: 600; color: #e11d48; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('')}
+    </div>`;
 }
 
 function renderCorporateUsers() {
@@ -360,57 +411,60 @@ function renderCorporateUsers() {
 
     const sortedUsers = [...corporateUsers].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-    container.innerHTML = sortedUsers.map(user => {
+    container.innerHTML = `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
+        ${sortedUsers.map(user => {
         const initials = getUserInitials(user);
         const timeAgo = formatTimeAgo(user.created_at);
         const displayName = getDisplayName(user);
 
         return `
-                    <div class="user-item">
-                        <div class="user-avatar corporate">
-                            ${initials}
-                        </div>
-                        <div class="user-info">
-                            <div class="user-name">${displayName}</div>
-                            <div class="user-role">CORPORATE • Joined ${timeAgo}</div>
-                            <div class="user-details">
-                                <div class="user-detail-item">
-                                    <div class="user-detail-label">Contact Person</div>
-                                    <div class="user-detail-value">${user.full_name || 'N/A'}</div>
-                                </div>
-                                <div class="user-detail-item">
-                                    <div class="user-detail-label">Company Name</div>
-                                    <div class="user-detail-value">${user.corporate_name || 'N/A'}</div>
-                                </div>
-                                <div class="user-detail-item">
-                                    <div class="user-detail-label">Email</div>
-                                    <div class="user-detail-value">${user.email}</div>
-                                </div>
-                                <div class="user-detail-item">
-                                    <div class="user-detail-label">Phone</div>
-                                    <div class="user-detail-value">${user.phone_number || 'N/A'}</div>
-                                </div>
-                                <div class="user-detail-item">
-                                    <div class="user-detail-label">User ID</div>
-                                    <div class="user-detail-value">#${user.id}</div>
-                                </div>
-                                <div class="user-detail-item">
-                                    <div class="user-detail-label">Registration Date</div>
-                                    <div class="user-detail-value">${new Date(user.created_at).toLocaleDateString()}</div>
-                                </div>
-                            </div>
-                            <div class="user-actions" style="margin-top: 10px; display: flex; gap: 10px;">
-                                <button onclick="editUser(${user.id})" style="padding: 5px 10px; background: #fcb82e; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Edit</button>
-                                <button onclick="deleteUser(${user.id})" style="padding: 5px 10px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Delete</button>
-                            </div>
-                        </div>
-                        <div class="user-status status-offline">
-                            <span class="status-dot"></span>
-                            Offline
+            <div class="user-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: linear-gradient(90deg, #0f172a, #334155);"></div>
+                
+                <div style="display: flex; align-items: flex-start; margin-bottom: 1.25rem;">
+                    <div class="user-avatar corporate" style="width: 56px; height: 56px; font-size: 1.25rem; margin-right: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); background: #f1f5f9; color: #0f172a; border: 1px solid #e2e8f0;">
+                        ${initials}
+                    </div>
+                    <div>
+                        <div class="user-name" style="font-size: 1.1rem; margin-bottom: 0.25rem;">${displayName}</div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="background: #f1f5f9; color: #334155; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; border: 1px solid #e2e8f0;">CORPORATE</span>
+                            <span style="font-size: 0.8rem; color: #94a3b8;">• Joined ${timeAgo}</span>
                         </div>
                     </div>
-                `;
-    }).join('');
+                </div>
+
+                <div class="user-details-grid" style="background: #f8fafc; padding: 1rem; border-radius: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; font-size: 0.85rem;">
+                    <div>
+                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Company</div>
+                        <div style="color: #334155; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.corporate_name || 'N/A'}</div>
+                    </div>
+                    <div>
+                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Contact</div>
+                        <div style="color: #334155; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.full_name || 'N/A'}</div>
+                    </div>
+                    <div>
+                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Email</div>
+                        <div style="color: #334155; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.email}</div>
+                    </div>
+                    <div>
+                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Phone</div>
+                        <div style="color: #334155; font-weight: 600;">${user.phone_number || 'N/A'}</div>
+                    </div>
+                </div>
+
+                <div class="user-actions" style="display: flex; gap: 10px; border-top: 1px solid #f1f5f9; padding-top: 1.25rem;">
+                    <button onclick="editUser(${user.id})" style="flex: 1; padding: 8px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; color: #475569; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                        <i class="fas fa-pen"></i> Edit
+                    </button>
+                    <button onclick="deleteUser(${user.id})" style="flex: 1; padding: 8px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; cursor: pointer; font-weight: 600; color: #e11d48; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('')}
+    </div>`;
 }
 
 function renderConnectorUsers() {
@@ -429,49 +483,60 @@ function renderConnectorUsers() {
 
     const sortedUsers = [...connectorUsers].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-    container.innerHTML = sortedUsers.map(user => {
+    container.innerHTML = `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
+        ${sortedUsers.map(user => {
         const initials = getUserInitials(user);
         const timeAgo = formatTimeAgo(user.created_at);
         const displayName = getDisplayName(user);
 
         return `
-                    <div class="user-item">
-                        <div class="user-avatar connector">
-                            ${initials}
-                        </div>
-                        <div class="user-info">
-                            <div class="user-name">${displayName}</div>
-                            <div class="user-role">${user.role.toUpperCase()} • Joined ${timeAgo}</div>
-                            <div class="user-details">
-                                <div class="user-detail-item">
-                                    <div class="user-detail-label">Email</div>
-                                    <div class="user-detail-value">${user.email}</div>
-                                </div>
-                                <div class="user-detail-item">
-                                    <div class="user-detail-label">Country</div>
-                                    <div class="user-detail-value">${user.country || 'N/A'}</div>
-                                </div>
-                                <div class="user-detail-item">
-                                    <div class="user-detail-label">User ID</div>
-                                    <div class="user-detail-value">#${user.id}</div>
-                                </div>
-                                <div class="user-detail-item">
-                                    <div class="user-detail-label">Registration Date</div>
-                                    <div class="user-detail-value">${new Date(user.created_at).toLocaleDateString()}</div>
-                                </div>
-                            </div>
-                            <div class="user-actions" style="margin-top: 10px; display: flex; gap: 10px;">
-                                <button onclick="editUser(${user.id})" style="padding: 5px 10px; background: #fcb82e; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Edit</button>
-                                <button onclick="deleteUser(${user.id})" style="padding: 5px 10px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Delete</button>
-                            </div>
-                        </div>
-                        <div class="user-status status-offline">
-                            <span class="status-dot"></span>
-                            Offline
+            <div class="user-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: linear-gradient(90deg, #2563eb, #3b82f6);"></div>
+                
+                <div style="display: flex; align-items: flex-start; margin-bottom: 1.25rem;">
+                    <div class="user-avatar connector" style="width: 56px; height: 56px; font-size: 1.25rem; margin-right: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe;">
+                        ${initials}
+                    </div>
+                    <div>
+                        <div class="user-name" style="font-size: 1.1rem; margin-bottom: 0.25rem;">${displayName}</div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="background: #eff6ff; color: #1e40af; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; border: 1px solid #dbeafe;">CONNECTOR</span>
+                            <span style="font-size: 0.8rem; color: #94a3b8;">• Joined ${timeAgo}</span>
                         </div>
                     </div>
-                `;
-    }).join('');
+                </div>
+
+                <div class="user-details-grid" style="background: #f8fafc; padding: 1rem; border-radius: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; font-size: 0.85rem;">
+                    <div>
+                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Email</div>
+                        <div style="color: #334155; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.email}</div>
+                    </div>
+                    <div>
+                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Country</div>
+                        <div style="color: #334155; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${user.country || 'N/A'}</div>
+                    </div>
+                    <div>
+                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">User ID</div>
+                        <div style="color: #334155; font-weight: 600;">#${user.id}</div>
+                    </div>
+                    <div>
+                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Registered</div>
+                        <div style="color: #334155; font-weight: 600;">${new Date(user.created_at).toLocaleDateString()}</div>
+                    </div>
+                </div>
+
+                <div class="user-actions" style="display: flex; gap: 10px; border-top: 1px solid #f1f5f9; padding-top: 1.25rem;">
+                    <button onclick="editUser(${user.id})" style="flex: 1; padding: 8px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; color: #475569; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                        <i class="fas fa-pen"></i> Edit
+                    </button>
+                    <button onclick="deleteUser(${user.id})" style="flex: 1; padding: 8px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; cursor: pointer; font-weight: 600; color: #e11d48; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('')}
+    </div>`;
 }
 
 function filterUsers(filter) {

@@ -3,8 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enabler Dashboard - InnoBridge</title>
+    <title>Connector Dashboard - InnoBridge</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .timeline-meta {
@@ -652,23 +653,23 @@
             border-radius: 999px;
         }
 
-        .pill-dot.green {
+        .pill-dot green {
             background: #22c55e;
         }
 
-        .pill-dot.blue {
+        .pill-dot blue {
             background: #3b82f6;
         }
 
-        .pill-dot.amber {
+        .pill-dot amber {
             background: #fbbf24;
         }
 
-        .pill-dot.red {
+        .pill-dot red {
             background: #ef4444;
         }
 
-        .pill-dot.slate {
+        .pill-dot slate {
             background: #64748b;
         }
 
@@ -689,22 +690,22 @@
             gap: 0.35rem;
         }
 
-        .badge-soft.gold {
+        .badge-soft gold {
             color: #f59e0b;
             background: rgba(245, 158, 11, 0.12);
         }
 
-        .badge-soft.blue {
+        .badge-soft blue {
             color: #2563eb;
             background: rgba(37, 99, 235, 0.12);
         }
 
-        .badge-soft.green {
+        .badge-soft green {
             color: #16a34a;
             background: rgba(22, 163, 74, 0.12);
         }
 
-        .badge-soft.slate {
+        .badge-soft slate {
             color: #475569;
             background: rgba(148, 163, 184, 0.18);
         }
@@ -922,22 +923,22 @@
             font-weight: 600;
         }
 
-        .status-pill.pending {
+        .status-pill pending {
             background: #fef3c7;
             color: #92400e;
         }
 
-        .status-pill.completed {
+        .status-pill completed {
             background: #dcfce7;
             color: #166534;
         }
 
-        .status-pill.in-progress {
+        .status-pill in-progress {
             background: #dbeafe;
             color: #1d4ed8;
         }
 
-        .status-pill.failed {
+        .status-pill failed {
             background: #fee2e2;
             color: #b91c1c;
         }
@@ -3047,6 +3048,128 @@
         .empty-meetings small {
             font-size: 12px;
         }
+
+        /* Program Card Styles */
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .program-card {
+            background: white;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .program-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border-color: #6366f1;
+        }
+
+        .program-header {
+            height: 160px;
+            background: linear-gradient(135deg, #0f172a, #334155);
+            background-size: cover;
+            background-position: center;
+            padding: 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .program-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.7));
+            z-index: 1;
+        }
+
+        .program-logo {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #000;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-size: 1.2rem;
+        }
+
+        .program-type-badge {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.9);
+            color: #1f2937;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            backdrop-filter: blur(4px);
+        }
+
+        .program-body {
+            padding: 1.5rem;
+        }
+
+        .program-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+
+        .program-company {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .program-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 0.25rem 0.5rem;
+            background: #f1f5f9;
+            color: #475569;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .apply-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #000;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .apply-btn:hover {
+            opacity: 0.9;
+        }
     </style>
 </head>
 
@@ -3068,6 +3191,11 @@
                 <i class="fa-solid fa-gauge-high"></i>
                 Overview
                 <span class="badge-outline">Live</span>
+            </button>
+            <button class="nav-item" onclick="showSection('programs')" id="tab-programs">
+                <i class="fa-solid fa-compass"></i>
+                Explore Programs
+                <span class="badge-outline" style="color: #6366f1; border-color: #6366f1;">New</span>
             </button>
             <button class="nav-item" onclick="showSection('referrals')" id="tab-referrals">
                 <i class="fa-solid fa-share-nodes"></i>
@@ -3517,7 +3645,7 @@
             </section>
 
             <!-- REFERRALS SECTION -->
-            <section id="referrals" class="section">
+            <section id="referrals-old" class="section">
                 <div class="section-header">
                     <div class="section-header-main">
                         <div class="section-title">
@@ -3588,7 +3716,7 @@
                                 </td>
                                 <td>
                                     <span class="pill">
-                                        <span class="pill-dot.blue"></span>
+                                        <span class="pill-dot blue"></span>
                                         Smart City Innovation Cohort
                                     </span>
                                     <div class="label-muted">Cohort 2025 • Batch 2</div>
@@ -3615,7 +3743,7 @@
                                 </td>
                                 <td>
                                     <span class="pill">
-                                        <span class="pill-dot.green"></span>
+                                        <span class="pill-dot green"></span>
                                         Retail Innovation Sprint
                                     </span>
                                     <div class="label-muted">Pilot in progress</div>
@@ -3642,13 +3770,13 @@
                                 </td>
                                 <td>
                                     <span class="pill">
-                                        <span class="pill-dot.amber"></span>
+                                        <span class="pill-dot amber"></span>
                                         Healthcare Pilot Program
                                     </span>
                                     <div class="label-muted">Interview round</div>
                                 </td>
                                 <td>
-                                    <span class="status-pill.pending">Shortlisted</span>
+                                    <span class="status-pill pending">Shortlisted</span>
                                 </td>
                                 <td>₹15,000</td>
                                 <td>
@@ -3669,7 +3797,7 @@
                                 </td>
                                 <td>
                                     <span class="pill">
-                                        <span class="pill-dot.slate"></span>
+                                        <span class="pill-dot slate"></span>
                                         Mobility & Logistics Challenge
                                     </span>
                                     <div class="label-muted">PoC scoping</div>
@@ -3696,7 +3824,7 @@
                                 </td>
                                 <td>
                                     <span class="pill">
-                                        <span class="pill-dot.green"></span>
+                                        <span class="pill-dot green"></span>
                                         Sustainability Innovation Grants
                                     </span>
                                     <div class="label-muted">Application submitted</div>
@@ -3994,7 +4122,7 @@
                             <tr>
                                 <td>14 Mar 2025</td>
                                 <td>
-                                    <span class="badge-soft.green">
+                                    <span class="badge-soft green">
                                         <i class="fa-solid fa-indian-rupee-sign"></i>
                                         Reward
                                     </span>
@@ -4009,7 +4137,7 @@
                             <tr>
                                 <td>05 Mar 2025</td>
                                 <td>
-                                    <span class="badge-soft.blue">
+                                    <span class="badge-soft blue">
                                         <i class="fa-solid fa-coins"></i>
                                         FLC Points
                                     </span>
@@ -4024,7 +4152,7 @@
                             <tr>
                                 <td>12 Feb 2025</td>
                                 <td>
-                                    <span class="badge-soft.gold">
+                                    <span class="badge-soft gold">
                                         <i class="fa-solid fa-wallet"></i>
                                         Payout
                                     </span>
@@ -4039,7 +4167,7 @@
                             <tr>
                                 <td>28 Jan 2025</td>
                                 <td>
-                                    <span class="badge-soft.green">
+                                    <span class="badge-soft green">
                                         <i class="fa-solid fa-indian-rupee-sign"></i>
                                         Reward
                                     </span>
@@ -4068,7 +4196,7 @@
             </section>
 
             <!-- ANALYTICS SECTION -->
-            <section id="analytics" class="section">
+            <section id="analytics-old" class="section">
                 <div class="section-header">
                     <div class="section-header-main">
                         <div class="section-title">
@@ -4471,6 +4599,35 @@
                 </div>
             </section>
 
+            <!-- PROGRAMS SECTION -->
+            <section id="programs" class="section">
+                <div class="section-header">
+                    <div class="section-header-main">
+                        <div class="section-title">
+                            <i class="fa-solid fa-compass"></i>
+                            Explore Programs
+                        </div>
+                        <div class="section-subtitle">
+                            Discover and apply to ecosystem programs relevant to your network.
+                        </div>
+                    </div>
+                    <div class="section-actions">
+                        <div class="search-input">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" placeholder="Search programs...">
+                        </div>
+                        <button class="btn">
+                            <i class="fa-solid fa-filter"></i> Filters
+                        </button>
+                    </div>
+                </div>
+
+                <div class="programs-grid" id="connectorProgramsGrid"
+                    style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                    <!-- Programs will be loaded here via JS -->
+                </div>
+            </section>
+
             <!-- REFERRALS SECTION -->
             <section id="referrals" class="section">
                 <div class="section-header">
@@ -4561,6 +4718,114 @@
                                     </button>
                                 </td>
                             </tr>
+                            <tr>
+                                <td style="font-weight: 600;">MedSync Health</td>
+                                <td>HealthTech Accelerator</td>
+                                <td>Jan 22, 2026</td>
+                                <td><span class="status-pill in-progress">Shortlisted</span></td>
+                                <td style="color: #3b82f6; font-weight: 700;">₹2,500</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('MedSync Health')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">FinFlow Pro</td>
+                                <td>FinTech Innovation Program</td>
+                                <td>Jan 10, 2026</td>
+                                <td><span class="status-pill completed">Completed</span></td>
+                                <td style="color: #22c55e; font-weight: 700;">₹3,500</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('FinFlow Pro')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">AgriTech Solutions</td>
+                                <td>AgriTech Accelerator</td>
+                                <td>Jan 25, 2026</td>
+                                <td><span class="status-pill pending">Under Review</span></td>
+                                <td style="color: #f59e0b; font-weight: 700;">₹2,200</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('AgriTech Solutions')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">EduLearn Platform</td>
+                                <td>EdTech Growth Program</td>
+                                <td>Jan 12, 2026</td>
+                                <td><span class="status-pill failed">Rejected</span></td>
+                                <td style="color: #64748b; font-weight: 700;">₹0</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('EduLearn Platform')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">CloudNest</td>
+                                <td>AI Logistics Pilot</td>
+                                <td>Jan 8, 2026</td>
+                                <td><span class="status-pill completed">Completed</span></td>
+                                <td style="color: #22c55e; font-weight: 700;">₹2,000</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('CloudNest')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">SmartMobility Inc</td>
+                                <td>Smart Mobility Initiative</td>
+                                <td>Jan 27, 2026</td>
+                                <td><span class="status-pill in-progress">Pitch Scheduled</span></td>
+                                <td style="color: #3b82f6; font-weight: 700;">₹2,800</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('SmartMobility Inc')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">DataVault Security</td>
+                                <td>Cybersecurity Innovation</td>
+                                <td>Jan 5, 2026</td>
+                                <td><span class="status-pill completed">Completed</span></td>
+                                <td style="color: #22c55e; font-weight: 700;">₹4,000</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('DataVault Security')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">EcoCircle</td>
+                                <td>Sustainable Energy Challenge</td>
+                                <td>Jan 23, 2026</td>
+                                <td><span class="status-pill in-progress">Due Diligence</span></td>
+                                <td style="color: #3b82f6; font-weight: 700;">₹3,000</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('EcoCircle')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">RetailTech Hub</td>
+                                <td>Retail Innovation Sprint</td>
+                                <td>Jan 28, 2026</td>
+                                <td><span class="status-pill pending">Application Submitted</span></td>
+                                <td style="color: #f59e0b; font-weight: 700;">₹1,800</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('RetailTech Hub')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <div class="table-footer">
@@ -4575,9 +4840,464 @@
                 </div>
             </section>
 
+            <!-- PROGRAM DETAILS SECTION -->
+            <section id="program-details" class="section">
+                <div class="card"
+                    style="padding: 0; overflow: hidden; border: none; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);">
+                    <div id="programDetailsBanner"
+                        style="height: 300px; background-size: cover; background-position: center; position: relative;">
+                        <button onclick="showSection('programs')"
+                            style="position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.9); border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; z-index: 10;">
+                            <i class="fa-solid fa-arrow-left"></i> Back to Programs
+                        </button>
+                        <div
+                            style="position: absolute; bottom: 0; left: 0; right: 0; padding: 3rem 2rem; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: white;">
+                            <span id="programDetailsType"
+                                style="background: #fcb82e; color: black; padding: 4px 12px; border-radius: 100px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;"></span>
+                            <h2 id="programDetailsTitle"
+                                style="font-size: 2.5rem; font-weight: 800; margin-top: 0.5rem; margin-bottom: 0;"></h2>
+                        </div>
+                    </div>
+
+                    <div style="padding: 3rem; background: white;">
+                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 4rem;">
+                            <div>
+                                <div style="margin-bottom: 3rem;">
+                                    <h3
+                                        style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: #111827; display: flex; align-items: center; gap: 0.75rem;">
+                                        <i class="fa-solid fa-circle-info" style="color: #6366f1;"></i> Program Overview
+                                    </h3>
+                                    <p id="programDetailsDesc"
+                                        style="color: #4b5563; line-height: 1.8; font-size: 1.05rem;"></p>
+                                </div>
+
+                                <div style="margin-bottom: 3rem;">
+                                    <h3
+                                        style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: #111827; display: flex; align-items: center; gap: 0.75rem;">
+                                        <i class="fa-solid fa-list-check" style="color: #10b981;"></i> Eligibility
+                                        Criteria
+                                    </h3>
+                                    <p id="programDetailsEligibility"
+                                        style="color: #4b5563; line-height: 1.8; font-size: 1.05rem;"></p>
+                                </div>
+
+                                <div style="margin-bottom: 0;">
+                                    <h3
+                                        style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: #111827; display: flex; align-items: center; gap: 0.75rem;">
+                                        <i class="fa-solid fa-gift" style="color: #f59e0b;"></i> Benefits & Support
+                                    </h3>
+                                    <p id="programDetailsBenefits"
+                                        style="color: #4b5563; line-height: 1.8; font-size: 1.05rem;"></p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div style="position: sticky; top: 2rem;">
+                                    <div
+                                        style="background: #f8fafc; padding: 2rem; border-radius: 1.5rem; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
+                                        <h4
+                                            style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 1.5rem; letter-spacing: 0.05em;">
+                                            Key Information</h4>
+
+                                        <div style="margin-bottom: 1.5rem;">
+                                            <div
+                                                style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                                <i class="fa-solid fa-tags"></i> Target Sectors
+                                            </div>
+                                            <div id="programDetailsSectors"
+                                                style="display: flex; flex-wrap: wrap; gap: 0.5rem;"></div>
+                                        </div>
+
+                                        <div style="margin-bottom: 1.5rem;">
+                                            <div
+                                                style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                                <i class="fa-solid fa-earth-americas"></i> Regions
+                                            </div>
+                                            <div id="programDetailsCountries"
+                                                style="font-weight: 600; color: #1e293b; font-size: 1rem;"></div>
+                                        </div>
+
+                                        <div style="margin-bottom: 0;">
+                                            <div
+                                                style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                                <i class="fa-solid fa-calendar-xmark"></i> Deadline
+                                            </div>
+                                            <div id="programDetailsDeadline"
+                                                style="font-weight: 700; color: #ef4444; font-size: 1rem;"></div>
+                                        </div>
+                                    </div>
+
+                                    <button id="referFromDetailsBtn"
+                                        style="width: 100%; padding: 1.25rem; background: #000; color: white; border: none; border-radius: 1rem; font-size: 1.1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem; transition: transform 0.2s;">
+                                        Refer a Startup <i class="fa-solid fa-paper-plane"></i>
+                                    </button>
+                                    <p
+                                        style="text-align: center; color: #64748b; font-size: 0.85rem; margin-top: 1rem;">
+                                        <i class="fa-solid fa-shield-halved"></i> Verified Referral Process
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ANALYTICS SECTION -->
+            <section id="analytics" class="section">
+                <div class="section-header">
+                    <div class="section-header-main">
+                        <div class="section-title">
+                            <i class="fa-solid fa-chart-line"></i>
+                            Analytics & Insights
+                        </div>
+                        <div class="section-subtitle">
+                            Deep dive into your referral performance, conversion metrics, and earning trends.
+                        </div>
+                    </div>
+                    <div class="section-actions">
+                        <div class="toggle-group">
+                            <button class="toggle-btn active" onclick="updateAnalyticsRange('30D', this)">30D</button>
+                            <button class="toggle-btn" onclick="updateAnalyticsRange('90D', this)">90D</button>
+                            <button class="toggle-btn" onclick="updateAnalyticsRange('ALL', this)">All Time</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Metrics Overview -->
+                <div class="referrals-summary"
+                    style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div class="summary-item">
+                        <span>Total Referrals</span>
+                        <strong data-base="28">28</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Successful Conversions</span>
+                        <strong data-base="9">9</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Avg. Response Time</span>
+                        <strong data-base="2.4">2.4 days</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Success Rate</span>
+                        <strong data-base="32">32%</strong>
+                    </div>
+                </div>
+
+                <!-- Performance Charts -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                    <!-- Referral Trend Chart -->
+                    <div class="card">
+                        <div class="card-header"
+                            style="border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                            <div>
+                                <div class="card-title">Referral Performance Trend</div>
+                                <div style="font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">Monthly referral
+                                    activity and
+                                    conversion rates</div>
+                            </div>
+                        </div>
+                        <canvas id="referralTrendChart" style="max-height: 300px;"></canvas>
+                    </div>
+
+                    <!-- Top Performing Sectors -->
+                    <div class="card">
+                        <div class="card-header"
+                            style="border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                            <div>
+                                <div class="card-title">Top Sectors</div>
+                                <div style="font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">By conversion rate
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #3b82f6;">
+                                    </div>
+                                    <span style="font-size: 0.9rem; color: #334155;">HealthTech</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div
+                                        style="flex: 1; height: 6px; background: #e2e8f0; border-radius: 999px; width: 80px;">
+                                        <div
+                                            style="height: 100%; background: #3b82f6; border-radius: 999px; width: 85%;">
+                                        </div>
+                                    </div>
+                                    <span style="font-size: 0.85rem; font-weight: 600; color: #111827;">48%</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #10b981;">
+                                    </div>
+                                    <span style="font-size: 0.9rem; color: #334155;">FinTech</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div
+                                        style="flex: 1; height: 6px; background: #e2e8f0; border-radius: 999px; width: 80px;">
+                                        <div
+                                            style="height: 100%; background: #10b981; border-radius: 999px; width: 72%;">
+                                        </div>
+                                    </div>
+                                    <span style="font-size: 0.85rem; font-weight: 600; color: #111827;">36%</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #f59e0b;">
+                                    </div>
+                                    <span style="font-size: 0.9rem; color: #334155;">AgriTech</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div
+                                        style="flex: 1; height: 6px; background: #e2e8f0; border-radius: 999px; width: 80px;">
+                                        <div
+                                            style="height: 100%; background: #f59e0b; border-radius: 999px; width: 50%;">
+                                        </div>
+                                    </div>
+                                    <span style="font-size: 0.85rem; font-weight: 600; color: #111827;">25%</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #8b5cf6;">
+                                    </div>
+                                    <span style="font-size: 0.9rem; color: #334155;">EdTech</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div
+                                        style="flex: 1; height: 6px; background: #e2e8f0; border-radius: 999px; width: 80px;">
+                                        <div
+                                            style="height: 100%; background: #8b5cf6; border-radius: 999px; width: 40%;">
+                                        </div>
+                                    </div>
+                                    <span style="font-size: 0.85rem; font-weight: 600; color: #111827;">20%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Analytics Grid -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+                    <!-- Referral Status Breakdown -->
+                    <div class="card">
+                        <div class="card-header"
+                            style="border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                            <div class="card-title">Referral Status</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #f8fafc; border-radius: 0.5rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fa-solid fa-hourglass-half" style="color: #3b82f6;"></i>
+                                    <span style="font-size: 0.9rem; color: #334155;">Under Review</span>
+                                </div>
+                                <span style="font-size: 1.1rem; font-weight: 700; color: #111827;">14</span>
+                            </div>
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #f0fdf4; border-radius: 0.5rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fa-solid fa-circle-check" style="color: #10b981;"></i>
+                                    <span style="font-size: 0.9rem; color: #334155;">Completed</span>
+                                </div>
+                                <span style="font-size: 1.1rem; font-weight: 700; color: #111827;">9</span>
+                            </div>
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #fef2f2; border-radius: 0.5rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fa-solid fa-circle-xmark" style="color: #ef4444;"></i>
+                                    <span style="font-size: 0.9rem; color: #334155;">Rejected</span>
+                                </div>
+                                <span style="font-size: 1.1rem; font-weight: 700; color: #111827;">5</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Earnings Breakdown -->
+                    <div class="card">
+                        <div class="card-header"
+                            style="border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                            <div class="card-title">Earnings Breakdown</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 0.85rem; color: #64748b;">Total Earned</span>
+                                <span style="font-size: 1.25rem; font-weight: 700; color: #10b981;">₹85,400</span>
+                            </div>
+                            <div style="height: 1px; background: #e2e8f0;"></div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 0.85rem; color: #64748b;">Pending Payouts</span>
+                                <span style="font-size: 1rem; font-weight: 600; color: #f59e0b;">₹12,500</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 0.85rem; color: #64748b;">Avg. per Referral</span>
+                                <span style="font-size: 1rem; font-weight: 600; color: #111827;">₹9,489</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 0.85rem; color: #64748b;">Highest Reward</span>
+                                <span style="font-size: 1rem; font-weight: 600; color: #111827;">₹20,000</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Response Time Analysis -->
+                    <div class="card">
+                        <div class="card-header"
+                            style="border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                            <div class="card-title">Response Time</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div
+                                style="text-align: center; padding: 1rem; background: #f8fafc; border-radius: 0.75rem;">
+                                <div
+                                    style="font-size: 2.5rem; font-weight: 800; color: #111827; margin-bottom: 0.25rem;">
+                                    2.4</div>
+                                <div style="font-size: 0.85rem; color: #64748b;">Avg. Days to Response</div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 0.85rem; color: #64748b;">Fastest Response</span>
+                                <span style="font-size: 0.9rem; font-weight: 600; color: #10b981;">6 hours</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 0.85rem; color: #64748b;">Slowest Response</span>
+                                <span style="font-size: 0.9rem; font-weight: 600; color: #ef4444;">12 days</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI-Powered Insights -->
+                <div class="insights-card" style="margin-bottom: 2rem;">
+                    <div class="insights-header">
+                        <div class="insights-title">
+                            <i class="fa-solid fa-brain"></i>
+                            AI-Powered Performance Insights
+                        </div>
+                        <div class="insights-badge">
+                            <i class="fa-solid fa-sparkles"></i>
+                            Personalized Recommendations
+                        </div>
+                    </div>
+                    <div class="insights-list"
+                        style="grid-template-columns: repeat(2, 1fr); display: grid; gap: 1.5rem;">
+                        <div class="insight-item">
+                            <div class="insight-bullet">
+                                <i class="fa-solid fa-trophy"></i>
+                            </div>
+                            <div class="insight-text">
+                                Your <span class="insight-highlight">HealthTech referrals</span> have a 48% success
+                                rate,
+                                which is 2.1x higher than the platform average. Consider focusing more on this sector.
+                            </div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-bullet">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+                            <div class="insight-text">
+                                Startups referred within <span class="insight-highlight">72 hours of program
+                                    launch</span>
+                                are 3.2x more likely to be accepted. Enable notifications for new programs.
+                            </div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-bullet">
+                                <i class="fa-solid fa-calendar-check"></i>
+                            </div>
+                            <div class="insight-text">
+                                Your most successful day for referrals is <span
+                                    class="insight-highlight">Tuesday</span>,
+                                with a 42% conversion rate. Plan your outreach accordingly.
+                            </div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-bullet">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <div class="insight-text">
+                                You're on track to reach <span class="insight-highlight">Level 4</span> by next month.
+                                Just 3 more successful referrals needed to unlock premium benefits.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Program Performance Comparison -->
+                <div class="card">
+                    <div class="card-header"
+                        style="border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                        <div>
+                            <div class="card-title">Program Performance Comparison</div>
+                            <div style="font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">Your top performing
+                                programs by
+                                conversion and earnings</div>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Program Name</th>
+                                    <th>Referrals</th>
+                                    <th>Conversions</th>
+                                    <th>Success Rate</th>
+                                    <th>Total Earned</th>
+                                    <th>Avg. Response Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: 600;">HealthTech Accelerator</td>
+                                    <td>8</td>
+                                    <td><span class="status-pill completed">5</span></td>
+                                    <td><span style="color: #10b981; font-weight: 600;">62.5%</span></td>
+                                    <td style="color: #10b981; font-weight: 700;">₹32,500</td>
+                                    <td>1.8 days</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600;">Fintech Innovation Program</td>
+                                    <td>6</td>
+                                    <td><span class="status-pill completed">2</span></td>
+                                    <td><span style="color: #f59e0b; font-weight: 600;">33.3%</span></td>
+                                    <td style="color: #10b981; font-weight: 700;">₹24,000</td>
+                                    <td>3.2 days</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600;">Sustainable Energy Challenge</td>
+                                    <td>5</td>
+                                    <td><span class="status-pill completed">1</span></td>
+                                    <td><span style="color: #f59e0b; font-weight: 600;">20%</span></td>
+                                    <td style="color: #10b981; font-weight: 700;">₹15,000</td>
+                                    <td>2.5 days</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600;">EdTech Growth Program</td>
+                                    <td>4</td>
+                                    <td><span class="status-pill completed">1</span></td>
+                                    <td><span style="color: #f59e0b; font-weight: 600;">25%</span></td>
+                                    <td style="color: #10b981; font-weight: 700;">₹8,900</td>
+                                    <td>4.1 days</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600;">Smart Mobility Initiative</td>
+                                    <td>5</td>
+                                    <td><span class="status-pill in-progress">0</span></td>
+                                    <td><span style="color: #64748b; font-weight: 600;">0%</span></td>
+                                    <td style="color: #64748b; font-weight: 700;">₹0</td>
+                                    <td>-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+
             <!-- ADD REFERRAL MODAL -->
             <div id="addReferralModal"
-                style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
+                style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10001; align-items: center; justify-content: center;">
                 <div
                     style="background: white; border-radius: 1.5rem; width: 100%; max-width: 600px; padding: 2.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative; max-height: 90vh; overflow-y: auto;">
                     <button onclick="closeAddReferralModal()"
@@ -5153,12 +5873,19 @@
                 section.classList.remove('active');
             });
 
-            document.getElementById(sectionId).classList.add('active');
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) targetSection.classList.add('active');
 
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
-            document.getElementById('tab-' + sectionId).classList.add('active');
+
+            // Map sub-pages to parent tabs
+            let tabId = 'tab-' + sectionId;
+            if (sectionId === 'program-details') tabId = 'tab-programs';
+
+            const activeTab = document.getElementById(tabId);
+            if (activeTab) activeTab.classList.add('active');
 
             const sectionTitle = document.getElementById('sectionTitle');
             const sectionSubtitle = document.getElementById('sectionSubtitle');
@@ -5166,6 +5893,12 @@
             if (sectionId === 'overview') {
                 sectionTitle.textContent = 'Connector Overview';
                 sectionSubtitle.textContent = 'Track your referrals, rewards, and impact across the ecosystem';
+            } else if (sectionId === 'programs') {
+                sectionTitle.textContent = 'Explore Programs';
+                sectionSubtitle.textContent = 'Discover and apply to ecosystem programs relevant to your network.';
+            } else if (sectionId === 'program-details') {
+                sectionTitle.textContent = 'Program Specifics';
+                sectionSubtitle.textContent = 'Review detailed information before referring a startup.';
             } else if (sectionId === 'referrals') {
                 sectionTitle.textContent = 'My Referrals';
                 sectionSubtitle.textContent = 'Detailed view of all startups you have referred across programs.';
@@ -5287,54 +6020,91 @@
             document.getElementById('addReferralModal').style.display = 'none';
         }
 
-        function submitReferral(event) {
+        async function submitReferral(event) {
             event.preventDefault();
 
             const startupName = document.getElementById('startupName').value;
+            const startupEmail = document.getElementById('startupEmail').value;
             const programSelect = document.getElementById('programSelect');
-            const programText = programSelect.options[programSelect.selectedIndex].text;
+            const oppId = programSelect.value;
+            const notes = document.getElementById('referralNotes').value;
             const submitBtn = document.getElementById('submitReferralBtn');
+
+            if (!oppId) {
+                showToast("Please select a program.", "info");
+                return;
+            }
 
             // Show loading state
             submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
             submitBtn.disabled = true;
 
-            // Simulate API call
-            setTimeout(() => {
-                // Add new row to table
-                const tbody = document.getElementById('referralsTableBody');
-                const newRow = document.createElement('tr');
-                const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            try {
+                const res = await fetch('/api/referrals/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        startup_name: startupName,
+                        startup_email: startupEmail,
+                        opportunity_id: oppId,
+                        notes: notes
+                    })
+                });
+                const json = await res.json();
 
-                newRow.innerHTML = `
-                    <td style="font-weight: 600;">${startupName}</td>
-                    <td>${programText.split(' - ')[0]}</td>
-                    <td>${today}</td>
-                    <td><span class="status-pill pending">Pending Review</span></td>
-                    <td style="color: #f59e0b; font-weight: 700;">${programText.match(/₹[\d,]+/)[0]}</td>
-                    <td>
-                        <button class="btn-icon" onclick="viewReferralDetails('${startupName}')">
-                            <i class="fa-solid fa-eye"></i>
-                        </button>
-                    </td>
-                `;
+                if (json.success) {
+                    showToast(`Referral for ${startupName} submitted successfully!`, "success");
+                    closeAddReferralModal();
 
-                tbody.insertBefore(newRow, tbody.firstChild);
+                    // Refresh referrals table
+                    loadMyReferrals();
 
-                // Show success message
-                showToast(`Referral for ${startupName} submitted successfully!`, "success");
-
-                // Reset and close modal
-                closeAddReferralModal();
+                    showSection('referrals');
+                } else {
+                    showToast(json.error || "Failed to submit referral", "info");
+                }
+            } catch (err) {
+                console.error(err);
+                showToast("Error submitting referral", "info");
+            } finally {
                 submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Referral';
                 submitBtn.disabled = false;
+            }
+        }
 
-                // Update badge count
-                const badge = document.querySelector('#tab-referrals .badge');
-                if (badge) {
-                    badge.textContent = parseInt(badge.textContent) + 1;
+        async function loadMyReferrals() {
+            const tbody = document.getElementById('referralsTableBody');
+            if (!tbody) return;
+
+            try {
+                const res = await fetch('/api/referrals/my');
+                const json = await res.json();
+
+                if (json.success) {
+                    tbody.innerHTML = json.referrals.map(r => {
+                        const date = new Date(r.created_at).toLocaleDateString();
+                        const statusClass = r.status === 'pending' ? 'pending' : (r.status === 'accepted' ? 'completed' : 'failed');
+                        const statusLabel = r.status.charAt(0).toUpperCase() + r.status.slice(1);
+
+                        return `
+                        <tr>
+                            <td style="font-weight: 600;">${r.startup_name}</td>
+                            <td>${r.opportunity_title}</td>
+                            <td>${date}</td>
+                            <td><span class="status-pill ${statusClass}">${statusLabel}</span></td>
+                            <td style="color: #64748b; font-weight: 700;">-</td>
+                            <td>
+                                <button class="btn-icon" onclick="viewReferralDetails('${r.startup_name}')">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        `;
+                    }).join('');
                 }
-            }, 1500);
+            } catch (err) {
+                console.error(err);
+            }
         }
 
         let referralsPage = 1;
@@ -5365,43 +6135,79 @@
             if (referralsPage === 2) {
                 tbody.innerHTML = `
                     <tr>
-                        <td style="font-weight: 600;">CloudNode</td>
-                        <td>Serverless Infrastructure</td>
-                        <td>Dec 10, 2025</td>
+                        <td style="font-weight: 600;">EduLearn Platform</td>
+                        <td>EdTech Growth Program</td>
+                        <td>Jan 12, 2026</td>
+                        <td><span class="status-pill failed">Rejected</span></td>
+                        <td style="color: #64748b; font-weight: 700;">₹0</td>
+                        <td>
+                            <button class="btn-icon" onclick="viewReferralDetails('EduLearn Platform')">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">CloudNest</td>
+                        <td>AI Logistics Pilot</td>
+                        <td>Jan 8, 2026</td>
                         <td><span class="status-pill completed">Completed</span></td>
-                        <td style="color: #22c55e; font-weight: 700;">₹4,500</td>
+                        <td style="color: #22c55e; font-weight: 700;">₹2,000</td>
                         <td>
-                            <button class="btn-icon" onclick="viewReferralDetails('CloudNode')">
+                            <button class="btn-icon" onclick="viewReferralDetails('CloudNest')">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                         </td>
                     </tr>
                     <tr>
-                        <td style="font-weight: 600;">DataMesh</td>
-                        <td>Enterprise Analytics</td>
-                        <td>Dec 15, 2025</td>
-                        <td><span class="status-pill in-progress">In Progress</span></td>
-                        <td style="color: #3b82f6; font-weight: 700;">₹3,200</td>
+                        <td style="font-weight: 600;">SmartMobility Inc</td>
+                        <td>Smart Mobility Initiative</td>
+                        <td>Jan 27, 2026</td>
+                        <td><span class="status-pill in-progress">Pitch Scheduled</span></td>
+                        <td style="color: #3b82f6; font-weight: 700;">₹2,800</td>
                         <td>
-                            <button class="btn-icon" onclick="viewReferralDetails('DataMesh')">
+                            <button class="btn-icon" onclick="viewReferralDetails('SmartMobility Inc')">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                         </td>
                     </tr>
                     <tr>
-                        <td style="font-weight: 600;">SecurePass</td>
-                        <td>Cybersecurity Suite</td>
-                        <td>Dec 20, 2025</td>
-                        <td><span class="status-pill pending">Pending Review</span></td>
-                        <td style="color: #f59e0b; font-weight: 700;">₹2,800</td>
+                        <td style="font-weight: 600;">DataVault Security</td>
+                        <td>Cybersecurity Innovation</td>
+                        <td>Jan 5, 2026</td>
+                        <td><span class="status-pill completed">Completed</span></td>
+                        <td style="color: #22c55e; font-weight: 700;">₹4,000</td>
                         <td>
-                            <button class="btn-icon" onclick="viewReferralDetails('SecurePass')">
+                            <button class="btn-icon" onclick="viewReferralDetails('DataVault Security')">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">EcoCircle</td>
+                        <td>Sustainable Energy Challenge</td>
+                        <td>Jan 23, 2026</td>
+                        <td><span class="status-pill in-progress">Due Diligence</span></td>
+                        <td style="color: #3b82f6; font-weight: 700;">₹3,000</td>
+                        <td>
+                            <button class="btn-icon" onclick="viewReferralDetails('EcoCircle')">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">RetailTech Hub</td>
+                        <td>Retail Innovation Sprint</td>
+                        <td>Jan 28, 2026</td>
+                        <td><span class="status-pill pending">Application Submitted</span></td>
+                        <td style="color: #f59e0b; font-weight: 700;">₹1,800</td>
+                        <td>
+                            <button class="btn-icon" onclick="viewReferralDetails('RetailTech Hub')">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                         </td>
                     </tr>
                 `;
-                countLabel.textContent = "Showing 4-6 of 12 referrals";
+                countLabel.textContent = "Showing 7-12 of 12 referrals";
             } else {
                 tbody.innerHTML = `
                     <tr>
@@ -5440,14 +6246,50 @@
                             </button>
                         </td>
                     </tr>
+                    <tr>
+                        <td style="font-weight: 600;">MedSync Health</td>
+                        <td>HealthTech Accelerator</td>
+                        <td>Jan 22, 2026</td>
+                        <td><span class="status-pill in-progress">Shortlisted</span></td>
+                        <td style="color: #3b82f6; font-weight: 700;">₹2,500</td>
+                        <td>
+                            <button class="btn-icon" onclick="viewReferralDetails('MedSync Health')">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">FinFlow Pro</td>
+                        <td>FinTech Innovation Program</td>
+                        <td>Jan 10, 2026</td>
+                        <td><span class="status-pill completed">Completed</span></td>
+                        <td style="color: #22c55e; font-weight: 700;">₹3,500</td>
+                        <td>
+                            <button class="btn-icon" onclick="viewReferralDetails('FinFlow Pro')">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">AgriTech Solutions</td>
+                        <td>AgriTech Accelerator</td>
+                        <td>Jan 25, 2026</td>
+                        <td><span class="status-pill pending">Under Review</span></td>
+                        <td style="color: #f59e0b; font-weight: 700;">₹2,200</td>
+                        <td>
+                            <button class="btn-icon" onclick="viewReferralDetails('AgriTech Solutions')">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
                 `;
-                countLabel.textContent = "Showing 1-3 of 12 referrals";
+                countLabel.textContent = "Showing 1-6 of 12 referrals";
             }
             // Trigger filter after pagination to maintain filter state
             // filterReferrals(true); // Deprecated
         }
 
-        function updateReferralsTabFilter(filter, btn = null) {
+        async function updateReferralsTabFilter(filter, btn = null) {
             // If btn is not provided, find the correct one by filter value
             if (!btn) {
                 const pills = document.querySelectorAll('#referrals .filter-pill');
@@ -5465,64 +6307,10 @@
                 btn.classList.add('active');
             }
 
-            const tbody = document.getElementById('referralsTableBody');
-            const countLabel = document.getElementById('referralsTableCount');
-
-            if (!tbody) return;
-
             showToast(`Viewing: ${filter.charAt(0).toUpperCase() + filter.slice(1)} referrals`, 'info');
 
-            if (filter === 'active') {
-                const activeData = [
-                    ['Quantum AI', 'TechSprint', 'Jan 22, 2026', 'Pending Review', '#f59e0b', '₹15,000'],
-                    ['HealthBot', 'Healthcare Pilot', 'Jan 20, 2026', 'Shortlisted', '#3b82f6', '₹12,000'],
-                    ['MobiRoute', 'Smart Mobility', 'Jan 18, 2026', 'Pitch Scheduled', '#3b82f6', '₹10,000'],
-                    ['SaaSly', 'SaaS Scaler', 'Jan 15, 2026', 'In Review', '#3b82f6', '₹8,000'],
-                    ['BioNano', 'Healthcare Pilot', 'Jan 10, 2026', 'Due Diligence', '#3b82f6', '₹20,000'],
-                    ['EcoDrive', 'Smart Mobility', 'Jan 08, 2026', 'Shortlisted', '#3b82f6', '₹12,000'],
-                    ['CyberShield', 'TechSprint', 'Jan 05, 2026', 'In Review', '#f59e0b', '₹18,000'],
-                    ['AgriCloud', 'AgriTech Sprint', 'Jan 02, 2026', 'Pitching', '#3b82f6', '₹14,000']
-                ];
-
-                tbody.innerHTML = activeData.map(d => `
-                    <tr>
-                        <td style="font-weight: 600;">${d[0]}</td>
-                        <td>${d[1]}</td>
-                        <td>${d[2]}</td>
-                        <td><span class="status-pill in-progress">${d[3]}</span></td>
-                        <td style="color: ${d[4]}; font-weight: 700;">${d[5]}</td>
-                        <td><button class="btn-icon" onclick="viewReferralDetails('${d[0]}')"><i class="fa-solid fa-eye"></i></button></td>
-                    </tr>
-                `).join('');
-                countLabel.textContent = "Showing 8 of 14 active referrals";
-            } else if (filter === 'completed') {
-                const completedData = [
-                    ['BioStream', 'HealthTech Accelerator', 'Jan 15, 2026', 'Completed', '#22c55e', '₹2,500'],
-                    ['GreenWave AI', 'Sustainable Energy', 'Jan 10, 2026', 'Completed', '#22c55e', '₹3,000'],
-                    ['FinFlow', 'Fintech 2025', 'Jan 05, 2026', 'Success', '#22c55e', '₹15,000'],
-                    ['SafeBank', 'Fintech 2025', 'Dec 28, 2025', 'Settled', '#22c55e', '₹10,000'],
-                    ['SolarLens', 'Green Energy', 'Dec 20, 2025', 'Completed', '#22c55e', '₹10,000'],
-                    ['MedData', 'Healthcare Innovation', 'Dec 15, 2025', 'Success', '#22c55e', '₹20,000'],
-                    ['NeoPay', 'Fintech 2025', 'Dec 10, 2025', 'Settled', '#22c55e', '₹12,000'],
-                    ['EcoPower', 'GreenTech Challenge', 'Dec 05, 2025', 'Success', '#22c55e', '₹12,000'],
-                    ['OceanPulse', 'Smart City Challenge', 'Nov 28, 2025', 'Completed', '#22c55e', '₹8,000']
-                ];
-
-                tbody.innerHTML = completedData.map(d => `
-                    <tr>
-                        <td style="font-weight: 600;">${d[0]}</td>
-                        <td>${d[1]}</td>
-                        <td>${d[2]}</td>
-                        <td><span class="status-pill completed">${d[3]}</span></td>
-                        <td style="color: ${d[4]}; font-weight: 700;">${d[5]}</td>
-                        <td><button class="btn-icon" onclick="viewReferralDetails('${d[0]}')"><i class="fa-solid fa-eye"></i></button></td>
-                    </tr>
-                `).join('');
-                countLabel.textContent = "Showing 9 of 9 completed referrals";
-            } else {
-                // Reset to default page 1
-                paginateReferralsTab(1);
-            }
+            // Use pagination to show mock data
+            paginateReferralsTab(1);
         }
 
         function filterReferrals(skipToast) {
@@ -5570,7 +6358,6 @@
             toast.innerHTML = `<i class="fas ${icon}"></i> <span>${message}</span>`;
 
             document.body.appendChild(toast);
-
             setTimeout(() => toast.style.transform = 'translateY(0)', 100);
             setTimeout(() => {
                 toast.style.transform = 'translateY(100px)';
@@ -5616,10 +6403,21 @@
                 // Update Recent Referrals Table
                 const tbody = document.getElementById('recentReferralsBody');
                 if (tbody) {
-                    tbody.innerHTML = recent_referrals.map(ref => `
+                    tbody.innerHTML = recent_referrals.map(ref => {
+                        let appBadge = '';
+                        if (ref.application_status) {
+                            const aS = ref.application_status.toUpperCase();
+                            let color = '#3b82f6';
+                            if (aS === 'REJECTED') color = '#ef4444';
+                            if (aS === 'SHORTLISTED') color = '#10b981';
+                            appBadge = `<div style="font-size: 0.65rem; margin-top: 0.2rem; font-weight: 700; color: ${color}; text-transform: uppercase;">App: ${aS}</div>`;
+                        }
+
+                        return `
                         <tr>
                             <td>
                                 <div>${ref.startup_name}</div>
+                                ${appBadge}
                                 <div class="label-muted">Referred on ${new Date(ref.created_at).toLocaleDateString()}</div>
                             </td>
                             <td>
@@ -5636,7 +6434,8 @@
                             <td>${ref.reward}</td>
                             <td>${timeSince(new Date(ref.created_at))} ago</td>
                         </tr>
-                    `).join('');
+                        `;
+                    }).join('');
                 }
 
                 updatePaginationUI('overviewPagination', state.overview.page);
@@ -5727,7 +6526,7 @@
         function updateOverviewTimeframe(timeframe, btn) {
             btn.parentElement.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
             btn.classList.add('active');
-            showToast(`Timeframe: ${timeframe === 'all' ? 'All Time' : 'Last 30 Days'}`, 'info');
+            showToast(`Timeframe: ${timeframe === 'all' ? 'All Time' : 'Last 30 Days'} `, 'info');
             state.overview.page = 1;
             loadEnablerOverview(timeframe, 1);
         }
@@ -5921,7 +6720,8 @@
             }
 
             // Scroll to table
-            tbody.closest('.table-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const container = tbody.closest('.table-container');
+            if (container) container.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         function paginateRewards(page) {
@@ -5932,7 +6732,7 @@
         function updateRewardFilter(type, btn) {
             btn.parentElement.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
             btn.classList.add('active');
-            showToast(`Filtering: ${type}`, 'info');
+            showToast(`Filtering: ${type} `, 'info');
             state.rewards.page = 1;
             loadRewardsHistory(1, type);
         }
@@ -5944,7 +6744,7 @@
                 const variance = range === '30D' ? 0.7 : (range === '90D' ? 1.0 : 2.5);
                 s.innerText = Math.round(parseInt(s.dataset.base || s.innerText) * variance);
             });
-            showToast(`Range: ${range}`, 'info');
+            showToast(`Range: ${range} `, 'info');
         }
 
         function updateAnalyticsTab(tab, btn) {
@@ -5994,7 +6794,119 @@
             if (status === 'in-progress') document.getElementById('chip-active').style.borderColor = '#3b82f6';
             if (status === 'completed') document.getElementById('chip-completed').style.borderColor = '#22c55e';
 
-            showToast(`Filtering by status: ${status}`, 'info');
+            showToast(`Filtering by status: ${status} `, 'info');
+        }
+
+        let allPrograms = [];
+        async function loadPrograms() {
+            try {
+                // Fetch connector's referrals to see which programs have been "taken" (successfully referred)
+                const refRes = await fetch('/api/referrals/my');
+                const refJson = await refRes.json();
+                const acceptedOppIds = (refJson.referrals || [])
+                    .filter(r => r.status === 'accepted')
+                    .map(r => r.opportunity_id);
+
+                const res = await fetch('/api/opportunities/');
+                const json = await res.json();
+                if (!json.success) return;
+
+                allPrograms = json.data.items; // Store globally
+                const programsGrid = document.getElementById('connectorProgramsGrid');
+                const programSelect = document.getElementById('programSelect');
+
+                if (programSelect) {
+                    programSelect.innerHTML = '<option value="">Choose a program...</option>' +
+                        json.data.items.map(item => `<option value="${item.id}">${item.title}</option>`).join('');
+                }
+
+                if (programsGrid) {
+                    programsGrid.innerHTML = json.data.items.map(item => {
+                        const sectors = (item.sectors || []).slice(0, 2).map(s => `<span class="tag" style="background: rgba(255,255,255,0.2); color: white; border: none;">${s}</span>`).join('');
+                        const logoChar = item.title.charAt(0).toUpperCase();
+                        const bannerImage = item.banner_url || 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1974&auto=format&fit=crop';
+
+                        const isTaken = acceptedOppIds.includes(item.id);
+                        const buttonHtml = isTaken
+                            ? `<button class="apply-btn" style="background: #22c55e; border-color: #22c55e; cursor: pointer;" onclick="handleApply('${item.title}')"><i class="fa-solid fa-check-circle"></i> Referral Taken</button>`
+                            : `<button class="apply-btn" onclick="handleApply('${item.title}')">Refer Startup</button>`;
+
+                        return `
+                        <div class="program-card ${isTaken ? 'taken' : ''}">
+                            <div class="program-header" style="background-image: url('${bannerImage}')">
+                                <div class="program-logo">${logoChar}</div>
+                                <span class="program-type-badge">${item.type || 'Program'}</span>
+                                ${isTaken ? '<span class="status-badge" style="position: absolute; top: 1rem; right: 1rem; background: #22c55e; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 10;">TAKEN</span>' : ''}
+                            </div>
+                            <div class="program-body">
+                                <div class="program-title">${item.title}</div>
+                                <div class="program-company">${item.owner_company || 'Global Innovation Hub'}</div>
+                                <div class="program-tags">
+                                    ${sectors}
+                                </div>
+                                ${buttonHtml}
+                            </div>
+                        </div>
+                    `;
+                    }).join('');
+                }
+            } catch (err) { console.error('Programs error:', err); }
+        }
+
+        function handleApply(programTitle) {
+            const program = allPrograms.find(p => p.title === programTitle);
+            if (!program) return;
+
+            // Update details view
+            const banner = document.getElementById('programDetailsBanner');
+            if (banner) banner.style.backgroundImage = `url('${program.banner_url || 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1974&auto=format&fit=crop'}')`;
+
+            const typeTag = document.getElementById('programDetailsType');
+            if (typeTag) typeTag.textContent = program.type || 'Program';
+
+            const titleElem = document.getElementById('programDetailsTitle');
+            if (titleElem) titleElem.textContent = program.title;
+
+            const descElem = document.getElementById('programDetailsDesc');
+            if (descElem) descElem.textContent = program.description || 'No description available.';
+
+            const eligElem = document.getElementById('programDetailsEligibility');
+            if (eligElem) eligElem.textContent = program.eligibility || 'Open for all relevant startups.';
+
+            const benefitsElem = document.getElementById('programDetailsBenefits');
+            if (benefitsElem) benefitsElem.textContent = program.benefits || 'Check platform for full benefits package.';
+
+            // Sectors
+            const sectorsContainer = document.getElementById('programDetailsSectors');
+            if (sectorsContainer) {
+                sectorsContainer.innerHTML = (program.sectors || []).map(s => `<span class="tag" style="background: #eef2ff; color: #4f46e5; border: 1px solid #e0e7ff;">${s}</span>`).join('');
+            }
+
+            // Countries
+            const countriesElem = document.getElementById('programDetailsCountries');
+            if (countriesElem) countriesElem.textContent = (program.countries || []).join(', ') || 'Global Access';
+
+            // Deadline
+            const deadElem = document.getElementById('programDetailsDeadline');
+            if (deadElem) {
+                const deadline = program.deadline ? new Date(program.deadline).toLocaleDateString() : 'Rolling Selection';
+                deadElem.textContent = deadline;
+            }
+
+            // Refer Button link
+            const referBtn = document.getElementById('referFromDetailsBtn');
+            if (referBtn) {
+                referBtn.onclick = () => {
+                    openAddReferralModal();
+                    const select = document.getElementById('programSelect');
+                    if (select) {
+                        select.value = program.id;
+                    }
+                };
+            }
+
+            showSection('program-details');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // --- Initialization ---
@@ -6003,6 +6915,8 @@
             loadEnablerOverview();
             loadRewardsSummary();
             loadRewardsHistory();
+            loadPrograms();
+            updateReferralsTabFilter('all');
 
             // Store base values for analytics variance
             document.querySelectorAll('.summary-item strong').forEach(s => s.dataset.base = s.innerText);
@@ -6078,6 +6992,103 @@
                             x: {
                                 grid: {
                                     display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Load initial data
+            loadMyReferrals();
+
+            // Initialize Analytics Referral Trend Chart
+            const trendCtx = document.getElementById('referralTrendChart');
+            if (trendCtx) {
+                new Chart(trendCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan'],
+                        datasets: [{
+                            label: 'Referrals',
+                            data: [3, 5, 4, 7, 6, 9],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            pointBackgroundColor: '#3b82f6',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2
+                        }, {
+                            label: 'Conversions',
+                            data: [1, 2, 1, 2, 2, 3],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            pointBackgroundColor: '#10b981',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 15,
+                                    font: {
+                                        size: 12,
+                                        weight: '600'
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: '#1e293b',
+                                padding: 12,
+                                titleFont: {
+                                    size: 13,
+                                    weight: '600'
+                                },
+                                bodyFont: {
+                                    size: 12
+                                },
+                                borderColor: '#e2e8f0',
+                                borderWidth: 1
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    drawBorder: false,
+                                    color: 'rgba(0,0,0,0.05)'
+                                },
+                                ticks: {
+                                    stepSize: 2,
+                                    font: {
+                                        size: 11
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 11
+                                    }
                                 }
                             }
                         }

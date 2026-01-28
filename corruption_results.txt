@@ -1,0 +1,4 @@
+Line 5472: if (file.size > 5 * 1024 * 1024) {
+Line 5656: if (referralsPage > 1) referralsPage--;
+Line 5991: (item.amount_money > 0 ? '+ ₹' : '- ₹') + Math.abs(item.amount_money).toLocaleString() :
+Line 6047: if (interval > 1) return Math.floor(interval) + " " + unit + (Math.floor(interval) > 1 ? 's' : '');

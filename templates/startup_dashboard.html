@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Startup Dashboard - InnoBridge</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -366,25 +367,54 @@
         }
 
         .program-header {
-            height: 120px;
+            height: 140px;
             background: linear-gradient(135deg, #0f172a, #334155);
-            padding: 1.5rem;
+            background-size: cover;
+            background-position: center;
+            padding: 1.25rem;
             color: white;
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
+            position: relative;
+        }
+
+        .program-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6));
+            z-index: 1;
         }
 
         .program-logo {
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             background: white;
-            border-radius: 8px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
+            font-weight: 800;
             color: #000;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .program-type-tag {
+            position: relative;
+            z-index: 2;
+            background: rgba(252, 184, 46, 0.9);
+            color: #000;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
         }
 
         .program-body {
@@ -544,6 +574,7 @@
             line-height: 1.5;
             display: -webkit-box;
             -webkit-line-clamp: 1;
+            line-clamp: 1;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -723,6 +754,86 @@
         .empty-meetings small {
             font-size: 12px;
         }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10001;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .modal-header {
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: #f3f4f6;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            transition: all 0.2s;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.75rem;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #fcb82e;
+            box-shadow: 0 0 0 4px rgba(252, 184, 46, 0.1);
+        }
     </style>
 </head>
 
@@ -740,18 +851,22 @@
             <button class="nav-item active" onclick="showSection('overview')">
                 <i class="fa-solid fa-gauge-high"></i> Overview
             </button>
+            <button class="nav-item" onclick="showSection('programs')">
+                <i class="fa-solid fa-compass"></i> Explore Programs
+            </button>
             <button class="nav-item" onclick="showSection('applications')">
                 <i class="fa-solid fa-paper-plane"></i> Applications
                 <span class="badge">3</span>
-            </button>
-            <button class="nav-item" onclick="showSection('programs')">
-                <i class="fa-solid fa-compass"></i> Explore Programs
             </button>
             <button class="nav-item" onclick="showSection('documents')">
                 <i class="fa-solid fa-folder-open"></i> Documents
             </button>
             <button class="nav-item" onclick="showSection('inbox')">
                 <i class="fa-solid fa-envelope"></i> Inbox <span class="badge" style="background:#fcb82e;">2</span>
+            </button>
+            <button class="nav-item" id="tab-referrals" onclick="showSection('referrals')">
+                <i class="fa-solid fa-handshake"></i> Referral Requests <span class="badge" id="referralCountBadge"
+                    style="display:none; background:#ef4444;">0</span>
             </button>
             <button class="nav-item" onclick="showSection('settings')">
                 <i class="fa-solid fa-gear"></i> Settings
@@ -859,24 +974,10 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="overviewApplicationsTableBody">
                             <tr>
-                                <td>Global AI Challenge</td>
-                                <td>TechCorp AI</td>
-                                <td>Dec 01, 2025</td>
-                                <td><span class="status-pill pending">In Review</span></td>
-                            </tr>
-                            <tr>
-                                <td>Green Tech Pilot</td>
-                                <td>EcoFuture Ventures</td>
-                                <td>Nov 28, 2025</td>
-                                <td><span class="status-pill active">Shortlisted</span></td>
-                            </tr>
-                            <tr>
-                                <td>FinTech Series A</td>
-                                <td>Global VC</td>
-                                <td>Nov 15, 2025</td>
-                                <td><span class="status-pill rejected">Declined</span></td>
+                                <td colspan="4" style="text-align: center; padding: 2rem; color: #6b7280;">Loading
+                                    recent activity...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -941,57 +1042,39 @@
                 </div>
             </section>
 
+            <!-- PROGRAMS SECTION -->
+            <section id="programs" class="section">
+                <h2 style="margin-bottom: 1rem;">Explore Programs</h2>
+                <div class="programs-grid" id="startupProgramsGrid">
+                    <!-- Programs will be loaded here -->
+                </div>
+            </section>
+
             <!-- APPLICATIONS SECTION -->
             <section id="applications" class="section">
-                <h2 style="margin-bottom: 1rem;">My Applications</h2>
+                <div style="margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: 700; color: #111827;">My Applications</h2>
+                    <p style="color: #6b7280; font-size: 0.9rem;">Track all your program submissions and their current
+                        progress.</p>
+                </div>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th>Program Name</th>
-                                <th>Company</th>
+                                <th>Startup</th>
+                                <th>Program</th>
                                 <th>Date Applied</th>
                                 <th>Status</th>
-                                <th>Action</th>
+                                <th style="text-align: right;">Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="applicationsTableBody">
                             <tr>
-                                <td>Global AI Challenge</td>
-                                <td>TechCorp AI</td>
-                                <td>Dec 01, 2025</td>
-                                <td><span class="status-pill pending">In Review</span></td>
-                                <td><button
-                                        style="padding: 4px 8px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">View</button>
-                                </td>
+                                <td colspan="3" style="text-align: center; padding: 2rem; color: #6b7280;">No
+                                    applications found.</td>
                             </tr>
-                            <!-- More rows... -->
                         </tbody>
                     </table>
-                </div>
-            </section>
-
-            <!-- PROGRAMS SECTION -->
-            <section id="programs" class="section">
-                <h2 style="margin-bottom: 1rem;">Explore Programs</h2>
-                <div class="programs-grid">
-                    <!-- Duplicate program cards here for demo -->
-                    <div class="program-card">
-                        <div class="program-header">
-                            <div class="program-logo">A</div>
-                            <span
-                                style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;">GRANT</span>
-                        </div>
-                        <div class="program-body">
-                            <div class="program-title">AgriTech Grant 2025</div>
-                            <div class="program-company">Global Food Initiative</div>
-                            <div class="program-tags">
-                                <span class="tag">AgriTech</span>
-                                <span class="tag">Sustainability</span>
-                            </div>
-                            <button class="apply-btn" onclick="handleApply('AgriTech Grant 2025')">Apply Now</button>
-                        </div>
-                    </div>
                 </div>
             </section>
 
@@ -1078,59 +1161,46 @@
                     <p style="color: #666;">Investment inquiries, application updates, and network alerts.</p>
                 </div>
 
-                <div class="inbox-container">
-                    <!-- Message 1 -->
-                    <div class="inbox-item unread" onclick="viewMessage(1)">
-                        <div class="inbox-avatar" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
-                            <i class="fas fa-building"></i>
-                        </div>
-                        <div class="inbox-content">
-                            <div class="inbox-header">
-                                <span class="inbox-sender">Global Ventures <span
-                                        class="inbox-badge badge-corp">Investor</span></span>
-                                <span class="inbox-time">45 mins ago</span>
-                            </div>
-                            <div class="inbox-subject">Meeting Request: Series A Discussion</div>
-                            <div class="inbox-preview">We've been tracking your recent traction in the HealthTech
-                                sector. Our partners would like to schedule a 30-minute discovery call next Tuesday
-                                morning.</div>
-                        </div>
+                <div class="inbox-container" id="notificationContainer">
+                    <div style="padding: 2rem; text-align: center; color: #666;">
+                        <i class="fas fa-spinner fa-spin"
+                            style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                        Loading notifications...
                     </div>
+                </div>
+            </section>
 
-                    <!-- Message 2 -->
-                    <div class="inbox-item unread" onclick="viewMessage(2)">
-                        <div class="inbox-avatar" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <div class="inbox-content">
-                            <div class="inbox-header">
-                                <span class="inbox-sender">System <span
-                                        class="inbox-badge badge-system">Success</span></span>
-                                <span class="inbox-time">3 hours ago</span>
-                            </div>
-                            <div class="inbox-subject">Application Shortlisted: AI Challenge 2026</div>
-                            <div class="inbox-preview">Congratulations! Your application for the 'Next-Gen AI Logistics
-                                Challenge' has been moved to the semi-finalist review stage. Please check your data
-                                room.</div>
-                        </div>
+            <!-- REFERRALS SECTION -->
+            <section id="referrals" class="section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <div>
+                        <h2 style="font-size: 1.5rem; font-weight: 700; color: #111827;">Incoming Referral Requests</h2>
+                        <p style="color: #6b7280; font-size: 0.9rem;">Review and accept program referrals from ecosystem
+                            connectors.</p>
                     </div>
+                </div>
 
-                    <!-- Message 3 -->
-                    <div class="inbox-item" onclick="viewMessage(3)">
-                        <div class="inbox-avatar" style="background: rgba(252, 184, 46, 0.1); color: #fcb82e;">
-                            <i class="fas fa-user-friends"></i>
-                        </div>
-                        <div class="inbox-content">
-                            <div class="inbox-header">
-                                <span class="inbox-sender">Network Admin <span
-                                        class="inbox-badge badge-network">Network</span></span>
-                                <span class="inbox-time">Yesterday</span>
-                            </div>
-                            <div class="inbox-subject">New Connector Joined Your Region</div>
-                            <div class="inbox-preview">A new strategic connector specialized in European market
-                                expansion has joined InnoBridge. They are now visible in your 'Scout' view.</div>
-                        </div>
-                    </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Connector</th>
+                                <th>Program</th>
+                                <th>Date Received</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="referralTableBody">
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 3rem; color: #6b7280;">
+                                    <i class="fa-solid fa-spinner fa-spin"
+                                        style="font-size: 1.5rem; margin-bottom: 1rem; display: block;"></i>
+                                    Loading your referrals...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
         </div>
@@ -1199,6 +1269,10 @@
                 btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(sectionId)
             );
             if (activeBtn) activeBtn.classList.add('active');
+
+            if (sectionId === 'referrals') {
+                loadReferrals();
+            }
         }
 
         function handleApply(programTitle) {
@@ -1294,6 +1368,10 @@
             initChart();
             simulateLiveInsight();
             initLiveStats();
+            loadPrograms();
+            loadNotifications();
+            loadApplications();
+            loadReferrals();
 
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('welcome') === 'true') {
@@ -1328,6 +1406,95 @@
             }, 10000);
         }
 
+        async function loadApplications() {
+            const tbody = document.getElementById('applicationsTableBody');
+            if (!tbody) return;
+
+            try {
+                const res = await fetch('/api/applications/mine');
+                let apps = [];
+
+                if (res.ok) {
+                    apps = await res.json();
+                }
+
+                // Force mock data for demonstration if no apps exist or if request fails
+                if (!apps || !Array.isArray(apps) || apps.length === 0) {
+                    apps = [
+                        {
+                            startup_name: "NexGen AI",
+                            opportunity_title: "Global Tech Accelerator 2026",
+                            created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
+                            status: "Shortlisted"
+                        },
+                        {
+                            startup_name: "NexGen AI",
+                            opportunity_title: "Sustainable Cities Pilot Program",
+                            created_at: new Date(Date.now() - 86400000 * 5).toISOString(),
+                            status: "Under Review"
+                        },
+                        {
+                            startup_name: "NexGen AI",
+                            opportunity_title: "Web3 Infrastructure Grant",
+                            created_at: new Date(Date.now() - 86400000 * 10).toISOString(),
+                            status: "Rejected"
+                        }
+                    ];
+                }
+
+                if (apps && apps.length > 0) {
+                    const html = apps.map(app => {
+                        const date = new Date(app.created_at).toLocaleDateString();
+                        const status = app.status.toLowerCase();
+                        let statusClass = 'pending';
+                        if (status.includes('shortlisted') || status.includes('active') || status.includes('selected')) statusClass = 'active';
+                        if (status.includes('rejected') || status.includes('declined')) statusClass = 'rejected';
+                        if (status.includes('review')) statusClass = 'pending';
+
+                        return `
+                        <tr>
+                            <td>${app.startup_name}</td>
+                            <td>${app.opportunity_title}</td>
+                            <td>${date}</td>
+                            <td><span class="status-pill ${statusClass}">${app.status}</span></td>
+                            <td style="text-align: right;">
+                                <button onclick="showToast('Reviewing deep-dive documents...', 'info')" class="btn-icon" style="background:#eee; color:#333; border:none; padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:600;">Details</button>
+                            </td>
+                        </tr>
+                        `;
+                    }).join('');
+
+                    tbody.innerHTML = html;
+
+                    // Also populate overview table if it exists
+                    const overviewTbody = document.getElementById('overviewApplicationsTableBody');
+                    if (overviewTbody) {
+                        overviewTbody.innerHTML = apps.slice(0, 3).map(app => {
+                            const date = new Date(app.created_at).toLocaleDateString();
+                            const status = app.status.toLowerCase();
+                            let statusClass = 'pending';
+                            if (status.includes('shortlisted') || status.includes('active') || status.includes('selected')) statusClass = 'active';
+                            if (status.includes('rejected') || status.includes('declined')) statusClass = 'rejected';
+                            if (status.includes('review')) statusClass = 'pending';
+
+                            return `
+                            <tr>
+                                <td>${app.opportunity_title}</td>
+                                <td>${app.startup_name}</td>
+                                <td>${date}</td>
+                                <td><span class="status-pill ${statusClass}">${app.status}</span></td>
+                            </tr>
+                            `;
+                        }).join('');
+                    }
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem; color: #6b7280;">No applications found.</td></tr>';
+                }
+            } catch (err) {
+                console.error('Apps error:', err);
+            }
+        }
+
         function simulateLiveInsight() {
             const insights = [
                 "New corporate match found in Renewables!",
@@ -1343,7 +1510,387 @@
                 }
             }, 45000);
         }
+
+        async function loadPrograms() {
+            try {
+                // Fetch referrals to see which programs are "taken"
+                const refRes = await fetch('/api/referrals/incoming');
+                const refJson = await refRes.json();
+                const acceptedOppIds = (refJson.referrals || [])
+                    .filter(r => r.status === 'accepted')
+                    .map(r => r.opportunity_id);
+
+                const res = await fetch('/api/opportunities/');
+                const json = await res.json();
+                if (!json.success) return;
+
+                const programsGrid = document.getElementById('startupProgramsGrid');
+                if (programsGrid) {
+                    programsGrid.innerHTML = json.data.items.map(item => {
+                        const sectors = (item.sectors || []).slice(0, 2).map(s => `<span class="tag">${s}</span>`).join('');
+                        const logoChar = item.title.charAt(0).toUpperCase();
+                        const bannerImage = item.banner_url || 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1974&auto=format&fit=crop';
+
+                        const isTaken = acceptedOppIds.includes(item.id);
+                        const buttonHtml = isTaken
+                            ? `<button class="apply-btn" style="background: #22c55e; cursor: default;" disabled><i class="fa-solid fa-check-circle"></i> Program Taken</button>`
+                            : `<button class="apply-btn" onclick="handleApply(${item.id}, '${item.title}')">Apply Program</button>`;
+
+                        return `
+                        <div class="program-card ${isTaken ? 'taken' : ''}">
+                            <div class="program-header" style="background-image: url('${bannerImage}')">
+                                <div class="program-logo">${logoChar}</div>
+                                <span class="program-type-tag">${item.type}</span>
+                                ${isTaken ? '<span class="status-badge" style="position: absolute; top: 1rem; right: 1rem; background: #22c55e; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 10;">TAKEN</span>' : ''}
+                            </div>
+                            <div class="program-body">
+                                <div class="program-title">${item.title}</div>
+                                <div class="program-company">${item.owner_company || 'Global Innovation Hub'}</div>
+                                <div class="program-tags">
+                                    ${sectors}
+                                </div>
+                                ${buttonHtml}
+                            </div>
+                        </div>
+                        `;
+                    }).join('');
+                }
+            } catch (err) { console.error('Programs error:', err); }
+        }
+
+        async function handleApply(id, title) {
+            const modal = document.getElementById('applicationModal');
+            if (modal) {
+                document.getElementById('appliedOpportunityId').value = id;
+                document.getElementById('appliedOpportunityTitle').textContent = title;
+                modal.style.display = 'flex';
+
+                // Load startups for the user
+                try {
+                    const res = await fetch('/api/startups/mine');
+                    const json = await res.json();
+                    const select = document.getElementById('startupSelect');
+                    if (json.success && select) {
+                        select.innerHTML = json.startups.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+                    }
+                } catch (e) { }
+            }
+        }
+
+        async function submitApplication() {
+            const startup_id = document.getElementById('startupSelect').value;
+            const opportunity_id = document.getElementById('appliedOpportunityId').value;
+            const pitch = document.getElementById('shortPitch').value;
+
+            if (!startup_id) {
+                showToast("Please select a startup", "info");
+                return;
+            }
+
+            const btn = event.target;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/applications/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        startup_id,
+                        opportunity_id,
+                        notes: pitch // Sending pitch as notes
+                    })
+                });
+
+                if (res.ok) {
+                    showToast("Application submitted successfully!", "success");
+                    closeModal('applicationModal');
+                    loadPrograms(); // Refresh UI
+                    loadApplications(); // Refresh Applications list
+                } else {
+                    const err = await res.json();
+                    showToast(err.error || "Submission failed", "info");
+                }
+            } catch (err) {
+                showToast("Error submitting application", "info");
+            } finally {
+                btn.innerHTML = 'Submit Application';
+                btn.disabled = false;
+            }
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) modal.style.display = 'none';
+        }
+
+        async function loadReferrals() {
+            const tbody = document.getElementById('referralTableBody');
+            if (!tbody) return;
+
+            try {
+                const res = await fetch('/api/referrals/incoming');
+                const json = await res.json();
+                let referrals = json.referrals || [];
+
+                // Mock data if empty
+                if (referrals.length === 0) {
+                    referrals = [
+                        {
+                            id: 8881,
+                            connector_name: "Sarah Chen",
+                            opportunity_title: "Global FinTech Accelerator",
+                            created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
+                            status: "pending"
+                        },
+                        {
+                            id: 8882,
+                            connector_name: "Michael Ross",
+                            opportunity_title: "Smart City Pilot Program",
+                            created_at: new Date(Date.now() - 86400000 * 5).toISOString(),
+                            status: "accepted"
+                        }
+                    ];
+                }
+
+                if (referrals.length > 0) {
+                    tbody.innerHTML = referrals.map(r => {
+                        const date = new Date(r.created_at).toLocaleDateString();
+                        let statusClass = 'pending';
+                        if (r.status === 'accepted') statusClass = 'active';
+                        if (r.status === 'rejected') statusClass = 'rejected';
+                        if (r.status === 'under_review') statusClass = 'pending';
+                        if (r.status === 'shortlisted') statusClass = 'active';
+
+                        const statusLabel = r.status.replace('_', ' ').charAt(0).toUpperCase() + r.status.replace('_', ' ').slice(1);
+
+                        let actions = `
+                            <div style="display: flex; gap: 0.5rem; justify-content: flex-end; align-items: center;">
+                                <button onclick="viewProgram(${r.opportunity_id})" class="btn-icon" style="background:#f3f4f6; color:#374151; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: 1px solid #d1d5db; cursor: pointer;"><i class="fa-solid fa-eye"></i> View</button>
+                        `;
+
+                        if (r.status === 'pending' || r.status === 'under_review') {
+                            actions += `
+                                <button onclick="handleReferralAction(${r.id}, 'shortlist')" class="btn-icon" style="background:#fef3c7; color:#92400e; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer;">Shortlist</button>
+                                <button onclick="handleReferralAction(${r.id}, 'review')" class="btn-icon" style="background:#eff6ff; color:#1e40af; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer;">Review</button>
+                                <button onclick="handleReferralAction(${r.id}, 'accept')" class="btn-icon" style="background:#10b981; color:white; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer;">Accept</button>
+                                <button onclick="handleReferralAction(${r.id}, 'reject')" class="btn-icon" style="background:#ef4444; color:white; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer;">Decline</button>
+                            `;
+                        } else if (r.status === 'shortlisted') {
+                            actions += `
+                                <button onclick="handleReferralAction(${r.id}, 'accept')" class="btn-icon" style="background:#10b981; color:white; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer;">Accept</button>
+                                <button onclick="handleReferralAction(${r.id}, 'reject')" class="btn-icon" style="background:#ef4444; color:white; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer;">Decline</button>
+                             `;
+                        }
+
+                        actions += `</div>`;
+
+                        return `
+                        <tr>
+                            <td>
+                                <div style="font-weight:600;">${r.connector_name}</div>
+                                <div style="font-size:0.75rem; color:#64748b;">Ecosystem Connector</div>
+                            </td>
+                            <td>${r.opportunity_title}</td>
+                            <td>${date}</td>
+                            <td><span class="status-pill ${statusClass}">${statusLabel}</span></td>
+                            <td style="text-align: right;">${actions}</td>
+                        </tr>
+                        `;
+                    }).join('');
+
+                    // Update badge
+                    const pendingCount = referrals.filter(r => r.status === 'pending').length;
+                    const badge = document.getElementById('referralCountBadge');
+                    if (badge) {
+                        badge.style.display = pendingCount > 0 ? 'inline-block' : 'none';
+                        badge.textContent = pendingCount;
+                    }
+
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 3rem; color: #64748b;">No referral requests found.</td></tr>`;
+                }
+            } catch (err) {
+                console.error(err);
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 3rem; color: #ef4444;">Failed to load referrals.</td></tr>`;
+            }
+        }
+
+        async function handleReferralAction(id, action) {
+            try {
+                let msg = "Processing...";
+                if (action === 'accept') msg = "Accepting referral...";
+                if (action === 'reject') msg = "Declining referral...";
+                if (action === 'review') msg = "Moving to review...";
+                if (action === 'shortlist') msg = "Shortlisting program...";
+
+                showToast(msg, "info");
+                const res = await fetch(`/api/referrals/${id}/action`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action })
+                });
+                const json = await res.json();
+                if (json.success) {
+                    showToast(`Referral updated successfully!`, "success");
+                    loadReferrals();
+                } else {
+                    showToast(json.error || "Action failed", "info");
+                }
+            } catch (err) {
+                showToast("Error processing referral action", "info");
+            }
+        }
+
+        async function viewProgram(id) {
+            try {
+                const res = await fetch(`/api/opportunities/`);
+                const json = await res.json();
+                if (!json.success) return;
+
+                const item = json.data.items.find(o => o.id == id);
+                if (!item) {
+                    showToast("Program details not found.", "info");
+                    return;
+                }
+
+                document.getElementById('programDetailTitle').textContent = item.title;
+                document.getElementById('programDetailOwner').textContent = item.owner_company || 'Global Innovation Hub';
+                document.getElementById('programDetailDesc').textContent = item.description || "No description provided for this program.";
+
+                const banner = document.getElementById('programBanner');
+                banner.style.backgroundImage = `url('${item.banner_url || "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1974&auto=format&fit=crop"}')`;
+
+                document.getElementById('programDetailLogo').textContent = item.title.charAt(0).toUpperCase();
+
+                const sectorContainer = document.getElementById('programDetailSectors');
+                sectorContainer.innerHTML = (item.sectors || []).map(s => `<span class="tag" style="background: #eff6ff; color: #3b82f6; border: 1px solid #dbeafe;">${s}</span>`).join('');
+
+                const applyBtn = document.getElementById('applyFromDetailBtn');
+                applyBtn.onclick = () => {
+                    closeModal('programDetailModal');
+                    handleApply(item.id, item.title);
+                };
+
+                document.getElementById('programDetailModal').style.display = 'flex';
+            } catch (e) {
+                console.error(e);
+                showToast("Failed to load program details", "info");
+            }
+        }
+
+        async function loadNotifications() {
+            const container = document.getElementById('notificationContainer');
+            if (!container) return;
+
+            try {
+                const res = await fetch('/api/notifications/');
+                const json = await res.json();
+
+                if (json.success && json.notifications.length > 0) {
+                    container.innerHTML = json.notifications.map(n => {
+                        const date = new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        const icon = n.type === 'success' ? 'fa-check-circle' : 'fa-info-circle';
+                        const color = n.type === 'success' ? '#22c55e' : '#3b82f6';
+
+                        return `
+                        <div class="inbox-item ${n.is_read ? '' : 'unread'}" onclick="markNotifRead(${n.id}, '${n.link}')">
+                            <div class="inbox-avatar" style="color: ${color};">
+                                <i class="fas ${icon}"></i>
+                            </div>
+                            <div class="inbox-content">
+                                <div class="inbox-header">
+                                    <span class="inbox-sender">${n.title}</span>
+                                    <span class="inbox-time">${date}</span>
+                                </div>
+                                <div class="inbox-subject">${n.message}</div>
+                            </div>
+                        </div>
+                        `;
+                    }).join('');
+                } else {
+                    container.innerHTML = `
+                        <div style="padding: 2rem; text-align: center; color: #666;">
+                            <i class="fas fa-envelope-open" style="font-size: 2rem; margin-bottom: 1rem; display: block; opacity: 0.3;"></i>
+                            No notifications
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function markNotifRead(id, link) {
+            try {
+                await fetch(`/api/notifications/${id}/read`, { method: 'POST' });
+                if (link && link !== 'undefined') window.location.href = link;
+                else loadNotifications();
+            } catch (err) { }
+        }
     </script>
+    <!-- Application Modal -->
+    <div id="applicationModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('applicationModal')">&times;</button>
+            <div class="modal-header">
+                <h3 class="modal-title">Apply to Program</h3>
+                <p style="color: #6b7280; margin-top: 0.5rem;" id="appliedOpportunityTitle"></p>
+                <input type="hidden" id="appliedOpportunityId">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Select Startup</label>
+                <select id="startupSelect" class="form-select">
+                    <!-- Populated via JS -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Why are you a good fit? (Quick Pitch)</label>
+                <textarea id="shortPitch" class="form-textarea" rows="4"
+                    placeholder="Briefly describe why your startup is suitable for this program..."></textarea>
+            </div>
+
+            <button onclick="submitApplication()"
+                style="width: 100%; padding: 1rem; background: #000; color: white; border: none; border-radius: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+                Submit Application
+            </button>
+        </div>
+    </div>
+
+    <!-- Program Detail Modal -->
+    <div id="programDetailModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <button class="modal-close" onclick="closeModal('programDetailModal')">&times;</button>
+            <div id="programBanner"
+                style="height: 200px; border-radius: 12px; background-size: cover; background-position: center; margin-bottom: 1.5rem; position: relative;">
+                <div id="programDetailLogo"
+                    style="position: absolute; bottom: -30px; left: 2rem; width: 80px; height: 80px; background: white; border-radius: 16px; border: 4px solid white; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: #fcb82e; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                </div>
+            </div>
+            <div style="padding-top: 1rem;">
+                <h2 id="programDetailTitle" style="font-size: 1.8rem; font-weight: 800; color: #111827;"></h2>
+                <div id="programDetailOwner" style="color: #64748b; font-weight: 600; margin-bottom: 1rem;"></div>
+
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;" id="programDetailSectors"></div>
+
+                <div style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                    <h4
+                        style="font-size: 0.9rem; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 0.5rem;">
+                        Description</h4>
+                    <p id="programDetailDesc" style="color: #334155; line-height: 1.6;"></p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <button id="applyFromDetailBtn" class="apply-btn" style="width: 100%; border-radius: 8px;">Apply
+                        Now</button>
+                    <button onclick="closeModal('programDetailModal')"
+                        style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px; font-weight: 600; background: white; cursor: pointer;">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

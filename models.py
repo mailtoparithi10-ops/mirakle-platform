@@ -130,6 +130,7 @@ class Opportunity(db.Model):
 
     deadline = db.Column(db.DateTime)
     benefits = db.Column(db.Text)
+    banner_url = db.Column(db.String(500))  # URL to program image
 
     status = db.Column(db.String(40), default="draft")  
     # draft, published, closed
@@ -150,6 +151,7 @@ class Opportunity(db.Model):
             "deadline": self.deadline.isoformat() if self.deadline else None,
             "benefits": self.benefits,
             "status": self.status,
+            "banner_url": self.banner_url,
         }
 
 
@@ -197,13 +199,17 @@ class Referral(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     connector_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    startup_id = db.Column(db.Integer, db.ForeignKey("startups.id"), nullable=False)
+    startup_id = db.Column(db.Integer, db.ForeignKey("startups.id"), nullable=True) # Can be null if startup user not yet matched
     opportunity_id = db.Column(db.Integer, db.ForeignKey("opportunities.id"), nullable=False)
 
-    status = db.Column(db.String(40), default="open")  
-    # open, successful, failed
+    startup_name = db.Column(db.String(200))
+    startup_email = db.Column(db.String(200))
+    
+    status = db.Column(db.String(40), default="pending")  
+    # pending (wait for startup), accepted (confirmed by startup), rejected, successful (rewarded), failed (not selected)
 
     reward_log = db.Column(db.Text)  # JSON list
+    notes = db.Column(db.Text) # Connector notes
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -213,8 +219,11 @@ class Referral(db.Model):
             "connector_id": self.connector_id,
             "startup_id": self.startup_id,
             "opportunity_id": self.opportunity_id,
+            "startup_name": self.startup_name,
+            "startup_email": self.startup_email,
             "status": self.status,
             "reward_log": json.loads(self.reward_log or "[]"),
+            "notes": self.notes,
             "created_at": self.created_at.isoformat(),
         }
 
@@ -406,5 +415,37 @@ class MeetingParticipant(db.Model):
             "joined_at": self.joined_at.isoformat() if self.joined_at else None,
             "left_at": self.left_at.isoformat() if self.left_at else None,
             "attendance_status": self.attendance_status,
+            "created_at": self.created_at.isoformat()
+        }
+
+
+# -----------------------------------------
+# NOTIFICATION MODEL
+# -----------------------------------------
+class Notification(db.Model):
+    __tablename__ = "notifications"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    
+    title = db.Column(db.String(200), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    type = db.Column(db.String(50), default="info") # info, success, warning, danger
+    link = db.Column(db.String(500))
+    
+    is_read = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship("User", backref="notifications")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "title": self.title,
+            "message": self.message,
+            "type": self.type,
+            "link": self.link,
+            "is_read": self.is_read,
             "created_at": self.created_at.isoformat()
         }

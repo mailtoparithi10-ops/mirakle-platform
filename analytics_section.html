@@ -1,0 +1,325 @@
+<!-- ANALYTICS SECTION -->
+<section id="analytics" class="section">
+    <div class="section-header">
+        <div class="section-header-main">
+            <div class="section-title">
+                <i class="fa-solid fa-chart-line"></i>
+                Analytics & Insights
+            </div>
+            <div class="section-subtitle">
+                Deep dive into your referral performance, conversion metrics, and earning trends.
+            </div>
+        </div>
+        <div class="section-actions">
+            <div class="toggle-group">
+                <button class="toggle-btn active" onclick="updateAnalyticsRange('30D', this)">30D</button>
+                <button class="toggle-btn" onclick="updateAnalyticsRange('90D', this)">90D</button>
+                <button class="toggle-btn" onclick="updateAnalyticsRange('ALL', this)">All Time</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Metrics Overview -->
+    <div class="referrals-summary"
+        style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+        <div class="summary-item">
+            <span>Total Referrals</span>
+            <strong data-base="28">28</strong>
+        </div>
+        <div class="summary-item">
+            <span>Successful Conversions</span>
+            <strong data-base="9">9</strong>
+        </div>
+        <div class="summary-item">
+            <span>Avg. Response Time</span>
+            <strong data-base="2.4">2.4 days</strong>
+        </div>
+        <div class="summary-item">
+            <span>Success Rate</span>
+            <strong data-base="32">32%</strong>
+        </div>
+    </div>
+
+    <!-- Performance Charts -->
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+        <!-- Referral Trend Chart -->
+        <div class="card">
+            <div class="card-header"
+                style="border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                <div>
+                    <div class="card-title">Referral Performance Trend</div>
+                    <div style="font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">Monthly referral activity and
+                        conversion rates</div>
+                </div>
+            </div>
+            <canvas id="referralTrendChart" style="max-height: 300px;"></canvas>
+        </div>
+
+        <!-- Top Performing Sectors -->
+        <div class="card">
+            <div class="card-header"
+                style="border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                <div>
+                    <div class="card-title">Top Sectors</div>
+                    <div style="font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">By conversion rate</div>
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="width: 8px; height: 8px; border-radius: 50%; background: #3b82f6;"></div>
+                        <span style="font-size: 0.9rem; color: #334155;">HealthTech</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div style="flex: 1; height: 6px; background: #e2e8f0; border-radius: 999px; width: 80px;">
+                            <div style="height: 100%; background: #3b82f6; border-radius: 999px; width: 85%;"></div>
+                        </div>
+                        <span style="font-size: 0.85rem; font-weight: 600; color: #111827;">48%</span>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="width: 8px; height: 8px; border-radius: 50%; background: #10b981;"></div>
+                        <span style="font-size: 0.9rem; color: #334155;">FinTech</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div style="flex: 1; height: 6px; background: #e2e8f0; border-radius: 999px; width: 80px;">
+                            <div style="height: 100%; background: #10b981; border-radius: 999px; width: 72%;"></div>
+                        </div>
+                        <span style="font-size: 0.85rem; font-weight: 600; color: #111827;">36%</span>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="width: 8px; height: 8px; border-radius: 50%; background: #f59e0b;"></div>
+                        <span style="font-size: 0.9rem; color: #334155;">AgriTech</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div style="flex: 1; height: 6px; background: #e2e8f0; border-radius: 999px; width: 80px;">
+                            <div style="height: 100%; background: #f59e0b; border-radius: 999px; width: 50%;"></div>
+                        </div>
+                        <span style="font-size: 0.85rem; font-weight: 600; color: #111827;">25%</span>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="width: 8px; height: 8px; border-radius: 50%; background: #8b5cf6;"></div>
+                        <span style="font-size: 0.9rem; color: #334155;">EdTech</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div style="flex: 1; height: 6px; background: #e2e8f0; border-radius: 999px; width: 80px;">
+                            <div style="height: 100%; background: #8b5cf6; border-radius: 999px; width: 40%;"></div>
+                        </div>
+                        <span style="font-size: 0.85rem; font-weight: 600; color: #111827;">20%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Analytics Grid -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+        <!-- Referral Status Breakdown -->
+        <div class="card">
+            <div class="card-header"
+                style="border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                <div class="card-title">Referral Status</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #f8fafc; border-radius: 0.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fa-solid fa-hourglass-half" style="color: #3b82f6;"></i>
+                        <span style="font-size: 0.9rem; color: #334155;">Under Review</span>
+                    </div>
+                    <span style="font-size: 1.1rem; font-weight: 700; color: #111827;">14</span>
+                </div>
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #f0fdf4; border-radius: 0.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fa-solid fa-circle-check" style="color: #10b981;"></i>
+                        <span style="font-size: 0.9rem; color: #334155;">Completed</span>
+                    </div>
+                    <span style="font-size: 1.1rem; font-weight: 700; color: #111827;">9</span>
+                </div>
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #fef2f2; border-radius: 0.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fa-solid fa-circle-xmark" style="color: #ef4444;"></i>
+                        <span style="font-size: 0.9rem; color: #334155;">Rejected</span>
+                    </div>
+                    <span style="font-size: 1.1rem; font-weight: 700; color: #111827;">5</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings Breakdown -->
+        <div class="card">
+            <div class="card-header"
+                style="border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                <div class="card-title">Earnings Breakdown</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.85rem; color: #64748b;">Total Earned</span>
+                    <span style="font-size: 1.25rem; font-weight: 700; color: #10b981;">₹85,400</span>
+                </div>
+                <div style="height: 1px; background: #e2e8f0;"></div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.85rem; color: #64748b;">Pending Payouts</span>
+                    <span style="font-size: 1rem; font-weight: 600; color: #f59e0b;">₹12,500</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.85rem; color: #64748b;">Avg. per Referral</span>
+                    <span style="font-size: 1rem; font-weight: 600; color: #111827;">₹9,489</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.85rem; color: #64748b;">Highest Reward</span>
+                    <span style="font-size: 1rem; font-weight: 600; color: #111827;">₹20,000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Response Time Analysis -->
+        <div class="card">
+            <div class="card-header"
+                style="border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                <div class="card-title">Response Time</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div style="text-align: center; padding: 1rem; background: #f8fafc; border-radius: 0.75rem;">
+                    <div style="font-size: 2.5rem; font-weight: 800; color: #111827; margin-bottom: 0.25rem;">2.4</div>
+                    <div style="font-size: 0.85rem; color: #64748b;">Avg. Days to Response</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.85rem; color: #64748b;">Fastest Response</span>
+                    <span style="font-size: 0.9rem; font-weight: 600; color: #10b981;">6 hours</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.85rem; color: #64748b;">Slowest Response</span>
+                    <span style="font-size: 0.9rem; font-weight: 600; color: #ef4444;">12 days</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI-Powered Insights -->
+    <div class="insights-card" style="margin-bottom: 2rem;">
+        <div class="insights-header">
+            <div class="insights-title">
+                <i class="fa-solid fa-brain"></i>
+                AI-Powered Performance Insights
+            </div>
+            <div class="insights-badge">
+                <i class="fa-solid fa-sparkles"></i>
+                Personalized Recommendations
+            </div>
+        </div>
+        <div class="insights-list" style="grid-template-columns: repeat(2, 1fr); display: grid; gap: 1.5rem;">
+            <div class="insight-item">
+                <div class="insight-bullet">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <div class="insight-text">
+                    Your <span class="insight-highlight">HealthTech referrals</span> have a 48% success rate,
+                    which is 2.1x higher than the platform average. Consider focusing more on this sector.
+                </div>
+            </div>
+            <div class="insight-item">
+                <div class="insight-bullet">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="insight-text">
+                    Startups referred within <span class="insight-highlight">72 hours of program launch</span>
+                    are 3.2x more likely to be accepted. Enable notifications for new programs.
+                </div>
+            </div>
+            <div class="insight-item">
+                <div class="insight-bullet">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+                <div class="insight-text">
+                    Your most successful day for referrals is <span class="insight-highlight">Tuesday</span>,
+                    with a 42% conversion rate. Plan your outreach accordingly.
+                </div>
+            </div>
+            <div class="insight-item">
+                <div class="insight-bullet">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <div class="insight-text">
+                    You're on track to reach <span class="insight-highlight">Level 4</span> by next month.
+                    Just 3 more successful referrals needed to unlock premium benefits.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Program Performance Comparison -->
+    <div class="card">
+        <div class="card-header" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+            <div>
+                <div class="card-title">Program Performance Comparison</div>
+                <div style="font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">Your top performing programs by
+                    conversion and earnings</div>
+            </div>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Program Name</th>
+                        <th>Referrals</th>
+                        <th>Conversions</th>
+                        <th>Success Rate</th>
+                        <th>Total Earned</th>
+                        <th>Avg. Response Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-weight: 600;">HealthTech Accelerator</td>
+                        <td>8</td>
+                        <td><span class="status-pill completed">5</span></td>
+                        <td><span style="color: #10b981; font-weight: 600;">62.5%</span></td>
+                        <td style="color: #10b981; font-weight: 700;">₹32,500</td>
+                        <td>1.8 days</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">Fintech Innovation Program</td>
+                        <td>6</td>
+                        <td><span class="status-pill completed">2</span></td>
+                        <td><span style="color: #f59e0b; font-weight: 600;">33.3%</span></td>
+                        <td style="color: #10b981; font-weight: 700;">₹24,000</td>
+                        <td>3.2 days</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">Sustainable Energy Challenge</td>
+                        <td>5</td>
+                        <td><span class="status-pill completed">1</span></td>
+                        <td><span style="color: #f59e0b; font-weight: 600;">20%</span></td>
+                        <td style="color: #10b981; font-weight: 700;">₹15,000</td>
+                        <td>2.5 days</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">EdTech Growth Program</td>
+                        <td>4</td>
+                        <td><span class="status-pill completed">1</span></td>
+                        <td><span style="color: #f59e0b; font-weight: 600;">25%</span></td>
+                        <td style="color: #10b981; font-weight: 700;">₹8,900</td>
+                        <td>4.1 days</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">Smart Mobility Initiative</td>
+                        <td>5</td>
+                        <td><span class="status-pill in-progress">0</span></td>
+                        <td><span style="color: #64748b; font-weight: 600;">0%</span></td>
+                        <td style="color: #64748b; font-weight: 700;">₹0</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>

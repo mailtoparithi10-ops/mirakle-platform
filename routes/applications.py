@@ -48,6 +48,23 @@ def create_application():
     )
 
     db.session.add(app_entry)
+    
+    # Notify Opportunity Owner
+    try:
+        from models import Notification
+        opp = Opportunity.query.get(opportunity_id)
+        if opp and opp.owner_id:
+            notif = Notification(
+                user_id=opp.owner_id,
+                title="New Application Received",
+                message=f"Startup {startup.name} has applied to your program: {opp.title}",
+                type="success",
+                link=f"/corporate/dashboard?section=applications&opp_id={opp.id}"
+            )
+            db.session.add(notif)
+    except Exception as e:
+        print(f"Notification error: {e}")
+
     db.session.commit()
 
     return jsonify(app_entry.to_dict()), 201
@@ -120,8 +137,46 @@ def my_applications():
     # Get all startups of founder
     startup_ids = [s.id for s in current_user.startups]
 
-    items = Application.query.filter(
-        Application.startup_id.in_(startup_ids)
-    ).all()
+    items = Application.query.filter(Application.startup_id.in_(startup_ids)).all() if startup_ids else []
 
-    return jsonify([i.to_dict() for i in items])
+    results = []
+    for i in items:
+        d = i.to_dict()
+        # Add extra info for UI
+        startup = Startup.query.get(i.startup_id)
+        opp = Opportunity.query.get(i.opportunity_id)
+        d["startup_name"] = startup.name if startup else "Unknown"
+        d["opportunity_title"] = opp.title if opp else "Unknown"
+        results.append(d)
+
+    return jsonify(results)
+
+
+# ---------------------------------------
+# CORPORATE VIEW: SEE ALL APPLICATIONS SENT TO YOUR PROGRAMS
+# ---------------------------------------
+@bp.route("/corporate/all", methods=["GET"])
+@login_required
+def list_for_corporate():
+    if current_user.role != "corporate" and current_user.role != "admin":
+        return jsonify({"error": "forbidden"}), 403
+
+    # Get all opportunities owned by this user
+    opps = Opportunity.query.filter_by(owner_id=current_user.id).all()
+    opp_ids = [o.id for o in opps]
+
+    if not opp_ids:
+        return jsonify([])
+
+    items = Application.query.filter(Application.opportunity_id.in_(opp_ids)).all()
+
+    results = []
+    for i in items:
+        d = i.to_dict()
+        startup = Startup.query.get(i.startup_id)
+        opp = Opportunity.query.get(i.opportunity_id)
+        d["startup_name"] = startup.name if startup else "Unknown"
+        d["opportunity_title"] = opp.title if opp else "Unknown"
+        results.append(d)
+
+    return jsonify(results)

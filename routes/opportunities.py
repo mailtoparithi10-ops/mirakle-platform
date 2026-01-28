@@ -31,6 +31,7 @@ def create_opportunity():
         countries=json.dumps(data.get("countries", [])),
         deadline=datetime.fromisoformat(data["deadline"]) if data.get("deadline") else None,
         benefits=data.get("benefits"),
+        banner_url=data.get("banner_url"),
         status=data.get("status", "draft"),
     )
 
@@ -54,7 +55,7 @@ def update_opportunity(id):
     data = request.json or request.form or {}
 
     # Update simple fields
-    for key in ["title", "type", "description", "eligibility", "benefits", "status"]:
+    for key in ["title", "type", "description", "eligibility", "benefits", "status", "banner_url"]:
         if key in data:
             setattr(opp, key, data[key])
 

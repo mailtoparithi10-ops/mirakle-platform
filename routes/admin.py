@@ -154,6 +154,60 @@ def get_opportunities():
     opps = Opportunity.query.all()
     return jsonify({"success": True, "opportunities": [o.to_dict() for o in opps]})
 
+
+# ---------------------------------------
+# GET ALL REFERRALS
+# ---------------------------------------
+@bp.route("/referrals", methods=["GET"])
+@login_required
+def get_referrals():
+    if require_admin():
+        return require_admin()
+
+    referrals = Referral.query.order_by(Referral.created_at.desc()).all()
+    results = []
+    
+    for ref in referrals:
+        connector = User.query.get(ref.connector_id)
+        startup = Startup.query.get(ref.startup_id)
+        program = Opportunity.query.get(ref.opportunity_id)
+        
+        # Get startup name (Startup model might not have company_name, check User)
+        # Assuming Startup model has a OneToOne with User or fields. 
+        # Let's check models.py again for Startup field if needed, but for now we'll assume it's linked or has fields.
+        # Actually, looking at models.py earlier, Startup is a model.
+        # Let's double check Startup model to be safe.
+        
+        # Re-fetching for safety in this loop
+        connector_name = connector.name if connector else "Unknown"
+        
+        # Startup Name: The Startup model usually links to a User or has its own name.
+        # Based on previous knowledge, Startup might use 'user.company' or similar. 
+        # Let's look at how Startup is defined.
+        
+        startup_name = "Unknown Startup"
+        if startup:
+             if hasattr(startup, 'name'):
+                 startup_name = startup.name
+             elif hasattr(startup, 'company_name'):
+                 startup_name = startup.company_name
+             elif hasattr(startup, 'founder') and startup.founder:
+                 startup_name = startup.founder.company
+
+        program_title = program.title if program else "Unknown Program"
+        
+        results.append({
+            "id": ref.id,
+            "connector_name": connector_name,
+            "startup_id": ref.startup_id, # return ID just in case
+            "startup_name": startup_name,
+            "program_title": program_title,
+            "status": ref.status,
+            "created_at": ref.created_at.isoformat()
+        })
+
+    return jsonify({"success": True, "referrals": results})
+
 # ---------------------------------------
 # SEED ALL DATA (MOCK USERS & PROGRAMS)
 # ---------------------------------------
@@ -200,84 +254,96 @@ def seed_all_data():
             "type": "accelerator",
             "description": "A 3-month program for early-stage fintech startups focusing on cross-border payments.",
             "benefits": "$50k equity-free grant + mentorship",
-            "status": "published"
+            "status": "published",
+            "banner_url": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1965&auto=format&fit=crop"
         },
         {
             "title": "Sustainability Innovation Grant",
             "type": "grant",
             "description": "Government-backed grant for startups working on carbon sequestration technologies.",
             "benefits": "Up to $100k non-dilutive funding",
-            "status": "published"
+            "status": "published",
+            "banner_url": "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=2070&auto=format&fit=crop"
         },
         {
             "title": "Retail Tech Pilot - MegaCorp",
             "type": "pilot",
             "description": "MegaCorp is scouting for AI solutions to optimize supply chain logistics for their retail outlets.",
             "benefits": "Paid PoC + distribution opportunity",
-            "status": "published"
+            "status": "published",
+            "banner_url": "https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?q=80&w=2070&auto=format&fit=crop"
         },
         {
             "title": "HealthTech Challenge APAC",
             "type": "challenge",
             "description": "Solving regional healthcare accessibility through mobile-first digital solutions.",
             "benefits": "Pilot with regional hospital networks",
-            "status": "published"
+            "status": "published",
+            "banner_url": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=2070&auto=format&fit=crop"
         },
         {
             "title": "DeepTech Pioneer Program",
             "type": "accelerator",
             "description": "Unlocking breakthroughs in quantum computing and material sciences.",
             "benefits": "Lab access + $100k investment",
-            "status": "published"
+            "status": "published",
+            "banner_url": "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=2070&auto=format&fit=crop"
         },
         {
             "title": "Web3 Innovation Grant",
             "type": "grant",
             "description": "Building the future of decentralized finance and identity on the blockchain.",
             "benefits": "$25k non-equity grant",
-            "status": "published"
+            "status": "published",
+            "banner_url": "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2070&auto=format&fit=crop"
         },
         {
             "title": "AgriTech Smart Farming Initiative",
             "type": "pilot",
             "description": "Scouting for IoT and AI solutions to optimize crop yields and reduce waste in agriculture.",
             "benefits": "Implementation pilot + $40k funding",
-            "status": "published"
+            "status": "published",
+            "banner_url": "https://images.unsplash.com/photo-1628352081506-83c43123ed6d?q=80&w=2071&auto=format&fit=crop"
         },
         {
             "title": "EdTech Catalyst Program",
             "type": "accelerator",
             "description": "Bridging the digital divide with innovative remote learning tools for rural schools.",
             "benefits": "Mentorship + $30h grant",
-            "status": "published"
+            "status": "published",
+            "banner_url": "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=2070&auto=format&fit=crop"
         },
         {
             "title": "ClimateTech Carbon Challenge",
             "type": "challenge",
             "description": "Scouting for high-impact carbon capture and sequestration technologies.",
             "benefits": "$500k prize pool + pilot opportunity",
-            "status": "published"
+            "status": "published",
+            "banner_url": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop"
         },
         {
             "title": "SpaceTech Orbit Challenge",
             "type": "challenge",
             "description": "Scouting for low-earth orbit satellite communication solutions and debris management.",
             "benefits": "$200k prize + orbital testing slot",
-            "status": "published"
+            "status": "published",
+            "banner_url": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
         },
         {
             "title": "BioTech Health Accelerator",
             "type": "accelerator",
             "description": "A specialized program for drug discovery and genetic sequencing startups.",
             "benefits": "Wet lab access + $150k seed investment",
-            "status": "published"
+            "status": "published",
+            "banner_url": "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=2070&auto=format&fit=crop"
         },
         {
             "title": "GovTech Digital Summit",
             "type": "pilot",
             "description": "Governments seeking digital identity and e-governance solutions for citizen services.",
             "benefits": "National scale implementation + long-term contract",
-            "status": "published"
+            "status": "published",
+            "banner_url": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop"
         }
     ]
     
@@ -290,6 +356,7 @@ def seed_all_data():
                 description=p["description"],
                 benefits=p["benefits"],
                 status=p["status"],
+                banner_url=p.get('banner_url'),
                 owner_id=current_user.id,
                 deadline=datetime.utcnow() + timedelta(days=60),
                 sectors='["fintech", "cleantech", "retail", "health"]',

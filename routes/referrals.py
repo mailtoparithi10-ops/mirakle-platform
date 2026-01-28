@@ -1,107 +1,167 @@
-# routes/referrals.py
 from flask import Blueprint, request, jsonify
 from flask_login import login_required, current_user
 from extensions import db
-from models import Referral, Startup, Opportunity
-import json, datetime
+from models import Referral, User, Startup, Opportunity
+import json
+from datetime import datetime
 
 bp = Blueprint("referrals", __name__, url_prefix="/api/referrals")
 
-
 # ---------------------------------------
-# CONNECTOR CREATES A REFERRAL
+# CONNECTOR: Create a Referral
 # ---------------------------------------
 @bp.route("/", methods=["POST"])
 @login_required
 def create_referral():
-    if current_user.role not in ("connector", "admin"):
-        return jsonify({"error": "forbidden"}), 403
+    if current_user.role != "connector":
+        return jsonify({"error": "Only connectors can create referrals"}), 403
 
-    data = request.json or request.form or {}
-
-    startup_id = data.get("startup_id")
+    data = request.json or {}
+    startup_name = data.get("startup_name")
+    startup_email = data.get("startup_email")
     opportunity_id = data.get("opportunity_id")
+    notes = data.get("notes")
 
-    if not startup_id or not opportunity_id:
-        return jsonify({"error": "startup_id and opportunity_id required"}), 400
+    if not startup_name or not startup_email or not opportunity_id:
+        return jsonify({"error": "Missing required fields"}), 400
 
-    Startup.query.get_or_404(startup_id)
-    Opportunity.query.get_or_404(opportunity_id)
+    # Check if opportunity exists
+    opp = Opportunity.query.get(opportunity_id)
+    if not opp:
+        return jsonify({"error": "Program not found"}), 404
 
-    ref = Referral(
+    # Try to find existing startup user
+    user = User.query.filter_by(email=startup_email).first()
+    startup_id = None
+    if user and user.role == "founder" and user.startups:
+        startup_id = user.startups[0].id
+
+    referral = Referral(
         connector_id=current_user.id,
         startup_id=startup_id,
         opportunity_id=opportunity_id,
-        status="open",
-        reward_log=json.dumps([])
+        startup_name=startup_name,
+        startup_email=startup_email,
+        notes=notes,
+        status="pending"
     )
 
-    db.session.add(ref)
+    db.session.add(referral)
     db.session.commit()
 
-    return jsonify(ref.to_dict()), 201
-
+    return jsonify({
+        "success": True, 
+        "message": "Referral request sent to startup.",
+        "referral": referral.to_dict()
+    }), 201
 
 # ---------------------------------------
-# CONNECTOR VIEWS THEIR REFERRALS
+# STARTUP: List Incoming Referrals
 # ---------------------------------------
-@bp.route("/mine", methods=["GET"])
+@bp.route("/incoming", methods=["GET"])
 @login_required
-def my_referrals():
-    if current_user.role not in ("connector", "admin"):
-        return jsonify({"error": "forbidden"}), 403
+def list_incoming_referrals():
+    if current_user.role != "founder":
+        return jsonify({"error": "Only startups can see incoming referrals"}), 403
 
-    items = Referral.query.filter_by(connector_id=current_user.id).all()
-    return jsonify([i.to_dict() for i in items])
+    # Find all referrals where startup_email matches current_user.email
+    referrals = Referral.query.filter_by(startup_email=current_user.email).all()
+    
+    # Enrich with opportunity and connector details
+    results = []
+    for r in referrals:
+        d = r.to_dict()
+        opp = Opportunity.query.get(r.opportunity_id)
+        conn = User.query.get(r.connector_id)
+        d['opportunity_title'] = opp.title if opp else "Unknown Program"
+        d['connector_name'] = conn.name if conn else "Unknown Connector"
+        results.append(d)
 
+    return jsonify({"success": True, "referrals": results})
 
 # ---------------------------------------
-# CORPORATE / ADMIN UPDATES REFERRAL STATUS
+# STARTUP: Accept / Reject Referral
 # ---------------------------------------
-@bp.route("/<int:id>/status", methods=["PUT"])
+@bp.route("/<int:id>/action", methods=["POST"])
 @login_required
-def update_status(id):
-    ref = Referral.query.get_or_404(id)
-    opp = Opportunity.query.get_or_404(ref.opportunity_id)
+def referral_action(id):
+    if current_user.role != "founder":
+        return jsonify({"error": "Action forbidden"}), 403
 
-    # Only the opportunity owner (corporate) or admin can update
-    if current_user.id != opp.owner_id and current_user.role != "admin":
-        return jsonify({"error": "forbidden"}), 403
+    referral = Referral.query.get_or_404(id)
+    
+    # Security check: must match email
+    if referral.startup_email != current_user.email:
+        return jsonify({"error": "This referral is not for you"}), 403
 
-    data = request.json or request.form or {}
+    data = request.json or {}
+    action = data.get("action") # 'accept' or 'reject'
 
-    new_status = data.get("status")
-    note = data.get("note")
-
-    if not new_status:
-        return jsonify({"error": "status required"}), 400
-
-    # Update status (open, successful, failed)
-    ref.status = new_status
-
-    # Append to reward log
-    reward_log = json.loads(ref.reward_log or "[]")
-    reward_log.append({
-        "status": new_status,
-        "note": note,
-        "at": datetime.datetime.utcnow().isoformat(),
-        "by": current_user.id
-    })
-    ref.reward_log = json.dumps(reward_log)
+    if action == 'accept':
+        referral.status = 'accepted'
+        # Link startup_id if not already linked
+        if not referral.startup_id and current_user.startups:
+            referral.startup_id = current_user.startups[0].id
+    elif action == 'reject':
+        referral.status = 'rejected'
+    elif action == 'review':
+        referral.status = 'under_review'
+    elif action == 'shortlist':
+        referral.status = 'shortlisted'
+    else:
+        return jsonify({"error": "Invalid action"}), 400
 
     db.session.commit()
-
-    return jsonify(ref.to_dict())
-
+    return jsonify({"success": True, "message": f"Referral {action}ed."})
 
 # ---------------------------------------
-# ADMIN VIEW: ALL REFERRALS (OPTIONAL)
+# CONNECTOR: List My Referrals
 # ---------------------------------------
-@bp.route("/all", methods=["GET"])
+@bp.route("/my", methods=["GET"])
 @login_required
-def all_referrals():
+def list_my_referrals():
+    if current_user.role != "connector":
+        return jsonify({"error": "Forbidden"}), 403
+
+    referrals = Referral.query.filter_by(connector_id=current_user.id).all()
+    results = []
+    for r in referrals:
+        d = r.to_dict()
+        opp = Opportunity.query.get(r.opportunity_id)
+        d['opportunity_title'] = opp.title if opp else "Unknown Program"
+        d['opportunity_owner'] = opp.owner_company if opp else "Unknown Corporate"
+        
+        # Cross-reference with Applications if startup_id exists
+        app_status = None
+        if r.startup_id:
+            app = Application.query.filter_by(startup_id=r.startup_id, opportunity_id=r.opportunity_id).first()
+            if app:
+                app_status = app.status
+        
+        d['application_status'] = app_status # This is the corporate-assigned status
+        results.append(d)
+
+    return jsonify({"success": True, "referrals": results})
+
+# ---------------------------------------
+# ADMIN: List Confirmed Referrals
+# ---------------------------------------
+@bp.route("/admin", methods=["GET"])
+@login_required
+def admin_list_referrals():
     if current_user.role != "admin":
-        return jsonify({"error": "forbidden"}), 403
+        return jsonify({"error": "Admin access required"}), 403
 
-    items = Referral.query.all()
-    return jsonify([i.to_dict() for i in items])
+    # Show only accepted (confirmed by startup) or further
+    referrals = Referral.query.filter(Referral.status != 'pending').all()
+    
+    results = []
+    for r in referrals:
+        d = r.to_dict()
+        opp = Opportunity.query.get(r.opportunity_id)
+        conn = User.query.get(r.connector_id)
+        d['opportunity_title'] = opp.title if opp else "Unknown Program"
+        d['connector_name'] = conn.name if conn else "Unknown Connector"
+        results.append(d)
+
+    return jsonify({"success": True, "referrals": results})

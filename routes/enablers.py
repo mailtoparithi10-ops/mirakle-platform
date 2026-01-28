@@ -16,28 +16,33 @@ def get_overview():
     timeframe = request.args.get('timeframe', '30d')
     page = int(request.args.get('page', 1))
     
-    # Calculate base stats
-    total_referrals = Referral.query.filter_by(connector_id=current_user.id).count() or 28
-    multiplier = 2.5 if timeframe == 'all' else 1.0
+    # Calculate real stats
+    referrals = Referral.query.filter_by(connector_id=current_user.id).order_by(Referral.created_at.desc()).all()
+    total_referrals = len(referrals)
     
-    confirmed_earnings = int(total_referrals * 2500 * multiplier)
-    flc_points = int(total_referrals * 120 * multiplier)
+    # Mocking conversion and earnings for now based on referral count
+    confirmed_earnings = total_referrals * 2500 
+    flc_points = total_referrals * 120
     
-    # Generate different recent referrals based on page
-    if page == 1:
-        referral_list = [
-            {"startup_name": "NovaGrid Analytics", "program_name": "Smart City Cohort", "status": "successful", "created_at": "2026-03-20T10:00:00", "reward": "₹12,000"},
-            {"startup_name": "MedSync Health", "program_name": "Health Pilot", "status": "open", "created_at": "2026-03-18T14:30:00", "reward": "₹8,500"},
-            {"startup_name": "FarmLink Labs", "program_name": "Retail Sprint", "status": "successful", "created_at": "2026-03-14T09:15:00", "reward": "₹6,000"},
-            {"startup_name": "EcoFlow Energy", "program_name": "Green Challenge", "status": "failed", "created_at": "2026-03-10T11:45:00", "reward": "₹0"}
-        ]
-    else:
-        referral_list = [
-            {"startup_name": "QuantumBits", "program_name": "DeepTech Accelerator", "status": "successful", "created_at": "2026-02-28T16:20:00", "reward": "₹15,000"},
-            {"startup_name": "CyberShield", "program_name": "Security Program", "status": "open", "created_at": "2026-02-25T13:10:00", "reward": "₹7,200"},
-            {"startup_name": "UrbanLift", "program_name": "Mobility Cohort", "status": "open", "created_at": "2026-02-20T10:30:00", "reward": "₹5,500"},
-            {"startup_name": "BioFlow", "program_name": "BioTech Grant", "status": "successful", "created_at": "2026-02-15T08:00:00", "reward": "₹10,000"}
-        ]
+    referral_list = []
+    for r in referrals[:5]: # Last 5
+        opp = Opportunity.query.get(r.opportunity_id)
+        
+        # Cross-reference with Applications
+        app_status = None
+        if r.startup_id:
+            app = Application.query.filter_by(startup_id=r.startup_id, opportunity_id=r.opportunity_id).first()
+            if app:
+                app_status = app.status
+
+        referral_list.append({
+            "startup_name": r.startup_name,
+            "program_name": opp.title if opp else "Unknown Program",
+            "status": "successful" if r.status == 'accepted' else ("failed" if r.status == 'rejected' else "open"),
+            "application_status": app_status,
+            "created_at": r.created_at.isoformat(),
+            "reward": "₹2,500"
+        })
 
     return jsonify({
         "success": True,
@@ -46,7 +51,7 @@ def get_overview():
                 "total_referrals": total_referrals,
                 "confirmed_earnings": confirmed_earnings,
                 "flc_points": flc_points,
-                "conversion_rate": 0.32
+                "conversion_rate": 0.32 if total_referrals > 0 else 0
             },
             "recent_referrals": referral_list
         }

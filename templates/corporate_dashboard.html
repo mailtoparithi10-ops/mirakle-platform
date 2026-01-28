@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Corporate Dashboard - InnoBridge</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -555,6 +556,7 @@
             color: #64748b;
             line-height: 1.5;
             display: -webkit-box;
+            line-clamp: 1;
             -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
             overflow: hidden;
@@ -755,6 +757,9 @@
             <button class="nav-item" onclick="showSection('programs')">
                 <i class="fa-solid fa-trophy"></i> My Programs
             </button>
+            <button class="nav-item" onclick="showSection('applications')">
+                <i class="fa-solid fa-paper-plane"></i> Applications
+            </button>
             <button class="nav-item" onclick="showSection('dealflow')">
                 <i class="fa-solid fa-handshake"></i> Deal Flow
             </button>
@@ -827,6 +832,30 @@
                     <div style="height: 300px;">
                         <canvas id="matchChart"></canvas>
                     </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <div class="table-title">Recent Applications</div>
+                        <a href="javascript:void(0)" onclick="showSection('applications')"
+                            style="font-size: 0.8rem; color: #fcb82e; font-weight: 600; text-decoration: none;">View
+                            All</a>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Startup</th>
+                                <th>Program</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="overviewApplicationsTableBody">
+                            <tr>
+                                <td colspan="4" style="text-align: center; padding: 2rem; color: #666;">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="table-container">
@@ -1098,6 +1127,35 @@
                 </div>
             </section>
 
+            <!-- APPLICATIONS SECTION -->
+            <section id="applications" class="section">
+                <div style="margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: 700;">Incoming Applications</h2>
+                    <p style="color: #666;">Review and manage startups applying to your programs.</p>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Startup</th>
+                                <th>Program</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpApplicationsTableBody">
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 2rem; color: #666;">
+                                    <i class="fas fa-spinner fa-spin"></i> Loading applications...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
             <!-- DEALFLOW SECTION -->
             <section id="dealflow" class="section">
                 <div style="margin-bottom: 2rem;">
@@ -1291,59 +1349,11 @@
                     <p style="color: #666;">Stay updated with startup activity and system alerts.</p>
                 </div>
 
-                <div class="inbox-container">
-                    <!-- Message 1 -->
-                    <div class="inbox-item unread" onclick="viewMessage(1)">
-                        <div class="inbox-avatar" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
-                            <i class="fas fa-rocket"></i>
-                        </div>
-                        <div class="inbox-content">
-                            <div class="inbox-header">
-                                <span class="inbox-sender">System Monitor <span
-                                        class="inbox-badge badge-system">Priority</span></span>
-                                <span class="inbox-time">10 mins ago</span>
-                            </div>
-                            <div class="inbox-subject">New Matching Startup Identified</div>
-                            <div class="inbox-preview">Our AI has identified "QuantumScale" as a 96% match for your
-                                Sustainable Supply Chain challenge. Click to review their pitch deck and technical
-                                specifications.</div>
-                        </div>
-                    </div>
-
-                    <!-- Message 2 -->
-                    <div class="inbox-item unread" onclick="viewMessage(2)">
-                        <div class="inbox-avatar" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">
-                            <i class="fas fa-file-alt"></i>
-                        </div>
-                        <div class="inbox-content">
-                            <div class="inbox-header">
-                                <span class="inbox-sender">NeuroTech AI <span class="inbox-badge badge-startup">New
-                                        Data</span></span>
-                                <span class="inbox-time">2 hours ago</span>
-                            </div>
-                            <div class="inbox-subject">Data Room Updated: Clinical Trial Results</div>
-                            <div class="inbox-preview">The founder of NeuroTech AI has uploaded new documentation
-                                regarding their Q4 clinical trial results in the Due Diligence room. Please review the
-                                updated milestones.</div>
-                        </div>
-                    </div>
-
-                    <!-- Message 3 -->
-                    <div class="inbox-item" onclick="viewMessage(3)">
-                        <div class="inbox-avatar" style="background: rgba(252, 184, 46, 0.1); color: #fcb82e;">
-                            <i class="fas fa-globe"></i>
-                        </div>
-                        <div class="inbox-content">
-                            <div class="inbox-header">
-                                <span class="inbox-sender">Network Admin <span
-                                        class="inbox-badge badge-network">Update</span></span>
-                                <span class="inbox-time">Yesterday</span>
-                            </div>
-                            <div class="inbox-subject">InnoBridge Platform Maintenance Complete</div>
-                            <div class="inbox-preview">The scheduled maintenance for the cross-platform synchronization
-                                engine has been successfully completed. All deal-flow interactions are now running at 2x
-                                speed.</div>
-                        </div>
+                <div class="inbox-container" id="notificationContainer">
+                    <div style="padding: 2rem; text-align: center; color: #666;">
+                        <i class="fas fa-spinner fa-spin"
+                            style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                        Loading notifications...
                     </div>
                 </div>
             </section>
@@ -1586,6 +1596,114 @@
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             const activeBtn = Array.from(document.querySelectorAll('.nav-item')).find(btn => btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(sectionId));
             if (activeBtn) activeBtn.classList.add('active');
+
+            if (sectionId === 'applications') loadApplications();
+        }
+
+        async function loadApplications() {
+            const tbody = document.getElementById('corpApplicationsTableBody');
+            if (!tbody) return;
+
+            try {
+                const res = await fetch('/api/applications/corporate/all');
+                let apps = [];
+
+                if (res.ok) {
+                    apps = await res.json();
+                }
+
+                // Mock data for corporate display
+                if (!apps || !Array.isArray(apps) || apps.length === 0) {
+                    apps = [
+                        {
+                            id: 9991,
+                            startup_name: "GreenGrid AI",
+                            opportunity_title: "Sustainable Supply Chain POC",
+                            created_at: new Date(Date.now() - 86400000 * 1).toISOString(),
+                            status: "Under Review"
+                        },
+                        {
+                            id: 9992,
+                            startup_name: "QuantumLedger",
+                            opportunity_title: "AI Logistics Pilot",
+                            created_at: new Date(Date.now() - 86400000 * 3).toISOString(),
+                            status: "Shortlisted"
+                        },
+                        {
+                            id: 9993,
+                            startup_name: "BioNano Sync",
+                            opportunity_title: "Sustainable Supply Chain POC",
+                            created_at: new Date(Date.now() - 86400000 * 7).toISOString(),
+                            status: "Pending"
+                        }
+                    ];
+                }
+
+                if (apps && apps.length > 0) {
+                    const html = apps.map(app => {
+                        const date = new Date(app.created_at).toLocaleDateString();
+                        let statusClass = 'pending';
+                        const status = app.status.toLowerCase();
+                        if (status.includes('shortlisted')) statusClass = 'active';
+                        if (status.includes('rejected')) statusClass = 'rejected';
+                        if (status.includes('review')) statusClass = 'pending';
+
+                        return `
+                        <tr>
+                            <td><b style="color:#000;">${app.startup_name}</b></td>
+                            <td>${app.opportunity_title}</td>
+                            <td>${date}</td>
+                            <td><span class="status-pill ${statusClass}">${app.status}</span></td>
+                            <td style="text-align: right; display: flex; gap: 4px; justify-content: flex-end;">
+                                <button onclick="updateAppStatus(${app.id}, 'Under Review')" class="btn-icon" style="background:#fef3c7; color:#92400e; border:none; padding:4px 8px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:600;">REVIEW</button>
+                                <button onclick="updateAppStatus(${app.id}, 'Shortlisted')" class="btn-icon" style="background:#dcfce7; color:#166534; border:none; padding:4px 8px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:600;">SHORTLIST</button>
+                                <button onclick="updateAppStatus(${app.id}, 'Rejected')" class="btn-icon" style="background:#fee2e2; color:#b91c1c; border:none; padding:4px 8px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:600;">REJECT</button>
+                            </td>
+                        </tr>
+                        `;
+                    }).join('');
+
+                    tbody.innerHTML = html;
+
+                    const ovTbody = document.getElementById('overviewApplicationsTableBody');
+                    if (ovTbody) {
+                        ovTbody.innerHTML = apps.slice(0, 3).map(app => {
+                            const date = new Date(app.created_at).toLocaleDateString();
+                            let sClass = 'pending';
+                            const s = app.status.toLowerCase();
+                            if (s.includes('shortlisted')) sClass = 'active';
+                            if (s.includes('rejected')) sClass = 'rejected';
+                            if (s.includes('review')) sClass = 'pending';
+                            return `<tr><td><b>${app.startup_name}</b></td><td>${app.opportunity_title}</td><td>${date}</td><td><span class="status-pill ${sClass}">${app.status}</span></td></tr>`;
+                        }).join('');
+                    }
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem; color: #666;">No applications received yet.</td></tr>';
+                }
+            } catch (err) {
+                console.error('Err:', err);
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem; color: #666;">Failed to load applications.</td></tr>';
+            }
+        }
+
+        async function updateAppStatus(appId, newStatus) {
+            try {
+                const res = await fetch(`/api/applications/${appId}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+
+                if (res.ok) {
+                    showToast(`Application marked as <b>${newStatus}</b>`, "success");
+                    loadApplications();
+                } else {
+                    const err = await res.json();
+                    showToast(err.error || "Update failed", "info");
+                }
+            } catch (err) {
+                showToast("Connection error", "info");
+            }
         }
 
         function showToast(message, type = 'success') {
@@ -1613,11 +1731,79 @@
             setInterval(() => {
                 if (Math.random() > 0.6) {
                     const text = insights[Math.floor(Math.random() * insights.length)];
-                    document.getElementById('liveInsightText').innerText = text;
-                    document.getElementById('liveInsightText').style.animation = 'fadeIn 0.5s';
+                    const elem = document.getElementById('liveInsightText');
+                    if (elem) {
+                        elem.innerText = text;
+                        elem.style.animation = 'fadeIn 0.5s';
+                    }
                 }
             }, 25000);
         }
+
+        async function loadNotifications() {
+            const container = document.getElementById('notificationContainer');
+            if (!container) return;
+
+            try {
+                const res = await fetch('/api/notifications/');
+                const json = await res.json();
+
+                if (json.success && json.notifications.length > 0) {
+                    container.innerHTML = json.notifications.map(n => {
+                        const date = new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        const icon = n.type === 'success' ? 'fa-check-circle' : 'fa-rocket';
+                        const color = n.type === 'success' ? '#22c55e' : '#3b82f6';
+                        const bg = n.type === 'success' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(59, 130, 246, 0.1)';
+
+                        return `
+                        <div class="inbox-item ${n.is_read ? '' : 'unread'}" onclick="markNotifRead(${n.id}, '${n.link}')">
+                            <div class="inbox-avatar" style="background: ${bg}; color: ${color};">
+                                <i class="fas ${icon}"></i>
+                            </div>
+                            <div class="inbox-content">
+                                <div class="inbox-header">
+                                    <span class="inbox-sender">${n.title}</span>
+                                    <span class="inbox-time">${date}</span>
+                                </div>
+                                <div class="inbox-subject">${n.message}</div>
+                            </div>
+                        </div>
+                        `;
+                    }).join('');
+                } else {
+                    container.innerHTML = `
+                        <div style="padding: 2rem; text-align: center; color: #666;">
+                            <i class="fas fa-envelope-open" style="font-size: 2rem; margin-bottom: 1rem; display: block; opacity: 0.3;"></i>
+                            No new notifications
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function markNotifRead(id, link) {
+            try {
+                await fetch(`/api/notifications/${id}/read`, { method: 'POST' });
+
+                if (link && link.includes('#')) {
+                    const sectionId = link.split('#')[1];
+                    showSection(sectionId);
+                    loadNotifications(); // Refresh list to show as read
+                } else if (link && link !== 'undefined') {
+                    window.location.href = link;
+                } else {
+                    loadNotifications();
+                }
+            } catch (err) { }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initProgramChart();
+            simulateRealTimeFeed();
+            loadNotifications();
+        });
     </script>
 </body>
 

@@ -14,6 +14,7 @@ from routes.applications import bp as applications_bp
 from routes.referrals import bp as referrals_bp
 from routes.admin import bp as admin_bp
 from routes.meetings import bp as meetings_bp
+from routes.notifications import bp as notifications_bp
 
 
 from routes.enablers import bp as enablers_bp
@@ -49,6 +50,7 @@ def create_app():
     app.register_blueprint(admin_bp)
     app.register_blueprint(meetings_bp)
     app.register_blueprint(enablers_bp)
+    app.register_blueprint(notifications_bp)
 
     # Import WebRTC signaling events
     from routes import webrtc

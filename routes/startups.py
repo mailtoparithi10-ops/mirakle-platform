@@ -88,3 +88,15 @@ def list_startups():
     limit = int(request.args.get('limit', 50))
     items = q.offset(start).limit(limit).all()
     return jsonify([i.to_dict() for i in items])
+
+@bp.route('/mine', methods=['GET'])
+@login_required
+def list_my_startups():
+    if current_user.role not in ('founder', 'admin'):
+        return jsonify({'error': 'forbidden'}), 403
+    
+    startups = Startup.query.filter_by(founder_id=current_user.id).all()
+    return jsonify({
+        "success": True,
+        "startups": [s.to_dict() for s in startups]
+    })
