@@ -1836,7 +1836,8 @@
 
                     programsGrid.innerHTML = items.map(item => {
                         // Better tags with readable colors
-                        const sectors = (item.sectors || []).slice(0, 2).map(s => `<span class="tag" style="background: rgba(99, 102, 241, 0.1); color: #6366f1; border: 1px solid rgba(99, 102, 241, 0.2); margin-right: 4px;">${s}</span>`).join('');
+                        const sectorsArray = typeof item.sectors === 'string' ? item.sectors.split(' ').filter(s => s) : (item.sectors || []);
+                        const sectors = sectorsArray.slice(0, 2).map(s => `<span class="tag" style="background: rgba(99, 102, 241, 0.1); color: #6366f1; border: 1px solid rgba(99, 102, 241, 0.2); margin-right: 4px;">${s}</span>`).join('');
                         const logoChar = (item.title || 'P').charAt(0).toUpperCase();
                         const bannerImage = item.banner_url || 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1974&auto=format&fit=crop';
 
