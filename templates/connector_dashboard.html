@@ -3199,6 +3199,11 @@
                 My Referrals
                 <span class="badge">12</span>
             </button>
+            <button class="nav-item" onclick="showSection('referral-tracking')" id="tab-referral-tracking">
+                <i class="fa-solid fa-link"></i>
+                Referral Link Tracking
+                <span class="badge-outline" style="color: #10b981; border-color: #10b981;">Live</span>
+            </button>
             <button class="nav-item" onclick="showSection('overview')" id="tab-overview">
                 <i class="fa-solid fa-gauge-high"></i>
                 Overview
@@ -3478,6 +3483,233 @@
                             <button class="pagination-btn active" onclick="paginateReferralsTab(1)">1</button>
                             <button class="pagination-btn" onclick="paginateReferralsTab(2)">2</button>
                             <button class="pagination-btn" onclick="paginateReferralsTab('next')">›</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- REFERRAL LINK TRACKING SECTION -->
+            <section id="referral-tracking" class="section">
+                <div class="section-header">
+                    <div class="section-header-main">
+                        <div class="section-title">
+                            <i class="fa-solid fa-link"></i>
+                            Referral Link Tracking
+                        </div>
+                        <div class="section-subtitle">
+                            Monitor clicks, conversions, and performance of your referral links.
+                        </div>
+                    </div>
+                    <div class="section-actions">
+                        <button class="btn" onclick="refreshReferralTracking()">
+                            <i class="fa-solid fa-refresh"></i> Refresh
+                        </button>
+                        <button class="btn btn-primary" onclick="generateNewReferralLink()">
+                            <i class="fa-solid fa-plus"></i> Generate Link
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Referral Link Performance Cards -->
+                <div class="cards-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 2rem;">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Total Links</div>
+                            <div class="card-icon blue">
+                                <i class="fa-solid fa-link"></i>
+                            </div>
+                        </div>
+                        <div class="card-value" id="totalLinksCount">8</div>
+                        <div class="card-subtext">Active referral links</div>
+                        <div class="trend-indicator trend-up">
+                            <i class="fa-solid fa-arrow-up"></i>
+                            +2 this month
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Total Clicks</div>
+                            <div class="card-icon green">
+                                <i class="fa-solid fa-mouse-pointer"></i>
+                            </div>
+                        </div>
+                        <div class="card-value" id="totalClicksCount">247</div>
+                        <div class="card-subtext">Link clicks this month</div>
+                        <div class="trend-indicator trend-up">
+                            <i class="fa-solid fa-arrow-up"></i>
+                            +18% vs last month
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Conversions</div>
+                            <div class="card-icon gold">
+                                <i class="fa-solid fa-bullseye"></i>
+                            </div>
+                        </div>
+                        <div class="card-value" id="conversionsCount">23</div>
+                        <div class="card-subtext">Applications submitted</div>
+                        <div class="trend-indicator trend-up">
+                            <i class="fa-solid fa-arrow-up"></i>
+                            9.3% conversion rate
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Earnings</div>
+                            <div class="card-icon purple">
+                                <i class="fa-solid fa-coins"></i>
+                            </div>
+                        </div>
+                        <div class="card-value" id="linkEarnings">₹11,500</div>
+                        <div class="card-subtext">From referral links</div>
+                        <div class="trend-indicator trend-up">
+                            <i class="fa-solid fa-arrow-up"></i>
+                            +₹2,300 this month
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Referral Links Table -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <div>
+                            <div class="table-title">Referral Link Performance</div>
+                            <div class="table-subtitle">Track clicks, conversions, and earnings for each link</div>
+                        </div>
+                        <div class="table-filters">
+                            <div class="filter-pill active" onclick="filterReferralLinks('all')">All Links</div>
+                            <div class="filter-pill" onclick="filterReferralLinks('active')">
+                                <span class="filter-dot" style="background: #22c55e;"></span>
+                                Active (6)
+                            </div>
+                            <div class="filter-pill" onclick="filterReferralLinks('high-performing')">
+                                <span class="filter-dot" style="background: #f59e0b;"></span>
+                                High Performing (3)
+                            </div>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Program</th>
+                                <th>Link Token</th>
+                                <th>Clicks</th>
+                                <th>Conversions</th>
+                                <th>Conversion Rate</th>
+                                <th>Earnings</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="referralLinksTableBody">
+                            <tr>
+                                <td style="font-weight: 600;">HealthTech Innovation Challenge</td>
+                                <td>
+                                    <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">HTI-2024-ABC123</code>
+                                </td>
+                                <td><strong>89</strong></td>
+                                <td><strong style="color: #22c55e;">8</strong></td>
+                                <td><span style="color: #22c55e; font-weight: 600;">9.0%</span></td>
+                                <td><strong style="color: #22c55e;">₹4,000</strong></td>
+                                <td>Jan 15, 2026</td>
+                                <td>
+                                    <button class="btn-icon" onclick="copyReferralLink('HTI-2024-ABC123')" title="Copy Link">
+                                        <i class="fa-solid fa-copy"></i>
+                                    </button>
+                                    <button class="btn-icon" onclick="viewLinkAnalytics('HTI-2024-ABC123')" title="View Analytics">
+                                        <i class="fa-solid fa-chart-line"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">Global Fintech Accelerator 2026</td>
+                                <td>
+                                    <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">GFA-2026-XYZ789</code>
+                                </td>
+                                <td><strong>67</strong></td>
+                                <td><strong style="color: #22c55e;">6</strong></td>
+                                <td><span style="color: #22c55e; font-weight: 600;">9.0%</span></td>
+                                <td><strong style="color: #22c55e;">₹3,000</strong></td>
+                                <td>Jan 18, 2026</td>
+                                <td>
+                                    <button class="btn-icon" onclick="copyReferralLink('GFA-2026-XYZ789')" title="Copy Link">
+                                        <i class="fa-solid fa-copy"></i>
+                                    </button>
+                                    <button class="btn-icon" onclick="viewLinkAnalytics('GFA-2026-XYZ789')" title="View Analytics">
+                                        <i class="fa-solid fa-chart-line"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">AI & Machine Learning Bootcamp</td>
+                                <td>
+                                    <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">AI-ML-DEF456</code>
+                                </td>
+                                <td><strong>45</strong></td>
+                                <td><strong style="color: #f59e0b;">4</strong></td>
+                                <td><span style="color: #f59e0b; font-weight: 600;">8.9%</span></td>
+                                <td><strong style="color: #f59e0b;">₹2,000</strong></td>
+                                <td>Jan 20, 2026</td>
+                                <td>
+                                    <button class="btn-icon" onclick="copyReferralLink('AI-ML-DEF456')" title="Copy Link">
+                                        <i class="fa-solid fa-copy"></i>
+                                    </button>
+                                    <button class="btn-icon" onclick="viewLinkAnalytics('AI-ML-DEF456')" title="View Analytics">
+                                        <i class="fa-solid fa-chart-line"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">Sustainable Energy Accelerator</td>
+                                <td>
+                                    <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">SEA-2026-GHI789</code>
+                                </td>
+                                <td><strong>32</strong></td>
+                                <td><strong style="color: #3b82f6;">3</strong></td>
+                                <td><span style="color: #3b82f6; font-weight: 600;">9.4%</span></td>
+                                <td><strong style="color: #3b82f6;">₹1,500</strong></td>
+                                <td>Jan 22, 2026</td>
+                                <td>
+                                    <button class="btn-icon" onclick="copyReferralLink('SEA-2026-GHI789')" title="Copy Link">
+                                        <i class="fa-solid fa-copy"></i>
+                                    </button>
+                                    <button class="btn-icon" onclick="viewLinkAnalytics('SEA-2026-GHI789')" title="View Analytics">
+                                        <i class="fa-solid fa-chart-line"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">CII Capacity Building Program</td>
+                                <td>
+                                    <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">CII-CB-JKL012</code>
+                                </td>
+                                <td><strong>14</strong></td>
+                                <td><strong style="color: #6b7280;">2</strong></td>
+                                <td><span style="color: #6b7280; font-weight: 600;">14.3%</span></td>
+                                <td><strong style="color: #6b7280;">₹1,000</strong></td>
+                                <td>Jan 25, 2026</td>
+                                <td>
+                                    <button class="btn-icon" onclick="copyReferralLink('CII-CB-JKL012')" title="Copy Link">
+                                        <i class="fa-solid fa-copy"></i>
+                                    </button>
+                                    <button class="btn-icon" onclick="viewLinkAnalytics('CII-CB-JKL012')" title="View Analytics">
+                                        <i class="fa-solid fa-chart-line"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="table-footer">
+                        <span>Showing 5 of 8 referral links</span>
+                        <div class="pagination">
+                            <button class="pagination-btn">‹</button>
+                            <button class="pagination-btn active">1</button>
+                            <button class="pagination-btn">2</button>
+                            <button class="pagination-btn">›</button>
                         </div>
                     </div>
                 </div>
@@ -4934,7 +5166,7 @@
 
                                     <button id="referFromDetailsBtn"
                                         style="width: 100%; padding: 1.25rem; background: #000; color: white; border: none; border-radius: 1rem; font-size: 1.1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem; transition: transform 0.2s;">
-                                        Refer a Startup <i class="fa-solid fa-paper-plane"></i>
+                                        <i class="fa-solid fa-share-alt"></i> Refer a Startup
                                     </button>
                                     <p
                                         style="text-align: center; color: #64748b; font-size: 0.85rem; margin-top: 1rem;">
@@ -5955,6 +6187,9 @@
             } else if (sectionId === 'referrals') {
                 sectionTitle.textContent = 'My Referrals';
                 sectionSubtitle.textContent = 'Detailed view of all startups you have referred across programs.';
+            } else if (sectionId === 'referral-tracking') {
+                sectionTitle.textContent = 'Referral Link Tracking';
+                sectionSubtitle.textContent = 'Monitor clicks, conversions, and performance of your referral links.';
             } else if (sectionId === 'rewards') {
                 sectionTitle.textContent = 'Rewards & Earnings';
                 sectionSubtitle.textContent = 'Monitor your earnings, pending rewards, and payout history.';
@@ -6988,7 +7223,7 @@
                         const bannerImage = item.banner_url || 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1974&auto=format&fit=crop';
 
                         const isTaken = acceptedOppIds.includes(item.id);
-                        const buttonHtml = `<button class="apply-btn" onclick="referralManager.showReferralModal(${item.id}, '${item.title.replace(/'/g, "\\'")}')"><i class="fa-solid fa-share-alt"></i> Refer a Startup</button>`;
+                        const buttonHtml = `<button class="apply-btn" onclick="viewProgramDetails(${item.id})"><i class="fa-solid fa-eye"></i> View Program</button>`;
 
                         return `
                         <div class="program-card ${isTaken ? 'taken' : ''}">
@@ -7022,8 +7257,8 @@
             }
         }
 
-        function handleApply(programTitle) {
-            const program = allPrograms.find(p => p.title === programTitle);
+        function viewProgramDetails(programId) {
+            const program = allPrograms.find(p => p.id === programId);
             if (!program) return;
 
             // Update details view
@@ -7062,21 +7297,115 @@
                 deadElem.textContent = deadline;
             }
 
-            // Refer Button link
+            // Refer Button - now opens referral modal
             const referBtn = document.getElementById('referFromDetailsBtn');
             if (referBtn) {
                 referBtn.onclick = () => {
-                    openAddReferralModal();
-                    const select = document.getElementById('programSelect');
-                    if (select) {
-                        select.value = program.id;
-                    }
+                    referralManager.showReferralModal(program.id, program.title);
                 };
             }
 
             showSection('program-details');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        // --- Referral Link Tracking Functions ---
+        function refreshReferralTracking() {
+            console.log("🔄 Refreshing referral link tracking data...");
+            // Add loading state
+            const refreshBtn = event.target;
+            const originalText = refreshBtn.innerHTML;
+            refreshBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Refreshing...';
+            refreshBtn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                refreshBtn.innerHTML = originalText;
+                refreshBtn.disabled = false;
+                showToast('Referral tracking data refreshed successfully!', 'success');
+            }, 1500);
+        }
+
+        function generateNewReferralLink() {
+            console.log("🔗 Opening referral link generator...");
+            // This would open a modal to select program and generate link
+            showToast('Referral link generator coming soon!', 'info');
+        }
+
+        function copyReferralLink(token) {
+            const baseUrl = window.location.origin;
+            const referralUrl = `${baseUrl}/refer/${token}`;
+            
+            navigator.clipboard.writeText(referralUrl).then(() => {
+                showToast(`Referral link copied: ${token}`, 'success');
+            }).catch(() => {
+                showToast('Failed to copy link. Please try again.', 'error');
+            });
+        }
+
+        function viewLinkAnalytics(token) {
+            console.log(`📊 Viewing analytics for link: ${token}`);
+            // This would show detailed analytics for the specific link
+            showToast(`Analytics for ${token} - Feature coming soon!`, 'info');
+        }
+
+        function filterReferralLinks(filter) {
+            console.log(`🔍 Filtering referral links by: ${filter}`);
+            
+            // Update active filter pill
+            document.querySelectorAll('.table-filters .filter-pill').forEach(pill => {
+                pill.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Filter logic would go here
+            showToast(`Showing ${filter} referral links`, 'info');
+        }
+
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                font-size: 14px;
+                font-weight: 500;
+                max-width: 300px;
+                animation: slideInRight 0.3s ease-out;
+            `;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.3s ease-in';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // Add CSS animations for toast
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
 
         // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
