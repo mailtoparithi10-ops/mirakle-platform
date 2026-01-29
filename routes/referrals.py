@@ -1,9 +1,10 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, redirect, session, url_for
 from flask_login import login_required, current_user
 from extensions import db
-from models import Referral, User, Startup, Opportunity
+from models import Referral, User, Startup, Opportunity, Application
 import json
 from datetime import datetime
+import uuid
 
 bp = Blueprint("referrals", __name__, url_prefix="/api/referrals")
 
@@ -56,12 +57,95 @@ def create_referral():
     }), 201
 
 # ---------------------------------------
+# CONNECTOR: Generate a Shareable Link with QR Code
+# ---------------------------------------
+@bp.route("/generate-link", methods=["POST"])
+@login_required
+def generate_link():
+    if current_user.role not in ("connector", "enabler"):
+        return jsonify({"error": "Only connectors can generate referral links"}), 403
+
+    data = request.json or {}
+    opportunity_id = data.get("opportunity_id")
+    
+    if not opportunity_id:
+        return jsonify({"error": "Missing opportunity_id"}), 400
+
+    opp = Opportunity.query.get(opportunity_id)
+    if not opp:
+        return jsonify({"error": "Program not found"}), 404
+
+    # Create a "link-based" referral placeholder
+    token = str(uuid.uuid4())
+    referral = Referral(
+        connector_id=current_user.id,
+        opportunity_id=opportunity_id,
+        token=token,
+        is_link_referral=True,
+        status="pending_link", # New status for link-based
+        startup_name="Link-based Lead",
+        startup_email="pending@referral.link"
+    )
+
+    db.session.add(referral)
+    db.session.commit()
+
+    # The join URL
+    join_url = url_for("referrals.join_via_link", token=token, _external=True)
+    
+    # QR Code data URL (will be generated on frontend)
+    qr_data = join_url
+
+    return jsonify({
+        "success": True,
+        "token": token,
+        "join_url": join_url,
+        "qr_data": qr_data,
+        "opportunity_title": opp.title,
+        "referral_id": referral.id,
+        "referral": referral.to_dict()
+    })
+
+# ---------------------------------------
+# STARTUP: Join via Link (Track Click)
+# ---------------------------------------
+@bp.route("/join/<token>", methods=["GET"])
+def join_via_link(token):
+    from models import ReferralClick
+    
+    referral = Referral.query.filter_by(token=token).first_or_404()
+    
+    # Track the click
+    click = ReferralClick(
+        referral_id=referral.id,
+        ip_address=request.remote_addr,
+        user_agent=request.headers.get('User-Agent', '')[:500],
+        viewed_opportunity=False,
+        applied=False
+    )
+    db.session.add(click)
+    
+    # Update referral status if it's still pending_link
+    if referral.status == "pending_link":
+        referral.status = "link_clicked"
+    
+    db.session.commit()
+    
+    # Store referral info in session
+    session['referral_token'] = token
+    session['referral_id'] = referral.id
+    session['opportunity_id'] = referral.opportunity_id
+    
+    # Redirect to login with referral context
+    return redirect(f"/login?ref={token}")
+
+# ---------------------------------------
 # STARTUP: List Incoming Referrals
 # ---------------------------------------
 @bp.route("/incoming", methods=["GET"])
 @login_required
 def list_incoming_referrals():
-    if current_user.role != "founder":
+    if current_user.role not in ("founder", "startup", "admin"):
         return jsonify({"error": "Only startups can see incoming referrals"}), 403
 
     # Find all referrals where startup_email matches current_user.email
@@ -85,7 +169,7 @@ def list_incoming_referrals():
 @bp.route("/<int:id>/action", methods=["POST"])
 @login_required
 def referral_action(id):
-    if current_user.role != "founder":
+    if current_user.role not in ("founder", "startup", "admin"):
         return jsonify({"error": "Action forbidden"}), 403
 
     referral = Referral.query.get_or_404(id)
@@ -165,3 +249,57 @@ def admin_list_referrals():
         results.append(d)
 
     return jsonify({"success": True, "referrals": results})
+
+
+# ---------------------------------------
+# CONNECTOR: Get Referral Link Statistics
+# ---------------------------------------
+@bp.route("/link-stats/<int:referral_id>", methods=["GET"])
+@login_required
+def get_link_stats(referral_id):
+    from models import ReferralClick
+    
+    if current_user.role not in ("connector", "enabler", "admin"):
+        return jsonify({"error": "Forbidden"}), 403
+
+    referral = Referral.query.get_or_404(referral_id)
+    
+    # Security check: must be the connector who created it (or admin)
+    if current_user.role != "admin" and referral.connector_id != current_user.id:
+        return jsonify({"error": "Not your referral"}), 403
+
+    # Get click statistics
+    clicks = ReferralClick.query.filter_by(referral_id=referral_id).all()
+    
+    total_clicks = len(clicks)
+    unique_users = len(set([c.user_id for c in clicks if c.user_id]))
+    viewed_count = sum([1 for c in clicks if c.viewed_opportunity])
+    applied_count = sum([1 for c in clicks if c.applied])
+    
+    # Get opportunity details
+    opp = Opportunity.query.get(referral.opportunity_id)
+    
+    # Get application if exists
+    application = None
+    if referral.startup_id:
+        app = Application.query.filter_by(
+            startup_id=referral.startup_id,
+            opportunity_id=referral.opportunity_id
+        ).first()
+        if app:
+            application = app.to_dict()
+    
+    return jsonify({
+        "success": True,
+        "referral": referral.to_dict(),
+        "opportunity": opp.to_dict() if opp else None,
+        "application": application,
+        "stats": {
+            "total_clicks": total_clicks,
+            "unique_users": unique_users,
+            "viewed_opportunity": viewed_count,
+            "applied": applied_count,
+            "conversion_rate": (applied_count / total_clicks * 100) if total_clicks > 0 else 0
+        },
+        "clicks": [c.to_dict() for c in clicks]
+    })

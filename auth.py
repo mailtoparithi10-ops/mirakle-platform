@@ -1,6 +1,6 @@
 # auth.py
-from flask import Blueprint, request, redirect, url_for, render_template, jsonify
-from models import User
+from flask import Blueprint, request, redirect, url_for, render_template, jsonify, session
+from models import User, Referral, Startup
 from extensions import db, login_manager
 from flask_login import login_user, logout_user, login_required, current_user
 
@@ -55,6 +55,20 @@ def login():
 
     login_user(user)
     print(f"SUCCESS: User logged in - {user.email}")
+
+    # --- REFERRAL TRACKING ---
+    token = session.get('referral_token')
+    if token:
+        ref = Referral.query.filter_by(token=token).first()
+        if ref and user.role in ('founder', 'startup'):
+            # Link to user's first startup
+            if user.startups:
+                ref.startup_id = user.startups[0].id
+                ref.startup_name = user.name
+                ref.startup_email = user.email
+                ref.status = 'accepted'
+                db.session.commit()
+        session.pop('referral_token', None)
 
     # Always return JSON for fetch/AJAX requests (which is what the frontend uses)
     # The frontend JavaScript will handle the redirect
@@ -120,6 +134,21 @@ def register():
     db.session.commit()
 
     login_user(user)
+
+    # --- REFERRAL TRACKING ---
+    token = session.get('referral_token')
+    if token:
+        ref = Referral.query.filter_by(token=token).first()
+        if ref and user.role in ('founder', 'startup'):
+            # Link to user's first startup if exists, or wait for one to be created
+            # During registration, startups might not be created yet.
+            # But normally 'founder' creates a startup in dashboard.
+            # For now, just store the email and name
+            ref.startup_name = user.name
+            ref.startup_email = user.email
+            ref.status = 'accepted'
+            db.session.commit()
+        session.pop('referral_token', None)
 
     if request.is_json:
         return jsonify({"success": True, "message": "Registration successful", "user": user.to_dict(), "role": user.role})

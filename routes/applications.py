@@ -131,7 +131,7 @@ def list_for_opportunity(opportunity_id):
 @bp.route("/mine", methods=["GET"])
 @login_required
 def my_applications():
-    if current_user.role not in ("founder", "admin"):
+    if current_user.role not in ("founder", "startup", "admin"):
         return jsonify({"error": "forbidden"}), 403
 
     # Get all startups of founder

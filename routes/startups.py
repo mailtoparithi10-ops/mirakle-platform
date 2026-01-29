@@ -11,7 +11,7 @@ bp = Blueprint('startups', __name__, url_prefix='/api/startups')
 @login_required
 def create_startup():
     # Only founders (or admin) can create startups
-    if current_user.role not in ('founder', 'admin'):
+    if current_user.role not in ('founder', 'startup', 'admin'):
         return jsonify({'error': 'forbidden'}), 403
 
     data = request.json or request.form or {}
@@ -92,7 +92,7 @@ def list_startups():
 @bp.route('/mine', methods=['GET'])
 @login_required
 def list_my_startups():
-    if current_user.role not in ('founder', 'admin'):
+    if current_user.role not in ('founder', 'startup', 'admin'):
         return jsonify({'error': 'forbidden'}), 403
     
     startups = Startup.query.filter_by(founder_id=current_user.id).all()

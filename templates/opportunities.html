@@ -442,6 +442,26 @@
             transform: translateY(-2px);
         }
 
+        /* Opportunity Images */
+        .opportunity-card-banner {
+            width: calc(100% + 2.5rem);
+            margin: -1.25rem -1.25rem 1rem -1.25rem;
+            height: 160px;
+            object-fit: cover;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .modal-opp-banner {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-primary);
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -465,6 +485,10 @@
 
             .opp-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .modal-opp-banner {
+                height: 180px;
             }
         }
     </style>
@@ -605,6 +629,7 @@
                 <div class="loading"></div>
             </div>
             <div id="oppModalBody" style="display: none;">
+                <img id="modalOppBanner" class="modal-opp-banner" src="" alt="Program Banner" style="display: none;">
                 <div class="opp-detail-header">
                     <h2 id="modalOppTitle" class="opp-detail-title">Program Title</h2>
                     <div id="modalOppMeta" class="opp-detail-meta">
@@ -708,6 +733,7 @@
             const connectorNote = '';
 
             card.innerHTML = `
+                ${item.banner_url ? `<img src="${item.banner_url}" class="opportunity-card-banner" alt="${item.title}">` : ''}
                 <div class="opportunity-header">
                     <h3 class="opportunity-title">${item.title || 'Untitled program'}</h3>
                     ${item.status ? `<span class="opportunity-badge ${statusClass}">${statusLabel}</span>` : ''}
@@ -766,6 +792,15 @@
                 metaContainer.innerHTML = '';
                 if (opp.type) metaContainer.innerHTML += `<span class="chip">${opp.type}</span>`;
                 if (opp.status) metaContainer.innerHTML += `<span class="opportunity-badge status-open">${opp.status.toUpperCase()}</span>`;
+
+                // Image
+                const bannerImg = document.getElementById('modalOppBanner');
+                if (opp.banner_url) {
+                    bannerImg.src = opp.banner_url;
+                    bannerImg.style.display = 'block';
+                } else {
+                    bannerImg.style.display = 'none';
+                }
 
                 loader.style.display = 'none';
                 body.style.display = 'block';

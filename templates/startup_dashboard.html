@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
+    <link rel="icon"
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Startup Dashboard - InnoBridge</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -186,6 +187,22 @@
             background: #f9fafb;
         }
 
+        @media (max-width: 1024px) {
+            .programs-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .dashboard-content {
+                padding: 1rem;
+            }
+
+            .programs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .section {
             display: none;
         }
@@ -348,8 +365,10 @@
         /* Program Card Styles */
         .programs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
+            width: 100%;
+            max-width: 100%;
         }
 
         .program-card {
@@ -358,21 +377,25 @@
             border: 1px solid #e2e8f0;
             overflow: hidden;
             transition: all 0.3s ease;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
         }
 
         .program-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-            border-color: #fcb82e;
+            border-color: #6366f1;
         }
 
         .program-header {
-            height: 140px;
+            height: 160px;
             background: linear-gradient(135deg, #0f172a, #334155);
             background-size: cover;
             background-position: center;
             padding: 1.25rem;
-            color: white;
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
@@ -386,7 +409,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6));
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.7));
             z-index: 1;
         }
 
@@ -402,30 +425,55 @@
             color: #000;
             position: relative;
             z-index: 2;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-size: 1.2rem;
         }
 
-        .program-type-tag {
+        .program-type-badge {
             position: relative;
             z-index: 2;
-            background: rgba(252, 184, 46, 0.9);
-            color: #000;
+            background: rgba(255, 255, 255, 0.9);
+            color: #1f2937;
             padding: 4px 10px;
             border-radius: 6px;
             font-size: 0.7rem;
             font-weight: 700;
             text-transform: uppercase;
+            backdrop-filter: blur(4px);
         }
 
         .program-body {
             padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
 
         .program-title {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
             color: #111827;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 4.4rem;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .program-title:hover {
+            -webkit-line-clamp: unset;
+            line-clamp: unset;
+            overflow: visible;
+            background: white;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            padding: 2px;
         }
 
         .program-company {
@@ -453,17 +501,18 @@
         .apply-btn {
             width: 100%;
             padding: 0.75rem;
-            background: #fcb82e;
-            color: black;
+            background: #000;
+            color: white;
             border: none;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: opacity 0.2s;
+            margin-top: auto;
         }
 
         .apply-btn:hover {
-            background: #f59e0b;
+            opacity: 0.9;
         }
 
         @media (max-width: 768px) {
@@ -472,15 +521,20 @@
             }
 
             .sidebar {
-                position: static;
+                position: fixed;
+                bottom: 0;
+                left: 0;
                 width: 100%;
-                height: auto;
+                height: 70px;
                 display: flex;
-                overflow-x: auto;
+                flex-direction: row;
+                z-index: 1000;
+                padding: 0;
             }
 
             .main-content {
                 margin-left: 0;
+                margin-bottom: 70px;
                 border-radius: 0;
             }
 
@@ -490,14 +544,47 @@
 
             .nav-menu {
                 display: flex;
-                padding: 0.5rem;
+                flex-direction: row;
+                width: 100%;
+                padding: 0;
+                justify-content: space-around;
             }
 
             .nav-item {
-                padding: 0.75rem 1rem;
+                padding: 0;
+                flex: 1;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                font-size: 0.7rem;
+                gap: 4px;
                 border-left: none;
-                margin-right: 0.5rem;
+                margin-right: 0;
                 white-space: nowrap;
+            }
+
+            .nav-item i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+
+            .nav-item .badge {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                margin-left: 0;
+            }
+
+            .logout-btn {
+                display: none;
+            }
+
+            .dashboard-header {
+                padding: 1rem;
+            }
+
+            .dashboard-title {
+                font-size: 1.5rem;
             }
         }
 
@@ -710,6 +797,80 @@
             color: #6b7280;
         }
 
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.15rem;
+            gap: 1rem;
+        }
+
+        .section-header-main {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #020617;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-subtitle {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 0.9rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            background: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #111827;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: #fcb82e;
+            border-color: #fbbf24;
+            color: #000000;
+        }
+
+        .search-input {
+            position: relative;
+        }
+
+        .search-input input {
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            padding: 0.4rem 0.9rem 0.4rem 2rem;
+            font-size: 0.8rem;
+            outline: none;
+        }
+
+        .search-input i {
+            position: absolute;
+            left: 0.7rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+
         .meeting-actions {
             display: flex;
             gap: 8px;
@@ -848,11 +1009,15 @@
             </button>
         </div>
         <nav class="nav-menu">
-            <button class="nav-item active" onclick="showSection('overview')">
-                <i class="fa-solid fa-gauge-high"></i> Overview
-            </button>
-            <button class="nav-item" onclick="showSection('programs')">
+            <button class="nav-item active" onclick="showSection('programs')">
                 <i class="fa-solid fa-compass"></i> Explore Programs
+            </button>
+            <button class="nav-item" id="tab-referrals" onclick="showSection('referrals')">
+                <i class="fa-solid fa-handshake"></i> Referral Requests <span class="badge" id="referralCountBadge"
+                    style="display:none; background:#ef4444;">0</span>
+            </button>
+            <button class="nav-item" onclick="showSection('overview')">
+                <i class="fa-solid fa-gauge-high"></i> Overview
             </button>
             <button class="nav-item" onclick="showSection('applications')">
                 <i class="fa-solid fa-paper-plane"></i> Applications
@@ -863,10 +1028,6 @@
             </button>
             <button class="nav-item" onclick="showSection('inbox')">
                 <i class="fa-solid fa-envelope"></i> Inbox <span class="badge" style="background:#fcb82e;">2</span>
-            </button>
-            <button class="nav-item" id="tab-referrals" onclick="showSection('referrals')">
-                <i class="fa-solid fa-handshake"></i> Referral Requests <span class="badge" id="referralCountBadge"
-                    style="display:none; background:#ef4444;">0</span>
             </button>
             <button class="nav-item" onclick="showSection('settings')">
                 <i class="fa-solid fa-gear"></i> Settings
@@ -884,8 +1045,172 @@
         </div>
 
         <div class="dashboard-content">
+            <!-- PROGRAMS SECTION -->
+            <section id="programs" class="section active">
+                <div class="section-header">
+                    <div class="section-header-main">
+                        <div class="section-title">
+                            <i class="fa-solid fa-compass"></i>
+                            Explore Programs
+                        </div>
+                        <div class="section-subtitle">
+                            Discover and apply to ecosystem programs relevant to your startup.
+                        </div>
+                    </div>
+                    <div class="section-actions">
+                        <div class="search-input">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" placeholder="Search programs...">
+                        </div>
+                        <button class="btn">
+                            <i class="fa-solid fa-filter"></i> Filters
+                        </button>
+                    </div>
+                </div>
+
+                <div class="programs-grid" id="startupProgramsGrid">
+                    <!-- Programs will be loaded here -->
+                </div>
+            </section>
+
+            <!-- PROGRAM DETAILS SECTION -->
+            <section id="program-details" class="section">
+                <div class="card"
+                    style="padding: 0; overflow: hidden; border: none; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);">
+                    <div id="programDetailsBanner"
+                        style="height: 300px; background-size: cover; background-position: center; position: relative;">
+                        <button onclick="showSection('programs')"
+                            style="position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.9); border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; z-index: 10;">
+                            <i class="fa-solid fa-arrow-left"></i> Back to Programs
+                        </button>
+                        <div
+                            style="position: absolute; bottom: 0; left: 0; right: 0; padding: 3rem 2rem; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: white;">
+                            <span id="programDetailsType"
+                                style="background: #fcb82e; color: black; padding: 4px 12px; border-radius: 1000px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;"></span>
+                            <h2 id="programDetailsTitle"
+                                style="font-size: 2.5rem; font-weight: 800; margin-top: 0.5rem; margin-bottom: 0;"></h2>
+                        </div>
+                    </div>
+
+                    <div style="padding: 3rem; background: white;">
+                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 4rem;">
+                            <div>
+                                <div style="margin-bottom: 3rem;">
+                                    <h3
+                                        style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: #111827; display: flex; align-items: center; gap: 0.75rem;">
+                                        <i class="fa-solid fa-circle-info" style="color: #6366f1;"></i> Program Overview
+                                    </h3>
+                                    <p id="programDetailsDesc"
+                                        style="color: #4b5563; line-height: 1.8; font-size: 1.05rem;"></p>
+                                </div>
+
+                                <div style="margin-bottom: 3rem;">
+                                    <h3
+                                        style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: #111827; display: flex; align-items: center; gap: 0.75rem;">
+                                        <i class="fa-solid fa-list-check" style="color: #10b981;"></i> Eligibility
+                                        Criteria
+                                    </h3>
+                                    <p id="programDetailsEligibility"
+                                        style="color: #4b5563; line-height: 1.8; font-size: 1.05rem;"></p>
+                                </div>
+
+                                <div style="margin-bottom: 0;">
+                                    <h3
+                                        style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: #111827; display: flex; align-items: center; gap: 0.75rem;">
+                                        <i class="fa-solid fa-gift" style="color: #f59e0b;"></i> Benefits & Support
+                                    </h3>
+                                    <p id="programDetailsBenefits"
+                                        style="color: #4b5563; line-height: 1.8; font-size: 1.05rem;"></p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div style="position: sticky; top: 2rem;">
+                                    <div
+                                        style="background: #f8fafc; padding: 2rem; border-radius: 1.5rem; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
+                                        <h4
+                                            style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 1.5rem; letter-spacing: 0.05em;">
+                                            Key Information</h4>
+
+                                        <div style="margin-bottom: 1.5rem;">
+                                            <div
+                                                style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                                <i class="fa-solid fa-tags"></i> Target Sectors
+                                            </div>
+                                            <div id="programDetailsSectors"
+                                                style="display: flex; flex-wrap: wrap; gap: 0.5rem;"></div>
+                                        </div>
+
+                                        <div style="margin-bottom: 1.5rem;">
+                                            <div
+                                                style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                                <i class="fa-solid fa-earth-americas"></i> Regions
+                                            </div>
+                                            <div id="programDetailsCountries"
+                                                style="font-weight: 600; color: #1e293b; font-size: 1rem;"></div>
+                                        </div>
+
+                                        <div style="margin-bottom: 0;">
+                                            <div
+                                                style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                                <i class="fa-solid fa-calendar-xmark"></i> Deadline
+                                            </div>
+                                            <div id="programDetailsDeadline"
+                                                style="font-weight: 700; color: #ef4444; font-size: 1rem;"></div>
+                                        </div>
+                                    </div>
+
+                                    <button id="applyFromDetailsBtn"
+                                        style="width: 100%; padding: 1.25rem; background: #000; color: white; border: none; border-radius: 1rem; font-size: 1.1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem; transition: transform 0.2s;">
+                                        Apply for Program <i class="fa-solid fa-paper-plane"></i>
+                                    </button>
+                                    <p
+                                        style="text-align: center; color: #64748b; font-size: 0.85rem; margin-top: 1rem;">
+                                        <i class="fa-solid fa-shield-halved"></i> Verified Application Process
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- REFERRALS SECTION -->
+            <section id="referrals" class="section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <div>
+                        <h2 style="font-size: 1.5rem; font-weight: 700; color: #111827;">Incoming Referral Requests</h2>
+                        <p style="color: #6b7280; font-size: 0.9rem;">Review and accept program referrals from ecosystem
+                            connectors.</p>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Connector</th>
+                                <th>Program</th>
+                                <th>Date Received</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="referralTableBody">
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 3rem; color: #6b7280;">
+                                    <i class="fa-solid fa-spinner fa-spin"
+                                        style="font-size: 1.5rem; margin-bottom: 1rem; display: block;"></i>
+                                    Loading your referrals...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
             <!-- OVERVIEW SECTION -->
-            <section id="overview" class="section active">
+            <section id="overview" class="section">
                 <!-- Meeting Inbox Widget -->
                 <div class="meeting-inbox" id="meetingInbox">
                     <!-- Meeting inbox will be populated by JavaScript -->
@@ -1042,14 +1367,6 @@
                 </div>
             </section>
 
-            <!-- PROGRAMS SECTION -->
-            <section id="programs" class="section">
-                <h2 style="margin-bottom: 1rem;">Explore Programs</h2>
-                <div class="programs-grid" id="startupProgramsGrid">
-                    <!-- Programs will be loaded here -->
-                </div>
-            </section>
-
             <!-- APPLICATIONS SECTION -->
             <section id="applications" class="section">
                 <div style="margin-bottom: 2rem;">
@@ -1169,40 +1486,6 @@
                     </div>
                 </div>
             </section>
-
-            <!-- REFERRALS SECTION -->
-            <section id="referrals" class="section">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <div>
-                        <h2 style="font-size: 1.5rem; font-weight: 700; color: #111827;">Incoming Referral Requests</h2>
-                        <p style="color: #6b7280; font-size: 0.9rem;">Review and accept program referrals from ecosystem
-                            connectors.</p>
-                    </div>
-                </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Connector</th>
-                                <th>Program</th>
-                                <th>Date Received</th>
-                                <th>Status</th>
-                                <th style="text-align: right;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="referralTableBody">
-                            <tr>
-                                <td colspan="5" style="text-align: center; padding: 3rem; color: #6b7280;">
-                                    <i class="fa-solid fa-spinner fa-spin"
-                                        style="font-size: 1.5rem; margin-bottom: 1rem; display: block;"></i>
-                                    Loading your referrals...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
         </div>
     </main>
 
@@ -1275,24 +1558,6 @@
             }
         }
 
-        function handleApply(programTitle) {
-            const btn = event.target;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
-            btn.disabled = true;
-
-            setTimeout(() => {
-                showToast(`Application submitted successfully for <b>${programTitle}</b>!`, "success");
-                btn.innerHTML = '<i class="fas fa-check"></i> Applied';
-                btn.style.background = '#10b981';
-                btn.style.color = 'white';
-
-                state.applications++;
-                animateValue('totalApps', state.applications - 1, state.applications, 600);
-
-                const badge = document.querySelector('.badge');
-                if (badge) badge.innerText = state.applications;
-            }, 1500);
-        }
 
         function saveSettings() {
             const btn = event.target;
@@ -1512,39 +1777,83 @@
         }
 
         async function loadPrograms() {
+            console.log("🔍 Loading programs for startup...");
+            const programsGrid = document.getElementById('startupProgramsGrid');
+            if (programsGrid) {
+                programsGrid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                        <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: #fcb82e; margin-bottom: 1rem;"></i>
+                        <p style="color: #666;">Looking for the best programs for you...</p>
+                    </div>
+                `;
+            }
+
             try {
-                // Fetch referrals to see which programs are "taken"
-                const refRes = await fetch('/api/referrals/incoming');
-                const refJson = await refRes.json();
-                const acceptedOppIds = (refJson.referrals || [])
-                    .filter(r => r.status === 'accepted')
-                    .map(r => r.opportunity_id);
+                // Fetch referrals and opportunities in parallel for better performance
+                const [refRes, oppRes] = await Promise.all([
+                    fetch('/api/referrals/incoming').catch(e => ({ ok: false })),
+                    fetch('/api/opportunities/').catch(e => ({ ok: false }))
+                ]);
 
-                const res = await fetch('/api/opportunities/');
-                const json = await res.json();
-                if (!json.success) return;
+                let acceptedOppIds = [];
+                if (refRes && refRes.ok) {
+                    const refJson = await refRes.json();
+                    acceptedOppIds = (refJson.referrals || [])
+                        .filter(r => r.status === 'accepted')
+                        .map(r => r.opportunity_id);
+                }
 
-                const programsGrid = document.getElementById('startupProgramsGrid');
+                if (!oppRes || !oppRes.ok) throw new Error("Opportunities API failed");
+                const json = await oppRes.json();
+
+                if (!json.success || !json.data || !json.data.items) {
+                    console.error("❌ Failed to load programs data:", json);
+                    if (programsGrid) {
+                        programsGrid.innerHTML = `
+                            <div style="grid-column: 1/-1; text-align: center; padding: 3rem; background: white; border-radius: 1rem; border: 1px dashed #e2e8f0;">
+                                <i class="fa-solid fa-circle-exclamation" style="font-size: 2rem; color: #ef4444; margin-bottom: 1rem;"></i>
+                                <p style="color: #666; font-weight: 500;">Unable to load programs right now. Please try refreshing.</p>
+                            </div>
+                        `;
+                    }
+                    return;
+                }
+
+                const items = json.data.items;
+                console.log(`✅ Loaded ${items.length} programs. Accepted IDs:`, acceptedOppIds);
+
                 if (programsGrid) {
-                    programsGrid.innerHTML = json.data.items.map(item => {
-                        const sectors = (item.sectors || []).slice(0, 2).map(s => `<span class="tag">${s}</span>`).join('');
-                        const logoChar = item.title.charAt(0).toUpperCase();
+                    if (items.length === 0) {
+                        programsGrid.innerHTML = `
+                            <div style="grid-column: 1/-1; text-align: center; padding: 4rem; background: #fff; border-radius: 1.5rem; border: 2px dashed #e2e8f0;">
+                                <i class="fa-solid fa-box-open" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 1.5rem;"></i>
+                                <h3 style="color: #1e293b; margin-bottom: 0.5rem;">No Programs Found</h3>
+                                <p style="color: #64748b;">There are currently no published programs matching your profile. Check back later!</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    programsGrid.innerHTML = items.map(item => {
+                        // Better tags with readable colors
+                        const sectors = (item.sectors || []).slice(0, 2).map(s => `<span class="tag" style="background: rgba(99, 102, 241, 0.1); color: #6366f1; border: 1px solid rgba(99, 102, 241, 0.2); margin-right: 4px;">${s}</span>`).join('');
+                        const logoChar = (item.title || 'P').charAt(0).toUpperCase();
                         const bannerImage = item.banner_url || 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1974&auto=format&fit=crop';
 
                         const isTaken = acceptedOppIds.includes(item.id);
                         const buttonHtml = isTaken
-                            ? `<button class="apply-btn" style="background: #22c55e; cursor: default;" disabled><i class="fa-solid fa-check-circle"></i> Program Taken</button>`
-                            : `<button class="apply-btn" onclick="handleApply(${item.id}, '${item.title}')">Apply Program</button>`;
+                            ? `<button class="apply-btn" style="background: #22c55e; border: none; color: white; cursor: default;" disabled><i class="fa-solid fa-check-circle"></i> Program Taken</button>`
+                            : `<button class="apply-btn" onclick="viewProgram(${item.id})">Explore & Apply</button>`;
 
                         return `
                         <div class="program-card ${isTaken ? 'taken' : ''}">
                             <div class="program-header" style="background-image: url('${bannerImage}')">
                                 <div class="program-logo">${logoChar}</div>
-                                <span class="program-type-tag">${item.type}</span>
+                                <span class="program-type-badge">${item.type || 'Program'}</span>
                                 ${isTaken ? '<span class="status-badge" style="position: absolute; top: 1rem; right: 1rem; background: #22c55e; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 10;">TAKEN</span>' : ''}
                             </div>
                             <div class="program-body">
-                                <div class="program-title">${item.title}</div>
+                                <div class="program-title" title="${item.title}">${item.title}</div>
                                 <div class="program-company">${item.owner_company || 'Global Innovation Hub'}</div>
                                 <div class="program-tags">
                                     ${sectors}
@@ -1555,25 +1864,49 @@
                         `;
                     }).join('');
                 }
-            } catch (err) { console.error('Programs error:', err); }
+            } catch (err) {
+                console.error('❌ Programs error:', err);
+                if (programsGrid) {
+                    programsGrid.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 3rem; background: white; border-radius: 1rem; border: 1px dashed #e2e8f0;">
+                            <i class="fa-solid fa-circle-exclamation" style="font-size: 2rem; color: #ef4444; margin-bottom: 1rem;"></i>
+                            <p style="color: #666; font-weight: 500;">Failed to load programs. ${err.message}</p>
+                        </div>
+                    `;
+                }
+            }
         }
 
         async function handleApply(id, title) {
-            const modal = document.getElementById('applicationModal');
-            if (modal) {
-                document.getElementById('appliedOpportunityId').value = id;
-                document.getElementById('appliedOpportunityTitle').textContent = title;
-                modal.style.display = 'flex';
+            const select = document.getElementById('startupSelect');
+            if (!select) return;
 
-                // Load startups for the user
-                try {
-                    const res = await fetch('/api/startups/mine');
-                    const json = await res.json();
-                    const select = document.getElementById('startupSelect');
-                    if (json.success && select) {
-                        select.innerHTML = json.startups.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
-                    }
-                } catch (e) { }
+            // Load startups for the user FIRST before showing modal
+            try {
+                const res = await fetch('/api/startups/mine');
+                const json = await res.json();
+
+                if (json.success && json.startups && json.startups.length > 0) {
+                    select.innerHTML = json.startups.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+                } else {
+                    showToast("No startups found. Please create a startup profile in Settings first.", "info");
+                    // Optionally show a "Create Startup" button or link
+                    select.innerHTML = '<option value="">-- No Startups Found --</option>';
+                    setTimeout(() => {
+                        showSection('settings');
+                    }, 2000);
+                    return;
+                }
+
+                const modal = document.getElementById('applicationModal');
+                if (modal) {
+                    document.getElementById('appliedOpportunityId').value = id;
+                    document.getElementById('appliedOpportunityTitle').textContent = title;
+                    modal.style.display = 'flex';
+                }
+            } catch (e) {
+                console.error('Error fetching startups:', e);
+                showToast("Failed to load your startups. Please try again.", "error");
             }
         }
 
@@ -1744,6 +2077,13 @@
 
         async function viewProgram(id) {
             try {
+                // Fetch referrals to see which programs are "taken"
+                const refRes = await fetch('/api/referrals/incoming');
+                const refJson = await refRes.json();
+                const acceptedOppIds = (refJson.referrals || [])
+                    .filter(r => r.status === 'accepted')
+                    .map(r => r.opportunity_id);
+
                 const res = await fetch(`/api/opportunities/`);
                 const json = await res.json();
                 if (!json.success) return;
@@ -1754,25 +2094,63 @@
                     return;
                 }
 
-                document.getElementById('programDetailTitle').textContent = item.title;
-                document.getElementById('programDetailOwner').textContent = item.owner_company || 'Global Innovation Hub';
-                document.getElementById('programDetailDesc').textContent = item.description || "No description provided for this program.";
+                // Update details view (Section based)
+                const banner = document.getElementById('programDetailsBanner');
+                if (banner) banner.style.backgroundImage = `url('${item.banner_url || "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1974&auto=format&fit=crop"}')`;
 
-                const banner = document.getElementById('programBanner');
-                banner.style.backgroundImage = `url('${item.banner_url || "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1974&auto=format&fit=crop"}')`;
+                const typeTag = document.getElementById('programDetailsType');
+                if (typeTag) typeTag.textContent = item.type || 'Program';
 
-                document.getElementById('programDetailLogo').textContent = item.title.charAt(0).toUpperCase();
+                const titleElem = document.getElementById('programDetailsTitle');
+                if (titleElem) titleElem.textContent = item.title;
 
-                const sectorContainer = document.getElementById('programDetailSectors');
-                sectorContainer.innerHTML = (item.sectors || []).map(s => `<span class="tag" style="background: #eff6ff; color: #3b82f6; border: 1px solid #dbeafe;">${s}</span>`).join('');
+                const descElem = document.getElementById('programDetailsDesc');
+                if (descElem) descElem.textContent = item.description || 'No description available.';
 
-                const applyBtn = document.getElementById('applyFromDetailBtn');
-                applyBtn.onclick = () => {
-                    closeModal('programDetailModal');
-                    handleApply(item.id, item.title);
-                };
+                const eligElem = document.getElementById('programDetailsEligibility');
+                if (eligElem) eligElem.textContent = item.eligibility || 'Open for all relevant startups.';
 
-                document.getElementById('programDetailModal').style.display = 'flex';
+                const benefitsElem = document.getElementById('programDetailsBenefits');
+                if (benefitsElem) benefitsElem.textContent = item.benefits || 'Check platform for full benefits package.';
+
+                // Sectors
+                const sectorsContainer = document.getElementById('programDetailsSectors');
+                if (sectorsContainer) {
+                    sectorsContainer.innerHTML = (item.sectors || []).map(s => `<span class="tag" style="background: #eef2ff; color: #4f46e5; border: 1px solid #e0e7ff;">${s}</span>`).join('');
+                }
+
+                // Countries
+                const countriesElem = document.getElementById('programDetailsCountries');
+                if (countriesElem) countriesElem.textContent = (item.countries || []).join(', ') || 'Global Access';
+
+                // Deadline
+                const deadElem = document.getElementById('programDetailsDeadline');
+                if (deadElem) {
+                    const deadline = item.deadline ? new Date(item.deadline).toLocaleDateString() : 'Rolling Selection';
+                    deadElem.textContent = deadline;
+                }
+
+                const applyBtn = document.getElementById('applyFromDetailsBtn');
+                const isTaken = acceptedOppIds.includes(item.id);
+
+                if (isTaken) {
+                    applyBtn.innerHTML = '<i class="fa-solid fa-check-circle"></i> Already Applied';
+                    applyBtn.style.background = '#22c55e';
+                    applyBtn.style.cursor = 'default';
+                    applyBtn.disabled = true;
+                    applyBtn.onclick = null;
+                } else {
+                    applyBtn.innerHTML = 'Apply for Program <i class="fa-solid fa-paper-plane"></i>';
+                    applyBtn.style.background = '#000';
+                    applyBtn.style.color = '#fff';
+                    applyBtn.style.cursor = 'pointer';
+                    applyBtn.disabled = false;
+                    applyBtn.onclick = () => {
+                        handleApply(item.id, item.title);
+                    };
+                }
+
+                showSection('program-details');
             } catch (e) {
                 console.error(e);
                 showToast("Failed to load program details", "info");
@@ -1869,8 +2247,10 @@
                     style="position: absolute; bottom: -30px; left: 2rem; width: 80px; height: 80px; background: white; border-radius: 16px; border: 4px solid white; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: #fcb82e; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
                 </div>
             </div>
-            <div style="padding-top: 1rem;">
-                <h2 id="programDetailTitle" style="font-size: 1.8rem; font-weight: 800; color: #111827;"></h2>
+            <div style="padding-top: 2rem;">
+                <h2 id="programDetailTitle"
+                    style="font-size: 1.5rem; font-weight: 800; color: #111827; line-height: 1.3; margin-top: 3.5rem; margin-bottom: 0.75rem; word-break: break-word;">
+                </h2>
                 <div id="programDetailOwner" style="color: #64748b; font-weight: 600; margin-bottom: 1rem;"></div>
 
                 <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;" id="programDetailSectors"></div>
@@ -1883,8 +2263,8 @@
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <button id="applyFromDetailBtn" class="apply-btn" style="width: 100%; border-radius: 8px;">Apply
-                        Now</button>
+                    <button id="applyFromDetailBtn" class="apply-btn" style="width: 100%; border-radius: 8px;">Apply for
+                        Program</button>
                     <button onclick="closeModal('programDetailModal')"
                         style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px; font-weight: 600; background: white; cursor: pointer;">Close</button>
                 </div>

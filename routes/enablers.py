@@ -1,7 +1,7 @@
 # routes/enablers.py
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
-from models import Referral, Startup, Opportunity, User
+from models import Referral, Startup, Opportunity, User, Application
 from extensions import db
 import random
 

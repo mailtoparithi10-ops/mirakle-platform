@@ -3,10 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
+    <link rel="icon"
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connector Dashboard - InnoBridge</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/referral-links.css">
     <style>
         .timeline-meta {
             font-size: 0.75rem;
@@ -3187,12 +3189,7 @@
             </button>
         </div>
         <nav class="nav-menu">
-            <button class="nav-item active" onclick="showSection('overview')" id="tab-overview">
-                <i class="fa-solid fa-gauge-high"></i>
-                Overview
-                <span class="badge-outline">Live</span>
-            </button>
-            <button class="nav-item" onclick="showSection('programs')" id="tab-programs">
+            <button class="nav-item active" onclick="showSection('programs')" id="tab-programs">
                 <i class="fa-solid fa-compass"></i>
                 Explore Programs
                 <span class="badge-outline" style="color: #6366f1; border-color: #6366f1;">New</span>
@@ -3201,6 +3198,11 @@
                 <i class="fa-solid fa-share-nodes"></i>
                 My Referrals
                 <span class="badge">12</span>
+            </button>
+            <button class="nav-item" onclick="showSection('overview')" id="tab-overview">
+                <i class="fa-solid fa-gauge-high"></i>
+                Overview
+                <span class="badge-outline">Live</span>
             </button>
             <button class="nav-item" onclick="showSection('rewards')" id="tab-rewards">
                 <i class="fa-solid fa-trophy"></i>
@@ -3233,14 +3235,256 @@
 
     <main class="main-content">
         <div class="dashboard-header">
-            <div class="dashboard-title" id="sectionTitle">Connector Overview</div>
-            <div class="dashboard-subtitle" id="sectionSubtitle">Track your referrals, rewards, and impact across the
-                ecosystem</div>
+            <div class="dashboard-title" id="sectionTitle">Explore Programs</div>
+            <div class="dashboard-subtitle" id="sectionSubtitle">Discover and apply to ecosystem programs relevant to
+                your
+                network</div>
         </div>
 
         <div class="dashboard-content">
+            <!-- PROGRAMS SECTION -->
+            <section id="programs" class="section active">
+                <div class="section-header">
+                    <div class="section-header-main">
+                        <div class="section-title">
+                            <i class="fa-solid fa-compass"></i>
+                            Explore Programs
+                        </div>
+                        <div class="section-subtitle">
+                            Discover and apply to ecosystem programs relevant to your network.
+                        </div>
+                    </div>
+                    <div class="section-actions">
+                        <div class="search-input">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" placeholder="Search programs...">
+                        </div>
+                        <button class="btn">
+                            <i class="fa-solid fa-filter"></i> Filters
+                        </button>
+                    </div>
+                </div>
+
+                <div class="programs-grid" id="connectorProgramsGrid"
+                    style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                    <!-- Programs will be loaded here via JS -->
+                </div>
+            </section>
+
+            <!-- REFERRALS SECTION -->
+            <section id="referrals" class="section">
+                <div class="section-header">
+                    <div class="section-header-main">
+                        <div class="section-title">
+                            <i class="fa-solid fa-share-nodes"></i>
+                            My Referrals
+                        </div>
+                        <div class="section-subtitle">
+                            Track and manage all your startup referrals and their progress.
+                        </div>
+                    </div>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="openAddReferralModal()">
+                            <i class="fa-solid fa-plus"></i> Add New Referral
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <div>
+                            <div class="table-title">All Referrals</div>
+                            <div class="table-subtitle">Track status and earnings for each referral</div>
+                        </div>
+                        <div class="table-filters" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <div class="filter-pill active" onclick="updateReferralsTabFilter('all', this)"
+                                style="cursor: pointer;">
+                                All Status
+                            </div>
+                            <div class="filter-pill" onclick="updateReferralsTabFilter('active', this)"
+                                style="cursor: pointer;">
+                                <span class="filter-dot" style="background: #3b82f6;"></span>
+                                Active (14)
+                            </div>
+                            <div class="filter-pill" onclick="updateReferralsTabFilter('completed', this)"
+                                style="cursor: pointer;">
+                                <span class="filter-dot" style="background: #22c55e;"></span>
+                                Completed (9)
+                            </div>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Startup Name</th>
+                                <th>Program</th>
+                                <th>Date Referred</th>
+                                <th>Status</th>
+                                <th>Potential Reward</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="referralsTableBody">
+                            <tr>
+                                <td style="font-weight: 600;">BioStream</td>
+                                <td>HealthTech Accelerator</td>
+                                <td>Jan 15, 2026</td>
+                                <td><span class="status-pill completed">Completed</span></td>
+                                <td style="color: #22c55e; font-weight: 700;">₹2,500</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('BioStream')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">GreenWave AI</td>
+                                <td>Sustainable Energy Challenge</td>
+                                <td>Jan 18, 2026</td>
+                                <td><span class="status-pill in-progress">In Progress</span></td>
+                                <td style="color: #3b82f6; font-weight: 700;">₹3,000</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('GreenWave AI')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">QuantumScale</td>
+                                <td>AI Logistics Pilot</td>
+                                <td>Jan 20, 2026</td>
+                                <td><span class="status-pill pending">Pending Review</span></td>
+                                <td style="color: #f59e0b; font-weight: 700;">₹2,000</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('QuantumScale')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">MedSync Health</td>
+                                <td>HealthTech Accelerator</td>
+                                <td>Jan 22, 2026</td>
+                                <td><span class="status-pill in-progress">Shortlisted</span></td>
+                                <td style="color: #3b82f6; font-weight: 700;">₹2,500</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('MedSync Health')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">FinFlow Pro</td>
+                                <td>FinTech Innovation Program</td>
+                                <td>Jan 10, 2026</td>
+                                <td><span class="status-pill completed">Completed</span></td>
+                                <td style="color: #22c55e; font-weight: 700;">₹3,500</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('FinFlow Pro')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">AgriTech Solutions</td>
+                                <td>AgriTech Accelerator</td>
+                                <td>Jan 25, 2026</td>
+                                <td><span class="status-pill pending">Under Review</span></td>
+                                <td style="color: #f59e0b; font-weight: 700;">₹2,200</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('AgriTech Solutions')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">EduLearn Platform</td>
+                                <td>EdTech Growth Program</td>
+                                <td>Jan 12, 2026</td>
+                                <td><span class="status-pill failed">Rejected</span></td>
+                                <td style="color: #64748b; font-weight: 700;">₹0</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('EduLearn Platform')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">CloudNest</td>
+                                <td>AI Logistics Pilot</td>
+                                <td>Jan 8, 2026</td>
+                                <td><span class="status-pill completed">Completed</span></td>
+                                <td style="color: #22c55e; font-weight: 700;">₹2,000</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('CloudNest')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">SmartMobility Inc</td>
+                                <td>Smart Mobility Initiative</td>
+                                <td>Jan 27, 2026</td>
+                                <td><span class="status-pill in-progress">Pitch Scheduled</span></td>
+                                <td style="color: #3b82f6; font-weight: 700;">₹2,800</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('SmartMobility Inc')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">DataVault Security</td>
+                                <td>Cybersecurity Innovation</td>
+                                <td>Jan 5, 2026</td>
+                                <td><span class="status-pill completed">Completed</span></td>
+                                <td style="color: #22c55e; font-weight: 700;">₹4,000</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('DataVault Security')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">EcoCircle</td>
+                                <td>Sustainable Energy Challenge</td>
+                                <td>Jan 23, 2026</td>
+                                <td><span class="status-pill in-progress">Due Diligence</span></td>
+                                <td style="color: #3b82f6; font-weight: 700;">₹3,000</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('EcoCircle')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">RetailTech Hub</td>
+                                <td>Retail Innovation Sprint</td>
+                                <td>Jan 28, 2026</td>
+                                <td><span class="status-pill pending">Application Submitted</span></td>
+                                <td style="color: #f59e0b; font-weight: 700;">₹1,800</td>
+                                <td>
+                                    <button class="btn-icon" onclick="viewReferralDetails('RetailTech Hub')">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="table-footer">
+                        <span id="referralsTableCount">Showing 3 of 12 referrals</span>
+                        <div class="pagination">
+                            <button class="pagination-btn" onclick="paginateReferralsTab('prev')">‹</button>
+                            <button class="pagination-btn active" onclick="paginateReferralsTab(1)">1</button>
+                            <button class="pagination-btn" onclick="paginateReferralsTab(2)">2</button>
+                            <button class="pagination-btn" onclick="paginateReferralsTab('next')">›</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- OVERVIEW SECTION -->
-            <section id="overview" class="section active">
+            <section id="overview" class="section">
                 <!-- Meeting Inbox Widget -->
                 <div class="meeting-inbox" id="meetingInbox">
                     <!-- Meeting inbox will be populated by JavaScript -->
@@ -4599,246 +4843,7 @@
                 </div>
             </section>
 
-            <!-- PROGRAMS SECTION -->
-            <section id="programs" class="section">
-                <div class="section-header">
-                    <div class="section-header-main">
-                        <div class="section-title">
-                            <i class="fa-solid fa-compass"></i>
-                            Explore Programs
-                        </div>
-                        <div class="section-subtitle">
-                            Discover and apply to ecosystem programs relevant to your network.
-                        </div>
-                    </div>
-                    <div class="section-actions">
-                        <div class="search-input">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" placeholder="Search programs...">
-                        </div>
-                        <button class="btn">
-                            <i class="fa-solid fa-filter"></i> Filters
-                        </button>
-                    </div>
-                </div>
 
-                <div class="programs-grid" id="connectorProgramsGrid"
-                    style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
-                    <!-- Programs will be loaded here via JS -->
-                </div>
-            </section>
-
-            <!-- REFERRALS SECTION -->
-            <section id="referrals" class="section">
-                <div class="section-header">
-                    <div class="section-header-main">
-                        <div class="section-title">
-                            <i class="fa-solid fa-share-nodes"></i>
-                            My Referrals
-                        </div>
-                        <div class="section-subtitle">
-                            Track and manage all your startup referrals and their progress.
-                        </div>
-                    </div>
-                    <div class="section-actions">
-                        <button class="btn btn-primary" onclick="openAddReferralModal()">
-                            <i class="fa-solid fa-plus"></i> Add New Referral
-                        </button>
-                    </div>
-                </div>
-
-                <div class="table-container">
-                    <div class="table-header">
-                        <div>
-                            <div class="table-title">All Referrals</div>
-                            <div class="table-subtitle">Track status and earnings for each referral</div>
-                        </div>
-                        <div class="table-filters" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                            <div class="filter-pill active" onclick="updateReferralsTabFilter('all', this)"
-                                style="cursor: pointer;">
-                                All Status
-                            </div>
-                            <div class="filter-pill" onclick="updateReferralsTabFilter('active', this)"
-                                style="cursor: pointer;">
-                                <span class="filter-dot" style="background: #3b82f6;"></span>
-                                Active (14)
-                            </div>
-                            <div class="filter-pill" onclick="updateReferralsTabFilter('completed', this)"
-                                style="cursor: pointer;">
-                                <span class="filter-dot" style="background: #22c55e;"></span>
-                                Completed (9)
-                            </div>
-                        </div>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Startup Name</th>
-                                <th>Program</th>
-                                <th>Date Referred</th>
-                                <th>Status</th>
-                                <th>Potential Reward</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="referralsTableBody">
-                            <tr>
-                                <td style="font-weight: 600;">BioStream</td>
-                                <td>HealthTech Accelerator</td>
-                                <td>Jan 15, 2026</td>
-                                <td><span class="status-pill completed">Completed</span></td>
-                                <td style="color: #22c55e; font-weight: 700;">₹2,500</td>
-                                <td>
-                                    <button class="btn-icon" onclick="viewReferralDetails('BioStream')">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600;">GreenWave AI</td>
-                                <td>Sustainable Energy Challenge</td>
-                                <td>Jan 18, 2026</td>
-                                <td><span class="status-pill in-progress">In Progress</span></td>
-                                <td style="color: #3b82f6; font-weight: 700;">₹3,000</td>
-                                <td>
-                                    <button class="btn-icon" onclick="viewReferralDetails('GreenWave AI')">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600;">QuantumScale</td>
-                                <td>AI Logistics Pilot</td>
-                                <td>Jan 20, 2026</td>
-                                <td><span class="status-pill pending">Pending Review</span></td>
-                                <td style="color: #f59e0b; font-weight: 700;">₹2,000</td>
-                                <td>
-                                    <button class="btn-icon" onclick="viewReferralDetails('QuantumScale')">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600;">MedSync Health</td>
-                                <td>HealthTech Accelerator</td>
-                                <td>Jan 22, 2026</td>
-                                <td><span class="status-pill in-progress">Shortlisted</span></td>
-                                <td style="color: #3b82f6; font-weight: 700;">₹2,500</td>
-                                <td>
-                                    <button class="btn-icon" onclick="viewReferralDetails('MedSync Health')">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600;">FinFlow Pro</td>
-                                <td>FinTech Innovation Program</td>
-                                <td>Jan 10, 2026</td>
-                                <td><span class="status-pill completed">Completed</span></td>
-                                <td style="color: #22c55e; font-weight: 700;">₹3,500</td>
-                                <td>
-                                    <button class="btn-icon" onclick="viewReferralDetails('FinFlow Pro')">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600;">AgriTech Solutions</td>
-                                <td>AgriTech Accelerator</td>
-                                <td>Jan 25, 2026</td>
-                                <td><span class="status-pill pending">Under Review</span></td>
-                                <td style="color: #f59e0b; font-weight: 700;">₹2,200</td>
-                                <td>
-                                    <button class="btn-icon" onclick="viewReferralDetails('AgriTech Solutions')">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600;">EduLearn Platform</td>
-                                <td>EdTech Growth Program</td>
-                                <td>Jan 12, 2026</td>
-                                <td><span class="status-pill failed">Rejected</span></td>
-                                <td style="color: #64748b; font-weight: 700;">₹0</td>
-                                <td>
-                                    <button class="btn-icon" onclick="viewReferralDetails('EduLearn Platform')">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600;">CloudNest</td>
-                                <td>AI Logistics Pilot</td>
-                                <td>Jan 8, 2026</td>
-                                <td><span class="status-pill completed">Completed</span></td>
-                                <td style="color: #22c55e; font-weight: 700;">₹2,000</td>
-                                <td>
-                                    <button class="btn-icon" onclick="viewReferralDetails('CloudNest')">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600;">SmartMobility Inc</td>
-                                <td>Smart Mobility Initiative</td>
-                                <td>Jan 27, 2026</td>
-                                <td><span class="status-pill in-progress">Pitch Scheduled</span></td>
-                                <td style="color: #3b82f6; font-weight: 700;">₹2,800</td>
-                                <td>
-                                    <button class="btn-icon" onclick="viewReferralDetails('SmartMobility Inc')">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600;">DataVault Security</td>
-                                <td>Cybersecurity Innovation</td>
-                                <td>Jan 5, 2026</td>
-                                <td><span class="status-pill completed">Completed</span></td>
-                                <td style="color: #22c55e; font-weight: 700;">₹4,000</td>
-                                <td>
-                                    <button class="btn-icon" onclick="viewReferralDetails('DataVault Security')">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600;">EcoCircle</td>
-                                <td>Sustainable Energy Challenge</td>
-                                <td>Jan 23, 2026</td>
-                                <td><span class="status-pill in-progress">Due Diligence</span></td>
-                                <td style="color: #3b82f6; font-weight: 700;">₹3,000</td>
-                                <td>
-                                    <button class="btn-icon" onclick="viewReferralDetails('EcoCircle')">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600;">RetailTech Hub</td>
-                                <td>Retail Innovation Sprint</td>
-                                <td>Jan 28, 2026</td>
-                                <td><span class="status-pill pending">Application Submitted</span></td>
-                                <td style="color: #f59e0b; font-weight: 700;">₹1,800</td>
-                                <td>
-                                    <button class="btn-icon" onclick="viewReferralDetails('RetailTech Hub')">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="table-footer">
-                        <span id="referralsTableCount">Showing 3 of 12 referrals</span>
-                        <div class="pagination">
-                            <button class="pagination-btn" onclick="paginateReferralsTab('prev')">‹</button>
-                            <button class="pagination-btn active" onclick="paginateReferralsTab(1)">1</button>
-                            <button class="pagination-btn" onclick="paginateReferralsTab(2)">2</button>
-                            <button class="pagination-btn" onclick="paginateReferralsTab('next')">›</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             <!-- PROGRAM DETAILS SECTION -->
             <section id="program-details" class="section">
@@ -5306,565 +5311,613 @@
                     <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: #111827;">
                         <i class="fa-solid fa-plus-circle" style="color: #fcb82e;"></i> Add New Referral
                     </h2>
-                    <p style="color: #6b7280; margin-bottom: 2rem; font-size: 0.9rem;">Connect a startup with a program
-                        and earn rewards</p>
+                    <div id="linkReferralSection" style="text-align: center;">
+                        <p style="color: #64748b; margin-bottom: 2rem; font-size: 0.95rem;">
+                            Instead of filling a form, generate a unique link. When a startup registers or logs in via
+                            this link, they'll be automatically tracked under your profile.
+                        </p>
 
-                    <form id="addReferralForm" onsubmit="submitReferral(event)">
-                        <div style="margin-bottom: 1.5rem;">
+                        <div style="margin-bottom: 2rem; text-align: left;">
                             <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">
-                                <i class="fa-solid fa-rocket" style="color: #fcb82e;"></i> Startup Name
+                                <i class="fa-solid fa-trophy" style="color: #fcb82e;"></i> Select Program to Refer
                             </label>
-                            <input type="text" id="startupName" required placeholder="Enter startup name"
-                                style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; font-size: 0.9rem;" />
-                            <small style="color: #6b7280; font-size: 0.8rem;">The startup you're referring to the
-                                program</small>
-                        </div>
-
-                        <div style="margin-bottom: 1.5rem;">
-                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">
-                                <i class="fa-solid fa-trophy" style="color: #fcb82e;"></i> Select Program
-                            </label>
-                            <select id="programSelect" required
-                                style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; font-size: 0.9rem;">
-                                <option value="">Choose a program...</option>
-                                <option value="healthtech">HealthTech Accelerator - ₹2,500 reward</option>
-                                <option value="energy">Sustainable Energy Challenge - ₹3,000 reward</option>
-                                <option value="ai">AI Logistics Pilot - ₹2,000 reward</option>
-                                <option value="fintech">FinTech Innovation Program - ₹3,500 reward</option>
-                                <option value="agritech">AgriTech Accelerator - ₹2,200 reward</option>
+                            <select id="programLinkSelect"
+                                style="width: 100%; padding: 1rem; border: 1.5px solid #e2e8f0; border-radius: 0.75rem; font-size: 0.95rem; background: #f8fafc; transition: border-color 0.2s;">
+                                <!-- Will be populated -->
                             </select>
                         </div>
 
-                        <div style="margin-bottom: 1.5rem;">
-                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">
-                                <i class="fa-solid fa-envelope" style="color: #fcb82e;"></i> Startup Email
-                            </label>
-                            <input type="email" id="startupEmail" required placeholder="contact@startup.com"
-                                style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; font-size: 0.9rem;" />
-                        </div>
-
-                        <div style="margin-bottom: 2rem;">
-                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">
-                                <i class="fa-solid fa-comment" style="color: #fcb82e;"></i> Why is this a good fit?
-                            </label>
-                            <textarea id="referralNotes" rows="3"
-                                placeholder="Explain why this startup is a great match for the program..."
-                                style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; font-size: 0.9rem; resize: vertical;"></textarea>
-                        </div>
-
-                        <div style="display: flex; gap: 1rem;">
-                            <button type="button" onclick="closeAddReferralModal()"
-                                style="flex: 1; padding: 0.75rem; border: 1px solid #e5e7eb; background: white; border-radius: 0.5rem; font-weight: 600; cursor: pointer; color: #6b7280;">
-                                Cancel
-                            </button>
-                            <button type="submit" id="submitReferralBtn"
-                                style="flex: 1; padding: 0.75rem; background: #fcb82e; border: none; border-radius: 0.5rem; font-weight: 600; cursor: pointer; color: #000;">
-                                <i class="fa-solid fa-paper-plane"></i> Submit Referral
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- TIER BENEFITS MODAL -->
-            <div id="tierBenefitsModal"
-                style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); z-index: 20000; align-items: center; justify-content: center; padding: 1.5rem;">
-                <div
-                    style="background: white; border-radius: 2rem; width: 100%; max-width: 900px; padding: 3rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); position: relative; max-height: 90vh; overflow-y: auto;">
-                    <button onclick="closeTierBenefitsModal()"
-                        style="position: absolute; top: 24px; right: 24px; border: none; background: #f1f5f9; width: 40px; height: 40px; border-radius: 20px; font-size: 1.25rem; cursor: pointer; color: #475569; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">&times;</button>
-
-                    <div style="text-align: center; margin-bottom: 3rem;">
-                        <h2 style="font-size: 2.25rem; font-weight: 800; color: #0f172a; margin-bottom: 0.75rem;">
-                            Connector Tier Benefits</h2>
-                        <p style="color: #64748b; font-size: 1.1rem; max-width: 500px; margin: 0 auto;">Maximize your
-                            impact and unlock exclusive institutional-grade rewards as you level up.</p>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
-                        <!-- Standard Tier -->
-                        <div
-                            style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 1.5rem; padding: 2rem; transition: transform 0.3s ease;">
-                            <div
-                                style="width: 48px; height: 48px; background: #e2e8f0; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: #475569; font-size: 1.5rem;">
-                                <i class="fa-solid fa-leaf"></i>
-                            </div>
-                            <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">
-                                Standard</h3>
-                            <div style="color: #64748b; font-size: 0.875rem; margin-bottom: 1.5rem;">Entry level (L1 -
-                                L2)</div>
-                            <ul
-                                style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; color: #334155; font-size: 0.93rem;">
-                                <li style="display: flex; align-items: center; gap: 0.75rem;"><i
-                                        class="fa-solid fa-check" style="color: #10b981;"></i> 10% Reward Share</li>
-                                <li style="display: flex; align-items: center; gap: 0.75rem;"><i
-                                        class="fa-solid fa-check" style="color: #10b981;"></i> 14-day Payout speed</li>
-                                <li style="display: flex; align-items: center; gap: 0.75rem;"><i
-                                        class="fa-solid fa-check" style="color: #10b981;"></i> Standard support</li>
-                                <li style="display: flex; align-items: center; gap: 0.75rem;"><i
-                                        class="fa-solid fa-check" style="color: #10b981;"></i> Public programs only</li>
-                            </ul>
-                        </div>
-
-                        <!-- Pro Tier (Active) -->
-                        <div
-                            style="background: #fffbeb; border: 2px solid #fbbf24; border-radius: 1.5rem; padding: 2rem; position: relative; transform: scale(1.05); box-shadow: 0 10px 25px -5px rgba(251, 191, 36, 0.2);">
-                            <div
-                                style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #fbbf24; color: #92400e; padding: 4px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
-                                Your Current Tier</div>
-                            <div
-                                style="width: 48px; height: 48px; background: #fef3c7; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: #d97706; font-size: 1.5rem;">
-                                <i class="fa-solid fa-rocket"></i>
-                            </div>
-                            <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Pro
-                                Connector</h3>
-                            <div style="color: #d97706; font-size: 0.875rem; margin-bottom: 1.5rem;">Growth level (L3 -
-                                L4)</div>
-                            <ul
-                                style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; color: #334155; font-size: 0.93rem;">
-                                <li style="display: flex; align-items: center; gap: 0.75rem;"><i
-                                        class="fa-solid fa-check" style="color: #d97706;"></i> 18% Reward Share</li>
-                                <li style="display: flex; align-items: center; gap: 0.75rem;"><i
-                                        class="fa-solid fa-check" style="color: #d97706;"></i> 7-day Payout speed</li>
-                                <li style="display: flex; align-items: center; gap: 0.75rem;"><i
-                                        class="fa-solid fa-check" style="color: #d97706;"></i> Gold-tier support</li>
-                                <li style="display: flex; align-items: center; gap: 0.75rem;"><i
-                                        class="fa-solid fa-check" style="color: #d97706;"></i> Early program access</li>
-                                <li style="display: flex; align-items: center; gap: 0.75rem;"><i
-                                        class="fa-solid fa-check" style="color: #d97706;"></i> 1.2x Multiplier</li>
-                            </ul>
-                        </div>
-
-                        <!-- Elite Tier -->
-                        <div
-                            style="background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 1.5rem; padding: 2rem;">
-                            <div
-                                style="width: 48px; height: 48px; background: #cbd5e1; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: #1e293b; font-size: 1.5rem;">
-                                <i class="fa-solid fa-crown"></i>
-                            </div>
-                            <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">
-                                Elite</h3>
-                            <div style="color: #475569; font-size: 0.875rem; margin-bottom: 1.5rem;">Master level (L5+)
-                            </div>
-                            <ul
-                                style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; color: #334155; font-size: 0.93rem;">
-                                <li style="display: flex; align-items: center; gap: 0.75rem;"><i
-                                        class="fa-solid fa-check" style="color: #1e293b;"></i> 25% Reward Share</li>
-                                <li style="display: flex; align-items: center; gap: 0.75rem;"><i
-                                        class="fa-solid fa-check" style="color: #1e293b;"></i> Instant Payout</li>
-                                <li style="display: flex; align-items: center; gap: 0.75rem;"><i
-                                        class="fa-solid fa-check" style="color: #1e293b;"></i> Dedicated Manager</li>
-                                <li style="display: flex; align-items: center; gap: 0.75rem;"><i
-                                        class="fa-solid fa-check" style="color: #1e293b;"></i> Private opportunities
-                                </li>
-                                <li style="display: flex; align-items: center; gap: 0.75rem;"><i
-                                        class="fa-solid fa-check" style="color: #1e293b;"></i> 1.5x Multiplier</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div
-                        style="margin-top: 3rem; background: #f8fafc; border-radius: 1rem; padding: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div
-                                style="width: 40px; height: 40px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #475569;">
-                                <i class="fa-solid fa-chart-line"></i>
-                            </div>
-                            <div style="color: #475569; font-size: 0.95rem;">You are <strong>450 points</strong> away
-                                from the next tier!</div>
-                        </div>
-                        <button onclick="closeTierBenefitsModal(); showSection('guide')"
-                            style="background: #0f172a; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s;">Learn
-                            how to level up</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PAYOUT REQUIREMENTS MODAL -->
-            <div id="payoutRequirementsModal"
-                style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); z-index: 20000; align-items: center; justify-content: center; padding: 1.5rem;">
-                <div
-                    style="background: white; border-radius: 2rem; width: 100%; max-width: 800px; padding: 3rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); position: relative; max-height: 90vh; overflow-y: auto;">
-                    <button onclick="closePayoutRequirementsModal()"
-                        style="position: absolute; top: 24px; right: 24px; border: none; background: #f1f5f9; width: 40px; height: 40px; border-radius: 20px; font-size: 1.25rem; cursor: pointer; color: #475569; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">&times;</button>
-
-                    <div style="text-align: center; margin-bottom: 2.5rem;">
-                        <div
-                            style="width: 64px; height: 64px; background: linear-gradient(135deg, #fcb82e, #f97316); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: #000; font-size: 2rem;">
-                            <i class="fa-solid fa-file-invoice-dollar"></i>
-                        </div>
-                        <h2 style="font-size: 2rem; font-weight: 800; color: #0f172a; margin-bottom: 0.75rem;">
-                            Payout Requirements</h2>
-                        <p style="color: #64748b; font-size: 1rem; max-width: 500px; margin: 0 auto;">Complete these
-                            steps to ensure smooth and timely payout processing for your earned rewards.</p>
-                    </div>
-
-                    <!-- Requirements Checklist -->
-                    <div style="background: #f8fafc; border-radius: 1rem; padding: 2rem; margin-bottom: 2rem;">
-                        <h3
-                            style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                            <i class="fa-solid fa-clipboard-check" style="color: #fcb82e;"></i>
-                            Required Documents & Information
-                        </h3>
-
-                        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
-                            <!-- Requirement 1 -->
-                            <div style="display: flex; gap: 1rem; align-items: start;">
-                                <div
-                                    style="width: 32px; height: 32px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: white; font-size: 0.875rem;">
-                                    <i class="fa-solid fa-check"></i>
-                                </div>
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 600; color: #1e293b; margin-bottom: 0.25rem;">Valid
-                                        Government ID</div>
-                                    <div style="font-size: 0.875rem; color: #64748b;">PAN Card, Aadhaar Card, Passport,
-                                        or Driver's License for identity verification.</div>
-                                </div>
-                            </div>
-
-                            <!-- Requirement 2 -->
-                            <div style="display: flex; gap: 1rem; align-items: start;">
-                                <div
-                                    style="width: 32px; height: 32px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: white; font-size: 0.875rem;">
-                                    <i class="fa-solid fa-check"></i>
-                                </div>
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 600; color: #1e293b; margin-bottom: 0.25rem;">Bank Account
-                                        Details</div>
-                                    <div style="font-size: 0.875rem; color: #64748b;">Account number, IFSC code, and
-                                        account holder name matching your registered name.</div>
-                                </div>
-                            </div>
-
-                            <!-- Requirement 3 -->
-                            <div style="display: flex; gap: 1rem; align-items: start;">
-                                <div
-                                    style="width: 32px; height: 32px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: white; font-size: 0.875rem;">
-                                    <i class="fa-solid fa-check"></i>
-                                </div>
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 600; color: #1e293b; margin-bottom: 0.25rem;">PAN Card
-                                        (India) or Tax ID</div>
-                                    <div style="font-size: 0.875rem; color: #64748b;">Required for tax compliance and
-                                        TDS deduction as per Indian regulations.</div>
-                                </div>
-                            </div>
-
-                            <!-- Requirement 4 -->
-                            <div style="display: flex; gap: 1rem; align-items: start;">
-                                <div
-                                    style="width: 32px; height: 32px; background: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: white; font-size: 0.875rem;">
-                                    <i class="fa-solid fa-exclamation"></i>
-                                </div>
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 600; color: #1e293b; margin-bottom: 0.25rem;">Email & Phone
-                                        Verification</div>
-                                    <div style="font-size: 0.875rem; color: #64748b;">Verified email and phone number
-                                        for payout notifications and OTP verification.</div>
-                                </div>
-                            </div>
-
-                            <!-- Requirement 5 -->
-                            <div style="display: flex; gap: 1rem; align-items: start;">
-                                <div
-                                    style="width: 32px; height: 32px; background: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: white; font-size: 0.875rem;">
-                                    <i class="fa-solid fa-exclamation"></i>
-                                </div>
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 600; color: #1e293b; margin-bottom: 0.25rem;">Minimum
-                                        Payout Threshold</div>
-                                    <div style="font-size: 0.875rem; color: #64748b;">Minimum balance of ₹1,000 required
-                                        to initiate a payout request.</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Verification Process -->
-                    <div
-                        style="background: #fff; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 2rem; margin-bottom: 2rem;">
-                        <h3
-                            style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                            <i class="fa-solid fa-shield-halved" style="color: #3b82f6;"></i>
-                            Verification Process
-                        </h3>
-
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
-                            <div style="text-align: center;">
-                                <div
-                                    style="width: 48px; height: 48px; background: #dbeafe; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: #3b82f6; font-size: 1.5rem;">
-                                    <i class="fa-solid fa-upload"></i>
-                                </div>
-                                <div
-                                    style="font-weight: 600; color: #1e293b; margin-bottom: 0.5rem; font-size: 0.9rem;">
-                                    1. Submit Documents</div>
-                                <div style="font-size: 0.8rem; color: #64748b;">Upload required KYC documents</div>
-                            </div>
-
-                            <div style="text-align: center;">
-                                <div
-                                    style="width: 48px; height: 48px; background: #fef3c7; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: #f59e0b; font-size: 1.5rem;">
-                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                </div>
-                                <div
-                                    style="font-weight: 600; color: #1e293b; margin-bottom: 0.5rem; font-size: 0.9rem;">
-                                    2. Verification</div>
-                                <div style="font-size: 0.8rem; color: #64748b;">2-3 business days review</div>
-                            </div>
-
-                            <div style="text-align: center;">
-                                <div
-                                    style="width: 48px; height: 48px; background: #dcfce7; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: #22c55e; font-size: 1.5rem;">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                </div>
-                                <div
-                                    style="font-weight: 600; color: #1e293b; margin-bottom: 0.5rem; font-size: 0.9rem;">
-                                    3. Approval</div>
-                                <div style="font-size: 0.8rem; color: #64748b;">Ready for payouts</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Important Notes -->
-                    <div
-                        style="background: #fffbeb; border: 1px solid #fbbf24; border-radius: 1rem; padding: 1.5rem; margin-bottom: 2rem;">
-                        <h4
-                            style="font-size: 1rem; font-weight: 700; color: #92400e; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                            <i class="fa-solid fa-lightbulb"></i>
-                            Important Notes
-                        </h4>
-                        <ul
-                            style="margin: 0; padding-left: 1.5rem; color: #78350f; font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.5rem;">
-                            <li>All documents must be clear, valid, and not expired.</li>
-                            <li>Name on bank account must match your registered profile name.</li>
-                            <li>TDS will be deducted as per Indian tax regulations (10% for amounts above ₹10,000).</li>
-                            <li>Payout processing takes 5-7 business days after approval.</li>
-                            <li>You'll receive email and SMS notifications at each stage.</li>
-                        </ul>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div style="display: flex; gap: 1rem;">
-                        <button onclick="closePayoutRequirementsModal()"
-                            style="flex: 1; padding: 0.875rem; border: 1px solid #e5e7eb; background: white; border-radius: 0.75rem; font-weight: 600; cursor: pointer; color: #6b7280; transition: all 0.2s;">
-                            Close
+                        <button id="genLinkBtn" onclick="generateReferralLink()"
+                            style="width: 100%; padding: 1.25rem; background: #111827; color: white; border: none; border-radius: 0.75rem; font-weight: 700; cursor: pointer; margin-bottom: 2rem; font-size: 1rem; transition: transform 0.2s, background-color 0.2s;">
+                            Generate Dynamic Referral Link <i class="fa-solid fa-wand-magic-sparkles"></i>
                         </button>
-                        <button
-                            onclick="closePayoutRequirementsModal(); showToast('Redirecting to KYC verification...', 'info');"
-                            style="flex: 1; padding: 0.875rem; background: #fcb82e; border: none; border-radius: 0.75rem; font-weight: 600; cursor: pointer; color: #000; transition: all 0.2s;">
-                            <i class="fa-solid fa-arrow-right"></i> Start KYC Verification
-                        </button>
-                    </div>
-                </div>
-            </div>
 
-            <!-- INBOX SECTION -->
-            <section id="inbox" class="section">
-                <div class="inbox-list">
-                    <!-- Message 1 -->
-                    <div class="inbox-item unread" onclick="viewMessage(1)">
-                        <div class="inbox-avatar" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">
-                            <i class="fas fa-coins"></i>
-                        </div>
-                        <div class="inbox-content">
-                            <div class="inbox-header">
-                                <span class="inbox-sender">Rewards Dept <span
-                                        class="inbox-badge badge-reward">Payment</span></span>
-                                <span class="inbox-time">1 hour ago</span>
-                            </div>
-                            <div class="inbox-subject">Referral Bonus Approved: ₹2,500</div>
-                            <div class="inbox-preview">Congratulations! Your referral for 'BioStream' has completed the
-                                first phase. Your ₹2,500 reward has been approved and moved to your available balance.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Message 2 -->
-                    <div class="inbox-item unread" onclick="viewMessage(2)">
-                        <div class="inbox-avatar" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
-                            <i class="fas fa-rocket"></i>
-                        </div>
-                        <div class="inbox-content">
-                            <div class="inbox-header">
-                                <span class="inbox-sender">GreenWave AI <span
-                                        class="inbox-badge badge-startup">Update</span></span>
-                                <span class="inbox-time">4 hours ago</span>
-                            </div>
-                            <div class="inbox-subject">New Pitch Deck Uploaded</div>
-                            <div class="inbox-preview">GreenWave AI has updated their pitch deck for the 'Sustainable
-                                Energy Challenge'. Since you are their primary connector, please review and update your
-                                assessment.</div>
-                        </div>
-                    </div>
-
-                    <!-- Message 3 -->
-                    <div class="inbox-item" onclick="viewMessage(3)">
-                        <div class="inbox-avatar" style="background: rgba(252, 184, 46, 0.1); color: #fcb82e;">
-                            <i class="fas fa-bullhorn"></i>
-                        </div>
-                        <div class="inbox-content">
-                            <div class="inbox-header">
-                                <span class="inbox-sender">Platform <span
-                                        class="inbox-badge badge-system">Notice</span></span>
-                                <span class="inbox-time">Yesterday</span>
-                            </div>
-                            <div class="inbox-subject">InnoBridge Connector Level Up!</div>
-                            <div class="inbox-preview">Your impact score has reached 'Level 4'. You now have access to
-                                exclusive high-tier programs in the FinTech sector. Check your Analytics tab for
-                                details.</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- REFERRAL GUIDE SECTION -->
-            <section id="guide" class="section">
-                <div class="section-grid">
-                    <div>
-                        <div class="card" style="margin-bottom: 2rem;">
-                            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;"><i
-                                    class="fa-solid fa-graduation-cap"></i> How to Refer Successfully</h3>
-                            <div class="guide-steps" style="display: flex; flex-direction: column; gap: 1.5rem;">
-                                <div style="display: flex; gap: 1rem;">
-                                    <div
-                                        style="width: 30px; height: 30px; background: #fcb82e; color: black; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">
-                                        1</div>
-                                    <div>
-                                        <h4 style="font-weight: 600;">Identify High-Quality Startups</h4>
-                                        <p style="color: #64748b; font-size: 0.9rem;">Look for startups in your network
-                                            that match the active program sectors and stages.</p>
-                                    </div>
-                                </div>
-                                <div style="display: flex; gap: 1rem;">
-                                    <div
-                                        style="width: 30px; height: 30px; background: #fcb82e; color: black; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">
-                                        2</div>
-                                    <div>
-                                        <h4 style="font-weight: 600;">Warm Introduction</h4>
-                                        <p style="color: #64748b; font-size: 0.9rem;">Talk to the founders first. Ensure
-                                            they are interested in the program benefits before referring.</p>
-                                    </div>
-                                </div>
-                                <div style="display: flex; gap: 1rem;">
-                                    <div
-                                        style="width: 30px; height: 30px; background: #fcb82e; color: black; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">
-                                        3</div>
-                                    <div>
-                                        <h4 style="font-weight: 600;">Submit via Dashboard</h4>
-                                        <p style="color: #64748b; font-size: 0.9rem;">Use the "Add Referral" button.
-                                            Provide a clear note on why they are a good fit for better selection odds.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn-primary" style="margin-top: 2rem; width: 100%;"
-                                onclick="startGuideTutorial()">
-                                <i class="fa-solid fa-play"></i> Start Interactive Tutorial
-                            </button>
-                        </div>
-
-                        <div class="card">
-                            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem;"><i
-                                    class="fa-solid fa-award"></i> Reward Tier System</h3>
-                            <table style="width: 100%; border-collapse: collapse;">
-                                <thead style="text-align: left; border-bottom: 2px solid #f1f5f9;">
-                                    <tr>
-                                        <th style="padding: 1rem 0;">Tier</th>
-                                        <th style="padding: 1rem 0;">Referrals Req.</th>
-                                        <th style="padding: 1rem 0;">Reward Multiplier</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr style="border-bottom: 1px solid #f1f5f9;">
-                                        <td style="padding: 1rem 0;"><span class="badge-soft green">Bronze</span></td>
-                                        <td>0 - 5</td>
-                                        <td>1.0x (Base)</td>
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid #f1f5f9;">
-                                        <td style="padding: 1rem 0;"><span class="badge-soft blue">Silver</span></td>
-                                        <td>6 - 15</td>
-                                        <td>1.15x</td>
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid #f1f5f9;">
-                                        <td style="padding: 1rem 0;"><span class="badge-soft gold">Gold</span></td>
-                                        <td>16+</td>
-                                        <td>1.3x + Perks</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div id="referralLinkOutput" style="display: none; animation: fadeIn 0.4s ease-out;">
                             <div
-                                style="margin-top: 1.5rem; background: #f8fafc; padding: 1rem; border-radius: 8px; font-size: 0.85rem; color: #64748b;">
-                                <i class="fa-solid fa-circle-info"></i> Tiers are calculated based on successful
-                                conversions in the last 12 months.
+                                style="margin-bottom: 1rem; text-align: left; font-weight: 600; color: #374151; font-size: 0.9rem;">
+                                Your Unique Link</div>
+                            <div
+                                style="background: white; border: 2px dashed #fcb82e; padding: 1.25rem; border-radius: 1rem; margin-bottom: 2.5rem; display: flex; align-items: center; gap: 1rem; background: #fffdf5;">
+                                <input type="text" id="referralUrlInput" readonly
+                                    style="flex: 1; background: transparent; border: none; font-family: 'DM Mono', monospace; font-size: 0.9rem; color: #1e293b; font-weight: 600;" />
+                                <button onclick="copyReferralLink()"
+                                    style="background: #fcb82e; border: none; padding: 0.75rem 1.25rem; border-radius: 0.5rem; cursor: pointer; font-weight: 700; color: #000; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fa-solid fa-copy"></i> Copy
+                                </button>
                             </div>
+
+                            <div
+                                style="margin-bottom: 1.5rem; font-weight: 700; color: #1e293b; position: relative; display: flex; align-items: center; justify-content: center; gap: 1rem;">
+                                <span style="height: 1px; background: #e2e8f0; flex: 1;"></span>
+                                <span>Share via QR Code</span>
+                                <span style="height: 1px; background: #e2e8f0; flex: 1;"></span>
+                            </div>
+
+                            <div id="referralQrContainer"
+                                style="background: white; padding: 1.5rem; border-radius: 1.5rem; border: 1px solid #e2e8f0; display: inline-block; margin-bottom: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);">
+                                <img id="referralQrImg" src="" alt="Referral QR Code"
+                                    style="width: 200px; height: 200px;" />
+                            </div>
+                            <p style="color: #64748b; font-size: 0.85rem; max-width: 400px; margin: 0 auto;">
+                                <i class="fa-solid fa-circle-info"></i> Share this link or QR code with the founder.
+                                Once they login/register, the referral will be tracked under your account.
+                            </p>
                         </div>
                     </div>
 
-                    <div class="card">
-                        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem;"><i
-                                class="fa-solid fa-toolbox"></i> Connector Resources</h3>
-                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- TIER BENEFITS MODAL -->
+                    <div id="tierBenefitsModal"
+                        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); z-index: 20000; align-items: center; justify-content: center; padding: 1.5rem;">
+                        <div
+                            style="background: white; border-radius: 2rem; width: 100%; max-width: 900px; padding: 3rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); position: relative; max-height: 90vh; overflow-y: auto;">
+                            <button onclick="closeTierBenefitsModal()"
+                                style="position: absolute; top: 24px; right: 24px; border: none; background: #f1f5f9; width: 40px; height: 40px; border-radius: 20px; font-size: 1.25rem; cursor: pointer; color: #475569; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">&times;</button>
+
+                            <div style="text-align: center; margin-bottom: 3rem;">
+                                <h2
+                                    style="font-size: 2.25rem; font-weight: 800; color: #0f172a; margin-bottom: 0.75rem;">
+                                    Connector Tier Benefits</h2>
+                                <p style="color: #64748b; font-size: 1.1rem; max-width: 500px; margin: 0 auto;">Maximize
+                                    your
+                                    impact and unlock exclusive institutional-grade rewards as you level up.</p>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+                                <!-- Standard Tier -->
+                                <div
+                                    style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 1.5rem; padding: 2rem; transition: transform 0.3s ease;">
+                                    <div
+                                        style="width: 48px; height: 48px; background: #e2e8f0; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: #475569; font-size: 1.5rem;">
+                                        <i class="fa-solid fa-leaf"></i>
+                                    </div>
+                                    <h3
+                                        style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">
+                                        Standard</h3>
+                                    <div style="color: #64748b; font-size: 0.875rem; margin-bottom: 1.5rem;">Entry level
+                                        (L1 -
+                                        L2)</div>
+                                    <ul
+                                        style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; color: #334155; font-size: 0.93rem;">
+                                        <li style="display: flex; align-items: center; gap: 0.75rem;"><i
+                                                class="fa-solid fa-check" style="color: #10b981;"></i> 10% Reward Share
+                                        </li>
+                                        <li style="display: flex; align-items: center; gap: 0.75rem;"><i
+                                                class="fa-solid fa-check" style="color: #10b981;"></i> 14-day Payout
+                                            speed</li>
+                                        <li style="display: flex; align-items: center; gap: 0.75rem;"><i
+                                                class="fa-solid fa-check" style="color: #10b981;"></i> Standard support
+                                        </li>
+                                        <li style="display: flex; align-items: center; gap: 0.75rem;"><i
+                                                class="fa-solid fa-check" style="color: #10b981;"></i> Public programs
+                                            only</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Pro Tier (Active) -->
+                                <div
+                                    style="background: #fffbeb; border: 2px solid #fbbf24; border-radius: 1.5rem; padding: 2rem; position: relative; transform: scale(1.05); box-shadow: 0 10px 25px -5px rgba(251, 191, 36, 0.2);">
+                                    <div
+                                        style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #fbbf24; color: #92400e; padding: 4px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+                                        Your Current Tier</div>
+                                    <div
+                                        style="width: 48px; height: 48px; background: #fef3c7; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: #d97706; font-size: 1.5rem;">
+                                        <i class="fa-solid fa-rocket"></i>
+                                    </div>
+                                    <h3
+                                        style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">
+                                        Pro
+                                        Connector</h3>
+                                    <div style="color: #d97706; font-size: 0.875rem; margin-bottom: 1.5rem;">Growth
+                                        level (L3 -
+                                        L4)</div>
+                                    <ul
+                                        style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; color: #334155; font-size: 0.93rem;">
+                                        <li style="display: flex; align-items: center; gap: 0.75rem;"><i
+                                                class="fa-solid fa-check" style="color: #d97706;"></i> 18% Reward Share
+                                        </li>
+                                        <li style="display: flex; align-items: center; gap: 0.75rem;"><i
+                                                class="fa-solid fa-check" style="color: #d97706;"></i> 7-day Payout
+                                            speed</li>
+                                        <li style="display: flex; align-items: center; gap: 0.75rem;"><i
+                                                class="fa-solid fa-check" style="color: #d97706;"></i> Gold-tier support
+                                        </li>
+                                        <li style="display: flex; align-items: center; gap: 0.75rem;"><i
+                                                class="fa-solid fa-check" style="color: #d97706;"></i> Early program
+                                            access</li>
+                                        <li style="display: flex; align-items: center; gap: 0.75rem;"><i
+                                                class="fa-solid fa-check" style="color: #d97706;"></i> 1.2x Multiplier
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <!-- Elite Tier -->
+                                <div
+                                    style="background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 1.5rem; padding: 2rem;">
+                                    <div
+                                        style="width: 48px; height: 48px; background: #cbd5e1; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: #1e293b; font-size: 1.5rem;">
+                                        <i class="fa-solid fa-crown"></i>
+                                    </div>
+                                    <h3
+                                        style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">
+                                        Elite</h3>
+                                    <div style="color: #475569; font-size: 0.875rem; margin-bottom: 1.5rem;">Master
+                                        level (L5+)
+                                    </div>
+                                    <ul
+                                        style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; color: #334155; font-size: 0.93rem;">
+                                        <li style="display: flex; align-items: center; gap: 0.75rem;"><i
+                                                class="fa-solid fa-check" style="color: #1e293b;"></i> 25% Reward Share
+                                        </li>
+                                        <li style="display: flex; align-items: center; gap: 0.75rem;"><i
+                                                class="fa-solid fa-check" style="color: #1e293b;"></i> Instant Payout
+                                        </li>
+                                        <li style="display: flex; align-items: center; gap: 0.75rem;"><i
+                                                class="fa-solid fa-check" style="color: #1e293b;"></i> Dedicated Manager
+                                        </li>
+                                        <li style="display: flex; align-items: center; gap: 0.75rem;"><i
+                                                class="fa-solid fa-check" style="color: #1e293b;"></i> Private
+                                            opportunities
+                                        </li>
+                                        <li style="display: flex; align-items: center; gap: 0.75rem;"><i
+                                                class="fa-solid fa-check" style="color: #1e293b;"></i> 1.5x Multiplier
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
                             <div
-                                style="padding: 1rem; border: 1px solid #e2e8f0; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
+                                style="margin-top: 3rem; background: #f8fafc; border-radius: 1rem; padding: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
                                 <div style="display: flex; align-items: center; gap: 1rem;">
-                                    <div style="font-size: 1.5rem; color: #ef4444;"><i class="fa-solid fa-file-pdf"></i>
+                                    <div
+                                        style="width: 40px; height: 40px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #475569;">
+                                        <i class="fa-solid fa-chart-line"></i>
                                     </div>
-                                    <div>
-                                        <div style="font-weight: 600;">Ecosystem One-pager</div>
-                                        <div style="font-size: 0.8rem; color: #64748b;">Perfect to share with founders
+                                    <div style="color: #475569; font-size: 0.95rem;">You are <strong>450 points</strong>
+                                        away
+                                        from the next tier!</div>
+                                </div>
+                                <button onclick="closeTierBenefitsModal(); showSection('guide')"
+                                    style="background: #0f172a; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s;">Learn
+                                    how to level up</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PAYOUT REQUIREMENTS MODAL -->
+                    <div id="payoutRequirementsModal"
+                        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); z-index: 20000; align-items: center; justify-content: center; padding: 1.5rem;">
+                        <div
+                            style="background: white; border-radius: 2rem; width: 100%; max-width: 800px; padding: 3rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); position: relative; max-height: 90vh; overflow-y: auto;">
+                            <button onclick="closePayoutRequirementsModal()"
+                                style="position: absolute; top: 24px; right: 24px; border: none; background: #f1f5f9; width: 40px; height: 40px; border-radius: 20px; font-size: 1.25rem; cursor: pointer; color: #475569; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">&times;</button>
+
+                            <div style="text-align: center; margin-bottom: 2.5rem;">
+                                <div
+                                    style="width: 64px; height: 64px; background: linear-gradient(135deg, #fcb82e, #f97316); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: #000; font-size: 2rem;">
+                                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                                </div>
+                                <h2 style="font-size: 2rem; font-weight: 800; color: #0f172a; margin-bottom: 0.75rem;">
+                                    Payout Requirements</h2>
+                                <p style="color: #64748b; font-size: 1rem; max-width: 500px; margin: 0 auto;">Complete
+                                    these
+                                    steps to ensure smooth and timely payout processing for your earned rewards.</p>
+                            </div>
+
+                            <!-- Requirements Checklist -->
+                            <div style="background: #f8fafc; border-radius: 1rem; padding: 2rem; margin-bottom: 2rem;">
+                                <h3
+                                    style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fa-solid fa-clipboard-check" style="color: #fcb82e;"></i>
+                                    Required Documents & Information
+                                </h3>
+
+                                <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                                    <!-- Requirement 1 -->
+                                    <div style="display: flex; gap: 1rem; align-items: start;">
+                                        <div
+                                            style="width: 32px; height: 32px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: white; font-size: 0.875rem;">
+                                            <i class="fa-solid fa-check"></i>
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600; color: #1e293b; margin-bottom: 0.25rem;">Valid
+                                                Government ID</div>
+                                            <div style="font-size: 0.875rem; color: #64748b;">PAN Card, Aadhaar Card,
+                                                Passport,
+                                                or Driver's License for identity verification.</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Requirement 2 -->
+                                    <div style="display: flex; gap: 1rem; align-items: start;">
+                                        <div
+                                            style="width: 32px; height: 32px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: white; font-size: 0.875rem;">
+                                            <i class="fa-solid fa-check"></i>
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600; color: #1e293b; margin-bottom: 0.25rem;">Bank
+                                                Account
+                                                Details</div>
+                                            <div style="font-size: 0.875rem; color: #64748b;">Account number, IFSC code,
+                                                and
+                                                account holder name matching your registered name.</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Requirement 3 -->
+                                    <div style="display: flex; gap: 1rem; align-items: start;">
+                                        <div
+                                            style="width: 32px; height: 32px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: white; font-size: 0.875rem;">
+                                            <i class="fa-solid fa-check"></i>
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600; color: #1e293b; margin-bottom: 0.25rem;">PAN
+                                                Card
+                                                (India) or Tax ID</div>
+                                            <div style="font-size: 0.875rem; color: #64748b;">Required for tax
+                                                compliance and
+                                                TDS deduction as per Indian regulations.</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Requirement 4 -->
+                                    <div style="display: flex; gap: 1rem; align-items: start;">
+                                        <div
+                                            style="width: 32px; height: 32px; background: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: white; font-size: 0.875rem;">
+                                            <i class="fa-solid fa-exclamation"></i>
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600; color: #1e293b; margin-bottom: 0.25rem;">Email
+                                                & Phone
+                                                Verification</div>
+                                            <div style="font-size: 0.875rem; color: #64748b;">Verified email and phone
+                                                number
+                                                for payout notifications and OTP verification.</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Requirement 5 -->
+                                    <div style="display: flex; gap: 1rem; align-items: start;">
+                                        <div
+                                            style="width: 32px; height: 32px; background: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: white; font-size: 0.875rem;">
+                                            <i class="fa-solid fa-exclamation"></i>
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600; color: #1e293b; margin-bottom: 0.25rem;">
+                                                Minimum
+                                                Payout Threshold</div>
+                                            <div style="font-size: 0.875rem; color: #64748b;">Minimum balance of ₹1,000
+                                                required
+                                                to initiate a payout request.</div>
                                         </div>
                                     </div>
                                 </div>
-                                <button class="btn-icon" onclick="downloadAsset('one-pager')"><i
-                                        class="fa-solid fa-download"></i></button>
                             </div>
+
+                            <!-- Verification Process -->
                             <div
-                                style="padding: 1rem; border: 1px solid #e2e8f0; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
-                                <div style="display: flex; align-items: center; gap: 1rem;">
-                                    <div style="font-size: 1.5rem; color: #3b82f6;"><i
-                                            class="fa-solid fa-file-powerpoint"></i></div>
-                                    <div>
-                                        <div style="font-weight: 600;">Connector Presentation</div>
-                                        <div style="font-size: 0.8rem; color: #64748b;">For community presentations
+                                style="background: #fff; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 2rem; margin-bottom: 2rem;">
+                                <h3
+                                    style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fa-solid fa-shield-halved" style="color: #3b82f6;"></i>
+                                    Verification Process
+                                </h3>
+
+                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                                    <div style="text-align: center;">
+                                        <div
+                                            style="width: 48px; height: 48px; background: #dbeafe; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: #3b82f6; font-size: 1.5rem;">
+                                            <i class="fa-solid fa-upload"></i>
+                                        </div>
+                                        <div
+                                            style="font-weight: 600; color: #1e293b; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                                            1. Submit Documents</div>
+                                        <div style="font-size: 0.8rem; color: #64748b;">Upload required KYC documents
                                         </div>
                                     </div>
-                                </div>
-                                <button class="btn-icon" onclick="downloadAsset('deck')"><i
-                                        class="fa-solid fa-download"></i></button>
-                            </div>
-                            <div
-                                style="padding: 1rem; border: 1px solid #e2e8f0; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
-                                <div style="display: flex; align-items: center; gap: 1rem;">
-                                    <div style="font-size: 1.5rem; color: #22c55e;"><i class="fa-solid fa-image"></i>
-                                    </div>
-                                    <div>
-                                        <div style="font-weight: 600;">Social Media Kit</div>
-                                        <div style="font-size: 0.8rem; color: #64748b;">LinkedIn and Twitter assets
+
+                                    <div style="text-align: center;">
+                                        <div
+                                            style="width: 48px; height: 48px; background: #fef3c7; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: #f59e0b; font-size: 1.5rem;">
+                                            <i class="fa-solid fa-magnifying-glass"></i>
                                         </div>
+                                        <div
+                                            style="font-weight: 600; color: #1e293b; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                                            2. Verification</div>
+                                        <div style="font-size: 0.8rem; color: #64748b;">2-3 business days review</div>
+                                    </div>
+
+                                    <div style="text-align: center;">
+                                        <div
+                                            style="width: 48px; height: 48px; background: #dcfce7; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: #22c55e; font-size: 1.5rem;">
+                                            <i class="fa-solid fa-circle-check"></i>
+                                        </div>
+                                        <div
+                                            style="font-weight: 600; color: #1e293b; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                                            3. Approval</div>
+                                        <div style="font-size: 0.8rem; color: #64748b;">Ready for payouts</div>
                                     </div>
                                 </div>
-                                <button class="btn-icon" onclick="downloadAsset('social-kit')"><i
-                                        class="fa-solid fa-download"></i></button>
+                            </div>
+
+                            <!-- Important Notes -->
+                            <div
+                                style="background: #fffbeb; border: 1px solid #fbbf24; border-radius: 1rem; padding: 1.5rem; margin-bottom: 2rem;">
+                                <h4
+                                    style="font-size: 1rem; font-weight: 700; color: #92400e; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fa-solid fa-lightbulb"></i>
+                                    Important Notes
+                                </h4>
+                                <ul
+                                    style="margin: 0; padding-left: 1.5rem; color: #78350f; font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                                    <li>All documents must be clear, valid, and not expired.</li>
+                                    <li>Name on bank account must match your registered profile name.</li>
+                                    <li>TDS will be deducted as per Indian tax regulations (10% for amounts above
+                                        ₹10,000).</li>
+                                    <li>Payout processing takes 5-7 business days after approval.</li>
+                                    <li>You'll receive email and SMS notifications at each stage.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div style="display: flex; gap: 1rem;">
+                                <button onclick="closePayoutRequirementsModal()"
+                                    style="flex: 1; padding: 0.875rem; border: 1px solid #e5e7eb; background: white; border-radius: 0.75rem; font-weight: 600; cursor: pointer; color: #6b7280; transition: all 0.2s;">
+                                    Close
+                                </button>
+                                <button
+                                    onclick="closePayoutRequirementsModal(); showToast('Redirecting to KYC verification...', 'info');"
+                                    style="flex: 1; padding: 0.875rem; background: #fcb82e; border: none; border-radius: 0.75rem; font-weight: 600; cursor: pointer; color: #000; transition: all 0.2s;">
+                                    <i class="fa-solid fa-arrow-right"></i> Start KYC Verification
+                                </button>
                             </div>
                         </div>
-
-                        <div class="subtle-divider" style="margin: 2rem 0;"></div>
-
-                        <h4 style="font-weight: 700; margin-bottom: 1rem;">Important Policies</h4>
-                        <ul
-                            style="padding-left: 1.25rem; color: #64748b; font-size: 0.9rem; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 2rem;">
-                            <li>Self-referrals are not eligible for rewards.</li>
-                            <li>Startups must be new to the InnoBridge database.</li>
-                            <li>Rewards are processed 15 days after program completion.</li>
-                        </ul>
-                        <button class="btn" style="width: 100%;"
-                            onclick="showSection('inbox'); showToast('Support ticket opened', 'info')">
-                            <i class="fa-solid fa-headset"></i> Contact Connector Support
-                        </button>
                     </div>
+
+                    <!-- INBOX SECTION -->
+                    <section id="inbox" class="section">
+                        <div class="inbox-list">
+                            <!-- Message 1 -->
+                            <div class="inbox-item unread" onclick="viewMessage(1)">
+                                <div class="inbox-avatar" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">
+                                    <i class="fas fa-coins"></i>
+                                </div>
+                                <div class="inbox-content">
+                                    <div class="inbox-header">
+                                        <span class="inbox-sender">Rewards Dept <span
+                                                class="inbox-badge badge-reward">Payment</span></span>
+                                        <span class="inbox-time">1 hour ago</span>
+                                    </div>
+                                    <div class="inbox-subject">Referral Bonus Approved: ₹2,500</div>
+                                    <div class="inbox-preview">Congratulations! Your referral for 'BioStream' has
+                                        completed the
+                                        first phase. Your ₹2,500 reward has been approved and moved to your available
+                                        balance.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Message 2 -->
+                            <div class="inbox-item unread" onclick="viewMessage(2)">
+                                <div class="inbox-avatar" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
+                                    <i class="fas fa-rocket"></i>
+                                </div>
+                                <div class="inbox-content">
+                                    <div class="inbox-header">
+                                        <span class="inbox-sender">GreenWave AI <span
+                                                class="inbox-badge badge-startup">Update</span></span>
+                                        <span class="inbox-time">4 hours ago</span>
+                                    </div>
+                                    <div class="inbox-subject">New Pitch Deck Uploaded</div>
+                                    <div class="inbox-preview">GreenWave AI has updated their pitch deck for the
+                                        'Sustainable
+                                        Energy Challenge'. Since you are their primary connector, please review and
+                                        update your
+                                        assessment.</div>
+                                </div>
+                            </div>
+
+                            <!-- Message 3 -->
+                            <div class="inbox-item" onclick="viewMessage(3)">
+                                <div class="inbox-avatar" style="background: rgba(252, 184, 46, 0.1); color: #fcb82e;">
+                                    <i class="fas fa-bullhorn"></i>
+                                </div>
+                                <div class="inbox-content">
+                                    <div class="inbox-header">
+                                        <span class="inbox-sender">Platform <span
+                                                class="inbox-badge badge-system">Notice</span></span>
+                                        <span class="inbox-time">Yesterday</span>
+                                    </div>
+                                    <div class="inbox-subject">InnoBridge Connector Level Up!</div>
+                                    <div class="inbox-preview">Your impact score has reached 'Level 4'. You now have
+                                        access to
+                                        exclusive high-tier programs in the FinTech sector. Check your Analytics tab for
+                                        details.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- REFERRAL GUIDE SECTION -->
+                    <section id="guide" class="section">
+                        <div class="section-grid">
+                            <div>
+                                <div class="card" style="margin-bottom: 2rem;">
+                                    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;"><i
+                                            class="fa-solid fa-graduation-cap"></i> How to Refer Successfully</h3>
+                                    <div class="guide-steps"
+                                        style="display: flex; flex-direction: column; gap: 1.5rem;">
+                                        <div style="display: flex; gap: 1rem;">
+                                            <div
+                                                style="width: 30px; height: 30px; background: #fcb82e; color: black; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">
+                                                1</div>
+                                            <div>
+                                                <h4 style="font-weight: 600;">Identify High-Quality Startups</h4>
+                                                <p style="color: #64748b; font-size: 0.9rem;">Look for startups in your
+                                                    network
+                                                    that match the active program sectors and stages.</p>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; gap: 1rem;">
+                                            <div
+                                                style="width: 30px; height: 30px; background: #fcb82e; color: black; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">
+                                                2</div>
+                                            <div>
+                                                <h4 style="font-weight: 600;">Warm Introduction</h4>
+                                                <p style="color: #64748b; font-size: 0.9rem;">Talk to the founders
+                                                    first. Ensure
+                                                    they are interested in the program benefits before referring.</p>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; gap: 1rem;">
+                                            <div
+                                                style="width: 30px; height: 30px; background: #fcb82e; color: black; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">
+                                                3</div>
+                                            <div>
+                                                <h4 style="font-weight: 600;">Submit via Dashboard</h4>
+                                                <p style="color: #64748b; font-size: 0.9rem;">Use the "Add Referral"
+                                                    button.
+                                                    Provide a clear note on why they are a good fit for better selection
+                                                    odds.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn-primary" style="margin-top: 2rem; width: 100%;"
+                                        onclick="startGuideTutorial()">
+                                        <i class="fa-solid fa-play"></i> Start Interactive Tutorial
+                                    </button>
+                                </div>
+
+                                <div class="card">
+                                    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem;"><i
+                                            class="fa-solid fa-award"></i> Reward Tier System</h3>
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <thead style="text-align: left; border-bottom: 2px solid #f1f5f9;">
+                                            <tr>
+                                                <th style="padding: 1rem 0;">Tier</th>
+                                                <th style="padding: 1rem 0;">Referrals Req.</th>
+                                                <th style="padding: 1rem 0;">Reward Multiplier</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                                <td style="padding: 1rem 0;"><span
+                                                        class="badge-soft green">Bronze</span></td>
+                                                <td>0 - 5</td>
+                                                <td>1.0x (Base)</td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                                <td style="padding: 1rem 0;"><span class="badge-soft blue">Silver</span>
+                                                </td>
+                                                <td>6 - 15</td>
+                                                <td>1.15x</td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                                <td style="padding: 1rem 0;"><span class="badge-soft gold">Gold</span>
+                                                </td>
+                                                <td>16+</td>
+                                                <td>1.3x + Perks</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div
+                                        style="margin-top: 1.5rem; background: #f8fafc; padding: 1rem; border-radius: 8px; font-size: 0.85rem; color: #64748b;">
+                                        <i class="fa-solid fa-circle-info"></i> Tiers are calculated based on successful
+                                        conversions in the last 12 months.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem;"><i
+                                        class="fa-solid fa-toolbox"></i> Connector Resources</h3>
+                                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                    <div
+                                        style="padding: 1rem; border: 1px solid #e2e8f0; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
+                                        <div style="display: flex; align-items: center; gap: 1rem;">
+                                            <div style="font-size: 1.5rem; color: #ef4444;"><i
+                                                    class="fa-solid fa-file-pdf"></i>
+                                            </div>
+                                            <div>
+                                                <div style="font-weight: 600;">Ecosystem One-pager</div>
+                                                <div style="font-size: 0.8rem; color: #64748b;">Perfect to share with
+                                                    founders
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="btn-icon" onclick="downloadAsset('one-pager')"><i
+                                                class="fa-solid fa-download"></i></button>
+                                    </div>
+                                    <div
+                                        style="padding: 1rem; border: 1px solid #e2e8f0; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
+                                        <div style="display: flex; align-items: center; gap: 1rem;">
+                                            <div style="font-size: 1.5rem; color: #3b82f6;"><i
+                                                    class="fa-solid fa-file-powerpoint"></i></div>
+                                            <div>
+                                                <div style="font-weight: 600;">Connector Presentation</div>
+                                                <div style="font-size: 0.8rem; color: #64748b;">For community
+                                                    presentations
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="btn-icon" onclick="downloadAsset('deck')"><i
+                                                class="fa-solid fa-download"></i></button>
+                                    </div>
+                                    <div
+                                        style="padding: 1rem; border: 1px solid #e2e8f0; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
+                                        <div style="display: flex; align-items: center; gap: 1rem;">
+                                            <div style="font-size: 1.5rem; color: #22c55e;"><i
+                                                    class="fa-solid fa-image"></i>
+                                            </div>
+                                            <div>
+                                                <div style="font-weight: 600;">Social Media Kit</div>
+                                                <div style="font-size: 0.8rem; color: #64748b;">LinkedIn and Twitter
+                                                    assets
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="btn-icon" onclick="downloadAsset('social-kit')"><i
+                                                class="fa-solid fa-download"></i></button>
+                                    </div>
+                                </div>
+
+                                <div class="subtle-divider" style="margin: 2rem 0;"></div>
+
+                                <h4 style="font-weight: 700; margin-bottom: 1rem;">Important Policies</h4>
+                                <ul
+                                    style="padding-left: 1.25rem; color: #64748b; font-size: 0.9rem; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 2rem;">
+                                    <li>Self-referrals are not eligible for rewards.</li>
+                                    <li>Startups must be new to the InnoBridge database.</li>
+                                    <li>Rewards are processed 15 days after program completion.</li>
+                                </ul>
+                                <button class="btn" style="width: 100%;"
+                                    onclick="showSection('inbox'); showToast('Support ticket opened', 'info')">
+                                    <i class="fa-solid fa-headset"></i> Contact Connector Support
+                                </button>
+                            </div>
+                        </div>
+                    </section>
                 </div>
-            </section>
-        </div>
     </main>
 
     <script>
@@ -6013,63 +6066,75 @@
         // Referral Modal Functions
         function openAddReferralModal() {
             document.getElementById('addReferralModal').style.display = 'flex';
-            document.getElementById('addReferralForm').reset();
+            document.getElementById('referralLinkOutput').style.display = 'none';
+            document.getElementById('genLinkBtn').style.display = 'block';
+
+            // Reset the select options to match the latest programs
+            const linkSelect = document.getElementById('programLinkSelect');
+            const mainSelect = document.getElementById('programSelect');
+
+            // If mainSelect exists (which it should if allPrograms is loaded), sync options
+            // allPrograms is a global array of published programs
+            if (linkSelect && typeof allPrograms !== 'undefined') {
+                linkSelect.innerHTML = '<option value="">Choose a program for referral...</option>' +
+                    allPrograms.map(item => `<option value="${item.id}">${item.title}</option>`).join('');
+            }
         }
 
         function closeAddReferralModal() {
             document.getElementById('addReferralModal').style.display = 'none';
         }
 
-        async function submitReferral(event) {
-            event.preventDefault();
 
-            const startupName = document.getElementById('startupName').value;
-            const startupEmail = document.getElementById('startupEmail').value;
-            const programSelect = document.getElementById('programSelect');
-            const oppId = programSelect.value;
-            const notes = document.getElementById('referralNotes').value;
-            const submitBtn = document.getElementById('submitReferralBtn');
-
+        async function generateReferralLink() {
+            const oppId = document.getElementById('programLinkSelect').value;
             if (!oppId) {
-                showToast("Please select a program.", "info");
+                showToast("Please select a program first.", "info");
                 return;
             }
 
-            // Show loading state
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
-            submitBtn.disabled = true;
+            const btn = document.getElementById('genLinkBtn');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating...';
+            btn.disabled = true;
 
             try {
-                const res = await fetch('/api/referrals/', {
+                const res = await fetch('/api/referrals/generate-link', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        startup_name: startupName,
-                        startup_email: startupEmail,
-                        opportunity_id: oppId,
-                        notes: notes
-                    })
+                    body: JSON.stringify({ opportunity_id: oppId })
                 });
                 const json = await res.json();
 
                 if (json.success) {
-                    showToast(`Referral for ${startupName} submitted successfully!`, "success");
-                    closeAddReferralModal();
+                    showToast("Referral link generated!", "success");
+                    document.getElementById('referralUrlInput').value = json.join_url;
 
-                    // Refresh referrals table
+                    // Generate QR Code
+                    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(json.join_url)}`;
+                    document.getElementById('referralQrImg').src = qrUrl;
+
+                    document.getElementById('referralLinkOutput').style.display = 'block';
+                    btn.style.display = 'none';
+
+                    // Refresh referrals table to show the new "Link-based Lead"
                     loadMyReferrals();
-
-                    showSection('referrals');
                 } else {
-                    showToast(json.error || "Failed to submit referral", "info");
+                    showToast(json.error || "Failed to generate link", "info");
                 }
             } catch (err) {
                 console.error(err);
-                showToast("Error submitting referral", "info");
+                showToast("Error generating link", "info");
             } finally {
-                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Referral';
-                submitBtn.disabled = false;
+                btn.innerHTML = 'Generate Unique Referral Link <i class="fa-solid fa-link"></i>';
+                btn.disabled = false;
             }
+        }
+
+        function copyReferralLink() {
+            const input = document.getElementById('referralUrlInput');
+            input.select();
+            document.execCommand('copy');
+            showToast("Link copied to clipboard!", "success");
         }
 
         async function loadMyReferrals() {
@@ -6083,20 +6148,59 @@
                 if (json.success) {
                     tbody.innerHTML = json.referrals.map(r => {
                         const date = new Date(r.created_at).toLocaleDateString();
-                        const statusClass = r.status === 'pending' ? 'pending' : (r.status === 'accepted' ? 'completed' : 'failed');
-                        const statusLabel = r.status.charAt(0).toUpperCase() + r.status.slice(1);
+
+                        let statusClass = 'pending';
+                        let statusLabel = r.status;
+                        let statusIcon = '';
+
+                        if (r.status === 'accepted') {
+                            statusClass = 'completed';
+                            statusLabel = 'Claimed';
+                            statusIcon = '<i class="fa-solid fa-check-circle"></i> ';
+                        } else if (r.status === 'pending_link') {
+                            statusClass = 'in-progress';
+                            statusLabel = 'Link Active';
+                            statusIcon = '<i class="fa-solid fa-link"></i> ';
+                        } else if (r.status === 'rejected') {
+                            statusClass = 'failed';
+                            statusLabel = 'Rejected';
+                            statusIcon = '<i class="fa-solid fa-times-circle"></i> ';
+                        } else {
+                            statusClass = 'pending';
+                            statusLabel = 'Pending';
+                            statusIcon = '<i class="fa-solid fa-clock"></i> ';
+                        }
+
+                        const startupNameHtml = r.is_link_referral && r.status === 'pending_link'
+                            ? `<span style="color: #6366f1; font-weight: 600;"><i class="fa-solid fa-qrcode"></i> Awaiting Startup Login</span>`
+                            : `<span style="font-weight: 600;">${r.startup_name}</span>`;
+
+                        // Action button - copy link for active links, view details for others
+                        let actionButton = '';
+                        if (r.is_link_referral && r.status === 'pending_link' && r.token) {
+                            const linkUrl = window.location.origin + '/api/referrals/join/' + r.token;
+                            actionButton = `
+                                <button class="btn-icon" onclick="copyToClipboard('${linkUrl}', 'Referral link copied!')" title="Copy referral link" style="background: #6366f1; color: white;">
+                                    <i class="fa-solid fa-copy"></i>
+                                </button>
+                            `;
+                        } else {
+                            actionButton = `
+                                <button class="btn-icon" onclick="viewReferralDetails('${r.startup_name}', ${r.id})">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            `;
+                        }
 
                         return `
                         <tr>
-                            <td style="font-weight: 600;">${r.startup_name}</td>
+                            <td>${startupNameHtml}</td>
                             <td>${r.opportunity_title}</td>
                             <td>${date}</td>
-                            <td><span class="status-pill ${statusClass}">${statusLabel}</span></td>
+                            <td><span class="status-pill ${statusClass}">${statusIcon}${statusLabel}</span></td>
                             <td style="color: #64748b; font-weight: 700;">-</td>
                             <td>
-                                <button class="btn-icon" onclick="viewReferralDetails('${r.startup_name}')">
-                                    <i class="fa-solid fa-eye"></i>
-                                </button>
+                                ${actionButton}
                             </td>
                         </tr>
                         `;
@@ -6105,6 +6209,21 @@
             } catch (err) {
                 console.error(err);
             }
+        }
+
+        function copyToClipboard(text, message) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(message || "Copied to clipboard!", "success");
+            }).catch(err => {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast(message || "Copied to clipboard!", "success");
+            });
         }
 
         let referralsPage = 1;
@@ -6799,37 +6918,76 @@
 
         let allPrograms = [];
         async function loadPrograms() {
+            console.log("🔍 Loading programs for connector...");
+            const programsGrid = document.getElementById('connectorProgramsGrid');
+            if (programsGrid) {
+                programsGrid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                        <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: #fcb82e; margin-bottom: 1rem;"></i>
+                        <p style="color: #666;">Curating exclusive programs for your network...</p>
+                    </div>
+                `;
+            }
+
             try {
-                // Fetch connector's referrals to see which programs have been "taken" (successfully referred)
-                const refRes = await fetch('/api/referrals/my');
-                const refJson = await refRes.json();
-                const acceptedOppIds = (refJson.referrals || [])
-                    .filter(r => r.status === 'accepted')
-                    .map(r => r.opportunity_id);
+                // Fetch in parallel
+                const [refRes, oppRes] = await Promise.all([
+                    fetch('/api/referrals/my').catch(e => ({ ok: false })),
+                    fetch('/api/opportunities/').catch(e => ({ ok: false }))
+                ]);
 
-                const res = await fetch('/api/opportunities/');
-                const json = await res.json();
-                if (!json.success) return;
+                let acceptedOppIds = [];
+                if (refRes && refRes.ok) {
+                    const refJson = await refRes.json();
+                    acceptedOppIds = (refJson.referrals || [])
+                        .filter(r => r.status === 'accepted')
+                        .map(r => r.opportunity_id);
+                }
 
-                allPrograms = json.data.items; // Store globally
-                const programsGrid = document.getElementById('connectorProgramsGrid');
+                if (!oppRes || !oppRes.ok) throw new Error("Opportunities API failed");
+                const json = await oppRes.json();
+
+                if (!json.success || !json.data || !json.data.items) {
+                    console.error("❌ Failed to load programs:", json);
+                    if (programsGrid) {
+                        programsGrid.innerHTML = `
+                            <div style="grid-column: 1/-1; text-align: center; padding: 3rem; background: #fff; border-radius: 1rem; border: 1px dashed #e2e8f0;">
+                                <i class="fa-solid fa-circle-exclamation" style="font-size: 2rem; color: #ef4444; margin-bottom: 1rem;"></i>
+                                <p style="color: #666; font-weight: 500;">Failed to synchronize programs. Please try again.</p>
+                            </div>
+                        `;
+                    }
+                    return;
+                }
+
+                allPrograms = json.data.items;
+                console.log(`✅ Connector loaded ${allPrograms.length} programs.`);
+
                 const programSelect = document.getElementById('programSelect');
-
                 if (programSelect) {
                     programSelect.innerHTML = '<option value="">Choose a program...</option>' +
-                        json.data.items.map(item => `<option value="${item.id}">${item.title}</option>`).join('');
+                        allPrograms.map(item => `<option value="${item.id}">${item.title}</option>`).join('');
                 }
 
                 if (programsGrid) {
-                    programsGrid.innerHTML = json.data.items.map(item => {
-                        const sectors = (item.sectors || []).slice(0, 2).map(s => `<span class="tag" style="background: rgba(255,255,255,0.2); color: white; border: none;">${s}</span>`).join('');
-                        const logoChar = item.title.charAt(0).toUpperCase();
+                    if (allPrograms.length === 0) {
+                        programsGrid.innerHTML = `
+                            <div style="grid-column: 1/-1; text-align: center; padding: 4rem; background: #fff; border-radius: 1.5rem; border: 2px dashed #e2e8f0;">
+                                <i class="fa-solid fa-folder-open" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 1.5rem;"></i>
+                                <h3 style="color: #1e293b; margin-bottom: 0.5rem;">No Active Programs</h3>
+                                <p style="color: #64748b;">There are currently no active programs available for referrals.</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    programsGrid.innerHTML = allPrograms.map(item => {
+                        const sectors = (item.sectors || []).slice(0, 2).map(s => `<span class="tag" style="background: rgba(99, 102, 241, 0.1); color: #6366f1; border: 1px solid rgba(99, 102, 241, 0.2); margin-right: 4px;">${s}</span>`).join('');
+                        const logoChar = (item.title || 'P').charAt(0).toUpperCase();
                         const bannerImage = item.banner_url || 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1974&auto=format&fit=crop';
 
                         const isTaken = acceptedOppIds.includes(item.id);
-                        const buttonHtml = isTaken
-                            ? `<button class="apply-btn" style="background: #22c55e; border-color: #22c55e; cursor: pointer;" onclick="handleApply('${item.title}')"><i class="fa-solid fa-check-circle"></i> Referral Taken</button>`
-                            : `<button class="apply-btn" onclick="handleApply('${item.title}')">Refer Startup</button>`;
+                        const buttonHtml = `<button class="apply-btn" onclick="referralManager.showReferralModal(${item.id}, '${item.title.replace(/'/g, "\\'")}')"><i class="fa-solid fa-share-alt"></i> Refer a Startup</button>`;
 
                         return `
                         <div class="program-card ${isTaken ? 'taken' : ''}">
@@ -6850,7 +7008,17 @@
                     `;
                     }).join('');
                 }
-            } catch (err) { console.error('Programs error:', err); }
+            } catch (err) {
+                console.error('❌ Programs error:', err);
+                if (programsGrid) {
+                    programsGrid.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 3rem; background: #fff; border-radius: 1rem; border: 1px dashed #e2e8f0;">
+                            <i class="fa-solid fa-circle-exclamation" style="font-size: 2rem; color: #ef4444; margin-bottom: 1rem;"></i>
+                            <p style="color: #666; font-weight: 500;">Critical error loading programs: ${err.message}</p>
+                        </div>
+                    `;
+                }
+            }
         }
 
         function handleApply(programTitle) {
@@ -6911,7 +7079,7 @@
 
         // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
-            showSection('overview');
+            showSection('programs');
             loadEnablerOverview();
             loadRewardsSummary();
             loadRewardsHistory();
@@ -7100,3 +7268,10 @@
 </body>
 
 </html>
+
+
+<!-- QR Code Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<!-- Referral Link Manager -->
+<script src="/static/js/referral-links.js"></script>

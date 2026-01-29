@@ -205,6 +205,9 @@ class Referral(db.Model):
     startup_name = db.Column(db.String(200))
     startup_email = db.Column(db.String(200))
     
+    token = db.Column(db.String(100), unique=True)
+    is_link_referral = db.Column(db.Boolean, default=False)
+    
     status = db.Column(db.String(40), default="pending")  
     # pending (wait for startup), accepted (confirmed by startup), rejected, successful (rewarded), failed (not selected)
 
@@ -216,6 +219,7 @@ class Referral(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
+            "token": self.token,
             "connector_id": self.connector_id,
             "startup_id": self.startup_id,
             "opportunity_id": self.opportunity_id,
@@ -225,6 +229,42 @@ class Referral(db.Model):
             "reward_log": json.loads(self.reward_log or "[]"),
             "notes": self.notes,
             "created_at": self.created_at.isoformat(),
+        }
+
+
+# -----------------------------------------
+# REFERRAL LINK CLICK TRACKING MODEL
+# -----------------------------------------
+class ReferralClick(db.Model):
+    __tablename__ = "referral_clicks"
+
+    id = db.Column(db.Integer, primary_key=True)
+    referral_id = db.Column(db.Integer, db.ForeignKey("referrals.id"), nullable=False)
+    
+    # User who clicked (if logged in)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
+    startup_id = db.Column(db.Integer, db.ForeignKey("startups.id"), nullable=True)
+    
+    # Tracking data
+    ip_address = db.Column(db.String(50))
+    user_agent = db.Column(db.String(500))
+    clicked_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Conversion tracking
+    viewed_opportunity = db.Column(db.Boolean, default=False)
+    applied = db.Column(db.Boolean, default=False)
+    applied_at = db.Column(db.DateTime)
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "referral_id": self.referral_id,
+            "user_id": self.user_id,
+            "startup_id": self.startup_id,
+            "clicked_at": self.clicked_at.isoformat(),
+            "viewed_opportunity": self.viewed_opportunity,
+            "applied": self.applied,
+            "applied_at": self.applied_at.isoformat() if self.applied_at else None
         }
 
 
