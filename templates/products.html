@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
+    <link rel="icon"
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InnoBridge Products - Our Ecosystem</title>
     <meta name="description"
@@ -146,15 +147,31 @@
                 <a href="/" class="nav-link">HOME</a>
                 <a href="/about" class="nav-link">ABOUT</a>
                 <a href="/products" class="nav-link">PRODUCTS</a>
-                <a href="/opportunities" class="nav-link">OPPORTUNITIES</a>
+                {% if current_user.is_authenticated %}<a href="/opportunities" class="nav-link">OPPORTUNITIES</a>{%
+                endif %}
                 <a href="/blog" class="nav-link">BLOG</a>
                 <a href="/contact" class="nav-link">CONTACT</a>
-                <a href="/investor" class="nav-link">INVESTORS</a>
+
             </nav>
 
             <div class="nav-actions" id="navActions">
+                {% if current_user.is_authenticated %}
+                <span class="nav-btn secondary" style="cursor: default; pointer-events: none;">{{ current_user.name
+                    }}</span>
+                <a href="/auth/logout" class="nav-btn secondary">LOG OUT</a>
+                {% if current_user.role == 'admin' %}
+                <a href="/admin" class="nav-btn primary">DASHBOARD</a>
+                {% elif current_user.role == 'corporate' %}
+                <a href="/corporate" class="nav-btn primary">DASHBOARD</a>
+                {% elif current_user.role == 'connector' or current_user.role == 'enabler' %}
+                <a href="/connector" class="nav-btn primary">DASHBOARD</a>
+                {% else %}
+                <a href="/startup" class="nav-btn primary">DASHBOARD</a>
+                {% endif %}
+                {% else %}
                 <a href="/login" class="nav-btn secondary">LOG IN</a>
                 <a href="/signup" class="nav-btn primary">GET STARTED</a>
+                {% endif %}
                 <button class="mobile-menu-btn" aria-label="Toggle Menu">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -246,7 +263,12 @@
                 <a href="/request-demo" class="hero-btn primary">REQUEST DEMO</a>
             </div>
             <div class="product-visual">
-                <img src="/static/images/corporate_suite.png" alt="Corporate Suite" class="product-image">
+                <div style="width: 100%; height: 400px; background: linear-gradient(135deg, #000000, #1a1a1a); display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 20px; position: relative; overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1); border: 1px solid rgba(0, 0, 0, 0.05); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 30% 30%, rgba(252, 184, 46, 0.1), transparent 60%);"></div>
+                    <div style="font-family: 'JetBrains Mono', monospace; font-size: 3.5rem; font-weight: 900; color: #fcb82e; text-align: center; z-index: 2; text-shadow: 0 0 20px rgba(252, 184, 46, 0.5); margin-bottom: 1rem;">CORPORATES</div>
+                    <div style="width: 100px; height: 3px; background: linear-gradient(90deg, transparent, #fcb82e, transparent); margin: 1rem 0; z-index: 2;"></div>
+                    <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; color: #fcb82e; text-align: center; z-index: 2; opacity: 0.8; font-weight: 600;">INNOVATION SUITE</div>
+                </div>
             </div>
         </div>
     </section>

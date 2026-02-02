@@ -17,7 +17,7 @@
 .floating-shape,
 .floating-element {
     position: absolute;
-    opacity: 0.18;
+    opacity: 0.12;
     pointer-events: none;
     filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
     transition: opacity 0.5s ease;
@@ -252,11 +252,11 @@
     }
 
     10% {
-        opacity: 0.1;
+        opacity: 0.07;
     }
 
     90% {
-        opacity: 0.1;
+        opacity: 0.07;
     }
 
     100% {
@@ -321,11 +321,11 @@
     }
 
     10% {
-        opacity: 0.15;
+        opacity: 0.1;
     }
 
     90% {
-        opacity: 0.15;
+        opacity: 0.1;
     }
 
     100% {
@@ -341,7 +341,7 @@
     }
 
     10% {
-        opacity: 0.12;
+        opacity: 0.08;
     }
 
     25% {
@@ -357,7 +357,7 @@
     }
 
     90% {
-        opacity: 0.12;
+        opacity: 0.08;
     }
 
     100% {
@@ -373,7 +373,7 @@
     }
 
     10% {
-        opacity: 0.1;
+        opacity: 0.07;
     }
 
     25% {
@@ -389,7 +389,7 @@
     }
 
     90% {
-        opacity: 0.1;
+        opacity: 0.07;
     }
 
     100% {
@@ -405,7 +405,7 @@
     }
 
     10% {
-        opacity: 0.1;
+        opacity: 0.07;
     }
 
     20% {
@@ -425,7 +425,7 @@
     }
 
     90% {
-        opacity: 0.1;
+        opacity: 0.07;
     }
 
     100% {
@@ -441,7 +441,7 @@
     }
 
     10% {
-        opacity: 0.12;
+        opacity: 0.08;
     }
 
     25% {
@@ -457,7 +457,7 @@
     }
 
     90% {
-        opacity: 0.12;
+        opacity: 0.08;
     }
 
     100% {
@@ -473,7 +473,7 @@
     }
 
     10% {
-        opacity: 0.1;
+        opacity: 0.07;
     }
 
     50% {
@@ -481,7 +481,7 @@
     }
 
     90% {
-        opacity: 0.1;
+        opacity: 0.07;
     }
 
     100% {
@@ -497,11 +497,11 @@
     }
 
     10% {
-        opacity: 0.08;
+        opacity: 0.06;
     }
 
     90% {
-        opacity: 0.08;
+        opacity: 0.06;
     }
 
     100% {
@@ -631,7 +631,7 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .floating-element {
-        opacity: 0.05;
+        opacity: 0.03;
     }
 
     .float-lightbulb,

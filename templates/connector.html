@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
+    <link rel="icon"
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InnoBridge Connector - Empower Your Ecosystem</title>
     <meta name="description"
@@ -81,14 +82,30 @@
             <nav class="nav-menu">
                 <a href="about.html" class="nav-link">ABOUT</a>
                 <a href="products.html" class="nav-link">PRODUCTS</a>
-                <a href="opportunities.html" class="nav-link">OPPORTUNITIES</a>
+                {% if current_user.is_authenticated %}<a href="opportunities.html" class="nav-link">OPPORTUNITIES</a>{%
+                endif %}
                 <a href="blog.html" class="nav-link">BLOG</a>
                 <a href="contact.html" class="nav-link">CONTACT</a>
             </nav>
 
             <div class="nav-actions">
+                {% if current_user.is_authenticated %}
+                <span class="nav-btn secondary" style="cursor: default; pointer-events: none;">{{ current_user.name
+                    }}</span>
+                <a href="/auth/logout" class="nav-btn secondary">LOG OUT</a>
+                {% if current_user.role == 'admin' %}
+                <a href="/admin" class="nav-btn primary">DASHBOARD</a>
+                {% elif current_user.role == 'corporate' %}
+                <a href="/corporate" class="nav-btn primary">DASHBOARD</a>
+                {% elif current_user.role == 'connector' or current_user.role == 'enabler' %}
+                <a href="/connector" class="nav-btn primary">DASHBOARD</a>
+                {% else %}
+                <a href="/startup" class="nav-btn primary">DASHBOARD</a>
+                {% endif %}
+                {% else %}
                 <a href="/login" class="nav-btn secondary">LOG IN</a>
-                <a href="signup.html" class="nav-btn primary">GET STARTED</a>
+                <a href="/signup" class="nav-btn primary">GET STARTED</a>
+                {% endif %}
                 <button class="mobile-menu-btn" aria-label="Toggle Menu">
                     <i class="fas fa-bars"></i>
                 </button>

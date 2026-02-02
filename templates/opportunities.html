@@ -510,15 +510,31 @@
                 <a href="/" class="nav-link">HOME</a>
                 <a href="/about" class="nav-link">ABOUT</a>
                 <a href="/products" class="nav-link">PRODUCTS</a>
-                <a href="/opportunities" class="nav-link active">OPPORTUNITIES</a>
+                {% if current_user.is_authenticated %}<a href="/opportunities"
+                    class="nav-link active">OPPORTUNITIES</a>{% endif %}
                 <a href="/blog" class="nav-link">BLOG</a>
                 <a href="/contact" class="nav-link">CONTACT</a>
-                <a href="/investor" class="nav-link">INVESTORS</a>
+
             </nav>
 
             <div class="nav-actions" id="navActions">
+                {% if current_user.is_authenticated %}
+                <span class="nav-btn secondary" style="cursor: default; pointer-events: none;">{{ current_user.name
+                    }}</span>
+                <a href="/auth/logout" class="nav-btn secondary">LOG OUT</a>
+                {% if current_user.role == 'admin' %}
+                <a href="/admin" class="nav-btn primary">DASHBOARD</a>
+                {% elif current_user.role == 'corporate' %}
+                <a href="/corporate" class="nav-btn primary">DASHBOARD</a>
+                {% elif current_user.role == 'connector' or current_user.role == 'enabler' %}
+                <a href="/connector" class="nav-btn primary">DASHBOARD</a>
+                {% else %}
+                <a href="/startup" class="nav-btn primary">DASHBOARD</a>
+                {% endif %}
+                {% else %}
                 <a href="/login" class="nav-btn secondary">LOG IN</a>
                 <a href="/signup" class="nav-btn primary">GET STARTED</a>
+                {% endif %}
                 <button class="mobile-menu-btn" aria-label="Toggle Menu">
                     <i class="fas fa-bars"></i>
                 </button>

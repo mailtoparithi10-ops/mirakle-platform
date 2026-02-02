@@ -1009,14 +1009,15 @@
             </button>
         </div>
         <nav class="nav-menu">
-            <button class="nav-item active" onclick="showSection('programs')">
-                <i class="fa-solid fa-compass"></i> Explore Programs
-            </button>
+            <a href="/" class="nav-item" style="text-decoration: none;">
+                <i class="fa-solid fa-arrow-left"></i> Back to Home
+            </a>
+
             <button class="nav-item" id="tab-referrals" onclick="showSection('referrals')">
                 <i class="fa-solid fa-handshake"></i> Referral Requests <span class="badge" id="referralCountBadge"
                     style="display:none; background:#ef4444;">0</span>
             </button>
-            <button class="nav-item" onclick="showSection('overview')">
+            <button class="nav-item active" onclick="showSection('overview')">
                 <i class="fa-solid fa-gauge-high"></i> Overview
             </button>
             <button class="nav-item" onclick="showSection('applications')">
@@ -1045,33 +1046,7 @@
         </div>
 
         <div class="dashboard-content">
-            <!-- PROGRAMS SECTION -->
-            <section id="programs" class="section active">
-                <div class="section-header">
-                    <div class="section-header-main">
-                        <div class="section-title">
-                            <i class="fa-solid fa-compass"></i>
-                            Explore Programs
-                        </div>
-                        <div class="section-subtitle">
-                            Discover and apply to ecosystem programs relevant to your startup.
-                        </div>
-                    </div>
-                    <div class="section-actions">
-                        <div class="search-input">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" placeholder="Search programs...">
-                        </div>
-                        <button class="btn">
-                            <i class="fa-solid fa-filter"></i> Filters
-                        </button>
-                    </div>
-                </div>
 
-                <div class="programs-grid" id="startupProgramsGrid">
-                    <!-- Programs will be loaded here -->
-                </div>
-            </section>
 
             <!-- PROGRAM DETAILS SECTION -->
             <section id="program-details" class="section">
@@ -1079,7 +1054,7 @@
                     style="padding: 0; overflow: hidden; border: none; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);">
                     <div id="programDetailsBanner"
                         style="height: 300px; background-size: cover; background-position: center; position: relative;">
-                        <button onclick="showSection('programs')"
+                        <button onclick="showSection('overview')"
                             style="position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.9); border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; z-index: 10;">
                             <i class="fa-solid fa-arrow-left"></i> Back to Programs
                         </button>
@@ -1210,7 +1185,7 @@
             </section>
 
             <!-- OVERVIEW SECTION -->
-            <section id="overview" class="section">
+            <section id="overview" class="section active">
                 <!-- Meeting Inbox Widget -->
                 <div class="meeting-inbox" id="meetingInbox">
                     <!-- Meeting inbox will be populated by JavaScript -->
@@ -1313,9 +1288,6 @@
                     <!-- Program 1 -->
                     <div class="program-card">
                         <div class="program-header">
-                            <div class="program-logo">H</div>
-                            <span
-                                style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;">ACCELERATOR</span>
                         </div>
                         <div class="program-body">
                             <div class="program-title">HealthTech Innovators</div>
@@ -1332,9 +1304,6 @@
                     <!-- Program 2 -->
                     <div class="program-card">
                         <div class="program-header">
-                            <div class="program-logo">S</div>
-                            <span
-                                style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;">POC</span>
                         </div>
                         <div class="program-body">
                             <div class="program-title">Smart City Pilot</div>
@@ -1350,9 +1319,6 @@
                     <!-- Program 3 -->
                     <div class="program-card">
                         <div class="program-header">
-                            <div class="program-logo">B</div>
-                            <span
-                                style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;">INCUBATOR</span>
                         </div>
                         <div class="program-body">
                             <div class="program-title">Blockchain Builders</div>
@@ -1849,8 +1815,6 @@
                         return `
                         <div class="program-card ${isTaken ? 'taken' : ''}">
                             <div class="program-header" style="background-image: url('${bannerImage}')">
-                                <div class="program-logo">${logoChar}</div>
-                                <span class="program-type-badge">${item.type || 'Program'}</span>
                                 ${isTaken ? '<span class="status-badge" style="position: absolute; top: 1rem; right: 1rem; background: #22c55e; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 10;">TAKEN</span>' : ''}
                             </div>
                             <div class="program-body">

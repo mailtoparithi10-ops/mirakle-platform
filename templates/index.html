@@ -3,13 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
+    <link rel="icon"
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InnoBridge - Your Decentralized Startup Ecosystem</title>
     <meta name="description"
         content="InnoBridge is the largest decentralized startup ecosystem. Connect, Earn, Impact, and Grow with our three products that help establish better startup ecosystems globally.">
     <link rel="stylesheet" href="/static/css/index.css">
     <link rel="stylesheet" href="/static/css/floating-elements.css">
+    <link rel="stylesheet" href="/static/css/globe-animation.css">
+    <link rel="stylesheet" href="/static/css/globe-3d.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap"
         rel="stylesheet">
@@ -37,15 +40,31 @@
             <nav class="nav-menu">
                 <a href="/about" class="nav-link">ABOUT</a>
                 <a href="/products" class="nav-link">PRODUCTS</a>
-                <a href="/opportunities" class="nav-link">OPPORTUNITIES</a>
+                {% if current_user.is_authenticated %}<a href="/opportunities" class="nav-link">OPPORTUNITIES</a>{%
+                endif %}
                 <a href="/blog" class="nav-link">BLOG</a>
                 <a href="/contact" class="nav-link">CONTACT</a>
-                <a href="/investor" class="nav-link">INVESTORS</a>
+
             </nav>
 
             <div class="nav-actions" id="navActions">
+                {% if current_user.is_authenticated %}
+                <span class="nav-btn secondary" style="cursor: default; pointer-events: none;">{{ current_user.name
+                    }}</span>
+                <a href="/auth/logout" class="nav-btn secondary">LOG OUT</a>
+                {% if current_user.role == 'admin' %}
+                <a href="/admin" class="nav-btn primary">DASHBOARD</a>
+                {% elif current_user.role == 'corporate' %}
+                <a href="/corporate" class="nav-btn primary">DASHBOARD</a>
+                {% elif current_user.role == 'connector' or current_user.role == 'enabler' %}
+                <a href="/connector" class="nav-btn primary">DASHBOARD</a>
+                {% else %}
+                <a href="/startup" class="nav-btn primary">DASHBOARD</a>
+                {% endif %}
+                {% else %}
                 <a href="/login" class="nav-btn secondary">LOG IN</a>
                 <a href="/signup" class="nav-btn primary">GET STARTED</a>
+                {% endif %}
                 <button class="mobile-menu-btn" aria-label="Toggle Menu">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -93,74 +112,26 @@
                 </div>
             </div>
 
-            <!-- Hero Visual - Mobile Phone Mockup -->
+            <!-- Hero Visual - 3D Animated Globe with World Map -->
             <div class="hero-visual">
-                <div class="device-container">
-                    <!-- Orbital Rings -->
-                    <div class="orbital-ring orbit-1"></div>
-                    <div class="orbital-ring orbit-2"></div>
-                    <div class="orbital-ring orbit-3"></div>
-
-                    <!-- Orbital Dots -->
-                    <div class="orbit-dot dot-1"></div>
-                    <div class="orbit-dot dot-2"></div>
-                    <div class="orbit-dot dot-3"></div>
-
-                    <!-- Device Mockup -->
-                    <div class="device-mockup">
-                        <div class="device-screen">
-                            <div class="screen-header">
-                                <div class="screen-title">InnoBridge</div>
-                                <div class="screen-dots">
-                                    <div class="screen-dot red"></div>
-                                    <div class="screen-dot yellow"></div>
-                                    <div class="screen-dot green"></div>
-                                </div>
-                            </div>
-                            <div class="screen-content">
-                                <!-- User Profile Card -->
-                                <div class="screen-card" style="display: flex; align-items: center; gap: 12px;">
-                                    <div
-                                        style="width: 36px; height: 36px; background: linear-gradient(135deg, #fcb82e, #f59e0b); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: white;">
-                                        JD</div>
-                                    <div>
-                                        <div style="font-size: 10px; color: #666; margin-bottom: 2px;">Welcome back,
-                                        </div>
-                                        <div style="font-size: 13px; font-weight: 800; color: #000;">John Doe</div>
-                                    </div>
-                                </div>
-
-                                <!-- Match Notification Card -->
-                                <div class="screen-card"
-                                    style="display: flex; flex-direction: column; justify-content: center;">
-                                    <div
-                                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                                        <span
-                                            style="font-size: 9px; font-weight: 700; color: #fcb82e; background: rgba(252, 184, 46, 0.1); padding: 2px 6px; border-radius: 4px;">NEW
-                                            MATCH</span>
-                                        <span style="font-size: 9px; color: #999;">2m ago</span>
-                                    </div>
-                                    <div style="font-size: 13px; font-weight: 800; color: #000; margin-bottom: 2px;">
-                                        TechNova AI</div>
-                                    <div style="font-size: 10px; color: #666;">Enterprise SaaS • Series A</div>
-                                </div>
-
-                                <!-- Stats Card -->
-                                <div class="screen-card"
-                                    style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <div style="font-size: 10px; color: #666; margin-bottom: 2px;">Total Earnings
-                                        </div>
-                                        <div style="font-size: 16px; font-weight: 800; color: #000;">$1,250</div>
-                                    </div>
-                                    <div
-                                        style="background: rgba(40, 202, 66, 0.1); color: #28ca42; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px;">
-                                        +12% ↗
-                                    </div>
-                                </div>
+                <div class="globe-3d-container" id="globe-3d-container">
+                    <!-- 3D Globe will be rendered here by JavaScript -->
+                    <!-- Fallback content for when JavaScript is disabled -->
+                    <noscript>
+                        <div class="globe-container">
+                            <div class="globe-sphere">
+                                <div class="world-map"></div>
+                                <div class="globe-line lat-line" style="top: 20%; width: 80%;"></div>
+                                <div class="globe-line lat-line" style="top: 40%; width: 90%;"></div>
+                                <div class="globe-line lat-line equator" style="top: 50%; width: 100%;"></div>
+                                <div class="globe-line lat-line" style="top: 60%; width: 90%;"></div>
+                                <div class="globe-line lat-line" style="top: 80%; width: 80%;"></div>
+                                <div class="globe-line lon-line" style="left: 25%;"></div>
+                                <div class="globe-line lon-line" style="left: 50%;"></div>
+                                <div class="globe-line lon-line" style="left: 75%;"></div>
                             </div>
                         </div>
-                    </div>
+                    </noscript>
                 </div>
             </div>
         </div>
@@ -387,6 +358,8 @@
     <!-- Load external JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <script src="/static/js/floating-elements.js"></script>
+    <script src="/static/js/globe-particles.js"></script>
+    <script src="/static/js/globe-3d.js"></script>
     <script src="/static/js/main.js"></script>
     <script src="/static/js/index.js"></script>
 

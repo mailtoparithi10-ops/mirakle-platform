@@ -112,6 +112,7 @@ def generate_link():
 @bp.route("/join/<token>", methods=["GET"])
 def join_via_link(token):
     from models import ReferralClick
+    from flask_login import current_user
     
     referral = Referral.query.filter_by(token=token).first_or_404()
     
@@ -136,8 +137,16 @@ def join_via_link(token):
     session['referral_id'] = referral.id
     session['opportunity_id'] = referral.opportunity_id
     
-    # Redirect to login with referral context
-    return redirect(f"/login?ref={token}")
+    # If user is already authenticated and is a startup, redirect to their dashboard
+    if current_user.is_authenticated:
+        if current_user.role in ('startup', 'founder'):
+            return redirect('/startup?referral_accepted=true')
+        else:
+            # Other roles should login as startup to access this
+            return redirect(f"/signup?ref={token}&role=startup")
+    
+    # Redirect to signup for new users (encourage account creation)
+    return redirect(f"/signup?ref={token}&role=startup")
 
 # ---------------------------------------
 # STARTUP: List Incoming Referrals

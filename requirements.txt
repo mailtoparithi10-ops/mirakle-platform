@@ -14,3 +14,4 @@ eventlet>=0.35.2
 bidict
 gevent>=24.11.1
 simple-websocket==1.0.0
+requests==2.32.5

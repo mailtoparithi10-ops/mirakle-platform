@@ -35,6 +35,9 @@ class ReferralLinkManager {
     displayReferralModal(data, opportunityTitle) {
         const modal = document.createElement('div');
         modal.className = 'referral-modal-overlay';
+        // Use passed oppId or fallback to data
+        const oppId = this.currentReferral && this.currentReferral.referral ? this.currentReferral.referral.opportunity_id : data.referral.opportunity_id;
+
         modal.innerHTML = `
             <div class="referral-modal">
                 <div class="referral-modal-header">
@@ -47,20 +50,42 @@ class ReferralLinkManager {
                 <div class="referral-modal-body">
                     <div class="opportunity-info">
                         <h3>${opportunityTitle}</h3>
-                        <p class="text-muted">Share this opportunity with startups using the link or QR code below</p>
+                        <p class="text-muted">Invite a startup directly or share a link.</p>
                     </div>
 
                     <div class="referral-tabs">
-                        <button class="tab-btn active" onclick="switchReferralTab('link')">
-                            <i class="fas fa-link"></i> Shareable Link
+                        <button class="tab-btn active" onclick="switchReferralTab('direct')">
+                            <i class="fas fa-paper-plane"></i> Direct Invite
+                        </button>
+                        <button class="tab-btn" onclick="switchReferralTab('link')">
+                            <i class="fas fa-link"></i> Share Link
                         </button>
                         <button class="tab-btn" onclick="switchReferralTab('qr')">
                             <i class="fas fa-qrcode"></i> QR Code
                         </button>
                     </div>
 
+                    <!-- Direct Invite Tab -->
+                    <div id="directTab" class="tab-content active">
+                        <div class="form-group" style="margin-bottom:1rem;">
+                            <label style="display:block; margin-bottom:0.5rem; font-weight:600; color:#cbd5e1;">Startup Name</label>
+                            <input type="text" id="refStartupName" placeholder="e.g. NextGen AI" class="form-control" style="width:100%; padding:0.8rem; background:#1e293b; color:white; border:1px solid #334155; border-radius:6px;">
+                        </div>
+                        <div class="form-group" style="margin-bottom:1rem;">
+                            <label style="display:block; margin-bottom:0.5rem; font-weight:600; color:#cbd5e1;">Founder Email</label>
+                            <input type="email" id="refStartupEmail" placeholder="founder@startup.com" class="form-control" style="width:100%; padding:0.8rem; background:#1e293b; color:white; border:1px solid #334155; border-radius:6px;">
+                        </div>
+                        <div class="form-group" style="margin-bottom:1.5rem;">
+                            <label style="display:block; margin-bottom:0.5rem; font-weight:600; color:#cbd5e1;">Note (Optional)</label>
+                            <textarea id="refNotes" placeholder="Personal message..." rows="3" class="form-control" style="width:100%; padding:0.8rem; background:#1e293b; color:white; border:1px solid #334155; border-radius:6px;"></textarea>
+                        </div>
+                        <button class="action-btn" onclick="referralManager.sendDirectReferral(${oppId})" style="width:100%; padding:1rem; background:#3b82f6; color:white; border:none; border-radius:6px; font-weight:600; cursor:pointer; transition: background 0.2s;">
+                            <i class="fa-solid fa-paper-plane"></i> Send Invite
+                        </button>
+                    </div>
+
                     <!-- Link Tab -->
-                    <div id="linkTab" class="tab-content active">
+                    <div id="linkTab" class="tab-content">
                         <div class="link-container">
                             <div class="link-box">
                                 <input type="text" id="referralLink" value="${data.join_url}" readonly>
@@ -103,7 +128,7 @@ class ReferralLinkManager {
 
                     <!-- Tracking Info -->
                     <div class="tracking-info">
-                        <h4><i class="fas fa-chart-line"></i> Tracking</h4>
+                        <h4><i class="fas fa-chart-line"></i> Link Tracking</h4>
                         <div class="tracking-stats" id="trackingStats">
                             <div class="stat-item">
                                 <div class="stat-value" id="clickCount">0</div>
@@ -118,9 +143,6 @@ class ReferralLinkManager {
                                 <div class="stat-label">Applications</div>
                             </div>
                         </div>
-                        <button class="view-details-btn" onclick="viewReferralDetails(${data.referral_id})">
-                            View Detailed Analytics
-                        </button>
                     </div>
                 </div>
             </div>
@@ -170,12 +192,62 @@ class ReferralLinkManager {
             const data = await response.json();
 
             if (data.success) {
-                document.getElementById('clickCount').textContent = data.stats.total_clicks;
-                document.getElementById('viewCount').textContent = data.stats.viewed_opportunity;
-                document.getElementById('applyCount').textContent = data.stats.applied;
+                if (document.getElementById('clickCount')) document.getElementById('clickCount').textContent = data.stats.total_clicks;
+                if (document.getElementById('viewCount')) document.getElementById('viewCount').textContent = data.stats.viewed_opportunity;
+                if (document.getElementById('applyCount')) document.getElementById('applyCount').textContent = data.stats.applied;
             }
         } catch (error) {
             console.error('Error loading stats:', error);
+        }
+    }
+
+    async sendDirectReferral(oppId) {
+        const name = document.getElementById('refStartupName').value;
+        const email = document.getElementById('refStartupEmail').value;
+        const notes = document.getElementById('refNotes').value;
+
+        if (!name || !email) {
+            this.showError("Please enter startup name and email");
+            return;
+        }
+
+        // Simple email validation
+        if (!email.includes('@') || !email.includes('.')) {
+            this.showError("Please enter a valid email");
+            return;
+        }
+
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        btn.disabled = true;
+
+        try {
+            const res = await fetch('/api/referrals/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    opportunity_id: oppId,
+                    startup_name: name,
+                    startup_email: email,
+                    notes: notes
+                })
+            });
+            const json = await res.json();
+            if (json.success || res.status === 201) {
+                alert("Referral sent successfully! The startup will see this in their dashboard.");
+                document.querySelector('.referral-modal-overlay').remove();
+            } else {
+                this.showError(json.error || "Failed to send referral");
+            }
+        } catch (e) {
+            console.error(e);
+            this.showError("Network error sending referral");
+        } finally {
+            if (btn) {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         }
     }
 
@@ -192,11 +264,14 @@ function switchReferralTab(tab) {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
-    if (tab === 'link') {
-        document.querySelector('.tab-btn:first-child').classList.add('active');
+    if (tab === 'direct') {
+        document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+        document.getElementById('directTab').classList.add('active');
+    } else if (tab === 'link') {
+        document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
         document.getElementById('linkTab').classList.add('active');
     } else {
-        document.querySelector('.tab-btn:last-child').classList.add('active');
+        document.querySelector('.tab-btn:nth-child(3)').classList.add('active');
         document.getElementById('qrTab').classList.add('active');
     }
 }
@@ -264,6 +339,6 @@ function viewReferralDetails(referralId) {
 }
 
 // Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     console.log('Referral Link Manager initialized');
 });

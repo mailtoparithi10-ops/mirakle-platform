@@ -121,7 +121,7 @@ def setup_render_data():
                 "sectors": ["disability-entrepreneurship", "micro-enterprise", "manufacturing", "services", "trading", "capacity-building", "inclusive-business"],
                 "target_stages": ["micro-business", "early-stage", "growth-stage", "family-business"],
                 "countries": ["India"],
-                "banner_url": "/static/images/opportunities/cii_capacity_building.jpg"
+                "banner_url": "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?q=80&w=2069&auto=format&fit=crop"
             },
             {
                 "title": "AI & Machine Learning Bootcamp",

@@ -1,0 +1,778 @@
+/* ================================
+   3D ANIMATED GLOBE STYLES
+=================================*/
+
+.globe-container {
+    position: relative;
+    width: 550px;
+    height: 550px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1200px;
+    transform-style: preserve-3d;
+}
+
+/* Globe Sphere - Realistic 3D Ball */
+.globe-sphere {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+
+    /* Multi-layer radial gradient for 3D sphere effect */
+    background:
+        /* Highlight spot (top-left light reflection) */
+        radial-gradient(circle at 25% 25%,
+            rgba(255, 255, 255, 0.8) 0%,
+            rgba(255, 255, 255, 0.4) 8%,
+            transparent 15%),
+        /* Main sphere gradient (creates ball shape) */
+        radial-gradient(circle at 40% 40%,
+            rgba(255, 223, 0, 0.9) 0%,
+            rgba(252, 184, 46, 0.95) 25%,
+            rgba(245, 158, 11, 1) 45%,
+            rgba(217, 119, 6, 1) 65%,
+            rgba(180, 83, 9, 1) 80%,
+            rgba(120, 53, 15, 1) 95%,
+            rgba(60, 30, 10, 1) 100%);
+
+    /* Multiple shadows for 3D depth */
+    box-shadow:
+        /* Inner shadow - bottom right (creates depth) */
+        inset -40px -40px 100px rgba(0, 0, 0, 0.5),
+        inset -20px -20px 60px rgba(0, 0, 0, 0.3),
+        /* Inner highlight - top left */
+        inset 30px 30px 80px rgba(255, 255, 255, 0.15),
+        inset 15px 15px 40px rgba(255, 255, 255, 0.1),
+        /* Outer shadow (ball floating effect) */
+        0 30px 80px rgba(0, 0, 0, 0.3),
+        0 15px 40px rgba(0, 0, 0, 0.2),
+        /* Outer glow */
+        0 0 100px rgba(252, 184, 46, 0.3),
+        0 0 60px rgba(252, 184, 46, 0.2);
+
+    /* 3D transform for ball effect */
+    animation: globeRotate3D 40s linear infinite;
+    transform-style: preserve-3d;
+    transform: perspective(1000px) rotateX(20deg) rotateY(0deg);
+
+    /* Subtle border for definition */
+    border: 1px solid rgba(180, 83, 9, 0.3);
+}
+
+/* Sphere highlight overlay for glossy ball effect */
+.globe-sphere::before {
+    content: '';
+    position: absolute;
+    top: 8%;
+    left: 8%;
+    width: 45%;
+    height: 45%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%,
+            rgba(255, 255, 255, 0.6) 0%,
+            rgba(255, 255, 255, 0.3) 30%,
+            rgba(255, 255, 255, 0.1) 50%,
+            transparent 70%);
+    filter: blur(15px);
+    animation: highlightShift 8s ease-in-out infinite;
+    z-index: 10;
+}
+
+/* Bottom shadow for ball sitting effect */
+.globe-sphere::after {
+    content: '';
+    position: absolute;
+    bottom: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 30px;
+    background: radial-gradient(ellipse,
+            rgba(0, 0, 0, 0.4) 0%,
+            rgba(0, 0, 0, 0.2) 40%,
+            transparent 70%);
+    filter: blur(20px);
+    z-index: -1;
+}
+
+@keyframes highlightShift {
+
+    0%,
+    100% {
+        transform: translate(0, 0);
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: translate(25px, 15px);
+        opacity: 1;
+    }
+}
+
+@keyframes globeRotate3D {
+    0% {
+        transform: perspective(1000px) rotateX(20deg) rotateY(0deg);
+    }
+
+    100% {
+        transform: perspective(1000px) rotateX(20deg) rotateY(360deg);
+    }
+}
+
+/* World Map Overlay - Wraps around sphere */
+.world-map {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-image: url('/static/images/world-map.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+    /* Disabled scrolling so map stays fixed while globe rotates */
+    animation: none;
+    pointer-events: none;
+
+    /* Add sphere curvature effect */
+    mask-image: radial-gradient(circle at 50% 50%,
+            black 0%,
+            black 40%,
+            rgba(0, 0, 0, 0.8) 60%,
+            rgba(0, 0, 0, 0.4) 80%,
+            transparent 100%);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%,
+            black 0%,
+            black 40%,
+            rgba(0, 0, 0, 0.8) 60%,
+            rgba(0, 0, 0, 0.4) 80%,
+            transparent 100%);
+
+    /* Enhance 3D depth */
+    filter: brightness(1.1) contrast(1.2);
+}
+
+@keyframes mapScroll {
+    0% {
+        background-position: 0% center;
+    }
+
+    100% {
+        background-position: 200% center;
+    }
+}
+
+/* Globe Lines - Latitude & Longitude */
+.globe-line {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.lat-line {
+    height: 0;
+    border-radius: 50%;
+}
+
+.equator {
+    border-color: rgba(255, 255, 255, 0.3);
+    border-width: 2px;
+    opacity: 0.8;
+}
+
+.lon-line {
+    width: 0;
+    height: 100%;
+    top: 0;
+    transform: translateX(-50%);
+}
+
+/* Connection Dots - Network Points */
+.connection-dot {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow:
+        0 0 20px rgba(255, 255, 255, 0.8),
+        0 0 40px rgba(252, 184, 46, 0.6);
+    animation: dotPulse 2s ease-in-out infinite;
+    z-index: 10;
+}
+
+.connection-dot::before {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    animation: ripple 2s ease-out infinite;
+}
+
+.connection-dot::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(252, 184, 46, 0.4), transparent);
+    animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.4);
+        opacity: 0.8;
+    }
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0.8);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
+
+@keyframes glow {
+
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Country Dots - Stationary (only pulse) */
+.country-dot {
+    animation: dotPulse 2s ease-in-out infinite;
+}
+
+/* Country dots fixed in place; remove movement animations so they don't shift around */
+.country-dot[data-country="usa"],
+.country-dot[data-country="uk"],
+.country-dot[data-country="india"],
+.country-dot[data-country="singapore"],
+.country-dot[data-country="australia"],
+.country-dot[data-country="brazil"] {
+    animation: dotPulse 2s ease-in-out infinite;
+} 
+
+/* Movement animations - simulating connections */
+@keyframes moveUSA {
+
+    0%,
+    100% {
+        top: 35%;
+        left: 25%;
+    }
+
+    25% {
+        top: 32%;
+        left: 28%;
+    }
+
+    50% {
+        top: 38%;
+        left: 22%;
+    }
+
+    75% {
+        top: 33%;
+        left: 27%;
+    }
+}
+
+@keyframes moveUK {
+
+    0%,
+    100% {
+        top: 30%;
+        left: 48%;
+    }
+
+    25% {
+        top: 28%;
+        left: 50%;
+    }
+
+    50% {
+        top: 32%;
+        left: 46%;
+    }
+
+    75% {
+        top: 29%;
+        left: 49%;
+    }
+}
+
+@keyframes moveIndia {
+
+    0%,
+    100% {
+        top: 45%;
+        left: 62%;
+    }
+
+    25% {
+        top: 43%;
+        left: 64%;
+    }
+
+    50% {
+        top: 47%;
+        left: 60%;
+    }
+
+    75% {
+        top: 44%;
+        left: 63%;
+    }
+}
+
+@keyframes moveSingapore {
+
+    0%,
+    100% {
+        top: 55%;
+        left: 70%;
+    }
+
+    25% {
+        top: 53%;
+        left: 72%;
+    }
+
+    50% {
+        top: 57%;
+        left: 68%;
+    }
+
+    75% {
+        top: 54%;
+        left: 71%;
+    }
+}
+
+@keyframes moveAustralia {
+
+    0%,
+    100% {
+        top: 70%;
+        left: 75%;
+    }
+
+    25% {
+        top: 68%;
+        left: 77%;
+    }
+
+    50% {
+        top: 72%;
+        left: 73%;
+    }
+
+    75% {
+        top: 69%;
+        left: 76%;
+    }
+}
+
+@keyframes moveBrazil {
+
+    0%,
+    100% {
+        top: 65%;
+        left: 32%;
+    }
+
+    25% {
+        top: 63%;
+        left: 34%;
+    }
+
+    50% {
+        top: 67%;
+        left: 30%;
+    }
+
+    75% {
+        top: 64%;
+        left: 33%;
+    }
+}
+
+/* Connection Lines SVG */
+.connection-lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.connection-path {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.6);
+    stroke-width: 2;
+    stroke-dasharray: 10 5;
+    animation: pathFlow 4s linear infinite;
+    filter: drop-shadow(0 0 8px rgba(252, 184, 46, 0.8));
+}
+
+/* Country-specific path animations */
+.country-path {
+    stroke: rgba(252, 184, 46, 0.7);
+    stroke-width: 2.5;
+    animation: countryPathFlow 5s ease-in-out infinite;
+}
+
+.country-path:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.country-path:nth-child(2) {
+    animation-delay: 0.8s;
+}
+
+.country-path:nth-child(3) {
+    animation-delay: 1.6s;
+}
+
+.country-path:nth-child(4) {
+    animation-delay: 2.4s;
+}
+
+.country-path:nth-child(5) {
+    animation-delay: 3.2s;
+}
+
+.country-path:nth-child(6) {
+    animation-delay: 4s;
+}
+
+@keyframes pathFlow {
+    0% {
+        stroke-dashoffset: 0;
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        stroke-dashoffset: 30;
+        opacity: 0.4;
+    }
+}
+
+@keyframes countryPathFlow {
+    0% {
+        stroke-dashoffset: 0;
+        opacity: 0.3;
+        stroke-width: 2;
+    }
+
+    25% {
+        opacity: 0.8;
+        stroke-width: 3;
+    }
+
+    50% {
+        stroke-dashoffset: 15;
+        opacity: 1;
+        stroke-width: 3.5;
+    }
+
+    75% {
+        opacity: 0.8;
+        stroke-width: 3;
+    }
+
+    100% {
+        stroke-dashoffset: 30;
+        opacity: 0.3;
+        stroke-width: 2;
+    }
+}
+
+/* ================================
+   ORBITAL RINGS - 3D Orbits
+=================================*/
+
+.orbital-ring {
+    position: absolute;
+    border: 2px solid rgba(252, 184, 46, 0.25);
+    border-radius: 50%;
+    transform-style: preserve-3d;
+}
+
+.orbit-1 {
+    width: 500px;
+    height: 500px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotateX(75deg);
+    border-style: dashed;
+    animation: orbitRotate1 30s linear infinite;
+}
+
+.orbit-2 {
+    width: 600px;
+    height: 600px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotateX(60deg) rotateY(30deg);
+    border-color: rgba(255, 237, 74, 0.2);
+    animation: orbitRotate2 40s linear infinite reverse;
+}
+
+.orbit-3 {
+    width: 400px;
+    height: 400px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotateX(80deg) rotateY(-20deg);
+    border-color: rgba(255, 215, 0, 0.3);
+    animation: orbitRotate3 25s linear infinite;
+}
+
+@keyframes orbitRotate1 {
+    from {
+        transform: translate(-50%, -50%) rotateX(75deg) rotateZ(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotateX(75deg) rotateZ(360deg);
+    }
+}
+
+@keyframes orbitRotate2 {
+    from {
+        transform: translate(-50%, -50%) rotateX(60deg) rotateY(30deg) rotateZ(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotateX(60deg) rotateY(30deg) rotateZ(360deg);
+    }
+}
+
+@keyframes orbitRotate3 {
+    from {
+        transform: translate(-50%, -50%) rotateX(80deg) rotateY(-20deg) rotateZ(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotateX(80deg) rotateY(-20deg) rotateZ(360deg);
+    }
+}
+
+/* ================================
+   FLOATING INFO CARDS
+=================================*/
+
+.globe-info-card {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid rgba(252, 184, 46, 0.3);
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    animation: cardFloat 4s ease-in-out infinite;
+    z-index: 20;
+    transition: all 0.3s ease;
+}
+
+.card-icon {
+    font-size: 32px;
+    line-height: 1;
+}
+
+.card-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.card-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px;
+    font-weight: 800;
+    color: #fcb82e;
+    line-height: 1;
+}
+
+.card-subtitle {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card-1 {
+    top: 10%;
+    left: -10%;
+    animation-delay: 0s;
+}
+
+.card-2 {
+    top: 50%;
+    right: -15%;
+    animation-delay: 1.3s;
+}
+
+.card-3 {
+    bottom: 15%;
+    left: -5%;
+    animation-delay: 2.6s;
+}
+
+@keyframes cardFloat {
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-15px) scale(1.05);
+    }
+}
+
+/* ================================
+   HOVER EFFECTS
+=================================*/
+
+.globe-container:hover .globe-sphere {
+    animation-play-state: paused;
+    box-shadow:
+        inset -30px -30px 80px rgba(0, 0, 0, 0.4),
+        inset 20px 20px 60px rgba(255, 255, 255, 0.2),
+        0 0 100px rgba(252, 184, 46, 0.6),
+        0 0 150px rgba(252, 184, 46, 0.3);
+}
+
+.globe-container:hover .connection-dot {
+    animation-duration: 1s;
+}
+
+.globe-container:hover .globe-info-card {
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 0 12px 48px rgba(252, 184, 46, 0.3);
+}
+
+.globe-container:hover .orbital-ring {
+    border-color: rgba(252, 184, 46, 0.5);
+}
+
+/* ================================
+   RESPONSIVE DESIGN
+=================================*/
+
+@media (max-width: 1200px) {
+    .globe-container {
+        width: 450px;
+        height: 450px;
+    }
+
+    .globe-sphere {
+        width: 320px;
+        height: 320px;
+    }
+
+    .orbit-1 {
+        width: 400px;
+        height: 400px;
+    }
+
+    .orbit-2 {
+        width: 480px;
+        height: 480px;
+    }
+
+    .orbit-3 {
+        width: 320px;
+        height: 320px;
+    }
+
+    .globe-info-card {
+        padding: 12px 16px;
+    }
+
+    .card-title {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .globe-container {
+        width: 350px;
+        height: 350px;
+    }
+
+    .globe-sphere {
+        width: 250px;
+        height: 250px;
+    }
+
+    .orbit-1 {
+        width: 300px;
+        height: 300px;
+    }
+
+    .orbit-2 {
+        width: 360px;
+        height: 360px;
+    }
+
+    .orbit-3 {
+        width: 240px;
+        height: 240px;
+    }
+
+    .globe-info-card {
+        padding: 10px 12px;
+        gap: 8px;
+    }
+
+    .card-icon {
+        font-size: 24px;
+    }
+
+    .card-title {
+        font-size: 18px;
+    }
+
+    .card-subtitle {
+        font-size: 10px;
+    }
+}

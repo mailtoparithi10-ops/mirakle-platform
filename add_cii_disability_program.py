@@ -86,8 +86,8 @@ Prior Registration is Mandatory. Only Shortlisted Members Will Receive The confi
         # Set deadline to October 2025 as shown in the image
         program.deadline = datetime(2025, 10, 31)
         
-        # Use a placeholder image URL (you can replace this with the actual uploaded image URL)
-        program.banner_url = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2088&auto=format&fit=crop"
+        # Use a more relevant image for disability entrepreneurship and capacity building
+        program.banner_url = "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?q=80&w=2069&auto=format&fit=crop"
         
         program.status = "published"
         

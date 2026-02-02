@@ -115,7 +115,7 @@ def add_opportunities():
                 "sectors": ["smart-city", "iot", "urban-tech"],
                 "target_stages": ["series-a", "series-b"],
                 "countries": ["UAE", "Singapore", "Estonia"],
-                "banner_url": "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1f?q=80&w=2070&auto=format&fit=crop"
+                "banner_url": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=2069&auto=format&fit=crop"
             },
             {
                 "title": "Cybersecurity Innovation Challenge",

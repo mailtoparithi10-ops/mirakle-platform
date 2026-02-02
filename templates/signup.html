@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
+    <link rel="icon"
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - InnoBridge</title>
     <link rel="stylesheet" href="/static/css/index.css">
@@ -598,6 +599,58 @@
                         <input type="text" name="company" class="form-input" required placeholder="Your company name">
                     </div>
 
+                    <!-- Startup-specific fields (shown only for startup role) -->
+                    <div id="startupFields" style="display:none;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Company Size</label>
+                                <select name="companySize" class="form-select">
+                                    <option value="">Select size</option>
+                                    <option value="1-10">1-10 employees</option>
+                                    <option value="11-50">11-50 employees</option>
+                                    <option value="51-200">51-200 employees</option>
+                                    <option value="201-500">201-500 employees</option>
+                                    <option value="500+">500+ employees</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Industry / Sector</label>
+                                <select name="industry" class="form-select">
+                                    <option value="">Select industry</option>
+                                    <option value="FinTech">FinTech</option>
+                                    <option value="HealthTech">HealthTech</option>
+                                    <option value="EdTech">EdTech</option>
+                                    <option value="AgriTech">AgriTech</option>
+                                    <option value="E-commerce">E-commerce</option>
+                                    <option value="SaaS">SaaS</option>
+                                    <option value="AI/ML">AI/ML</option>
+                                    <option value="IoT">IoT</option>
+                                    <option value="CleanTech">CleanTech</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Startup Stage</label>
+                                <select name="stage" class="form-select">
+                                    <option value="">Select stage</option>
+                                    <option value="Idea">Idea Stage</option>
+                                    <option value="MVP">MVP / Prototype</option>
+                                    <option value="Early">Early Stage</option>
+                                    <option value="Growth">Growth Stage</option>
+                                    <option value="Scale">Scale-up</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Website (Optional)</label>
+                                <input type="url" name="website" class="form-input"
+                                    placeholder="https://yourcompany.com">
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Password</label>
@@ -650,7 +703,33 @@
                 opt.classList.remove('selected');
             });
             event.currentTarget.classList.add('selected');
+
+            // Show/hide startup-specific fields
+            const startupFields = document.getElementById('startupFields');
+            if (role === 'startup') {
+                startupFields.style.display = 'block';
+            } else {
+                startupFields.style.display = 'none';
+            }
         }
+
+        // Check for URL parameters (referral link)
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refToken = urlParams.get('ref');
+            const roleParam = urlParams.get('role');
+
+            // If coming from referral link, pre-select startup role
+            if (refToken && roleParam === 'startup') {
+                const startupOption = document.querySelector('.role-option input[value="startup"]').parentElement;
+                startupOption.click();
+
+                // Show a message about the referral
+                const successMsg = document.getElementById('successMsg');
+                successMsg.textContent = '🎉 You\'ve been invited to join an opportunity! Complete signup to access it.';
+                successMsg.style.display = 'block';
+            }
+        });
 
         function togglePassword(inputId, iconId) {
             const passwordInput = document.getElementById(inputId);
@@ -698,6 +777,11 @@
             btnText.innerHTML = 'Creating account<span class="spinner"></span>';
 
             const formData = new FormData(form);
+
+            // Combine firstName and lastName into 'name' for backend
+            const firstName = formData.get('firstName');
+            const lastName = formData.get('lastName');
+            formData.append('name', `${firstName} ${lastName}`.trim());
 
             try {
                 const response = await fetch('/auth/register', {

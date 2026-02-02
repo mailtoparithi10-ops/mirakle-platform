@@ -17,8 +17,8 @@ def update_cii_image():
             print(f"Found program: {program.title}")
             print(f"Current banner URL: {program.banner_url}")
             
-            # Update with the correct local image path
-            program.banner_url = "/static/images/opportunities/cii_capacity_building.jpg"
+            # Update with a more relevant professional image for disability entrepreneurship
+            program.banner_url = "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?q=80&w=2069&auto=format&fit=crop"
             
             db.session.commit()
             

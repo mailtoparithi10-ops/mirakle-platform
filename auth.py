@@ -116,6 +116,7 @@ def register():
     user.set_password(password)
 
     db.session.add(user)
+    db.session.flush()  # Get user.id before creating startup
     
     # NEW: Log as a Lead for the Admin Dashboard (specifically for Investor Hub/Corporate Hub users)
     if role in ('corporate', 'connector'):
@@ -131,6 +132,25 @@ def register():
         )
         db.session.add(new_lead)
 
+    # NEW: Create Startup record for startup users with additional details
+    if role in ('startup', 'founder'):
+        import json
+        company_size = data.get('companySize', '')
+        industry = data.get('industry', '')
+        stage = data.get('stage', '')
+        website = data.get('website', '')
+        
+        startup = Startup(
+            founder_id=user.id,
+            name=company or name,  # Use company name or user name
+            website=website,
+            team_size=company_size,
+            stage=stage,
+            sectors=json.dumps([industry] if industry else []),
+            country=country or 'India'
+        )
+        db.session.add(startup)
+
     db.session.commit()
 
     login_user(user)
@@ -140,10 +160,9 @@ def register():
     if token:
         ref = Referral.query.filter_by(token=token).first()
         if ref and user.role in ('founder', 'startup'):
-            # Link to user's first startup if exists, or wait for one to be created
-            # During registration, startups might not be created yet.
-            # But normally 'founder' creates a startup in dashboard.
-            # For now, just store the email and name
+            # Link to user's first startup
+            if user.startups:
+                ref.startup_id = user.startups[0].id
             ref.startup_name = user.name
             ref.startup_email = user.email
             ref.status = 'accepted'
@@ -173,7 +192,7 @@ def register():
 @login_required
 def logout():
     logout_user()
-    return redirect("/login.html")
+    return redirect("/")
 
 
 # -----------------------------------------

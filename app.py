@@ -134,10 +134,7 @@ def create_app():
             return render_template("403.html"), 403
         return render_template("startup_dashboard.html")
 
-    @app.route("/investor")
-    @app.route("/investor.html")
-    def investor_page():
-        return render_template("investor.html")
+
 
 
 
@@ -363,6 +360,7 @@ def create_app():
     # Opportunity listing page (public)
     @app.route("/opportunities")
     @app.route("/opportunities.html")
+    @login_required
     def opportunities_page():
         return render_template("opportunities.html")
 
