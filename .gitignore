@@ -96,6 +96,7 @@ insert_*.py
 # Documentation that's not needed in production
 *.md
 !README.md
+!DEPLOYMENT_CHECKLIST.md
 
 # Render specific
 .render/
