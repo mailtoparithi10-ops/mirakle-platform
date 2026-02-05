@@ -283,6 +283,12 @@ def google_config_check():
     
     configured = bool(client_id and client_secret and is_real_client_id)
     
+    # Debug logging for Render
+    print(f"GOOGLE_CONFIG_CHECK: configured={configured}")
+    print(f"GOOGLE_CONFIG_CHECK: client_id_exists={bool(client_id)}")
+    print(f"GOOGLE_CONFIG_CHECK: client_secret_exists={bool(client_secret)}")
+    print(f"GOOGLE_CONFIG_CHECK: is_real_client_id={is_real_client_id}")
+    
     return jsonify({
         "configured": configured,
         "missing_client_id": not client_id,
