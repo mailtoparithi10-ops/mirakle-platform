@@ -10,14 +10,14 @@ bp = Blueprint("enablers", __name__, url_prefix="/api/enabler")
 @bp.route("/dashboard/overview", methods=["GET"])
 @login_required
 def get_overview():
-    if current_user.role not in ("connector", "enabler", "admin"):
+    if current_user.role not in ("enabler", "admin"):
         return jsonify({"success": False, "message": "Unauthorized"}), 403
 
     timeframe = request.args.get('timeframe', '30d')
     page = int(request.args.get('page', 1))
     
     # Calculate real stats
-    referrals = Referral.query.filter_by(connector_id=current_user.id).order_by(Referral.created_at.desc()).all()
+    referrals = Referral.query.filter_by(enabler_id=current_user.id).order_by(Referral.created_at.desc()).all()
     total_referrals = len(referrals)
     
     # Mocking conversion and earnings for now based on referral count
@@ -60,7 +60,7 @@ def get_overview():
 @bp.route("/rewards/summary", methods=["GET"])
 @login_required
 def get_rewards_summary():
-    if current_user.role not in ("connector", "enabler", "admin"):
+    if current_user.role not in ("enabler", "admin"):
         return jsonify({"success": False, "message": "Unauthorized"}), 403
 
     return jsonify({
@@ -77,7 +77,7 @@ def get_rewards_summary():
 @bp.route("/rewards/history", methods=["GET"])
 @login_required
 def get_rewards_history():
-    if current_user.role not in ("connector", "enabler", "admin"):
+    if current_user.role not in ("enabler", "admin"):
         return jsonify({"success": False, "message": "Unauthorized"}), 403
 
     r_type = request.args.get('type', 'all').lower()
@@ -95,7 +95,7 @@ def get_rewards_history():
         all_items = [
             {"created_at": "2025-12-20", "startup_name": "EcoFlow", "program_name": "Sustainability Grant", "reward_type": "cash", "amount_money": 5000, "status": "Settled", "payout_method": "Wallet"},
             {"created_at": "2025-11-15", "startup_name": "CyberShield", "program_name": "Cybersecurity Cohort", "reward_type": "cash", "amount_money": 10000, "status": "Settled", "payout_method": "Bank"},
-            {"created_at": "2025-10-05", "startup_name": "InnoBridge", "program_name": "Q3 Top Connector", "reward_type": "points", "amount_points": 1200, "status": "Posted", "payout_method": "Points"},
+            {"created_at": "2025-10-05", "startup_name": "InnoBridge", "program_name": "Q3 Top Enabler", "reward_type": "points", "amount_points": 1200, "status": "Posted", "payout_method": "Points"},
             {"created_at": "2025-09-12", "startup_name": "UrbanLift", "program_name": "Mobility Program", "reward_type": "cash", "amount_money": 4500, "status": "Settled", "payout_method": "Wallet"}
         ]
 
@@ -120,7 +120,7 @@ def get_rewards_history():
 @bp.route("/analytics", methods=["GET"])
 @login_required
 def get_analytics():
-    if current_user.role not in ("connector", "enabler", "admin"):
+    if current_user.role not in ("enabler", "admin"):
         return jsonify({"success": False, "message": "Unauthorized"}), 403
 
     return jsonify({

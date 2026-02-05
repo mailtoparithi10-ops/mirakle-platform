@@ -2,13 +2,16 @@
 from flask import Blueprint, jsonify, request, render_template
 from flask_login import login_required, current_user
 from extensions import db
-from models import Meeting, MeetingParticipant, User
+from models import Meeting, MeetingParticipant, User, Notification
 from datetime import datetime, timedelta
 import uuid
 import random
 import string
 
 bp = Blueprint("meetings", __name__, url_prefix="/api/meetings")
+
+# Web routes for meeting pages
+web_bp = Blueprint("meetings_web", __name__, url_prefix="/meetings")
 
 
 def require_admin():
@@ -26,6 +29,104 @@ def generate_meeting_room_id():
 def generate_meeting_password():
     """Generate random meeting password"""
     return ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+
+
+# -----------------------------------------
+# WEB ROUTES
+# -----------------------------------------
+@web_bp.route('/')
+@login_required
+def meetings_view():
+    """User-friendly meetings view for all users"""
+    return render_template('meetings_user_view.html')
+
+
+@web_bp.route('/join/<meeting_room_id>')
+@login_required
+def join_meeting_page(meeting_room_id):
+    """Meeting join page"""
+    meeting = Meeting.query.filter_by(meeting_room_id=meeting_room_id).first_or_404()
+    
+    # Check if user has access
+    participant = MeetingParticipant.query.filter_by(
+        meeting_id=meeting.id,
+        user_id=current_user.id
+    ).first()
+    
+    # If not a participant, check if user is admin
+    if not participant and current_user.role == "admin":
+        participant = MeetingParticipant(
+            meeting_id=meeting.id,
+            user_id=current_user.id,
+            is_moderator=True
+        )
+        db.session.add(participant)
+        try:
+            db.session.commit()
+        except Exception as e:
+            print(f"Error adding admin as participant: {e}")
+            db.session.rollback()
+    
+    if not participant:
+        return render_template('403.html'), 403
+    
+    return render_template('meeting_join.html', meeting=meeting)
+
+
+def create_meeting_notification(meeting_id, notification_type, custom_message=None):
+    """Create notifications for meeting participants"""
+    meeting = Meeting.query.get(meeting_id)
+    if not meeting:
+        return False
+    
+    participants = MeetingParticipant.query.filter_by(meeting_id=meeting_id).all()
+    
+    templates = {
+        'created': {
+            'title': f'New Meeting: {meeting.title}',
+            'message': f'You have been invited to "{meeting.title}" scheduled for {meeting.scheduled_at.strftime("%B %d, %Y at %I:%M %p")}.',
+            'type': 'info'
+        },
+        'updated': {
+            'title': f'Meeting Updated: {meeting.title}',
+            'message': f'The meeting "{meeting.title}" has been updated. Please check the details.',
+            'type': 'warning'
+        },
+        'reminder': {
+            'title': f'Meeting Reminder: {meeting.title}',
+            'message': f'Your meeting "{meeting.title}" starts in 15 minutes. Click to join.',
+            'type': 'info'
+        },
+        'cancelled': {
+            'title': f'Meeting Cancelled: {meeting.title}',
+            'message': f'The meeting "{meeting.title}" has been cancelled.',
+            'type': 'danger'
+        }
+    }
+    
+    template = templates.get(notification_type, templates['created'])
+    if custom_message:
+        template['message'] = custom_message
+    
+    notifications_created = 0
+    for participant in participants:
+        if participant.user_id:
+            notification = Notification(
+                user_id=participant.user_id,
+                title=template['title'],
+                message=template['message'],
+                type=template['type'],
+                link=f'/meetings/join/{meeting.meeting_room_id}'
+            )
+            db.session.add(notification)
+            notifications_created += 1
+    
+    try:
+        db.session.commit()
+        return True
+    except Exception as e:
+        db.session.rollback()
+        return False
 
 
 # -----------------------------------------
@@ -141,6 +242,9 @@ def create_meeting():
         
         db.session.commit()
         
+        # Create notifications for participants
+        create_meeting_notification(meeting.id, 'created')
+        
         return jsonify({
             "success": True,
             "message": "Meeting created successfully",
@@ -175,21 +279,37 @@ def get_meetings():
 @bp.route("/my-meetings", methods=["GET"])
 @login_required
 def get_user_meetings():
-    # Get meetings where user is a participant
-    participant_meetings = db.session.query(Meeting).join(MeetingParticipant).filter(
-        MeetingParticipant.user_id == current_user.id
-    ).order_by(Meeting.scheduled_at.asc()).all()
-    
-    # Separate upcoming and past meetings
-    now = datetime.utcnow()
-    upcoming_meetings = [m for m in participant_meetings if m.scheduled_at > now]
-    past_meetings = [m for m in participant_meetings if m.scheduled_at <= now]
-    
-    return jsonify({
-        "success": True,
-        "upcoming_meetings": [meeting.to_dict() for meeting in upcoming_meetings],
-        "past_meetings": [meeting.to_dict() for meeting in past_meetings]
-    })
+    try:
+        print(f"DEBUG: get_user_meetings called by user {current_user.id} ({current_user.email})")
+        
+        # Get meetings where user is a participant
+        participant_meetings = db.session.query(Meeting).join(MeetingParticipant).filter(
+            MeetingParticipant.user_id == current_user.id
+        ).order_by(Meeting.scheduled_at.asc()).all()
+        
+        print(f"DEBUG: Found {len(participant_meetings)} meetings for user")
+        
+        # Separate upcoming and past meetings
+        now = datetime.utcnow()
+        upcoming_meetings = [m for m in participant_meetings if m.scheduled_at > now]
+        past_meetings = [m for m in participant_meetings if m.scheduled_at <= now]
+        
+        print(f"DEBUG: {len(upcoming_meetings)} upcoming, {len(past_meetings)} past")
+        
+        response_data = {
+            "success": True,
+            "upcoming_meetings": [meeting.to_dict() for meeting in upcoming_meetings],
+            "past_meetings": [meeting.to_dict() for meeting in past_meetings]
+        }
+        
+        print(f"DEBUG: Returning response with {len(response_data['upcoming_meetings'])} upcoming meetings")
+        return jsonify(response_data)
+        
+    except Exception as e:
+        print(f"ERROR in get_user_meetings: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": f"Internal server error: {str(e)}"}), 500
 
 
 # -----------------------------------------
@@ -255,6 +375,9 @@ def update_meeting(meeting_id):
         meeting.updated_at = datetime.utcnow()
         db.session.commit()
         
+        # Create update notification
+        create_meeting_notification(meeting_id, 'updated')
+        
         return jsonify({
             "success": True,
             "message": "Meeting updated successfully",
@@ -279,6 +402,9 @@ def delete_meeting(meeting_id):
     meeting = Meeting.query.get_or_404(meeting_id)
     
     try:
+        # Create cancellation notification before deleting
+        create_meeting_notification(meeting_id, 'cancelled')
+        
         db.session.delete(meeting)
         db.session.commit()
         

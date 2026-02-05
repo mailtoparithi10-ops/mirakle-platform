@@ -759,7 +759,7 @@
                 <i class="fa-solid fa-rocket"></i> Scout Startups
             </button>
             <button class="nav-item" onclick="showSection('programs')">
-                <i class="fa-solid fa-trophy"></i> My Programs
+                <i class="fa-solid fa-eye"></i> View Programs
             </button>
             <button class="nav-item" onclick="showSection('applications')">
                 <i class="fa-solid fa-paper-plane"></i> Applications
@@ -767,6 +767,9 @@
             <button class="nav-item" onclick="showSection('dealflow')">
                 <i class="fa-solid fa-handshake"></i> Deal Flow
             </button>
+            <a href="/meetings" class="nav-item" style="text-decoration: none;">
+                <i class="fa-solid fa-video"></i> My Meetings
+            </a>
             <button class="nav-item" onclick="showSection('inbox')">
                 <i class="fa-solid fa-envelope"></i> Inbox <span
                     style="margin-left:auto; background:#fcb82e; color:#000; padding:2px 6px; border-radius:10px; font-size:0.7rem; font-weight:700;">2</span>
@@ -783,7 +786,8 @@
     <main class="main-content">
         <div class="dashboard-header">
             <div class="dashboard-title">Corporate Dashboard</div>
-            <div class="dashboard-subtitle">Manage innovation challenges and scout for startups.</div>
+            <div class="dashboard-subtitle">View innovation challenges and scout for startups. Program management is
+                handled by administrators.</div>
         </div>
 
         <div class="dashboard-content">
@@ -1027,63 +1031,20 @@
                 </div>
             </section>
 
-            <!-- PROGRAM MODAL -->
-            <div id="programModal"
-                style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:20000; align-items:center; justify-content:center;">
-                <div
-                    style="background:white; padding:2.5rem; border-radius:1.5rem; width:100%; max-width:600px; box-shadow:0 20px 40px rgba(0,0,0,0.2); position:relative;">
-                    <button onclick="closeProgramModal()"
-                        style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
-                    <h2 style="margin-bottom:1.5rem; font-family:'Outfit',sans-serif;">Launch Innovation Program</h2>
 
-                    <div style="margin-bottom:1.5rem;">
-                        <label style="display:block; margin-bottom:0.5rem; font-weight:600;">Program Title</label>
-                        <input type="text" id="progTitle" placeholder="e.g. Sustainable Energy Challenge 2026"
-                            style="width:100%; padding:0.75rem; border:1px solid #ddd; border-radius:8px;">
-                    </div>
 
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem;">
-                        <div>
-                            <label style="display:block; margin-bottom:0.5rem; font-weight:600;">Type</label>
-                            <select id="progType"
-                                style="width:100%; padding:0.75rem; border:1px solid #ddd; border-radius:8px;">
-                                <option>Accelerator</option>
-                                <option>POC / Pilot</option>
-                                <option>Grant</option>
-                                <option>Corporate VC</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="display:block; margin-bottom:0.5rem; font-weight:600;">Days Left</label>
-                            <input type="number" id="progDays" value="30"
-                                style="width:100%; padding:0.75rem; border:1px solid #ddd; border-radius:8px;">
-                        </div>
-                    </div>
-
-                    <div style="margin-bottom:2rem;">
-                        <label style="display:block; margin-bottom:0.5rem; font-weight:600;">Description</label>
-                        <textarea id="progDesc" rows="3" placeholder="Identify the core innovation challenge..."
-                            style="width:100%; padding:0.75rem; border:1px solid #ddd; border-radius:8px;"></textarea>
-                    </div>
-
-                    <button class="action-btn" onclick="submitNewProgram()"
-                        style="width:100%; padding:1rem; background:#000; color:#fcb82e; font-size:1rem;">
-                        <i class="fas fa-rocket"></i> Publish Program
-                    </button>
-                </div>
-            </div>
-
-            <!-- PROGRAMS SECTION -->
+            <!-- PROGRAMS SECTION (Read Only) -->
             <section id="programs" class="section">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                     <div>
-                        <h2 style="font-size: 1.5rem; font-weight: 700;">Innovation Programs</h2>
-                        <p style="color: #666;">Manage your accelerator, POC, and partnership challenges.</p>
+                        <h2 style="font-size: 1.5rem; font-weight: 700;">Innovation Programs (View Only)</h2>
+                        <p style="color: #666;">View available programs. Contact administrators to create new programs.
+                        </p>
                     </div>
-                    <button class="action-btn" style="padding: 12px 20px; font-size: 14px;"
-                        onclick="showNewProgramModal()">
-                        <i class="fas fa-plus"></i> Launch New Program
-                    </button>
+                    <div
+                        style="background: #f3f4f6; padding: 12px 20px; border-radius: 8px; color: #6b7280; font-size: 14px;">
+                        <i class="fas fa-info-circle"></i> Admin-managed programs
+                    </div>
                 </div>
 
                 <div class="cards-grid">
@@ -1134,8 +1095,9 @@
             <!-- APPLICATIONS SECTION -->
             <section id="applications" class="section">
                 <div style="margin-bottom: 2rem;">
-                    <h2 style="font-size: 1.5rem; font-weight: 700;">Incoming Applications</h2>
-                    <p style="color: #666;">Review and manage startups applying to your programs.</p>
+                    <h2 style="font-size: 1.5rem; font-weight: 700;">Incoming Applications (View Only)</h2>
+                    <p style="color: #666;">View startups applying to programs. Application management is handled by
+                        administrators.</p>
                 </div>
 
                 <div class="table-container">
@@ -1466,52 +1428,7 @@
             }, 800);
         }
 
-        function showNewProgramModal() {
-            document.getElementById('programModal').style.display = 'flex';
-        }
 
-        function closeProgramModal() {
-            document.getElementById('programModal').style.display = 'none';
-        }
-
-        function submitNewProgram() {
-            const title = document.getElementById('progTitle').value;
-            const type = document.getElementById('progType').value;
-            const days = document.getElementById('progDays').value;
-
-            if (!title) {
-                showToast("Please enter a program title.", "info");
-                return;
-            }
-
-            const btn = event.target;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Launching Systems...';
-            btn.disabled = true;
-
-            setTimeout(() => {
-                showToast(`<b>${title}</b> has been published to the InnoBridge network!`, "success");
-
-                // Append to table
-                const tbody = document.querySelector('#programs table tbody');
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td style="font-weight: 600;">${title}</td>
-                    <td>0 Startups</td>
-                    <td>${days} Days</td>
-                    <td style="color: #64748b; font-weight: 700;">Just Launched</td>
-                    <td><span class="status-pill matched">Open</span></td>
-                `;
-                tbody.prepend(newRow);
-
-                closeProgramModal();
-                btn.innerHTML = '<i class="fas fa-rocket"></i> Publish Program';
-                btn.disabled = false;
-
-                // Clear inputs
-                document.getElementById('progTitle').value = '';
-                document.getElementById('progDesc').value = '';
-            }, 2000);
-        }
 
         function handleNotifyToggle(setting, isEnabled) {
             const status = isEnabled ? "enabled" : "disabled";
@@ -1803,11 +1720,21 @@
             } catch (err) { }
         }
 
+        function checkHash() {
+            const hash = window.location.hash.replace('#', '');
+            const sections = ['overview', 'startups', 'programs', 'applications', 'dealflow', 'inbox', 'settings'];
+            if (hash && sections.includes(hash)) {
+                showSection(hash);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             initProgramChart();
             simulateRealTimeFeed();
             loadNotifications();
+            checkHash();
         });
+        window.addEventListener('hashchange', checkHash);
     </script>
 </body>
 

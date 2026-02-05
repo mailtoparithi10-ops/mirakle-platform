@@ -29,7 +29,7 @@ with app.app_context():
     admin = add_user('Admin User', 'admin@mirakle.local', 'admin', 'Global', 'Mirakle')
     f1 = add_user('Priya Founder', 'priya@startup.in', 'founder', 'India')
     f2 = add_user('John Founder', 'john@startup.us', 'founder', 'USA')
-    conn = add_user('Asha Connector', 'asha@connector.org', 'connector', 'India', 'ConnectorOrg')
+    enabler = add_user('Asha Enabler', 'asha@enabler.org', 'enabler', 'India', 'EnablerOrg')
     corp = add_user('Acme Corp', 'acme@corp.com', 'corporate', 'USA', 'Acme Corp')
     inv = add_user('VC Europe', 'vc@europe.vc', 'corporate', 'UK', 'VentureEU')
 
@@ -105,9 +105,9 @@ with app.app_context():
     db.session.add(app1)
     db.session.commit()
 
-    # Create a referral (Connector refers AgriTech to opp1)
+    # Create a referral (Enabler refers AgriTech to opp1)
     ref1 = Referral(
-        connector_id=conn.id,
+        enabler_id=enabler.id,
         startup_id=s1.id,
         opportunity_id=opp1.id,
         status='open',

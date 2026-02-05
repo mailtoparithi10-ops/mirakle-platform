@@ -526,8 +526,8 @@
                 <a href="/admin" class="nav-btn primary">DASHBOARD</a>
                 {% elif current_user.role == 'corporate' %}
                 <a href="/corporate" class="nav-btn primary">DASHBOARD</a>
-                {% elif current_user.role == 'connector' or current_user.role == 'enabler' %}
-                <a href="/connector" class="nav-btn primary">DASHBOARD</a>
+                {% elif current_user.role == 'enabler' %}
+                <a href="/enabler" class="nav-btn primary">DASHBOARD</a>
                 {% else %}
                 <a href="/startup" class="nav-btn primary">DASHBOARD</a>
                 {% endif %}
@@ -545,13 +545,27 @@
     <main class="page-container">
         <section class="opportunities-hero">
             <div class="hero-header">
-                <h1 id="opportunitiesHeroTitle">
-                    <span>Explore live opportunities</span>
-                </h1>
-                <p id="opportunitiesHeroSubtitle">
-                    Discover cohorts, challenges and pilots from corporates, governments and ecosystem partners.
-                    Filter by sector, region and status to find the most relevant programs.
-                </p>
+                <div
+                    style="display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; flex-wrap: wrap;">
+                    <div style="flex: 1;">
+                        <h1 id="opportunitiesHeroTitle">
+                            <span>Explore live opportunities</span>
+                        </h1>
+                        <p id="opportunitiesHeroSubtitle">
+                            Discover cohorts, challenges and pilots from corporates, governments and ecosystem partners.
+                            Filter by sector, region and status to find the most relevant programs.
+                        </p>
+                    </div>
+                    {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                    <div class="admin-controls" style="padding-top: 1rem;">
+                        <a href="/admin#programs" class="nav-btn primary"
+                            style="padding: 12px 24px; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                            <i class="fas fa-plus-circle"></i>
+                            MANAGE PROGRAMS
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
                 <p id="opportunitiesStatsText">
                     Loading opportunities…
                 </p>
@@ -573,6 +587,7 @@
                             <option value="accelerator">Accelerator</option>
                             <option value="grant">Grant</option>
                             <option value="pilot">Pilot / PoC</option>
+                            <option value="challenge">Challenge</option>
                             <option value="investment">Investment</option>
                         </select>
                     </div>
@@ -673,7 +688,7 @@
                     <p id="modalOppDeadline" class="opp-section-content"></p>
                 </div>
 
-                <a href="/login" id="modalOppApplyBtn" class="opp-apply-btn">Apply Now</a>
+                <a href="/startup/apply" id="modalOppApplyBtn" class="opp-apply-btn">Apply Now</a>
             </div>
         </div>
     </div>
@@ -691,6 +706,7 @@
         let opportunitiesCurrentPage = 1;
         let opportunitiesTotalPages = 1;
         let opportunitiesLoadingTimeout = null;
+        const currentUserRole = "{{ current_user.role if current_user.is_authenticated else 'guest' }}";
 
         function getOpportunitiesFilters() {
             const q = document.getElementById('opportunitiesSearchInput')?.value || '';
@@ -746,7 +762,7 @@
                 rewardText = item.benefits;
             }
 
-            const connectorNote = '';
+            const enablerNote = '';
 
             card.innerHTML = `
                 ${item.banner_url ? `<img src="${item.banner_url}" class="opportunity-card-banner" alt="${item.title}">` : ''}
@@ -763,21 +779,19 @@
                 <div class="opportunity-footer">
                     <div class="opportunity-reward">
                         ${rewardText}
-                        ${connectorNote ? `<br><span>${connectorNote}</span>` : ''}
+                        ${enablerNote ? `<br><span>${enablerNote}</span>` : ''}
                     </div>
-                    <button class="btn-secondary" type="button">
-                        View details
-                    </button>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn-secondary" type="button" onclick="openOppModal(${item.id})">
+                            View
+                        </button>
+                        ${currentUserRole === 'admin' ? `
+                        <a href="/admin#programs" class="btn-secondary" style="background: var(--accent-primary); color: white; border-color: var(--accent-primary); display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                            <i class="fas fa-edit"></i>
+                        </a>` : ''}
+                    </div>
                 </div>
             `;
-
-            // Event listener
-            const btn = card.querySelector('.btn-secondary');
-            if (btn) {
-                btn.addEventListener('click', () => {
-                    openOppModal(item.id);
-                });
-            }
 
             return card;
         }
@@ -823,7 +837,9 @@
 
                 // Update Apply logic
                 const applyBtn = document.getElementById('modalOppApplyBtn');
-                applyBtn.href = '/signup?intent=apply&program=' + id;
+                if (applyBtn) {
+                    applyBtn.href = '/startup/apply?program_id=' + id;
+                }
 
             } catch (err) {
                 console.error('Error fetching opportunity:', err);

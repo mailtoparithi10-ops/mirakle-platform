@@ -310,13 +310,74 @@
             <!-- PROGRAMS SECTION -->
             <section id="programsSection" style="display: none;">
                 <h2 class="section-title">Program Management</h2>
-                <div class="content-card">
-                    <h3 class="card-title">Active Programs</h3>
-                    <div id="programsList">
-                        <div style="text-align: center; padding: 40px;">
-                            <i class="fas fa-rocket" style="font-size: 48px; color: #a0aec0; margin-bottom: 15px;"></i>
-                            <p style="color: #a0aec0;">No programs created yet</p>
+
+                <!-- Create Program Button -->
+                <div style="margin-bottom: 2rem;">
+                    <button class="admin-btn primary" onclick="showCreateProgramModal()"
+                        style="background: #4f46e5; padding: 12px 24px; border-radius: 8px; font-weight: 600;">
+                        <i class="fas fa-plus"></i> Create New Program
+                    </button>
+                </div>
+
+                <!-- Programs Stats -->
+                <div class="stats-grid" style="margin-bottom: 2rem; grid-template-columns: repeat(4, 1fr);">
+                    <div class="stat-card programs">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                            <div class="stat-trend"><i class="fas fa-arrow-up"></i> <span
+                                    id="programsTrendDetail">+2%</span></div>
                         </div>
+                        <div class="stat-title">Total Programs</div>
+                        <div class="stat-value" id="totalProgramsDetail">0</div>
+                    </div>
+
+                    <div class="stat-card active">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-play"></i></div>
+                            <div class="stat-trend"><i class="fas fa-check"></i> <span id="activeTrend">Live</span>
+                            </div>
+                        </div>
+                        <div class="stat-title">Active Programs</div>
+                        <div class="stat-value" id="activePrograms">0</div>
+                    </div>
+
+                    <div class="stat-card applications">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-paper-plane"></i></div>
+                            <div class="stat-trend"><i class="fas fa-user-plus"></i> <span
+                                    id="applicationsTrend">New</span></div>
+                        </div>
+                        <div class="stat-title">Total Applications</div>
+                        <div class="stat-value" id="totalApplicationsDetail">0</div>
+                    </div>
+
+                    <div class="stat-card draft">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-edit"></i></div>
+                            <div class="stat-trend"><i class="fas fa-clock"></i> <span id="draftTrend">Pending</span>
+                            </div>
+                        </div>
+                        <div class="stat-title">Draft Programs</div>
+                        <div class="stat-value" id="draftPrograms">0</div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-header-flex">
+                        <h3 class="card-title">
+                            <i class="fas fa-trophy"></i>
+                            All Programs
+                        </h3>
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" onclick="filterPrograms('all')">All</button>
+                            <button class="filter-tab" onclick="filterPrograms('published')">Published</button>
+                            <button class="filter-tab" onclick="filterPrograms('draft')">Draft</button>
+                            <button class="filter-tab" onclick="filterPrograms('closed')">Closed</button>
+                        </div>
+                    </div>
+                    <div id="programsList">
+                        <div class="loading" style="margin: 20px auto;"></div>
+                        <p style="text-align: center; margin-top: 10px;">Loading programs...</p>
                     </div>
                 </div>
             </section>
@@ -627,6 +688,18 @@
             setInterval(simulateLiveActivity, 5000);
             setTimeout(simulateLiveActivity, 1000);
 
+            // Handle Hash Navigation
+            function checkHash() {
+                const hash = window.location.hash.replace('#', '');
+                const validSections = ['dashboard', 'users', 'startups', 'corporate', 'connectors', 'programs', 'referrals', 'meetings', 'leads', 'inbox'];
+                if (hash && validSections.includes(hash)) {
+                    showSection(hash);
+                }
+            }
+
+            checkHash();
+            window.addEventListener('hashchange', checkHash);
+
             const ctx = document.getElementById('adminChart');
             if (ctx) {
                 new Chart(ctx, {
@@ -738,7 +811,6 @@
                 gap: 12px;
                 z-index: 10000;
                 transform: translateY(100px);
-                transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
                 font-family: 'Outfit', sans-serif;
                 font-weight: 600;
             `;
@@ -1201,6 +1273,811 @@
             modal.className = 'modal-backdrop';
             document.body.appendChild(modal);
             markLeadRead(id);
+        }
+
+        // --- PROGRAM MANAGEMENT ---
+        let allPrograms = [];
+
+        async function loadPrograms() {
+            const container = document.getElementById('programsList');
+            if (!container) return;
+
+            container.innerHTML = `<div class="loading" style="margin: 20px auto;"></div><p style="text-align: center; margin-top: 10px;">Loading programs...</p>`;
+
+            try {
+                const response = await fetch('/api/admin/opportunities');
+                const data = await response.json();
+
+                if (data.success) {
+                    allPrograms = data.opportunities;
+                    displayPrograms(allPrograms);
+                    updateProgramStats(allPrograms);
+                } else {
+                    container.innerHTML = `<div style="text-align: center; padding: 40px; color: red;">Failed to load programs</div>`;
+                }
+            } catch (error) {
+                console.error('Error loading programs:', error);
+                container.innerHTML = `<div style="text-align: center; padding: 40px; color: red;">Error loading programs</div>`;
+            }
+        }
+
+        function updateProgramStats(programs) {
+            const total = programs.length;
+            const active = programs.filter(p => p.status === 'published').length;
+            const draft = programs.filter(p => p.status === 'draft').length;
+
+            // Get total applications count
+            fetch('/api/admin/applications')
+                .then(response => response.json())
+                .then(data => {
+                    const totalApps = data.success ? data.applications.length : 0;
+                    document.getElementById('totalApplicationsDetail').textContent = totalApps;
+                })
+                .catch(() => {
+                    document.getElementById('totalApplicationsDetail').textContent = '0';
+                });
+
+            document.getElementById('totalProgramsDetail').textContent = total;
+            document.getElementById('activePrograms').textContent = active;
+            document.getElementById('draftPrograms').textContent = draft;
+        }
+
+        function displayPrograms(programs) {
+            const container = document.getElementById('programsList');
+
+            if (programs.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <i class="fas fa-trophy" style="font-size: 48px; color: #a0aec0; margin-bottom: 15px;"></i>
+                        <p style="color: #a0aec0;">No programs found</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = programs.map(program => `
+                <div class="program-item" style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 12px; background: white;">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                <h4 style="margin: 0; font-weight: 600; color: #1a202c;">${program.title}</h4>
+                                <span class="status-badge status-${program.status}" style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; text-transform: uppercase;">
+                                    ${program.status}
+                                </span>
+                                <span class="type-badge type-${program.type}" style="padding: 4px 8px; border-radius: 4px; font-size: 12px; background: #f3f4f6; color: #374151;">
+                                    ${program.type}
+                                </span>
+                            </div>
+                            <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">${program.description || 'No description'}</p>
+                            <div style="display: flex; gap: 16px; font-size: 13px; color: #666; margin-bottom: 8px;">
+                                <span><i class="fas fa-calendar"></i> Created: ${new Date(program.created_at).toLocaleDateString()}</span>
+                                ${program.deadline ? `<span><i class="fas fa-clock"></i> Deadline: ${new Date(program.deadline).toLocaleDateString()}</span>` : ''}
+                                <span><i class="fas fa-user"></i> Owner: ${program.owner_name || 'Admin'}</span>
+                            </div>
+                            ${program.benefits ? `<div style="font-size: 13px; color: #059669; font-weight: 500;"><i class="fas fa-gift"></i> ${program.benefits}</div>` : ''}
+                        </div>
+                        <div style="display: flex; gap: 8px; flex-shrink: 0;">
+                            <button onclick="viewProgram(${program.id})" style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button onclick="editProgram(${program.id})" style="padding: 6px 12px; border: 1px solid #4f46e5; border-radius: 4px; background: #4f46e5; color: white; cursor: pointer;">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button onclick="viewApplications(${program.id})" style="padding: 6px 12px; border: 1px solid #059669; border-radius: 4px; background: #059669; color: white; cursor: pointer;">
+                                <i class="fas fa-paper-plane"></i> Applications
+                            </button>
+                            <button onclick="deleteProgram(${program.id})" style="padding: 6px 12px; border: 1px solid #ef4444; border-radius: 4px; background: white; color: #ef4444; cursor: pointer;">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterPrograms(status) {
+            // Update active tab
+            document.querySelectorAll('#programsSection .filter-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (status === 'all') {
+                displayPrograms(allPrograms);
+            } else {
+                displayPrograms(allPrograms.filter(p => p.status === status));
+            }
+        }
+
+        function showCreateProgramModal() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            `;
+
+            modal.innerHTML = `
+                <div style="background: white; border-radius: 12px; padding: 24px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0; font-weight: 600;">Create New Program</h3>
+                        <button onclick="this.closest('.modal').remove()" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+                    </div>
+                    
+                    <form id="createProgramForm">
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Program Title *</label>
+                            <input type="text" name="title" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" placeholder="e.g. Global Fintech Accelerator 2026">
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Program Type *</label>
+                                <select name="type" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">
+                                    <option value="">Select Type</option>
+                                    <option value="accelerator">Accelerator</option>
+                                    <option value="grant">Grant</option>
+                                    <option value="pilot">Pilot/POC</option>
+                                    <option value="challenge">Challenge</option>
+                                    <option value="corporate_vc">Corporate VC</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Status</label>
+                                <select name="status" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">
+                                    <option value="draft">Draft</option>
+                                    <option value="published">Published</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Description *</label>
+                            <textarea name="description" rows="4" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" placeholder="Describe the program objectives and requirements..."></textarea>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Benefits</label>
+                            <input type="text" name="benefits" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" placeholder="e.g. $50k equity-free grant + mentorship">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Eligibility Criteria</label>
+                            <textarea name="eligibility" rows="3" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" placeholder="Who can apply to this program?"></textarea>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Application Deadline</label>
+                                <input type="datetime-local" name="deadline" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Banner Image URL</label>
+                                <input type="url" name="banner_url" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" placeholder="https://...">
+                            </div>
+                        </div>
+                        
+                        <!-- Poster Upload Section -->
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">Program Poster</label>
+                            <div style="border: 2px dashed #d1d5db; border-radius: 8px; padding: 20px; text-align: center; background: #f9fafb;">
+                                <div id="posterUploadArea">
+                                    <div id="posterDropZone" style="cursor: pointer;">
+                                        <i class="fas fa-cloud-upload-alt" style="font-size: 32px; color: #9ca3af; margin-bottom: 8px;"></i>
+                                        <p style="margin: 0 0 8px 0; color: #6b7280;">Click to upload or drag and drop</p>
+                                        <p style="margin: 0; font-size: 12px; color: #9ca3af;">PNG, JPG, JPEG, GIF, WEBP (Max 5MB)</p>
+                                        <input type="file" id="posterInput" name="poster" accept="image/*" style="display: none;">
+                                    </div>
+                                    <div id="posterPreview" style="display: none; margin-top: 12px;">
+                                        <img id="posterImage" style="max-width: 200px; max-height: 150px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                        <div style="margin-top: 8px;">
+                                            <button type="button" onclick="removePoster()" style="padding: 4px 12px; border: 1px solid #ef4444; border-radius: 4px; background: white; color: #ef4444; cursor: pointer; font-size: 12px;">
+                                                <i class="fas fa-trash"></i> Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="posterUploadProgress" style="display: none; margin-top: 12px;">
+                                    <div style="background: #e5e7eb; border-radius: 4px; height: 8px; overflow: hidden;">
+                                        <div id="posterProgressBar" style="background: #4f46e5; height: 100%; width: 0%;"></div>
+                                    </div>
+                                    <p style="margin: 8px 0 0 0; font-size: 12px; color: #6b7280;">Uploading poster...</p>
+                                </div>
+                            </div>
+                            <input type="hidden" name="poster_url" id="posterUrlInput">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Target Sectors (comma-separated)</label>
+                            <input type="text" name="sectors" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" placeholder="fintech, healthtech, cleantech">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Target Stages (comma-separated)</label>
+                            <input type="text" name="target_stages" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" placeholder="seed, series_a, series_b">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Target Countries (comma-separated)</label>
+                            <input type="text" name="countries" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" placeholder="Global, USA, Singapore, UK">
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                            <button type="button" onclick="this.closest('.modal').remove()" style="padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;">
+                                Cancel
+                            </button>
+                            <button type="submit" style="padding: 8px 16px; border: none; border-radius: 4px; background: #4f46e5; color: white; cursor: pointer; font-weight: 600;">
+                                Create Program
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+
+            modal.className = 'modal';
+            document.body.appendChild(modal);
+
+            // Handle form submission
+            document.getElementById('createProgramForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await createProgram(new FormData(e.target));
+                modal.remove();
+            });
+
+            // Setup poster upload for create form
+            setupPosterUpload('posterDropZone', 'posterInput', 'posterPreview', 'posterImage', 'posterUrlInput', 'posterUploadProgress', 'posterProgressBar');
+        }
+
+        async function createProgram(formData) {
+            const programData = {
+                title: formData.get('title'),
+                type: formData.get('type'),
+                description: formData.get('description'),
+                benefits: formData.get('benefits'),
+                eligibility: formData.get('eligibility'),
+                status: formData.get('status'),
+                deadline: formData.get('deadline'),
+                banner_url: formData.get('poster_url') || formData.get('banner_url'), // Use poster_url if available, fallback to banner_url
+                sectors: formData.get('sectors') ? formData.get('sectors').split(',').map(s => s.trim()) : [],
+                target_stages: formData.get('target_stages') ? formData.get('target_stages').split(',').map(s => s.trim()) : [],
+                countries: formData.get('countries') ? formData.get('countries').split(',').map(s => s.trim()) : []
+            };
+
+            try {
+                const response = await fetch('/api/admin/opportunities', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(programData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Program created successfully!');
+                    loadPrograms();
+                } else {
+                    showToast(data.error || 'Failed to create program', 'error');
+                }
+            } catch (error) {
+                console.error('Error creating program:', error);
+                showToast('Error creating program', 'error');
+            }
+        }
+
+        function viewProgram(programId) {
+            const program = allPrograms.find(p => p.id === programId);
+            if (!program) return;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.5); display: flex; justify-content: center;
+                align-items: center; z-index: 10001;
+            `;
+            modal.innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 12px; width: 600px; max-width: 90%; max-height: 90vh; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0;">Program Details</h3>
+                        <button onclick="this.closest('.modal-backdrop').remove()" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <h4 style="margin: 0 0 8px 0; color: #1a202c;">${program.title}</h4>
+                        <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                            <span class="status-badge status-${program.status}" style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; text-transform: uppercase;">
+                                ${program.status}
+                            </span>
+                            <span class="type-badge" style="padding: 4px 8px; border-radius: 4px; font-size: 12px; background: #f3f4f6; color: #374151;">
+                                ${program.type}
+                            </span>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <strong>Description:</strong>
+                        <p style="margin: 4px 0; color: #666;">${program.description || 'No description'}</p>
+                    </div>
+                    ${program.benefits ? `<div style="margin-bottom: 16px;"><strong>Benefits:</strong><p style="margin: 4px 0; color: #059669;">${program.benefits}</p></div>` : ''}
+                    ${program.eligibility ? `<div style="margin-bottom: 16px;"><strong>Eligibility:</strong><p style="margin: 4px 0; color: #666;">${program.eligibility}</p></div>` : ''}
+                    ${program.deadline ? `<div style="margin-bottom: 16px;"><strong>Deadline:</strong><p style="margin: 4px 0; color: #666;">${new Date(program.deadline).toLocaleString()}</p></div>` : ''}
+                    <div style="margin-bottom: 16px;">
+                        <strong>Created:</strong> ${new Date(program.created_at).toLocaleString()}
+                    </div>
+                    <div style="text-align: right;">
+                        <button onclick="editProgram(${program.id}); this.closest('.modal-backdrop').remove();" style="padding: 8px 16px; border: 1px solid #4f46e5; border-radius: 4px; background: #4f46e5; color: white; cursor: pointer; margin-right: 8px;">
+                            Edit Program
+                        </button>
+                        <button onclick="this.closest('.modal-backdrop').remove()" class="admin-btn">Close</button>
+                    </div>
+                </div>
+            `;
+            modal.className = 'modal-backdrop';
+            document.body.appendChild(modal);
+        }
+
+        function editProgram(programId) {
+            const program = allPrograms.find(p => p.id === programId);
+            if (!program) return;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            `;
+
+            // Parse JSON fields safely
+            let sectors = [];
+            let targetStages = [];
+            let countries = [];
+
+            try {
+                sectors = program.sectors ? JSON.parse(program.sectors) : [];
+                targetStages = program.target_stages ? JSON.parse(program.target_stages) : [];
+                countries = program.countries ? JSON.parse(program.countries) : [];
+            } catch (e) {
+                console.warn('Error parsing program JSON fields:', e);
+            }
+
+            modal.innerHTML = `
+                <div style="background: white; border-radius: 12px; padding: 24px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0; font-weight: 600;">Edit Program</h3>
+                        <button onclick="this.closest('.modal').remove()" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+                    </div>
+                    
+                    <form id="editProgramForm">
+                        <input type="hidden" name="program_id" value="${program.id}">
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Program Title *</label>
+                            <input type="text" name="title" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" value="${program.title}">
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Program Type *</label>
+                                <select name="type" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">
+                                    <option value="accelerator" ${program.type === 'accelerator' ? 'selected' : ''}>Accelerator</option>
+                                    <option value="grant" ${program.type === 'grant' ? 'selected' : ''}>Grant</option>
+                                    <option value="pilot" ${program.type === 'pilot' ? 'selected' : ''}>Pilot/POC</option>
+                                    <option value="challenge" ${program.type === 'challenge' ? 'selected' : ''}>Challenge</option>
+                                    <option value="corporate_vc" ${program.type === 'corporate_vc' ? 'selected' : ''}>Corporate VC</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Status</label>
+                                <select name="status" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">
+                                    <option value="draft" ${program.status === 'draft' ? 'selected' : ''}>Draft</option>
+                                    <option value="published" ${program.status === 'published' ? 'selected' : ''}>Published</option>
+                                    <option value="closed" ${program.status === 'closed' ? 'selected' : ''}>Closed</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Description *</label>
+                            <textarea name="description" rows="4" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">${program.description || ''}</textarea>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Benefits</label>
+                            <input type="text" name="benefits" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" value="${program.benefits || ''}">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Eligibility Criteria</label>
+                            <textarea name="eligibility" rows="3" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">${program.eligibility || ''}</textarea>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Application Deadline</label>
+                                <input type="datetime-local" name="deadline" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" value="${program.deadline ? new Date(program.deadline).toISOString().slice(0, 16) : ''}">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Banner Image URL</label>
+                                <input type="url" name="banner_url" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" value="${program.banner_url || ''}">
+                            </div>
+                        </div>
+                        
+                        <!-- Poster Upload Section -->
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">Program Poster</label>
+                            <div style="border: 2px dashed #d1d5db; border-radius: 8px; padding: 20px; text-align: center; background: #f9fafb;">
+                                <div id="editPosterUploadArea">
+                                    <div id="editPosterDropZone" style="cursor: pointer;">
+                                        <i class="fas fa-cloud-upload-alt" style="font-size: 32px; color: #9ca3af; margin-bottom: 8px;"></i>
+                                        <p style="margin: 0 0 8px 0; color: #6b7280;">Click to upload or drag and drop</p>
+                                        <p style="margin: 0; font-size: 12px; color: #9ca3af;">PNG, JPG, JPEG, GIF, WEBP (Max 5MB)</p>
+                                        <input type="file" id="editPosterInput" name="poster" accept="image/*" style="display: none;">
+                                    </div>
+                                    <div id="editPosterPreview" style="display: ${program.banner_url ? 'block' : 'none'}; margin-top: 12px;">
+                                        <img id="editPosterImage" src="${program.banner_url || ''}" style="max-width: 200px; max-height: 150px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                        <div style="margin-top: 8px;">
+                                            <button type="button" onclick="removeEditPoster()" style="padding: 4px 12px; border: 1px solid #ef4444; border-radius: 4px; background: white; color: #ef4444; cursor: pointer; font-size: 12px;">
+                                                <i class="fas fa-trash"></i> Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="editPosterUploadProgress" style="display: none; margin-top: 12px;">
+                                    <div style="background: #e5e7eb; border-radius: 4px; height: 8px; overflow: hidden;">
+                                        <div id="editPosterProgressBar" style="background: #4f46e5; height: 100%; width: 0%;"></div>
+                                    </div>
+                                    <p style="margin: 8px 0 0 0; font-size: 12px; color: #6b7280;">Uploading poster...</p>
+                                </div>
+                            </div>
+                            <input type="hidden" name="poster_url" id="editPosterUrlInput" value="${program.banner_url || ''}">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Target Sectors (comma-separated)</label>
+                            <input type="text" name="sectors" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" value="${sectors.join(', ')}">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Target Stages (comma-separated)</label>
+                            <input type="text" name="target_stages" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" value="${targetStages.join(', ')}">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Target Countries (comma-separated)</label>
+                            <input type="text" name="countries" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" value="${countries.join(', ')}">
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                            <button type="button" onclick="this.closest('.modal').remove()" style="padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;">
+                                Cancel
+                            </button>
+                            <button type="submit" style="padding: 8px 16px; border: none; border-radius: 4px; background: #4f46e5; color: white; cursor: pointer; font-weight: 600;">
+                                Update Program
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+
+            modal.className = 'modal';
+            document.body.appendChild(modal);
+
+            // Handle form submission
+            document.getElementById('editProgramForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await updateProgram(new FormData(e.target));
+                modal.remove();
+            });
+
+            // Setup poster upload for edit form
+            setupPosterUpload('editPosterDropZone', 'editPosterInput', 'editPosterPreview', 'editPosterImage', 'editPosterUrlInput', 'editPosterUploadProgress', 'editPosterProgressBar');
+        }
+
+        async function updateProgram(formData) {
+            const programId = formData.get('program_id');
+            const programData = {
+                title: formData.get('title'),
+                type: formData.get('type'),
+                description: formData.get('description'),
+                benefits: formData.get('benefits'),
+                eligibility: formData.get('eligibility'),
+                status: formData.get('status'),
+                deadline: formData.get('deadline'),
+                banner_url: formData.get('poster_url') || formData.get('banner_url'), // Use poster_url if available, fallback to banner_url
+                sectors: formData.get('sectors') ? formData.get('sectors').split(',').map(s => s.trim()) : [],
+                target_stages: formData.get('target_stages') ? formData.get('target_stages').split(',').map(s => s.trim()) : [],
+                countries: formData.get('countries') ? formData.get('countries').split(',').map(s => s.trim()) : []
+            };
+
+            try {
+                const response = await fetch(`/api/admin/opportunities/${programId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(programData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Program updated successfully!');
+                    loadPrograms();
+                } else {
+                    showToast(data.error || 'Failed to update program', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating program:', error);
+                showToast('Error updating program', 'error');
+            }
+        }
+
+        async function deleteProgram(programId) {
+            if (!confirm('Are you sure you want to delete this program? This action cannot be undone.')) return;
+
+            try {
+                const response = await fetch(`/api/admin/opportunities/${programId}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Program deleted successfully!');
+                    loadPrograms();
+                } else {
+                    showToast('Failed to delete program', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting program:', error);
+                showToast('Error deleting program', 'error');
+            }
+        }
+
+        async function viewApplications(programId) {
+            try {
+                const response = await fetch(`/api/applications/opportunity/${programId}`);
+                const applications = await response.json();
+
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                    background: rgba(0,0,0,0.5); display: flex; justify-content: center;
+                    align-items: center; z-index: 10001;
+                `;
+
+                const program = allPrograms.find(p => p.id === programId);
+                const programTitle = program ? program.title : 'Program';
+
+                modal.innerHTML = `
+                    <div style="background: white; padding: 30px; border-radius: 12px; width: 80%; max-width: 900px; max-height: 90vh; overflow-y: auto;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 style="margin: 0;">Applications for: ${programTitle}</h3>
+                            <button onclick="this.closest('.modal-backdrop').remove()" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+                        </div>
+                        
+                        ${applications.length === 0 ?
+                        `<div style="text-align: center; padding: 40px; color: #666;">
+                                <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 16px; color: #a0aec0;"></i>
+                                <p>No applications received yet</p>
+                            </div>` :
+                        `<div style="overflow-x: auto;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <thead>
+                                        <tr style="background: #f8f9fa;">
+                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6;">Startup</th>
+                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6;">Status</th>
+                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6;">Applied</th>
+                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6;">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${applications.map(app => `
+                                            <tr>
+                                                <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">
+                                                    <div style="font-weight: 600;">${app.startup_name || 'Unknown Startup'}</div>
+                                                    <div style="font-size: 12px; color: #666;">ID: ${app.startup_id}</div>
+                                                </td>
+                                                <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">
+                                                    <span class="status-badge status-${app.status}" style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; text-transform: uppercase;">
+                                                        ${app.status}
+                                                    </span>
+                                                </td>
+                                                <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">
+                                                    ${new Date(app.created_at).toLocaleDateString()}
+                                                </td>
+                                                <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">
+                                                    <select onchange="updateApplicationStatus(${app.id}, this.value)" style="padding: 4px 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px;">
+                                                        <option value="submitted" ${app.status === 'submitted' ? 'selected' : ''}>Submitted</option>
+                                                        <option value="under_review" ${app.status === 'under_review' ? 'selected' : ''}>Under Review</option>
+                                                        <option value="shortlisted" ${app.status === 'shortlisted' ? 'selected' : ''}>Shortlisted</option>
+                                                        <option value="accepted" ${app.status === 'accepted' ? 'selected' : ''}>Accepted</option>
+                                                        <option value="rejected" ${app.status === 'rejected' ? 'selected' : ''}>Rejected</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>`
+                    }
+                        
+                        <div style="text-align: right; margin-top: 20px;">
+                            <button onclick="this.closest('.modal-backdrop').remove()" class="admin-btn">Close</button>
+                        </div>
+                    </div>
+                `;
+                modal.className = 'modal-backdrop';
+                document.body.appendChild(modal);
+
+            } catch (error) {
+                console.error('Error loading applications:', error);
+                showToast('Error loading applications', 'error');
+            }
+        }
+
+        async function updateApplicationStatus(applicationId, newStatus) {
+            try {
+                const response = await fetch(`/api/admin/applications/${applicationId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        status: newStatus,
+                        note: `Status updated to ${newStatus} by admin`
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast(`Application status updated to ${newStatus}`);
+                } else {
+                    showToast('Failed to update application status', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating application status:', error);
+                showToast('Error updating application status', 'error');
+            }
+        }
+
+        // --- POSTER UPLOAD FUNCTIONALITY ---
+        function setupPosterUpload(dropZoneId, inputId, previewId, imageId, urlInputId, progressId, progressBarId) {
+            const dropZone = document.getElementById(dropZoneId);
+            const fileInput = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            const image = document.getElementById(imageId);
+            const urlInput = document.getElementById(urlInputId);
+            const progress = document.getElementById(progressId);
+            const progressBar = document.getElementById(progressBarId);
+
+            if (!dropZone || !fileInput) return;
+
+            // Click to upload
+            dropZone.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            // File input change
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    uploadPoster(file, preview, image, urlInput, progress, progressBar);
+                }
+            });
+
+            // Drag and drop
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = '#4f46e5';
+                dropZone.style.backgroundColor = '#f0f9ff';
+            });
+
+            dropZone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = '#d1d5db';
+                dropZone.style.backgroundColor = '#f9fafb';
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = '#d1d5db';
+                dropZone.style.backgroundColor = '#f9fafb';
+
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    uploadPoster(files[0], preview, image, urlInput, progress, progressBar);
+                }
+            });
+        }
+
+        async function uploadPoster(file, preview, image, urlInput, progress, progressBar) {
+            // Validate file type
+            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                showToast('Invalid file type. Please upload PNG, JPG, JPEG, GIF, or WEBP files.', 'error');
+                return;
+            }
+
+            // Validate file size (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('File too large. Maximum size is 5MB.', 'error');
+                return;
+            }
+
+            // Show progress
+            progress.style.display = 'block';
+            progressBar.style.width = '0%';
+
+            const formData = new FormData();
+            formData.append('poster', file);
+
+            try {
+                // Simulate progress
+                let progressValue = 0;
+                const progressInterval = setInterval(() => {
+                    progressValue += 10;
+                    progressBar.style.width = progressValue + '%';
+                    if (progressValue >= 90) {
+                        clearInterval(progressInterval);
+                    }
+                }, 100);
+
+                const response = await fetch('/api/admin/upload-poster', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                clearInterval(progressInterval);
+                progressBar.style.width = '100%';
+
+                setTimeout(() => {
+                    progress.style.display = 'none';
+
+                    if (data.success) {
+                        // Show preview
+                        image.src = data.poster_url;
+                        preview.style.display = 'block';
+                        urlInput.value = data.poster_url;
+                        showToast('Poster uploaded successfully!');
+                    } else {
+                        showToast(data.error || 'Upload failed', 'error');
+                    }
+                }, 500);
+
+            } catch (error) {
+                progress.style.display = 'none';
+                console.error('Upload error:', error);
+                showToast('Upload failed. Please try again.', 'error');
+            }
+        }
+
+        function removePoster() {
+            document.getElementById('posterPreview').style.display = 'none';
+            document.getElementById('posterImage').src = '';
+            document.getElementById('posterUrlInput').value = '';
+            document.getElementById('posterInput').value = '';
+        }
+
+        function removeEditPoster() {
+            document.getElementById('editPosterPreview').style.display = 'none';
+            document.getElementById('editPosterImage').src = '';
+            document.getElementById('editPosterUrlInput').value = '';
+            document.getElementById('editPosterInput').value = '';
         }
     </script>
 

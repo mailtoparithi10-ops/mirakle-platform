@@ -59,6 +59,9 @@ Thumbs.db
 
 # Logs
 *.log
+server_log*.txt
+*_dump.txt
+*_list.txt
 logs/
 
 # Temporary files

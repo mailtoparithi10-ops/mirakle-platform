@@ -8,12 +8,12 @@ from flask_login import login_required, current_user
 from auth import bp as auth_bp
 
 # ROUTES BLUEPRINTS
-from routes.startups import bp as startups_bp
+from routes.startups import bp as startups_bp, web_bp as startup_web_bp
 from routes.opportunities import bp as opportunities_bp
 from routes.applications import bp as applications_bp
 from routes.referrals import bp as referrals_bp
 from routes.admin import bp as admin_bp
-from routes.meetings import bp as meetings_bp
+from routes.meetings import bp as meetings_bp, web_bp as meetings_web_bp
 from routes.notifications import bp as notifications_bp
 
 
@@ -44,11 +44,13 @@ def create_app():
     # Register blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(startups_bp)
+    app.register_blueprint(startup_web_bp)
     app.register_blueprint(opportunities_bp)
     app.register_blueprint(applications_bp)
     app.register_blueprint(referrals_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(meetings_bp)
+    app.register_blueprint(meetings_web_bp)
     app.register_blueprint(enablers_bp)
     app.register_blueprint(notifications_bp)
 
@@ -76,9 +78,9 @@ def create_app():
     # Public Landing Pages
     @app.route("/innobridge")
     @app.route("/innobridge.html")
-    @app.route("/connector.html")
+    @app.route("/enabler.html")
     def innobridge_landing():
-        return render_template("connector.html")
+        return render_template("enabler.html")
 
     # Auth Shortcuts
     @app.route("/login")
@@ -89,7 +91,7 @@ def create_app():
         if current_user.is_authenticated:
             if current_user.role == "startup": return redirect("/startup")
             if current_user.role == "corporate": return redirect("/corporate")
-            if current_user.role == "connector": return redirect("/connector")
+            if current_user.role == "enabler": return redirect("/enabler")
             if current_user.role == "admin": return redirect("/admin")
             return redirect("/")
         return render_template("login.html")
@@ -124,15 +126,32 @@ def create_app():
     def register_page():
         return render_template("signup.html")
 
+    @app.route("/account-success")
+    def account_success_page():
+        from flask import request
+        from models import User
+        
+        user_id = request.args.get('user_id')
+        if not user_id:
+            return redirect("/signup")
+        
+        user = User.query.get(user_id)
+        if not user:
+            return redirect("/signup")
+        
+        return render_template("account_success.html", user=user)
+
     @app.route("/dashboard")
     @app.route("/startup")
     @app.route("/startup_dashboard.html")
     @login_required
     def dashboard_page():
         # Only founders see this dashboard
-        if current_user.role != "founder" and current_user.role != "startup" and current_user.role != "admin":
+        if current_user.role not in ("founder", "startup", "admin"):
             return render_template("403.html"), 403
-        return render_template("startup_dashboard.html")
+        
+        # Redirect to the new startup dashboard route
+        return redirect('/startup/dashboard')
 
 
 
@@ -160,12 +179,12 @@ def create_app():
                                recent_matches=recent_matches,
                                deal_flow_value=deal_flow_value)
 
-    @app.route("/connector")
+    @app.route("/enabler")
     @login_required
-    def connector_page():
-        if current_user.role not in ("connector", "enabler", "admin"):
+    def enabler_page():
+        if current_user.role not in ("enabler", "admin"):
             return render_template("403.html"), 403
-        return render_template("connector_dashboard.html")
+        return render_template("enabler_dashboard.html")
 
     @app.route("/admin")
     @login_required

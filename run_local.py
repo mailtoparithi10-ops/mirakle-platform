@@ -26,20 +26,20 @@ if __name__ == "__main__":
     app = create_app()
     port = find_free_port()
     
-    print(f"🚀 Starting InnoBridge Platform...")
-    print(f"🌐 Local URL: http://localhost:{port}")
-    print(f"🔑 Login Credentials:")
+    print(f"[*] Starting InnoBridge Platform...")
+    print(f"URL: http://localhost:{port}")
+    print(f"Credentials:")
     print(f"   Admin: admin@test.com / admin123")
     print(f"   Startup: startup@test.com / startup123")
     print(f"   Corporate: corporate@test.com / corporate123")
-    print(f"   Connector: connector@test.com / connector123")
-    print(f"📱 Press Ctrl+C to stop the server")
+    print(f"   Enabler: enabler@test.com / enabler123")
+    print(f"Press Ctrl+C to stop the server")
     print(f"=" * 50)
     
     try:
         socketio.run(app, debug=True, port=port, host='0.0.0.0')
     except KeyboardInterrupt:
-        print(f"\n👋 Server stopped!")
+        print(f"\nServer stopped!")
     except Exception as e:
-        print(f"❌ Error starting server: {e}")
-        print(f"💡 Try running: python run_local.py")
+        print(f"Error starting server: {e}")
+        print(f"Try running: python run_local.py")

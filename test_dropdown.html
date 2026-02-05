@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dropdown Test</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            background: #f0f0f0;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            margin: 1rem;
+        }
+
+        .dropdown-toggle {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dropdown-toggle:hover {
+            background: #555;
+        }
+
+        .dropdown-toggle.active {
+            background: #007bff;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border: 1px solid #ddd;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .dropdown.active .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 1rem;
+            color: #333;
+            text-decoration: none;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background: #f0f0f0;
+        }
+
+        .test-section {
+            margin: 2rem 0;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .test-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dropdown Functionality Test</h1>
+    
+    <button onclick="testJS()" style="background: green; color: white; padding: 1rem; border: none; border-radius: 4px; margin: 1rem;">Test JavaScript</button>
+
+    <div class="dropdown" id="testDropdown1">
+        <button class="dropdown-toggle" onclick="toggleDropdown('testDropdown1')">
+            <i class="fas fa-home"></i>
+            Test Dropdown 1
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="dropdown-menu">
+            <button class="dropdown-item" onclick="showSection('section1')">Section 1</button>
+            <button class="dropdown-item" onclick="showSection('section2')">Section 2</button>
+            <button class="dropdown-item" onclick="showSection('section3')">Section 3</button>
+        </div>
+    </div>
+
+    <div class="dropdown" id="testDropdown2">
+        <button class="dropdown-toggle" onclick="toggleDropdown('testDropdown2')">
+            <i class="fas fa-user"></i>
+            Test Dropdown 2
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="dropdown-menu">
+            <button class="dropdown-item" onclick="showSection('section4')">Section 4</button>
+            <button class="dropdown-item" onclick="showSection('section5')">Section 5</button>
+        </div>
+    </div>
+
+    <div class="test-section active" id="section1">
+        <h2>Section 1</h2>
+        <p>This is section 1 content.</p>
+    </div>
+
+    <div class="test-section" id="section2">
+        <h2>Section 2</h2>
+        <p>This is section 2 content.</p>
+    </div>
+
+    <div class="test-section" id="section3">
+        <h2>Section 3</h2>
+        <p>This is section 3 content.</p>
+    </div>
+
+    <div class="test-section" id="section4">
+        <h2>Section 4</h2>
+        <p>This is section 4 content.</p>
+    </div>
+
+    <div class="test-section" id="section5">
+        <h2>Section 5</h2>
+        <p>This is section 5 content.</p>
+    </div>
+
+    <script>
+        let activeDropdown = null;
+
+        function testJS() {
+            alert('JavaScript is working!');
+            console.log('Test function called');
+        }
+
+        function toggleDropdown(dropdownId) {
+            console.log('Toggling dropdown:', dropdownId);
+            const dropdown = document.getElementById(dropdownId);
+            
+            if (!dropdown) {
+                console.error('Dropdown not found:', dropdownId);
+                return;
+            }
+            
+            const isCurrentlyActive = dropdown.classList.contains('active');
+            console.log('Currently active:', isCurrentlyActive);
+
+            // Close all dropdowns
+            document.querySelectorAll('.dropdown').forEach(d => {
+                d.classList.remove('active');
+                const toggle = d.querySelector('.dropdown-toggle');
+                if (toggle) {
+                    toggle.classList.remove('active');
+                }
+            });
+
+            // If the clicked dropdown wasn't active, open it
+            if (!isCurrentlyActive) {
+                dropdown.classList.add('active');
+                const toggle = dropdown.querySelector('.dropdown-toggle');
+                if (toggle) {
+                    toggle.classList.add('active');
+                }
+                activeDropdown = dropdownId;
+                console.log('Opened dropdown:', dropdownId);
+            } else {
+                activeDropdown = null;
+                console.log('Closed dropdown:', dropdownId);
+            }
+        }
+
+        function showSection(sectionId) {
+            console.log('Showing section:', sectionId);
+            
+            // Hide all sections
+            document.querySelectorAll('.test-section').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Show target section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                console.log('Section activated:', sectionId);
+            } else {
+                console.error('Section not found:', sectionId);
+            }
+
+            // Close all dropdowns after selection
+            document.querySelectorAll('.dropdown').forEach(d => {
+                d.classList.remove('active');
+                const toggle = d.querySelector('.dropdown-toggle');
+                if (toggle) {
+                    toggle.classList.remove('active');
+                }
+            });
+            activeDropdown = null;
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(d => {
+                    d.classList.remove('active');
+                    const toggle = d.querySelector('.dropdown-toggle');
+                    if (toggle) {
+                        toggle.classList.remove('active');
+                    }
+                });
+                activeDropdown = null;
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Test page loaded');
+            const dropdowns = document.querySelectorAll('.dropdown');
+            console.log('Found dropdowns:', dropdowns.length);
+        });
+    </script>
+</body>
+</html>

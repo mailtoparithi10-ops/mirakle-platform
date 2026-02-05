@@ -9,7 +9,6 @@
     <title>Startup Dashboard - InnoBridge</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Reusing the high-quality styles from Enabler Dashboard */
         * {
             margin: 0;
             padding: 0;
@@ -18,191 +17,479 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #ffffff;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             min-height: 100vh;
             display: flex;
         }
 
-        .sidebar {
-            width: 240px;
-            background: #000000;
-            padding: 0;
+        /* Enhanced Top Navigation */
+        .top-nav {
+            width: 100%;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 1rem 2rem;
             position: fixed;
-            height: 100vh;
-            overflow-y: auto;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .main-content {
-            margin-left: 240px;
+            margin-top: 80px;
             flex: 1;
-            background: white;
-            min-height: 100vh;
-            border-radius: 20px 0 0 20px;
-            overflow: hidden;
-        }
-
-        .user-profile {
+            background: transparent;
+            min-height: calc(100vh - 80px);
             padding: 2rem;
-            text-align: center;
-            color: white;
-            border-bottom: 1px solid rgba(252, 184, 46, 0.3);
         }
 
-        .user-avatar-large {
-            width: 80px;
-            height: 80px;
+        /* Logo and Brand */
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .nav-brand i {
+            color: #fcb82e;
+        }
+
+        /* Navigation Dropdowns */
+        .nav-dropdowns {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-toggle:hover {
+            background: rgba(252, 184, 46, 0.2);
+            border-color: rgba(252, 184, 46, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .dropdown-toggle.active {
+            background: rgba(252, 184, 46, 0.3);
+            border-color: #fcb82e;
+            color: #fcb82e;
+        }
+
+        .dropdown.active .dropdown-menu {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateY(0) !important;
+            display: block !important;
+        }
+
+        /* Force visibility for debugging */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            backdrop-filter: blur(20px);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            color: #1e293b;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(252, 184, 46, 0.1);
+            color: #fcb82e;
+        }
+
+        .dropdown-item:first-child {
+            border-radius: 12px 12px 0 0;
+        }
+
+        .dropdown-item:last-child {
+            border-radius: 0 0 12px 12px;
+        }
+
+        .dropdown-item i {
+            width: 18px;
+            font-size: 1rem;
+        }
+
+        .dropdown-item .badge {
+            margin-left: auto;
+            background: #ef4444;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-item .badge.success {
+            background: #10b981;
+        }
+
+        .dropdown-item .badge.warning {
+            background: #f59e0b;
+        }
+
+        /* Profile Dropdown */
+        .profile-dropdown {
+            position: relative;
+        }
+
+        .profile-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 0.5rem 1rem 0.5rem 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .profile-toggle:hover {
+            background: rgba(252, 184, 46, 0.2);
+            border-color: rgba(252, 184, 46, 0.3);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            margin: 0 auto 1rem;
             background: linear-gradient(135deg, #fcb82e, #f97316);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 1.2rem;
             font-weight: bold;
             color: #000000;
-            border: 3px solid #fcb82e;
+            border: 2px solid #fcb82e;
         }
 
-        .user-name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
-        .user-email {
+        .profile-name {
             font-size: 0.9rem;
-            opacity: 0.8;
+            font-weight: 600;
+            color: white;
+            line-height: 1.2;
+        }
+
+        .profile-level {
+            font-size: 0.7rem;
+            color: #fcb82e;
+            font-weight: 500;
+        }
+
+        .profile-dropdown .dropdown-menu {
+            right: 0;
+            left: auto;
+            min-width: 280px;
+        }
+
+        .profile-stats {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            background: linear-gradient(135deg, rgba(252, 184, 46, 0.05), rgba(249, 115, 22, 0.05));
+        }
+
+        .profile-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
             margin-bottom: 1rem;
         }
 
-        .edit-profile-btn {
-            background: #fcb82e;
-            color: #000000;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 999px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
+        .stat-item {
+            text-align: center;
         }
 
-        .edit-profile-btn:hover {
-            background: #e5a629;
-            transform: translateY(-1px);
-        }
-
-        .nav-menu {
-            padding: 1rem 0;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem 1.5rem;
-            color: white;
-            text-decoration: none;
-            border-left: 3px solid transparent;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            background: none;
-            width: 100%;
-            font-size: 1rem;
-            text-align: left;
-        }
-
-        .nav-item:hover {
-            background: #fcb82e;
-            color: #000000;
-        }
-
-        .nav-item.active {
-            background: #fcb82e;
-            border-right: 3px solid #fcb82e;
-            color: #000000;
-        }
-
-        .nav-item i {
-            margin-right: 1rem;
-            width: 20px;
-            font-size: 1.1rem;
-        }
-
-        .nav-item .badge {
-            margin-left: auto;
-            background: #fcb82e;
-            color: #000000;
-            padding: 0.2rem 0.6rem;
-            border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .logout-btn {
-            margin: 1rem;
-            padding: 0.75rem 1rem;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.4);
-            color: #f8fafc;
-            background: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .logout-btn:hover {
-            background: #e5a629;
-            transform: translateY(-1px);
-        }
-
-        .dashboard-header {
-            padding: 2rem;
-            border-bottom: 1px solid #e2e8f0;
-            background: white;
-        }
-
-        .dashboard-title {
-            font-size: 2rem;
+        .stat-value {
+            font-size: 1.2rem;
             font-weight: 700;
-            color: #000000;
+            color: #1e293b;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .progress-info {
+            text-align: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .points-display {
+            font-size: 0.8rem;
+            color: #64748b;
             margin-bottom: 0.5rem;
         }
 
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(226, 232, 240, 0.5);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #fcb82e, #f97316);
+            width: 65%;
+            transition: width 0.3s ease;
+        }
+
+        /* Enhanced Dashboard Header */
+        .dashboard-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .dashboard-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #1e293b, #475569);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
         .dashboard-subtitle {
-            color: #666666;
-            font-size: 1rem;
+            color: #64748b;
+            font-size: 1.1rem;
+            font-weight: 500;
         }
 
-        .dashboard-content {
-            padding: 1.5rem 2rem 2rem 2rem;
-            overflow-y: auto;
-            height: calc(100vh - 88px);
-            background: #f9fafb;
+        /* Enhanced Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
         }
 
-        @media (max-width: 1024px) {
-            .programs-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
 
-        @media (max-width: 640px) {
-            .dashboard-content {
-                padding: 1rem;
-            }
-
-            .programs-grid {
-                grid-template-columns: 1fr;
-            }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
         }
 
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #fcb82e, #f97316);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .card-icon.gold {
+            background: linear-gradient(135deg, rgba(252, 184, 46, 0.2), rgba(249, 115, 22, 0.2));
+            color: #f59e0b;
+        }
+
+        .card-icon.green {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+            color: #10b981;
+        }
+
+        .card-icon.blue {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2));
+            color: #3b82f6;
+        }
+
+        .card-icon.purple {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.2));
+            color: #8b5cf6;
+        }
+
+        .trend-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            color: #10b981;
+        }
+
+        .trend-down {
+            color: #ef4444;
+        }
+
+        /* Achievement Badges */
+        .achievements-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .achievements-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .badge-item {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .badge-item.earned {
+            background: linear-gradient(135deg, rgba(252, 184, 46, 0.1), rgba(249, 115, 22, 0.1));
+            border-color: #fcb82e;
+        }
+
+        .badge-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.4;
+        }
+
+        .badge-item.earned .badge-icon {
+            opacity: 1;
+            color: #fcb82e;
+        }
+
+        .badge-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .badge-item.earned .badge-name {
+            color: #1e293b;
+        }
+
+        /* Section Styles */
         .section {
             display: none;
         }
@@ -211,81 +498,7 @@
             display: block;
         }
 
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .card {
-            background: white;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.75rem;
-        }
-
-        .card-title {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #6b7280;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
-
-        .card-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #020617;
-            margin-bottom: 0.25rem;
-        }
-
-        .card-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 999px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .card-icon.gold {
-            background: rgba(252, 184, 46, 0.15);
-            color: #fbbf24;
-        }
-
-        .card-icon.green {
-            background: rgba(34, 197, 94, 0.12);
-            color: #22c55e;
-        }
-
-        .card-icon.blue {
-            background: rgba(59, 130, 246, 0.12);
-            color: #3b82f6;
-        }
-
-        .trend-indicator {
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .trend-up {
-            color: #16a34a;
-        }
-
+        /* Table Styles for Referrals */
         .table-container {
             background: white;
             border-radius: 1rem;
@@ -362,1203 +575,1505 @@
             color: #b91c1c;
         }
 
-        /* Program Card Styles */
-        .programs-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            width: 100%;
-            max-width: 100%;
-        }
-
-        .program-card {
-            background: white;
-            border-radius: 1rem;
-            border: 1px solid #e2e8f0;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            width: 100%;
-            max-width: 100%;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .program-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-            border-color: #6366f1;
-        }
-
-        .program-header {
-            height: 160px;
-            background: linear-gradient(135deg, #0f172a, #334155);
-            background-size: cover;
-            background-position: center;
-            padding: 1.25rem;
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            position: relative;
-        }
-
-        .program-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.7));
-            z-index: 1;
-        }
-
-        .program-logo {
-            width: 48px;
-            height: 48px;
-            background: white;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            color: #000;
-            position: relative;
-            z-index: 2;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            font-size: 1.2rem;
-        }
-
-        .program-type-badge {
-            position: relative;
-            z-index: 2;
-            background: rgba(255, 255, 255, 0.9);
-            color: #1f2937;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            backdrop-filter: blur(4px);
-        }
-
-        .program-body {
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-
-        .program-title {
-            font-size: 1.05rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-            color: #111827;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            min-height: 4.4rem;
-            line-height: 1.4;
-            word-break: break-word;
-        }
-
-        .program-title:hover {
-            -webkit-line-clamp: unset;
-            line-clamp: unset;
-            overflow: visible;
-            background: white;
-            position: relative;
-            z-index: 10;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 4px;
-            padding: 2px;
-        }
-
-        .program-company {
-            font-size: 0.9rem;
-            color: #6b7280;
-            margin-bottom: 1rem;
-        }
-
-        .program-tags {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .tag {
-            padding: 0.25rem 0.5rem;
-            background: #f1f5f9;
-            color: #475569;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .apply-btn {
-            width: 100%;
-            padding: 0.75rem;
-            background: #000;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
-            margin-top: auto;
-        }
-
-        .apply-btn:hover {
-            opacity: 0.9;
-        }
-
+        /* Responsive Design */
         @media (max-width: 768px) {
-            body {
-                flex-direction: column;
+            .top-nav {
+                padding: 1rem;
+                flex-wrap: wrap;
+                gap: 1rem;
             }
 
-            .sidebar {
-                position: fixed;
-                bottom: 0;
-                left: 0;
+            .nav-dropdowns {
+                order: 3;
                 width: 100%;
-                height: 70px;
-                display: flex;
-                flex-direction: row;
-                z-index: 1000;
-                padding: 0;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .dropdown-toggle {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
             }
 
             .main-content {
-                margin-left: 0;
-                margin-bottom: 70px;
-                border-radius: 0;
-            }
-
-            .user-profile {
-                display: none;
-            }
-
-            .nav-menu {
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                padding: 0;
-                justify-content: space-around;
-            }
-
-            .nav-item {
-                padding: 0;
-                flex: 1;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                font-size: 0.7rem;
-                gap: 4px;
-                border-left: none;
-                margin-right: 0;
-                white-space: nowrap;
-            }
-
-            .nav-item i {
-                margin-right: 0;
-                font-size: 1.2rem;
-            }
-
-            .nav-item .badge {
-                position: absolute;
-                top: 5px;
-                right: 5px;
-                margin-left: 0;
-            }
-
-            .logout-btn {
-                display: none;
-            }
-
-            .dashboard-header {
+                margin-top: 120px;
                 padding: 1rem;
             }
 
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
             .dashboard-title {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
+            }
+
+            .profile-dropdown .dropdown-menu {
+                min-width: 250px;
             }
         }
 
-        /* Inbox Style */
-        .inbox-container {
-            background: white;
-            border-radius: 1rem;
-            border: 1px solid #e2e8f0;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        /* Dropdown Animation */
+        @keyframes dropdownSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .inbox-item {
-            padding: 1.5rem;
-            border-bottom: 1px solid #f1f5f9;
-            display: flex;
-            gap: 1.5rem;
-            transition: all 0.2s;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .inbox-item:hover {
-            background: #f8fafc;
-        }
-
-        .inbox-item.unread {
-            background: rgba(252, 184, 46, 0.03);
-            border-left: 4px solid #fcb82e;
-        }
-
-        .inbox-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background: #f1f5f9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            color: #64748b;
-            flex-shrink: 0;
-        }
-
-        .inbox-content {
-            flex: 1;
-        }
-
-        .inbox-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.25rem;
-        }
-
-        .inbox-sender {
-            font-weight: 700;
-            color: #1e293b;
-        }
-
-        .inbox-time {
-            font-size: 0.8rem;
-            color: #94a3b8;
-        }
-
-        .inbox-subject {
-            font-weight: 600;
-            color: #334155;
-            margin-bottom: 0.25rem;
-        }
-
-        .inbox-preview {
-            font-size: 0.9rem;
-            color: #64748b;
-            line-height: 1.5;
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            line-clamp: 1;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .inbox-badge {
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .badge-corp {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .badge-system {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .badge-network {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        /* Meeting Inbox Styles */
-        .meeting-inbox {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .inbox-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .inbox-header h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #1f2937;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .meeting-badge {
-            background: #ef4444;
-            color: white;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 10px;
-            min-width: 20px;
-            text-align: center;
-        }
-
-        .meeting-list {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .meeting-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid transparent;
-        }
-
-        .meeting-item:hover {
-            background: #f9fafb;
-            border-color: #e5e7eb;
-        }
-
-        .meeting-today {
-            background: #fef3c7;
-            border-color: #f59e0b;
-        }
-
-        .meeting-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            background: #4f46e5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 16px;
-        }
-
-        .meeting-details {
-            flex: 1;
-        }
-
-        .meeting-title {
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 4px;
-            font-size: 14px;
-        }
-
-        .meeting-time {
-            color: #6b7280;
-            font-size: 12px;
-            margin-bottom: 4px;
-        }
-
-        .meeting-meta {
-            display: flex;
-            gap: 12px;
-            font-size: 11px;
-        }
-
-        .time-until {
-            color: #059669;
-            font-weight: 500;
-        }
-
-        .participant-count {
-            color: #6b7280;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.15rem;
-            gap: 1rem;
-        }
-
-        .section-header-main {
-            display: flex;
-            flex-direction: column;
-            gap: 0.35rem;
-        }
-
-        .section-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #020617;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .section-subtitle {
-            font-size: 0.9rem;
-            color: #6b7280;
-        }
-
-        .section-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .btn {
-            padding: 0.5rem 0.9rem;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.6);
-            background: white;
-            cursor: pointer;
-            font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            color: #111827;
-            font-weight: 500;
-        }
-
-        .btn-primary {
-            background: #fcb82e;
-            border-color: #fbbf24;
-            color: #000000;
-        }
-
-        .search-input {
-            position: relative;
-        }
-
-        .search-input input {
-            border-radius: 999px;
-            border: 1px solid #e5e7eb;
-            padding: 0.4rem 0.9rem 0.4rem 2rem;
-            font-size: 0.8rem;
-            outline: none;
-        }
-
-        .search-input i {
-            position: absolute;
-            left: 0.7rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6b7280;
-            font-size: 0.8rem;
-        }
-
-        .meeting-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .join-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            border: none;
-            background: #10b981;
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-
-        .join-btn:hover {
-            background: #059669;
-            transform: scale(1.05);
-        }
-
-        .empty-meetings {
-            text-align: center;
-            padding: 40px 20px;
-            color: #9ca3af;
-        }
-
-        .empty-meetings i {
-            font-size: 32px;
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .empty-meetings p {
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-
-        .empty-meetings small {
-            font-size: 12px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 10001;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(4px);
-        }
-
-        .modal-content {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 1.5rem;
-            width: 100%;
-            max-width: 500px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            position: relative;
-        }
-
-        .modal-header {
-            margin-bottom: 2rem;
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #111827;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: #f3f4f6;
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #6b7280;
-            transition: all 0.2s;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-select,
-        .form-textarea {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.75rem;
-            font-size: 0.95rem;
-            transition: all 0.2s;
-        }
-
-        .form-select:focus,
-        .form-textarea:focus {
-            outline: none;
-            border-color: #fcb82e;
-            box-shadow: 0 0 0 4px rgba(252, 184, 46, 0.1);
+        .dropdown.active .dropdown-menu {
+            animation: dropdownSlide 0.3s ease;
         }
     </style>
 </head>
 
 <body>
-    <aside class="sidebar">
-        <div class="user-profile">
-            <div class="user-avatar-large">S</div>
-            <div class="user-name">{{ current_user.name }}</div>
-            <div class="user-email">founder@startup.com</div>
-            <button class="edit-profile-btn" onclick="showSection('settings')">
-                <i class="fa-solid fa-pen"></i> Edit Profile
-            </button>
+    <!-- Top Navigation with Dropdowns -->
+    <nav class="top-nav">
+        <div class="nav-brand">
+            <i class="fas fa-rocket"></i>
+            InnoBridge
         </div>
-        <nav class="nav-menu">
-            <a href="/" class="nav-item" style="text-decoration: none;">
-                <i class="fa-solid fa-arrow-left"></i> Back to Home
-            </a>
 
-            <button class="nav-item" id="tab-referrals" onclick="showSection('referrals')">
-                <i class="fa-solid fa-handshake"></i> Referral Requests <span class="badge" id="referralCountBadge"
-                    style="display:none; background:#ef4444;">0</span>
-            </button>
-            <button class="nav-item active" onclick="showSection('overview')">
-                <i class="fa-solid fa-gauge-high"></i> Overview
-            </button>
-            <button class="nav-item" onclick="showSection('applications')">
-                <i class="fa-solid fa-paper-plane"></i> Applications
-                <span class="badge">3</span>
-            </button>
-            <button class="nav-item" onclick="showSection('documents')">
-                <i class="fa-solid fa-folder-open"></i> Documents
-            </button>
-            <button class="nav-item" onclick="showSection('inbox')">
-                <i class="fa-solid fa-envelope"></i> Inbox <span class="badge" style="background:#fcb82e;">2</span>
-            </button>
-            <button class="nav-item" onclick="showSection('settings')">
-                <i class="fa-solid fa-gear"></i> Settings
-            </button>
-        </nav>
-        <button class="logout-btn" onclick="window.location.href='/logout'">
-            <i class="fa-solid fa-right-from-bracket"></i> Logout
-        </button>
-    </aside>
+        <div class="nav-dropdowns">
+
+
+            <!-- Dashboard Dropdown -->
+            <div class="dropdown" id="dashboardDropdown">
+                <button class="dropdown-toggle active" onclick="toggleDropdown('dashboardDropdown')">
+                    <i class="fas fa-gauge-high"></i>
+                    Dashboard
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="showSection('overview')">
+                        <i class="fas fa-home"></i>
+                        Overview
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('analytics')">
+                        <i class="fas fa-chart-line"></i>
+                        Analytics
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('achievements')">
+                        <i class="fas fa-trophy"></i>
+                        Achievements
+                        <span class="badge warning">5</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Applications Dropdown -->
+            <div class="dropdown" id="applicationsDropdown">
+                <button class="dropdown-toggle" onclick="toggleDropdown('applicationsDropdown')">
+                    <i class="fas fa-paper-plane"></i>
+                    Applications
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="showSection('applications')">
+                        <i class="fas fa-list"></i>
+                        My Applications
+                        <span class="badge">8</span>
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('programs')">
+                        <i class="fas fa-rocket"></i>
+                        Available Programs
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('drafts')">
+                        <i class="fas fa-file-alt"></i>
+                        Drafts
+                        <span class="badge warning">2</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Network Dropdown -->
+            <div class="dropdown" id="networkDropdown">
+                <button class="dropdown-toggle" onclick="toggleDropdown('networkDropdown')">
+                    <i class="fas fa-users"></i>
+                    Network
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <a href="/meetings" class="dropdown-item">
+                        <i class="fas fa-video"></i>
+                        My Meetings
+                    </a>
+                    <button class="dropdown-item" onclick="showSection('referrals')">
+                        <i class="fas fa-handshake"></i>
+                        Referrals
+                        <span class="badge success">3</span>
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('connections')">
+                        <i class="fas fa-network-wired"></i>
+                        Connections
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('messages')">
+                        <i class="fas fa-envelope"></i>
+                        Messages
+                        <span class="badge">12</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Resources Dropdown -->
+            <div class="dropdown" id="resourcesDropdown">
+                <button class="dropdown-toggle" onclick="toggleDropdown('resourcesDropdown')">
+                    <i class="fas fa-folder"></i>
+                    Resources
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="showSection('documents')">
+                        <i class="fas fa-file-pdf"></i>
+                        Documents
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('templates')">
+                        <i class="fas fa-copy"></i>
+                        Templates
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('guides')">
+                        <i class="fas fa-book"></i>
+                        Guides
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Dropdown -->
+        <div class="dropdown profile-dropdown" id="profileDropdown">
+            <div class="profile-toggle" onclick="toggleDropdown('profileDropdown')">
+                <div class="profile-avatar">{{ current_user.name[0] if current_user.name else 'S' }}</div>
+                <div class="profile-info">
+                    <div class="profile-name">{{ current_user.name }}</div>
+                    <div class="profile-level">Level 3 - Rising Star</div>
+                </div>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="dropdown-menu">
+                <div class="profile-stats">
+                    <div class="profile-stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">1,250</div>
+                            <div class="stat-label">Points</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">Level 3</div>
+                            <div class="stat-label">Rank</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">67%</div>
+                            <div class="stat-label">Success</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">342</div>
+                            <div class="stat-label">Views</div>
+                        </div>
+                    </div>
+                    <div class="progress-info">
+                        <div class="points-display">Next level: 500 points to go</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="dropdown-item" onclick="showSection('profile')">
+                    <i class="fas fa-user"></i>
+                    View Profile
+                </button>
+                <button class="dropdown-item" onclick="showSection('settings')">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </button>
+                <button class="dropdown-item" onclick="showSection('billing')">
+                    <i class="fas fa-credit-card"></i>
+                    Billing
+                </button>
+                <hr style="margin: 0.5rem 0; border: none; border-top: 1px solid rgba(226, 232, 240, 0.8);">
+                <a href="/" class="dropdown-item">
+                    <i class="fas fa-home"></i>
+                    Back to Home
+                </a>
+                <a href="/logout" class="dropdown-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </nav>
 
     <main class="main-content">
         <div class="dashboard-header">
-            <div class="dashboard-title">Startup Dashboard</div>
-            <div class="dashboard-subtitle">Manage your applications and discover new opportunities.</div>
+            <div class="dashboard-title">Welcome back, {{ current_user.name }}!</div>
+            <div class="dashboard-subtitle">Here's what's happening with your startup journey today.</div>
         </div>
 
-        <div class="dashboard-content">
+        <!-- OVERVIEW SECTION -->
+        <section id="overview" class="section active">
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Active Applications</div>
+                            <div class="card-value">8</div>
+                        </div>
+                        <div class="card-icon gold">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>2 new this week</span>
+                    </div>
+                </div>
 
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Profile Views</div>
+                            <div class="card-value">342</div>
+                        </div>
+                        <div class="card-icon blue">
+                            <i class="fa-solid fa-eye"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>+18% this month</span>
+                    </div>
+                </div>
 
-            <!-- PROGRAM DETAILS SECTION -->
-            <section id="program-details" class="section">
-                <div class="card"
-                    style="padding: 0; overflow: hidden; border: none; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);">
-                    <div id="programDetailsBanner"
-                        style="height: 300px; background-size: cover; background-position: center; position: relative;">
-                        <button onclick="showSection('overview')"
-                            style="position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.9); border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; z-index: 10;">
-                            <i class="fa-solid fa-arrow-left"></i> Back to Programs
-                        </button>
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Success Rate</div>
+                            <div class="card-value">67%</div>
+                        </div>
+                        <div class="card-icon green">
+                            <i class="fa-solid fa-target"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>Above average</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Flair Points</div>
+                            <div class="card-value">1,250</div>
+                        </div>
+                        <div class="card-icon purple">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>+125 this week</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievements Section -->
+            <div class="achievements-section">
+                <div class="achievements-title">
+                    <i class="fas fa-trophy"></i>
+                    Recent Achievements
+                </div>
+                <div class="badges-grid">
+                    <div class="badge-item earned">
+                        <div class="badge-icon">🚀</div>
+                        <div class="badge-name">First Application</div>
+                    </div>
+                    <div class="badge-item earned">
+                        <div class="badge-icon">👀</div>
+                        <div class="badge-name">Profile Views</div>
+                    </div>
+                    <div class="badge-item earned">
+                        <div class="badge-icon">🤝</div>
+                        <div class="badge-name">First Referral</div>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon">⭐</div>
+                        <div class="badge-name">Rising Star</div>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon">🎯</div>
+                        <div class="badge-name">High Success</div>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon">🏆</div>
+                        <div class="badge-name">Top Performer</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- REFERRALS SECTION -->
+        <section id="referrals" class="section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <div>
+                    <h2 style="font-size: 1.5rem; font-weight: 700; color: #111827;">Incoming Referral Requests</h2>
+                    <p style="color: #6b7280; font-size: 0.9rem;">Review and accept program referrals from ecosystem
+                        enablers.</p>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Enabler</th>
+                            <th>Program</th>
+                            <th>Date Received</th>
+                            <th>Status</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="referralTableBody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 3rem; color: #6b7280;">
+                                <i class="fa-solid fa-spinner fa-spin"
+                                    style="font-size: 1.5rem; margin-bottom: 1rem; display: block;"></i>
+                                Loading your referrals...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- APPLICATIONS SECTION -->
+        <section id="applications" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">My Applications</div>
+                <div class="dashboard-subtitle">Track your program submissions and progress</div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <div class="table-title">Application Status</div>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i> New Application
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Program</th>
+                            <th>Company</th>
+                            <th>Applied Date</th>
+                            <th>Status</th>
+                            <th>Next Step</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div style="font-weight: 600;">TechStars Accelerator 2024</div>
+                                <div style="font-size: 0.8rem; color: #64748b;">3-month program</div>
+                            </td>
+                            <td>TechStars</td>
+                            <td>Dec 15, 2025</td>
+                            <td><span class="status-pill active">Shortlisted</span></td>
+                            <td>Interview scheduled</td>
+                            <td>
+                                <button class="btn" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight: 600;">Y Combinator W25</div>
+                                <div style="font-size: 0.8rem; color: #64748b;">Batch Winter 2025</div>
+                            </td>
+                            <td>Y Combinator</td>
+                            <td>Nov 28, 2025</td>
+                            <td><span class="status-pill pending">Under Review</span></td>
+                            <td>Awaiting decision</td>
+                            <td>
+                                <button class="btn" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight: 600;">Google for Startups</div>
+                                <div style="font-size: 0.8rem; color: #64748b;">Cloud credits program</div>
+                            </td>
+                            <td>Google</td>
+                            <td>Jan 20, 2026</td>
+                            <td><span class="status-pill active">Accepted</span></td>
+                            <td>Onboarding</td>
+                            <td>
+                                <button class="btn" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">
+                                    <i class="fas fa-external-link-alt"></i> Access
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight: 600;">Microsoft for Startups</div>
+                                <div style="font-size: 0.8rem; color: #64748b;">Founders Hub</div>
+                            </td>
+                            <td>Microsoft</td>
+                            <td>Jan 10, 2026</td>
+                            <td><span class="status-pill rejected">Not Selected</span></td>
+                            <td>Feedback available</td>
+                            <td>
+                                <button class="btn" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">
+                                    <i class="fas fa-comment"></i> Feedback
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight: 600;">AWS Activate Program</div>
+                                <div style="font-size: 0.8rem; color: #64748b;">Cloud infrastructure</div>
+                            </td>
+                            <td>Amazon Web Services</td>
+                            <td>Feb 1, 2026</td>
+                            <td><span class="status-pill pending">Application Submitted</span></td>
+                            <td>Initial review</td>
+                            <td>
+                                <button class="btn" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ACHIEVEMENTS SECTION -->
+        <section id="achievements" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Achievements & Badges</div>
+                <div class="dashboard-subtitle">Your journey milestones and accomplishments</div>
+            </div>
+
+            <!-- Achievement Stats -->
+            <div class="cards-grid" style="margin-bottom: 2rem;">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Total Badges</div>
+                            <div class="card-value">12</div>
+                        </div>
+                        <div class="card-icon gold">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>3 new this month</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Current Level</div>
+                            <div class="card-value">3</div>
+                        </div>
+                        <div class="card-icon purple">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>Rising Star</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Points Earned</div>
+                            <div class="card-value">1,250</div>
+                        </div>
+                        <div class="card-icon blue">
+                            <i class="fa-solid fa-coins"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>+125 this week</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Next Milestone</div>
+                            <div class="card-value">500</div>
+                        </div>
+                        <div class="card-icon green">
+                            <i class="fa-solid fa-target"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>Points to Level 4</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Badges Grid -->
+            <div
+                style="background: white; border-radius: 20px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                <h3 style="font-size: 1.3rem; font-weight: 700; color: #1e293b; margin-bottom: 2rem;">
+                    <i class="fas fa-medal"></i> Achievement Badges
+                </h3>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                    <!-- Earned Badges -->
+                    <div class="badge-item earned"
+                        style="text-align: center; padding: 2rem 1rem; border-radius: 16px; background: linear-gradient(135deg, rgba(252, 184, 46, 0.1), rgba(249, 115, 22, 0.1)); border: 2px solid #fcb82e;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">First
+                            Launch</div>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 1rem;">Submitted your first
+                            application</div>
                         <div
-                            style="position: absolute; bottom: 0; left: 0; right: 0; padding: 3rem 2rem; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: white;">
-                            <span id="programDetailsType"
-                                style="background: #fcb82e; color: black; padding: 4px 12px; border-radius: 1000px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;"></span>
-                            <h2 id="programDetailsTitle"
-                                style="font-size: 2.5rem; font-weight: 800; margin-top: 0.5rem; margin-bottom: 0;"></h2>
+                            style="background: #fcb82e; color: white; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                            Earned Jan 15, 2026
                         </div>
                     </div>
 
-                    <div style="padding: 3rem; background: white;">
-                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 4rem;">
-                            <div>
-                                <div style="margin-bottom: 3rem;">
-                                    <h3
-                                        style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: #111827; display: flex; align-items: center; gap: 0.75rem;">
-                                        <i class="fa-solid fa-circle-info" style="color: #6366f1;"></i> Program Overview
-                                    </h3>
-                                    <p id="programDetailsDesc"
-                                        style="color: #4b5563; line-height: 1.8; font-size: 1.05rem;"></p>
-                                </div>
+                    <div class="badge-item earned"
+                        style="text-align: center; padding: 2rem 1rem; border-radius: 16px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); border: 2px solid #10b981;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🎯</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">Sharp
+                            Shooter</div>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 1rem;">Achieved 50%+ success rate
+                        </div>
+                        <div
+                            style="background: #10b981; color: white; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                            Earned Jan 28, 2026
+                        </div>
+                    </div>
 
-                                <div style="margin-bottom: 3rem;">
-                                    <h3
-                                        style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: #111827; display: flex; align-items: center; gap: 0.75rem;">
-                                        <i class="fa-solid fa-list-check" style="color: #10b981;"></i> Eligibility
-                                        Criteria
-                                    </h3>
-                                    <p id="programDetailsEligibility"
-                                        style="color: #4b5563; line-height: 1.8; font-size: 1.05rem;"></p>
-                                </div>
+                    <div class="badge-item earned"
+                        style="text-align: center; padding: 2rem 1rem; border-radius: 16px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1)); border: 2px solid #3b82f6;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">👥</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">Network
+                            Builder</div>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 1rem;">Connected with 50+ people
+                        </div>
+                        <div
+                            style="background: #3b82f6; color: white; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                            Earned Feb 2, 2026
+                        </div>
+                    </div>
 
-                                <div style="margin-bottom: 0;">
-                                    <h3
-                                        style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: #111827; display: flex; align-items: center; gap: 0.75rem;">
-                                        <i class="fa-solid fa-gift" style="color: #f59e0b;"></i> Benefits & Support
-                                    </h3>
-                                    <p id="programDetailsBenefits"
-                                        style="color: #4b5563; line-height: 1.8; font-size: 1.05rem;"></p>
-                                </div>
-                            </div>
+                    <div class="badge-item earned"
+                        style="text-align: center; padding: 2rem 1rem; border-radius: 16px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.1)); border: 2px solid #8b5cf6;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">⚡</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">Speed
+                            Demon</div>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 1rem;">Applied to 5 programs in
+                            one day</div>
+                        <div
+                            style="background: #8b5cf6; color: white; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                            Earned Feb 3, 2026
+                        </div>
+                    </div>
 
-                            <div>
-                                <div style="position: sticky; top: 2rem;">
-                                    <div
-                                        style="background: #f8fafc; padding: 2rem; border-radius: 1.5rem; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
-                                        <h4
-                                            style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 1.5rem; letter-spacing: 0.05em;">
-                                            Key Information</h4>
+                    <!-- Locked Badges -->
+                    <div class="badge-item"
+                        style="text-align: center; padding: 2rem 1rem; border-radius: 16px; background: linear-gradient(135deg, #f8fafc, #e2e8f0); border: 2px solid #e2e8f0; opacity: 0.6;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem; filter: grayscale(100%);">🏆</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; color: #64748b; margin-bottom: 0.5rem;">
+                            Champion</div>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 1rem;">Get accepted to 10 programs
+                        </div>
+                        <div
+                            style="background: #e2e8f0; color: #64748b; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                            7/10 Progress
+                        </div>
+                    </div>
 
-                                        <div style="margin-bottom: 1.5rem;">
-                                            <div
-                                                style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                                                <i class="fa-solid fa-tags"></i> Target Sectors
-                                            </div>
-                                            <div id="programDetailsSectors"
-                                                style="display: flex; flex-wrap: wrap; gap: 0.5rem;"></div>
-                                        </div>
-
-                                        <div style="margin-bottom: 1.5rem;">
-                                            <div
-                                                style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                                                <i class="fa-solid fa-earth-americas"></i> Regions
-                                            </div>
-                                            <div id="programDetailsCountries"
-                                                style="font-weight: 600; color: #1e293b; font-size: 1rem;"></div>
-                                        </div>
-
-                                        <div style="margin-bottom: 0;">
-                                            <div
-                                                style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                                                <i class="fa-solid fa-calendar-xmark"></i> Deadline
-                                            </div>
-                                            <div id="programDetailsDeadline"
-                                                style="font-weight: 700; color: #ef4444; font-size: 1rem;"></div>
-                                        </div>
-                                    </div>
-
-                                    <button id="applyFromDetailsBtn"
-                                        style="width: 100%; padding: 1.25rem; background: #000; color: white; border: none; border-radius: 1rem; font-size: 1.1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem; transition: transform 0.2s;">
-                                        Apply for Program <i class="fa-solid fa-paper-plane"></i>
-                                    </button>
-                                    <p
-                                        style="text-align: center; color: #64748b; font-size: 0.85rem; margin-top: 1rem;">
-                                        <i class="fa-solid fa-shield-halved"></i> Verified Application Process
-                                    </p>
-                                </div>
-                            </div>
+                    <div class="badge-item"
+                        style="text-align: center; padding: 2rem 1rem; border-radius: 16px; background: linear-gradient(135deg, #f8fafc, #e2e8f0); border: 2px solid #e2e8f0; opacity: 0.6;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem; filter: grayscale(100%);">🌟</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; color: #64748b; margin-bottom: 0.5rem;">Rising
+                            Star</div>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 1rem;">Reach Level 4</div>
+                        <div
+                            style="background: #e2e8f0; color: #64748b; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                            500 points needed
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- REFERRALS SECTION -->
-            <section id="referrals" class="section">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <div>
-                        <h2 style="font-size: 1.5rem; font-weight: 700; color: #111827;">Incoming Referral Requests</h2>
-                        <p style="color: #6b7280; font-size: 0.9rem;">Review and accept program referrals from ecosystem
-                            connectors.</p>
-                    </div>
-                </div>
+            <!-- Leaderboard -->
+            <div
+                style="background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                <h3 style="font-size: 1.3rem; font-weight: 700; color: #1e293b; margin-bottom: 2rem;">
+                    <i class="fas fa-ranking-star"></i> Community Leaderboard
+                </h3>
 
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Connector</th>
-                                <th>Program</th>
-                                <th>Date Received</th>
-                                <th>Status</th>
-                                <th style="text-align: right;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="referralTableBody">
-                            <tr>
-                                <td colspan="5" style="text-align: center; padding: 3rem; color: #6b7280;">
-                                    <i class="fa-solid fa-spinner fa-spin"
-                                        style="font-size: 1.5rem; margin-bottom: 1rem; display: block;"></i>
-                                    Loading your referrals...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- OVERVIEW SECTION -->
-            <section id="overview" class="section active">
-                <!-- Meeting Inbox Widget -->
-                <div class="meeting-inbox" id="meetingInbox">
-                    <!-- Meeting inbox will be populated by JavaScript -->
-                </div>
-
-                <div class="cards-grid">
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <div class="card-title">Active Applications</div>
-                                <div class="card-value" id="totalApps">3</div>
-                            </div>
-                            <div class="card-icon gold">
-                                <i class="fa-solid fa-paper-plane"></i>
-                            </div>
-                        </div>
-                        <div class="trend-indicator trend-up">
-                            <i class="fa-solid fa-arrow-up"></i>
-                            <span>1 in review</span>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <div class="card-title">Profile Views</div>
-                                <div class="card-value" id="totalViews">128</div>
-                            </div>
-                            <div class="card-icon blue">
-                                <i class="fa-solid fa-eye"></i>
-                            </div>
-                        </div>
-                        <div class="trend-indicator trend-up">
-                            <i class="fa-solid fa-arrow-up"></i>
-                            <span>+12% this week</span>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <div class="card-title">Matches</div>
-                                <div class="card-value" id="totalMatches">5</div>
-                            </div>
-                            <div class="card-icon green">
-                                <i class="fa-solid fa-handshake"></i>
-                            </div>
-                        </div>
-                        <div class="trend-indicator trend-up">
-                            <i class="fa-solid fa-check"></i>
-                            <span>2 new corporate matches</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- NEW CHART SECTION -->
-                <div
-                    style="background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
                     <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                        <h3 style="font-size: 1.1rem; font-weight: 700;">Profile Engagement</h3>
-                        <div style="display: flex; gap: 1rem;">
-                            <span
-                                style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: #666;">
-                                <span
-                                    style="display: block; width: 10px; height: 10px; background: #fcb82e; border-radius: 50%;"></span>
-                                Views
-                            </span>
-                        </div>
-                    </div>
-                    <div style="height: 300px; width: 100%;">
-                        <canvas id="startupChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="table-container">
-                    <div class="table-header">
-                        <div class="table-title">Recent Applications</div>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Program Name</th>
-                                <th>Company</th>
-                                <th>Date Applied</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="overviewApplicationsTableBody">
-                            <tr>
-                                <td colspan="4" style="text-align: center; padding: 2rem; color: #6b7280;">Loading
-                                    recent activity...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;">Recommended for You</h3>
-                <div class="programs-grid">
-                    <!-- Program 1 -->
-                    <div class="program-card">
-                        <div class="program-header">
-                        </div>
-                        <div class="program-body">
-                            <div class="program-title">HealthTech Innovators</div>
-                            <div class="program-company">MedLife Partners</div>
-                            <div class="program-tags">
-                                <span class="tag">HealthTech</span>
-                                <span class="tag">Seed Stage</span>
-                            </div>
-                            <button class="apply-btn" onclick="handleApply('HealthTech Innovators')">View
-                                Details</button>
-                        </div>
-                    </div>
-
-                    <!-- Program 2 -->
-                    <div class="program-card">
-                        <div class="program-header">
-                        </div>
-                        <div class="program-body">
-                            <div class="program-title">Smart City Pilot</div>
-                            <div class="program-company">UrbanFuture</div>
-                            <div class="program-tags">
-                                <span class="tag">IoT</span>
-                                <span class="tag">Smart City</span>
-                            </div>
-                            <button class="apply-btn" onclick="handleApply('Smart City Pilot')">View Details</button>
-                        </div>
-                    </div>
-
-                    <!-- Program 3 -->
-                    <div class="program-card">
-                        <div class="program-header">
-                        </div>
-                        <div class="program-body">
-                            <div class="program-title">Blockchain Builders</div>
-                            <div class="program-company">CryptoFund</div>
-                            <div class="program-tags">
-                                <span class="tag">Web3</span>
-                                <span class="tag">DeFi</span>
-                            </div>
-                            <button class="apply-btn" onclick="handleApply('Blockchain Builders')">View Details</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- APPLICATIONS SECTION -->
-            <section id="applications" class="section">
-                <div style="margin-bottom: 2rem;">
-                    <h2 style="font-size: 1.5rem; font-weight: 700; color: #111827;">My Applications</h2>
-                    <p style="color: #6b7280; font-size: 0.9rem;">Track all your program submissions and their current
-                        progress.</p>
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Startup</th>
-                                <th>Program</th>
-                                <th>Date Applied</th>
-                                <th>Status</th>
-                                <th style="text-align: right;">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="applicationsTableBody">
-                            <tr>
-                                <td colspan="3" style="text-align: center; padding: 2rem; color: #6b7280;">No
-                                    applications found.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- DOCUMENTS SECTION -->
-            <section id="documents" class="section">
-                <h2 style="margin-bottom: 1rem;">My Documents</h2>
-                <div
-                    style="background: white; padding: 2rem; border-radius: 1rem; border: 1px dashed #ccc; text-align: center;">
-                    <i class="fa-solid fa-cloud-arrow-up"
-                        style="font-size: 2rem; color: #ccc; margin-bottom: 1rem;"></i>
-                    <p>Drag and drop your Pitch Deck here</p>
-                    <button onclick="handleFileUpload()"
-                        style="margin-top: 1rem; padding: 0.5rem 1rem; background: #f1f5f9; border: none; border-radius: 4px; cursor: pointer;">Browse
-                        Files</button>
-                </div>
-            </section>
-
-            <!-- SETTINGS SECTION -->
-            <section id="settings" class="section">
-                <div style="margin-bottom: 2rem;">
-                    <h2 style="font-size: 1.5rem; font-weight: 700;">Account Settings</h2>
-                    <p style="color: #666;">Manage your startup profile and visibility.</p>
-                </div>
-
-                <div
-                    style="background: white; padding: 2rem; border-radius: 12px; border: 1px solid #e2e8f0; max-width: 800px;">
-                    <form>
-                        <h3
-                            style="margin-bottom: 1.5rem; font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">
-                            Basic Information</h3>
-
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
-                            <div>
-                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Startup
-                                    Name</label>
-                                <input type="text" value="Startup Inc."
-                                    style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;">
-                            </div>
-                            <div>
-                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Website</label>
-                                <input type="text" value="https://startup.com"
-                                    style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;">
-                            </div>
-                        </div>
-
-                        <div style="margin-bottom: 2rem;">
-                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Short Pitch</label>
-                            <textarea rows="3"
-                                style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;">We are revolutionizing the industry with AI.</textarea>
-                        </div>
-
-                        <h3
-                            style="margin-bottom: 1.5rem; font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">
-                            Visibility</h3>
-
+                        style="display: flex; align-items: center; padding: 1rem; background: linear-gradient(135deg, #fef3c7, #fbbf24); border-radius: 12px;">
                         <div
-                            style="margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between;">
-                            <div>
-                                <div style="font-weight: 600;">Profile Visibility</div>
-                                <div style="font-size: 0.9rem; color: #666;">Allow corporates and investors to view your
-                                    profile.</div>
+                            style="width: 40px; height: 40px; background: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; margin-right: 1rem;">
+                            1</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 700; color: #92400e;">Sarah Chen</div>
+                            <div style="font-size: 0.8rem; color: #92400e; opacity: 0.8;">Level 7 - Ecosystem Leader
                             </div>
-                            <label class="switch"
-                                style="position: relative; display: inline-block; width: 50px; height: 26px;">
-                                <input type="checkbox" checked style="opacity: 0; width: 0; height: 0;">
-                                <span
-                                    style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #fcb82e; transition: .4s; border-radius: 34px;"></span>
-                                <span
-                                    style="position: absolute; content: ''; height: 20px; width: 20px; left: 26px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%;"></span>
-                            </label>
                         </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 700; color: #92400e;">3,450 pts</div>
+                            <div style="font-size: 0.8rem; color: #92400e; opacity: 0.8;">18 badges</div>
+                        </div>
+                    </div>
 
-                        <button type="button" onclick="saveSettings()"
-                            style="padding: 0.75rem 2rem; background: #000; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Save
-                            Changes</button>
-                    </form>
-                </div>
-            </section>
+                    <div
+                        style="display: flex; align-items: center; padding: 1rem; background: #f8fafc; border-radius: 12px;">
+                        <div
+                            style="width: 40px; height: 40px; background: #64748b; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; margin-right: 1rem;">
+                            2</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 700; color: #1e293b;">Michael Ross</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">Level 5 - Expert</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 700; color: #1e293b;">2,890 pts</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">15 badges</div>
+                        </div>
+                    </div>
 
-            <!-- INBOX SECTION -->
-            <section id="inbox" class="section">
-                <div style="margin-bottom: 2rem;">
-                    <h2 style="font-size: 1.5rem; font-weight: 700;">Notification Inbox</h2>
-                    <p style="color: #666;">Investment inquiries, application updates, and network alerts.</p>
-                </div>
+                    <div
+                        style="display: flex; align-items: center; padding: 1rem; background: #f8fafc; border-radius: 12px;">
+                        <div
+                            style="width: 40px; height: 40px; background: #64748b; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; margin-right: 1rem;">
+                            3</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 700; color: #1e293b;">Alex Kumar</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">Level 4 - Advanced</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 700; color: #1e293b;">2,340 pts</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">12 badges</div>
+                        </div>
+                    </div>
 
-                <div class="inbox-container" id="notificationContainer">
-                    <div style="padding: 2rem; text-align: center; color: #666;">
-                        <i class="fas fa-spinner fa-spin"
-                            style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
-                        Loading notifications...
+                    <div
+                        style="display: flex; align-items: center; padding: 1rem; background: linear-gradient(135deg, rgba(252, 184, 46, 0.1), rgba(249, 115, 22, 0.1)); border-radius: 12px; border: 2px solid #fcb82e;">
+                        <div
+                            style="width: 40px; height: 40px; background: #fcb82e; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; margin-right: 1rem;">
+                            8</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 700; color: #1e293b;">You ({{ current_user.name }})</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">Level 3 - Rising Star</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 700; color: #1e293b;">1,250 pts</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">8 badges</div>
+                        </div>
                     </div>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
+
+        <!-- ANALYTICS SECTION -->
+        <section id="analytics" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Performance Analytics</div>
+                <div class="dashboard-subtitle">Insights into your startup's growth and engagement</div>
+            </div>
+
+            <!-- Analytics Cards -->
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Application Success Rate</div>
+                            <div class="card-value">67%</div>
+                        </div>
+                        <div class="card-icon green">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>+12% vs last month</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Profile Engagement</div>
+                            <div class="card-value">8.4</div>
+                        </div>
+                        <div class="card-icon blue">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>Engagement score</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Network Growth</div>
+                            <div class="card-value">156</div>
+                        </div>
+                        <div class="card-icon purple">
+                            <i class="fa-solid fa-network-wired"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>+23 this month</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Response Time</div>
+                            <div class="card-value">2.3d</div>
+                        </div>
+                        <div class="card-icon gold">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-down"></i>
+                        <span>Faster responses</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                <!-- Main Chart -->
+                <div
+                    style="background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h3 style="font-size: 1.2rem; font-weight: 700; color: #1e293b;">Application Activity</h3>
+                        <div style="display: flex; gap: 1rem;">
+                            <button
+                                style="padding: 0.5rem 1rem; border: 1px solid #e2e8f0; border-radius: 8px; background: white; cursor: pointer;">7D</button>
+                            <button
+                                style="padding: 0.5rem 1rem; border: 1px solid #fcb82e; border-radius: 8px; background: #fcb82e; color: white; cursor: pointer;">30D</button>
+                            <button
+                                style="padding: 0.5rem 1rem; border: 1px solid #e2e8f0; border-radius: 8px; background: white; cursor: pointer;">90D</button>
+                        </div>
+                    </div>
+                    <div style="height: 300px; display: flex; align-items: end; gap: 1rem; padding: 1rem 0;">
+                        <!-- Mock Chart Bars -->
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                            <div
+                                style="width: 100%; height: 120px; background: linear-gradient(to top, #fcb82e, #f97316); border-radius: 4px 4px 0 0; margin-bottom: 0.5rem;">
+                            </div>
+                            <span style="font-size: 0.8rem; color: #64748b;">Jan</span>
+                        </div>
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                            <div
+                                style="width: 100%; height: 180px; background: linear-gradient(to top, #fcb82e, #f97316); border-radius: 4px 4px 0 0; margin-bottom: 0.5rem;">
+                            </div>
+                            <span style="font-size: 0.8rem; color: #64748b;">Feb</span>
+                        </div>
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                            <div
+                                style="width: 100%; height: 90px; background: linear-gradient(to top, #fcb82e, #f97316); border-radius: 4px 4px 0 0; margin-bottom: 0.5rem;">
+                            </div>
+                            <span style="font-size: 0.8rem; color: #64748b;">Mar</span>
+                        </div>
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                            <div
+                                style="width: 100%; height: 220px; background: linear-gradient(to top, #fcb82e, #f97316); border-radius: 4px 4px 0 0; margin-bottom: 0.5rem;">
+                            </div>
+                            <span style="font-size: 0.8rem; color: #64748b;">Apr</span>
+                        </div>
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                            <div
+                                style="width: 100%; height: 160px; background: linear-gradient(to top, #fcb82e, #f97316); border-radius: 4px 4px 0 0; margin-bottom: 0.5rem;">
+                            </div>
+                            <span style="font-size: 0.8rem; color: #64748b;">May</span>
+                        </div>
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                            <div
+                                style="width: 100%; height: 200px; background: linear-gradient(to top, #fcb82e, #f97316); border-radius: 4px 4px 0 0; margin-bottom: 0.5rem;">
+                            </div>
+                            <span style="font-size: 0.8rem; color: #64748b;">Jun</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Side Stats -->
+                <div
+                    style="background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                    <h3 style="font-size: 1.2rem; font-weight: 700; color: #1e293b; margin-bottom: 2rem;">Key Metrics
+                    </h3>
+
+                    <div style="margin-bottom: 2rem;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.9rem; color: #64748b;">Conversion Rate</span>
+                            <span style="font-size: 1.1rem; font-weight: 700; color: #10b981;">23%</span>
+                        </div>
+                        <div style="width: 100%; height: 6px; background: #e2e8f0; border-radius: 3px;">
+                            <div style="width: 23%; height: 100%; background: #10b981; border-radius: 3px;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 2rem;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.9rem; color: #64748b;">Profile Completion</span>
+                            <span style="font-size: 1.1rem; font-weight: 700; color: #fcb82e;">89%</span>
+                        </div>
+                        <div style="width: 100%; height: 6px; background: #e2e8f0; border-radius: 3px;">
+                            <div style="width: 89%; height: 100%; background: #fcb82e; border-radius: 3px;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 2rem;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.9rem; color: #64748b;">Network Activity</span>
+                            <span style="font-size: 1.1rem; font-weight: 700; color: #3b82f6;">76%</span>
+                        </div>
+                        <div style="width: 100%; height: 6px; background: #e2e8f0; border-radius: 3px;">
+                            <div style="width: 76%; height: 100%; background: #3b82f6; border-radius: 3px;"></div>
+                        </div>
+                    </div>
+
+                    <div
+                        style="padding: 1.5rem; background: linear-gradient(135deg, rgba(252, 184, 46, 0.1), rgba(249, 115, 22, 0.1)); border-radius: 12px; text-align: center;">
+                        <div style="font-size: 1.5rem; font-weight: 800; color: #fcb82e; margin-bottom: 0.5rem;">A+
+                        </div>
+                        <div style="font-size: 0.9rem; color: #64748b;">Overall Score</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROGRAMS SECTION -->
+        <section id="programs" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Available Programs</div>
+                <div class="dashboard-subtitle">Discover opportunities tailored for your startup</div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div
+                style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                    <div class="search-input" style="flex: 1; min-width: 250px;">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search programs..." style="width: 100%;">
+                    </div>
+                    <select style="padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+                        <option>All Industries</option>
+                        <option>FinTech</option>
+                        <option>HealthTech</option>
+                        <option>AI/ML</option>
+                        <option>SaaS</option>
+                    </select>
+                    <select style="padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+                        <option>All Stages</option>
+                        <option>Pre-Seed</option>
+                        <option>Seed</option>
+                        <option>Series A</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Programs Grid -->
+            <div class="programs-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+                <!-- Program 1 -->
+                <div class="program-card"
+                    style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); transition: transform 0.3s ease;">
+                    <div
+                        style="height: 160px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.5rem; color: white; position: relative;">
+                        <div
+                            style="position: absolute; top: 1rem; right: 1rem; background: rgba(255, 255, 255, 0.2); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">
+                            Accelerator
+                        </div>
+                        <div style="position: absolute; bottom: 1rem; left: 1.5rem;">
+                            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem;">Plug and Play Tech
+                                Center</h3>
+                            <p style="opacity: 0.9; font-size: 0.9rem;">3-month acceleration program</p>
+                        </div>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                            <span
+                                style="background: #e0f2fe; color: #0277bd; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">FinTech</span>
+                            <span
+                                style="background: #f3e5f5; color: #7b1fa2; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">AI/ML</span>
+                        </div>
+                        <p style="color: #64748b; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+                            Join our 12-week program with $100K investment, mentorship from industry experts, and access
+                            to corporate partners.
+                        </p>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <div style="font-size: 0.8rem; color: #64748b;">
+                                <i class="fas fa-calendar"></i> Deadline: Mar 15, 2026
+                            </div>
+                            <div style="font-size: 0.8rem; color: #10b981; font-weight: 600;">
+                                <i class="fas fa-users"></i> 23 spots left
+                            </div>
+                        </div>
+                        <button onclick="window.location.href='/startup/apply/program/1'"
+                            style="width: 100%; padding: 0.8rem; background: #667eea; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Program 2 -->
+                <div class="program-card"
+                    style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                    <div
+                        style="height: 160px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 1.5rem; color: white; position: relative;">
+                        <div
+                            style="position: absolute; top: 1rem; right: 1rem; background: rgba(255, 255, 255, 0.2); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">
+                            Incubator
+                        </div>
+                        <div style="position: absolute; bottom: 1rem; left: 1.5rem;">
+                            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem;">500 Global Batch #30
+                            </h3>
+                            <p style="opacity: 0.9; font-size: 0.9rem;">4-month intensive program</p>
+                        </div>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                            <span
+                                style="background: #fff3e0; color: #ef6c00; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">SaaS</span>
+                            <span
+                                style="background: #e8f5e8; color: #2e7d32; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">B2B</span>
+                        </div>
+                        <p style="color: #64748b; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+                            $150K investment, global network access, and demo day presentation to 500+ investors
+                            worldwide.
+                        </p>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <div style="font-size: 0.8rem; color: #64748b;">
+                                <i class="fas fa-calendar"></i> Deadline: Apr 1, 2026
+                            </div>
+                            <div style="font-size: 0.8rem; color: #f59e0b; font-weight: 600;">
+                                <i class="fas fa-fire"></i> Hot opportunity
+                            </div>
+                        </div>
+                        <button onclick="window.location.href='/startup/apply/program/2'"
+                            style="width: 100%; padding: 0.8rem; background: #f5576c; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Program 3 -->
+                <div class="program-card"
+                    style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                    <div
+                        style="height: 160px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 1.5rem; color: white; position: relative;">
+                        <div
+                            style="position: absolute; top: 1rem; right: 1rem; background: rgba(255, 255, 255, 0.2); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">
+                            Corporate PoC
+                        </div>
+                        <div style="position: absolute; bottom: 1rem; left: 1.5rem;">
+                            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem;">IBM PartnerPlus</h3>
+                            <p style="opacity: 0.9; font-size: 0.9rem;">Enterprise partnership program</p>
+                        </div>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                            <span
+                                style="background: #e1f5fe; color: #0277bd; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">Enterprise</span>
+                            <span
+                                style="background: #f3e5f5; color: #7b1fa2; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">AI</span>
+                        </div>
+                        <p style="color: #64748b; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+                            Partner with IBM for enterprise solutions. Access to Watson AI, cloud credits, and
+                            enterprise sales channels.
+                        </p>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <div style="font-size: 0.8rem; color: #64748b;">
+                                <i class="fas fa-calendar"></i> Rolling basis
+                            </div>
+                            <div style="font-size: 0.8rem; color: #10b981; font-weight: 600;">
+                                <i class="fas fa-check-circle"></i> Fast track
+                            </div>
+                        </div>
+                        <button onclick="window.location.href='/startup/apply/program/3'"
+                            style="width: 100%; padding: 0.8rem; background: #4facfe; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Program 4 -->
+                <div class="program-card"
+                    style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                    <div
+                        style="height: 160px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); padding: 1.5rem; color: white; position: relative;">
+                        <div
+                            style="position: absolute; top: 1rem; right: 1rem; background: rgba(255, 255, 255, 0.2); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">
+                            Grant
+                        </div>
+                        <div style="position: absolute; bottom: 1rem; left: 1.5rem;">
+                            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem;">SBIR Phase I</h3>
+                            <p style="opacity: 0.9; font-size: 0.9rem;">Government research grant</p>
+                        </div>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                            <span
+                                style="background: #fff3e0; color: #ef6c00; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">Research</span>
+                            <span
+                                style="background: #e8f5e8; color: #2e7d32; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">Deep
+                                Tech</span>
+                        </div>
+                        <p style="color: #64748b; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+                            Up to $275K non-dilutive funding for innovative research and development projects with
+                            commercial potential.
+                        </p>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <div style="font-size: 0.8rem; color: #64748b;">
+                                <i class="fas fa-calendar"></i> Deadline: May 20, 2026
+                            </div>
+                            <div style="font-size: 0.8rem; color: #10b981; font-weight: 600;">
+                                <i class="fas fa-dollar-sign"></i> Non-dilutive
+                            </div>
+                        </div>
+                        <button onclick="window.location.href='/startup/apply/program/4'"
+                            style="width: 100%; padding: 0.8rem; background: #fa709a; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="settings" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Account Settings</div>
+                <div class="dashboard-subtitle">Manage your profile and preferences</div>
+            </div>
+            <!-- Settings content -->
+        </section>
+
+        <!-- DRAFTS SECTION -->
+        <section id="drafts" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Application Drafts</div>
+                <div class="dashboard-subtitle">Continue working on your saved applications</div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+                <!-- Draft 1 -->
+                <div
+                    style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border-left: 4px solid #f59e0b;">
+                    <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 1rem;">
+                        <div style="flex: 1;">
+                            <h3 style="font-size: 1.2rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">
+                                Sequoia Capital Seed Program</h3>
+                            <p style="color: #64748b; font-size: 0.9rem;">Early-stage investment program</p>
+                        </div>
+                        <span
+                            style="background: #fef3c7; color: #92400e; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Draft</span>
+                    </div>
+
+                    <div style="margin-bottom: 1.5rem;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.9rem; color: #64748b;">Completion Progress</span>
+                            <span style="font-size: 0.9rem; font-weight: 600; color: #f59e0b;">75%</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px;">
+                            <div style="width: 75%; height: 100%; background: #f59e0b; border-radius: 4px;"></div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                        <span
+                            style="background: #e0f2fe; color: #0277bd; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">FinTech</span>
+                        <span
+                            style="background: #f3e5f5; color: #7b1fa2; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">Seed
+                            Stage</span>
+                    </div>
+
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 0.8rem; color: #64748b;">
+                            <i class="fas fa-clock"></i> Last edited: 2 hours ago
+                        </div>
+                        <div style="font-size: 0.8rem; color: #ef4444; font-weight: 600;">
+                            <i class="fas fa-exclamation-triangle"></i> Deadline: Mar 1
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem;">
+                        <button
+                            style="flex: 1; padding: 0.8rem; background: #fcb82e; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            <i class="fas fa-edit"></i> Continue
+                        </button>
+                        <button
+                            style="padding: 0.8rem; background: #f1f5f9; color: #64748b; border: none; border-radius: 8px; cursor: pointer;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Draft 2 -->
+                <div
+                    style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border-left: 4px solid #10b981;">
+                    <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 1rem;">
+                        <div style="flex: 1;">
+                            <h3 style="font-size: 1.2rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">
+                                NVIDIA Inception Program</h3>
+                            <p style="color: #64748b; font-size: 0.9rem;">AI startup acceleration</p>
+                        </div>
+                        <span
+                            style="background: #dcfce7; color: #166534; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Ready</span>
+                    </div>
+
+                    <div style="margin-bottom: 1.5rem;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.9rem; color: #64748b;">Completion Progress</span>
+                            <span style="font-size: 0.9rem; font-weight: 600; color: #10b981;">100%</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px;">
+                            <div style="width: 100%; height: 100%; background: #10b981; border-radius: 4px;"></div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                        <span
+                            style="background: #f3e5f5; color: #7b1fa2; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">AI/ML</span>
+                        <span
+                            style="background: #e8f5e8; color: #2e7d32; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">Deep
+                            Tech</span>
+                    </div>
+
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 0.8rem; color: #64748b;">
+                            <i class="fas fa-check-circle"></i> Ready to submit
+                        </div>
+                        <div style="font-size: 0.8rem; color: #10b981; font-weight: 600;">
+                            <i class="fas fa-calendar-check"></i> No deadline
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem;">
+                        <button
+                            style="flex: 1; padding: 0.8rem; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            <i class="fas fa-paper-plane"></i> Submit
+                        </button>
+                        <button
+                            style="padding: 0.8rem; background: #f1f5f9; color: #64748b; border: none; border-radius: 8px; cursor: pointer;">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div
+                    style="background: white; border-radius: 16px; padding: 3rem 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 2px dashed #e2e8f0; text-align: center;">
+                    <div style="font-size: 3rem; color: #e2e8f0; margin-bottom: 1rem;">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <h3 style="font-size: 1.1rem; font-weight: 600; color: #64748b; margin-bottom: 0.5rem;">Start New
+                        Draft</h3>
+                    <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem;">Save time by creating reusable
+                        application templates</p>
+                    <button
+                        style="padding: 0.8rem 1.5rem; background: #fcb82e; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                        <i class="fas fa-plus"></i> New Draft
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="connections" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Network Connections</div>
+                <div class="dashboard-subtitle">Manage your professional network</div>
+            </div>
+            <!-- Connections content -->
+        </section>
+
+        <section id="messages" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Messages</div>
+                <div class="dashboard-subtitle">Communication with your network</div>
+            </div>
+            <!-- Messages content -->
+        </section>
+
+        <section id="documents" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Documents</div>
+                <div class="dashboard-subtitle">Manage your startup documents and files</div>
+            </div>
+            <!-- Documents content -->
+        </section>
+
+        <section id="templates" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Application Templates</div>
+                <div class="dashboard-subtitle">Reusable templates for faster applications</div>
+            </div>
+            <!-- Templates content -->
+        </section>
+
+        <section id="guides" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Startup Guides</div>
+                <div class="dashboard-subtitle">Resources and guides for startup success</div>
+            </div>
+            <!-- Guides content -->
+        </section>
+
+        <section id="profile" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">My Profile</div>
+                <div class="dashboard-subtitle">View and manage your startup profile</div>
+            </div>
+            <!-- Profile content -->
+        </section>
+
+        <section id="billing" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Billing & Subscription</div>
+                <div class="dashboard-subtitle">Manage your account billing and subscription</div>
+            </div>
+            <!-- Billing content -->
+        </section>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/static/js/meetings.js"></script>
     <script>
-        // Global State Simulation
-        const state = {
-            applications: 3,
-            profileViews: 128,
-            matches: 5,
-            profileCompletion: 85
-        };
+        // Simplified dropdown functionality
+        function toggleDropdown(dropdownId) {
+            console.log('Toggle called for:', dropdownId);
 
+            const dropdown = document.getElementById(dropdownId);
+            if (!dropdown) {
+                console.error('Dropdown not found:', dropdownId);
+                return;
+            }
 
+            const menu = dropdown.querySelector('.dropdown-menu');
+            // Handle both .dropdown-toggle and .profile-toggle
+            const toggle = dropdown.querySelector('.dropdown-toggle') || dropdown.querySelector('.profile-toggle');
 
-        function initChart() {
-            const ctx = document.getElementById('startupChart');
-            if (ctx) {
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                        datasets: [{
-                            label: 'Profile Views',
-                            data: [65, 78, 92, 115, 100, 145, 128],
-                            borderColor: '#fcb82e',
-                            backgroundColor: 'rgba(252, 184, 46, 0.1)',
-                            borderWidth: 3,
-                            tension: 0.4,
-                            fill: true,
-                            pointRadius: 4,
-                            pointBackgroundColor: '#fff',
-                            pointBorderColor: '#fcb82e',
-                            pointBorderWidth: 2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
-                            x: { grid: { display: false } }
-                        }
-                    }
-                });
+            if (!menu || !toggle) {
+                console.error('Menu or toggle not found in dropdown:', dropdownId);
+                return;
+            }
+
+            // Close all other dropdowns first
+            document.querySelectorAll('.dropdown').forEach(d => {
+                if (d.id !== dropdownId) {
+                    d.classList.remove('active');
+                    const otherToggle = d.querySelector('.dropdown-toggle') || d.querySelector('.profile-toggle');
+                    if (otherToggle) otherToggle.classList.remove('active');
+                }
+            });
+
+            // Toggle current dropdown
+            const isActive = dropdown.classList.contains('active');
+            if (isActive) {
+                dropdown.classList.remove('active');
+                toggle.classList.remove('active');
+                console.log('Closed dropdown:', dropdownId);
+            } else {
+                dropdown.classList.add('active');
+                toggle.classList.add('active');
+                console.log('Opened dropdown:', dropdownId);
             }
         }
 
         function showSection(sectionId) {
-            document.querySelectorAll('.section').forEach(el => {
-                el.style.display = 'none';
-                el.classList.remove('active');
+            console.log('Showing section:', sectionId);
+
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
             });
+
+            // Show target section
             const targetSection = document.getElementById(sectionId);
             if (targetSection) {
-                targetSection.style.display = 'block';
                 targetSection.classList.add('active');
+                console.log('Section shown:', sectionId);
+            } else {
+                console.error('Section not found:', sectionId);
             }
 
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            const activeBtn = Array.from(document.querySelectorAll('.nav-item')).find(btn =>
-                btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(sectionId)
-            );
-            if (activeBtn) activeBtn.classList.add('active');
+            // Close all dropdowns
+            document.querySelectorAll('.dropdown').forEach(d => {
+                d.classList.remove('active');
+                const toggle = d.querySelector('.dropdown-toggle') || d.querySelector('.profile-toggle');
+                if (toggle) toggle.classList.remove('active');
+            });
 
+            // Update active dropdown indicator
+            updateActiveDropdown(sectionId);
+
+            // Load referrals if needed
             if (sectionId === 'referrals') {
                 loadReferrals();
             }
         }
 
-
-        function saveSettings() {
-            const btn = event.target;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-            btn.disabled = true;
-
-            setTimeout(() => {
-                showToast("Profile settings updated successfully!", "success");
-                btn.innerHTML = 'Save Changes';
-                btn.disabled = false;
-            }, 1000);
-        }
-
-        function handleFileUpload() {
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.accept = '.pdf,.doc,.docx';
-            fileInput.onchange = e => {
-                const file = e.target.files[0];
-                if (file) {
-                    showToast(`Uploading <b>${file.name}</b>...`, "info");
-                    // Mock upload progress would go here
-                    setTimeout(() => {
-                        showToast(`${file.name} has been uploaded to your documents.`, "success");
-                    }, 2000);
-                }
+        function updateActiveDropdown(sectionId) {
+            const mapping = {
+                'overview': 'dashboardDropdown',
+                'analytics': 'dashboardDropdown',
+                'achievements': 'dashboardDropdown',
+                'applications': 'applicationsDropdown',
+                'programs': 'applicationsDropdown',
+                'drafts': 'applicationsDropdown',
+                'referrals': 'networkDropdown',
+                'connections': 'networkDropdown',
+                'messages': 'networkDropdown',
+                'documents': 'resourcesDropdown',
+                'templates': 'resourcesDropdown',
+                'guides': 'resourcesDropdown'
             };
-            fileInput.click();
+
+            // Reset all
+            document.querySelectorAll('.dropdown-toggle, .profile-toggle').forEach(toggle => {
+                toggle.classList.remove('active');
+            });
+
+            // Set active
+            const dropdownId = mapping[sectionId];
+            if (dropdownId) {
+                const dropdown = document.getElementById(dropdownId);
+                if (dropdown) {
+                    const toggle = dropdown.querySelector('.dropdown-toggle') || dropdown.querySelector('.profile-toggle');
+                    if (toggle) toggle.classList.add('active');
+                }
+            }
         }
 
-        function viewMessage(id) {
-            showToast("Syncing with secure communication server...", "info");
-            setTimeout(() => {
-                showToast("Message retrieved. Action required in the opportunity view.", "success");
-            }, 800);
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(d => {
+                    d.classList.remove('active');
+                    const toggle = d.querySelector('.dropdown-toggle') || d.querySelector('.profile-toggle');
+                    if (toggle) toggle.classList.remove('active');
+                });
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('Dashboard loaded');
+            updateActiveDropdown('overview');
+            loadReferrals();
+        });
+
+        // Referrals loading function
+        async function loadReferrals() {
+            const tbody = document.getElementById('referralTableBody');
+            if (!tbody) return;
+
+            try {
+                const res = await fetch('/api/referrals/incoming');
+                const json = await res.json();
+                let referrals = json.referrals || [];
+
+                if (referrals.length > 0) {
+                    tbody.innerHTML = referrals.map(r => {
+                        const date = new Date(r.created_at).toLocaleDateString();
+                        let statusClass = 'pending';
+                        if (r.status === 'accepted') statusClass = 'active';
+                        if (r.status === 'rejected') statusClass = 'rejected';
+
+                        const statusLabel = r.status.replace('_', ' ').charAt(0).toUpperCase() + r.status.replace('_', ' ').slice(1);
+
+                        let actions = `
+                            <div style="display: flex; gap: 0.5rem; justify-content: flex-end; align-items: center;">
+                                <button onclick="viewProgram(${r.opportunity_id})" class="btn-icon" style="background:#f3f4f6; color:#374151; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: 1px solid #d1d5db; cursor: pointer;"><i class="fa-solid fa-eye"></i> View</button>
+                        `;
+
+                        if (r.status === 'pending') {
+                            actions += `
+                                <button onclick="handleReferralAction(${r.id}, 'accept')" class="btn-icon" style="background:#10b981; color:white; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer;">Accept</button>
+                                <button onclick="handleReferralAction(${r.id}, 'reject')" class="btn-icon" style="background:#ef4444; color:white; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer;">Decline</button>
+                            `;
+                        }
+
+                        actions += `</div>`;
+
+                        return `
+                        <tr>
+                            <td>
+                                <div style="font-weight:600;">${r.enabler_name}</div>
+                                <div style="font-size:0.75rem; color:#64748b;">Ecosystem Enabler</div>
+                            </td>
+                            <td>${r.opportunity_title}</td>
+                            <td>${date}</td>
+                            <td><span class="status-pill ${statusClass}">${statusLabel}</span></td>
+                            <td style="text-align: right;">${actions}</td>
+                        </tr>
+                        `;
+                    }).join('');
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 3rem; color: #64748b;">No referral requests found.</td></tr>`;
+                }
+            } catch (err) {
+                console.error(err);
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 3rem; color: #ef4444;">Failed to load referrals.</td></tr>`;
+            }
+        }
+
+        async function handleReferralAction(id, action) {
+            try {
+                const res = await fetch(`/api/referrals/${id}/action`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action })
+                });
+                const json = await res.json();
+                if (json.success) {
+                    showToast(`Referral ${action}ed successfully!`, "success");
+                    loadReferrals();
+                } else {
+                    showToast(json.error || "Action failed", "info");
+                }
+            } catch (err) {
+                showToast("Error processing referral action", "info");
+            }
         }
 
         function showToast(message, type = 'info') {
@@ -1576,11 +2091,6 @@
                 z-index: 10000;
                 transform: translateY(100px);
                 transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                font-family: 'Outfit', sans-serif;
-                font-weight: 500;
             `;
 
             const icon = type === 'success' ? 'fa-check-circle' : 'fa-info-circle';
@@ -1595,647 +2105,52 @@
             }, 3500);
         }
 
+        // Initialize dashboard
         document.addEventListener('DOMContentLoaded', function () {
-            initChart();
-            simulateLiveInsight();
-            initLiveStats();
-            loadPrograms();
-            loadNotifications();
-            loadApplications();
-            loadReferrals();
+            console.log('Enhanced Dropdown Dashboard loaded');
 
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('welcome') === 'true') {
-                showToast("Welcome back, {{ current_user.name }}! Your profile is looking great.", "success");
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
+            // Test dropdown functionality
+            const dropdowns = document.querySelectorAll('.dropdown');
+            console.log('Found dropdowns:', dropdowns.length);
+
+            dropdowns.forEach((dropdown, index) => {
+                console.log(`Dropdown ${index}:`, dropdown.id);
+                const toggle = dropdown.querySelector('.dropdown-toggle') || dropdown.querySelector('.profile-toggle');
+                const menu = dropdown.querySelector('.dropdown-menu');
+                console.log(`  - Toggle:`, toggle ? 'found' : 'missing');
+                console.log(`  - Menu:`, menu ? 'found' : 'missing');
+            });
+
+            // Animate progress bar
+            setTimeout(() => {
+                const progressBar = document.querySelector('.progress-fill');
+                if (progressBar) {
+                    progressBar.style.width = '65%';
+                }
+            }, 500);
+
+            // Set initial active dropdown
+            updateActiveDropdown('overview');
+
+            // Load referrals on page load
+            loadReferrals();
         });
 
-        function animateValue(id, start, end, duration) {
-            const obj = document.getElementById(id);
-            if (!obj) return;
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                obj.innerHTML = Math.floor(progress * (end - start) + start);
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            window.requestAnimationFrame(step);
-        }
-
-        function initLiveStats() {
-            setInterval(() => {
-                if (Math.random() > 0.8) {
-                    const increase = Math.floor(Math.random() * 3) + 1;
-                    const oldVal = state.profileViews;
-                    state.profileViews += increase;
-                    animateValue('totalViews', oldVal, state.profileViews, 1000);
-                }
-            }, 10000);
-        }
-
-        async function loadApplications() {
-            const tbody = document.getElementById('applicationsTableBody');
-            if (!tbody) return;
-
-            try {
-                const res = await fetch('/api/applications/mine');
-                let apps = [];
-
-                if (res.ok) {
-                    apps = await res.json();
-                }
-
-                // Force mock data for demonstration if no apps exist or if request fails
-                if (!apps || !Array.isArray(apps) || apps.length === 0) {
-                    apps = [
-                        {
-                            startup_name: "NexGen AI",
-                            opportunity_title: "Global Tech Accelerator 2026",
-                            created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
-                            status: "Shortlisted"
-                        },
-                        {
-                            startup_name: "NexGen AI",
-                            opportunity_title: "Sustainable Cities Pilot Program",
-                            created_at: new Date(Date.now() - 86400000 * 5).toISOString(),
-                            status: "Under Review"
-                        },
-                        {
-                            startup_name: "NexGen AI",
-                            opportunity_title: "Web3 Infrastructure Grant",
-                            created_at: new Date(Date.now() - 86400000 * 10).toISOString(),
-                            status: "Rejected"
-                        }
-                    ];
-                }
-
-                if (apps && apps.length > 0) {
-                    const html = apps.map(app => {
-                        const date = new Date(app.created_at).toLocaleDateString();
-                        const status = app.status.toLowerCase();
-                        let statusClass = 'pending';
-                        if (status.includes('shortlisted') || status.includes('active') || status.includes('selected')) statusClass = 'active';
-                        if (status.includes('rejected') || status.includes('declined')) statusClass = 'rejected';
-                        if (status.includes('review')) statusClass = 'pending';
-
-                        return `
-                        <tr>
-                            <td>${app.startup_name}</td>
-                            <td>${app.opportunity_title}</td>
-                            <td>${date}</td>
-                            <td><span class="status-pill ${statusClass}">${app.status}</span></td>
-                            <td style="text-align: right;">
-                                <button onclick="showToast('Reviewing deep-dive documents...', 'info')" class="btn-icon" style="background:#eee; color:#333; border:none; padding:4px 12px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:600;">Details</button>
-                            </td>
-                        </tr>
-                        `;
-                    }).join('');
-
-                    tbody.innerHTML = html;
-
-                    // Also populate overview table if it exists
-                    const overviewTbody = document.getElementById('overviewApplicationsTableBody');
-                    if (overviewTbody) {
-                        overviewTbody.innerHTML = apps.slice(0, 3).map(app => {
-                            const date = new Date(app.created_at).toLocaleDateString();
-                            const status = app.status.toLowerCase();
-                            let statusClass = 'pending';
-                            if (status.includes('shortlisted') || status.includes('active') || status.includes('selected')) statusClass = 'active';
-                            if (status.includes('rejected') || status.includes('declined')) statusClass = 'rejected';
-                            if (status.includes('review')) statusClass = 'pending';
-
-                            return `
-                            <tr>
-                                <td>${app.opportunity_title}</td>
-                                <td>${app.startup_name}</td>
-                                <td>${date}</td>
-                                <td><span class="status-pill ${statusClass}">${app.status}</span></td>
-                            </tr>
-                            `;
-                        }).join('');
+        // Handle escape key to close dropdowns
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && activeDropdown) {
+                console.log('Escape key pressed, closing dropdowns');
+                document.querySelectorAll('.dropdown').forEach(d => {
+                    d.classList.remove('active');
+                    const toggle = d.querySelector('.dropdown-toggle') || d.querySelector('.profile-toggle');
+                    if (toggle) {
+                        toggle.classList.remove('active');
                     }
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem; color: #6b7280;">No applications found.</td></tr>';
-                }
-            } catch (err) {
-                console.error('Apps error:', err);
-            }
-        }
-
-        function simulateLiveInsight() {
-            const insights = [
-                "New corporate match found in Renewables!",
-                "Your pitch deck was viewed by Nexus Ventures.",
-                "3 new programs matching your criteria are open.",
-                "Trending: Fintech applications up by 15% this week."
-            ];
-
-            setInterval(() => {
-                if (Math.random() > 0.7) {
-                    const message = insights[Math.floor(Math.random() * insights.length)];
-                    showToast(message, "info");
-                }
-            }, 45000);
-        }
-
-        async function loadPrograms() {
-            console.log("🔍 Loading programs for startup...");
-            const programsGrid = document.getElementById('startupProgramsGrid');
-            if (programsGrid) {
-                programsGrid.innerHTML = `
-                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
-                        <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: #fcb82e; margin-bottom: 1rem;"></i>
-                        <p style="color: #666;">Looking for the best programs for you...</p>
-                    </div>
-                `;
-            }
-
-            try {
-                // Fetch referrals and opportunities in parallel for better performance
-                const [refRes, oppRes] = await Promise.all([
-                    fetch('/api/referrals/incoming').catch(e => ({ ok: false })),
-                    fetch('/api/opportunities/').catch(e => ({ ok: false }))
-                ]);
-
-                let acceptedOppIds = [];
-                if (refRes && refRes.ok) {
-                    const refJson = await refRes.json();
-                    acceptedOppIds = (refJson.referrals || [])
-                        .filter(r => r.status === 'accepted')
-                        .map(r => r.opportunity_id);
-                }
-
-                if (!oppRes || !oppRes.ok) throw new Error("Opportunities API failed");
-                const json = await oppRes.json();
-
-                if (!json.success || !json.data || !json.data.items) {
-                    console.error("❌ Failed to load programs data:", json);
-                    if (programsGrid) {
-                        programsGrid.innerHTML = `
-                            <div style="grid-column: 1/-1; text-align: center; padding: 3rem; background: white; border-radius: 1rem; border: 1px dashed #e2e8f0;">
-                                <i class="fa-solid fa-circle-exclamation" style="font-size: 2rem; color: #ef4444; margin-bottom: 1rem;"></i>
-                                <p style="color: #666; font-weight: 500;">Unable to load programs right now. Please try refreshing.</p>
-                            </div>
-                        `;
-                    }
-                    return;
-                }
-
-                const items = json.data.items;
-                console.log(`✅ Loaded ${items.length} programs. Accepted IDs:`, acceptedOppIds);
-
-                if (programsGrid) {
-                    if (items.length === 0) {
-                        programsGrid.innerHTML = `
-                            <div style="grid-column: 1/-1; text-align: center; padding: 4rem; background: #fff; border-radius: 1.5rem; border: 2px dashed #e2e8f0;">
-                                <i class="fa-solid fa-box-open" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 1.5rem;"></i>
-                                <h3 style="color: #1e293b; margin-bottom: 0.5rem;">No Programs Found</h3>
-                                <p style="color: #64748b;">There are currently no published programs matching your profile. Check back later!</p>
-                            </div>
-                        `;
-                        return;
-                    }
-
-                    programsGrid.innerHTML = items.map(item => {
-                        // Better tags with readable colors
-                        const sectorsArray = typeof item.sectors === 'string' ? item.sectors.split(' ').filter(s => s) : (item.sectors || []);
-                        const sectors = sectorsArray.slice(0, 2).map(s => `<span class="tag" style="background: rgba(99, 102, 241, 0.1); color: #6366f1; border: 1px solid rgba(99, 102, 241, 0.2); margin-right: 4px;">${s}</span>`).join('');
-                        const logoChar = (item.title || 'P').charAt(0).toUpperCase();
-                        const bannerImage = item.banner_url || 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1974&auto=format&fit=crop';
-
-                        const isTaken = acceptedOppIds.includes(item.id);
-                        const buttonHtml = isTaken
-                            ? `<button class="apply-btn" style="background: #22c55e; border: none; color: white; cursor: default;" disabled><i class="fa-solid fa-check-circle"></i> Program Taken</button>`
-                            : `<button class="apply-btn" onclick="viewProgram(${item.id})">Explore & Apply</button>`;
-
-                        return `
-                        <div class="program-card ${isTaken ? 'taken' : ''}">
-                            <div class="program-header" style="background-image: url('${bannerImage}')">
-                                ${isTaken ? '<span class="status-badge" style="position: absolute; top: 1rem; right: 1rem; background: #22c55e; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 10;">TAKEN</span>' : ''}
-                            </div>
-                            <div class="program-body">
-                                <div class="program-title" title="${item.title}">${item.title}</div>
-                                <div class="program-company">${item.owner_company || 'Global Innovation Hub'}</div>
-                                <div class="program-tags">
-                                    ${sectors}
-                                </div>
-                                ${buttonHtml}
-                            </div>
-                        </div>
-                        `;
-                    }).join('');
-                }
-            } catch (err) {
-                console.error('❌ Programs error:', err);
-                if (programsGrid) {
-                    programsGrid.innerHTML = `
-                        <div style="grid-column: 1/-1; text-align: center; padding: 3rem; background: white; border-radius: 1rem; border: 1px dashed #e2e8f0;">
-                            <i class="fa-solid fa-circle-exclamation" style="font-size: 2rem; color: #ef4444; margin-bottom: 1rem;"></i>
-                            <p style="color: #666; font-weight: 500;">Failed to load programs. ${err.message}</p>
-                        </div>
-                    `;
-                }
-            }
-        }
-
-        async function handleApply(id, title) {
-            const select = document.getElementById('startupSelect');
-            if (!select) return;
-
-            // Load startups for the user FIRST before showing modal
-            try {
-                const res = await fetch('/api/startups/mine');
-                const json = await res.json();
-
-                if (json.success && json.startups && json.startups.length > 0) {
-                    select.innerHTML = json.startups.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
-                } else {
-                    showToast("No startups found. Please create a startup profile in Settings first.", "info");
-                    // Optionally show a "Create Startup" button or link
-                    select.innerHTML = '<option value="">-- No Startups Found --</option>';
-                    setTimeout(() => {
-                        showSection('settings');
-                    }, 2000);
-                    return;
-                }
-
-                const modal = document.getElementById('applicationModal');
-                if (modal) {
-                    document.getElementById('appliedOpportunityId').value = id;
-                    document.getElementById('appliedOpportunityTitle').textContent = title;
-                    modal.style.display = 'flex';
-                }
-            } catch (e) {
-                console.error('Error fetching startups:', e);
-                showToast("Failed to load your startups. Please try again.", "error");
-            }
-        }
-
-        async function submitApplication() {
-            const startup_id = document.getElementById('startupSelect').value;
-            const opportunity_id = document.getElementById('appliedOpportunityId').value;
-            const pitch = document.getElementById('shortPitch').value;
-
-            if (!startup_id) {
-                showToast("Please select a startup", "info");
-                return;
-            }
-
-            const btn = event.target;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
-            btn.disabled = true;
-
-            try {
-                const res = await fetch('/api/applications/', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        startup_id,
-                        opportunity_id,
-                        notes: pitch // Sending pitch as notes
-                    })
                 });
-
-                if (res.ok) {
-                    showToast("Application submitted successfully!", "success");
-                    closeModal('applicationModal');
-                    loadPrograms(); // Refresh UI
-                    loadApplications(); // Refresh Applications list
-                } else {
-                    const err = await res.json();
-                    showToast(err.error || "Submission failed", "info");
-                }
-            } catch (err) {
-                showToast("Error submitting application", "info");
-            } finally {
-                btn.innerHTML = 'Submit Application';
-                btn.disabled = false;
+                activeDropdown = null;
             }
-        }
-
-        function closeModal(id) {
-            const modal = document.getElementById(id);
-            if (modal) modal.style.display = 'none';
-        }
-
-        async function loadReferrals() {
-            const tbody = document.getElementById('referralTableBody');
-            if (!tbody) return;
-
-            try {
-                const res = await fetch('/api/referrals/incoming');
-                const json = await res.json();
-                let referrals = json.referrals || [];
-
-                // Mock data if empty
-                if (referrals.length === 0) {
-                    referrals = [
-                        {
-                            id: 8881,
-                            connector_name: "Sarah Chen",
-                            opportunity_title: "Global FinTech Accelerator",
-                            created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
-                            status: "pending"
-                        },
-                        {
-                            id: 8882,
-                            connector_name: "Michael Ross",
-                            opportunity_title: "Smart City Pilot Program",
-                            created_at: new Date(Date.now() - 86400000 * 5).toISOString(),
-                            status: "accepted"
-                        }
-                    ];
-                }
-
-                if (referrals.length > 0) {
-                    tbody.innerHTML = referrals.map(r => {
-                        const date = new Date(r.created_at).toLocaleDateString();
-                        let statusClass = 'pending';
-                        if (r.status === 'accepted') statusClass = 'active';
-                        if (r.status === 'rejected') statusClass = 'rejected';
-                        if (r.status === 'under_review') statusClass = 'pending';
-                        if (r.status === 'shortlisted') statusClass = 'active';
-
-                        const statusLabel = r.status.replace('_', ' ').charAt(0).toUpperCase() + r.status.replace('_', ' ').slice(1);
-
-                        let actions = `
-                            <div style="display: flex; gap: 0.5rem; justify-content: flex-end; align-items: center;">
-                                <button onclick="viewProgram(${r.opportunity_id})" class="btn-icon" style="background:#f3f4f6; color:#374151; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: 1px solid #d1d5db; cursor: pointer;"><i class="fa-solid fa-eye"></i> View</button>
-                        `;
-
-                        if (r.status === 'pending' || r.status === 'under_review') {
-                            actions += `
-                                <button onclick="handleReferralAction(${r.id}, 'shortlist')" class="btn-icon" style="background:#fef3c7; color:#92400e; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer;">Shortlist</button>
-                                <button onclick="handleReferralAction(${r.id}, 'review')" class="btn-icon" style="background:#eff6ff; color:#1e40af; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer;">Review</button>
-                                <button onclick="handleReferralAction(${r.id}, 'accept')" class="btn-icon" style="background:#10b981; color:white; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer;">Accept</button>
-                                <button onclick="handleReferralAction(${r.id}, 'reject')" class="btn-icon" style="background:#ef4444; color:white; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer;">Decline</button>
-                            `;
-                        } else if (r.status === 'shortlisted') {
-                            actions += `
-                                <button onclick="handleReferralAction(${r.id}, 'accept')" class="btn-icon" style="background:#10b981; color:white; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer;">Accept</button>
-                                <button onclick="handleReferralAction(${r.id}, 'reject')" class="btn-icon" style="background:#ef4444; color:white; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer;">Decline</button>
-                             `;
-                        }
-
-                        actions += `</div>`;
-
-                        return `
-                        <tr>
-                            <td>
-                                <div style="font-weight:600;">${r.connector_name}</div>
-                                <div style="font-size:0.75rem; color:#64748b;">Ecosystem Connector</div>
-                            </td>
-                            <td>${r.opportunity_title}</td>
-                            <td>${date}</td>
-                            <td><span class="status-pill ${statusClass}">${statusLabel}</span></td>
-                            <td style="text-align: right;">${actions}</td>
-                        </tr>
-                        `;
-                    }).join('');
-
-                    // Update badge
-                    const pendingCount = referrals.filter(r => r.status === 'pending').length;
-                    const badge = document.getElementById('referralCountBadge');
-                    if (badge) {
-                        badge.style.display = pendingCount > 0 ? 'inline-block' : 'none';
-                        badge.textContent = pendingCount;
-                    }
-
-                } else {
-                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 3rem; color: #64748b;">No referral requests found.</td></tr>`;
-                }
-            } catch (err) {
-                console.error(err);
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 3rem; color: #ef4444;">Failed to load referrals.</td></tr>`;
-            }
-        }
-
-        async function handleReferralAction(id, action) {
-            try {
-                let msg = "Processing...";
-                if (action === 'accept') msg = "Accepting referral...";
-                if (action === 'reject') msg = "Declining referral...";
-                if (action === 'review') msg = "Moving to review...";
-                if (action === 'shortlist') msg = "Shortlisting program...";
-
-                showToast(msg, "info");
-                const res = await fetch(`/api/referrals/${id}/action`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action })
-                });
-                const json = await res.json();
-                if (json.success) {
-                    showToast(`Referral updated successfully!`, "success");
-                    loadReferrals();
-                } else {
-                    showToast(json.error || "Action failed", "info");
-                }
-            } catch (err) {
-                showToast("Error processing referral action", "info");
-            }
-        }
-
-        async function viewProgram(id) {
-            try {
-                // Fetch referrals to see which programs are "taken"
-                const refRes = await fetch('/api/referrals/incoming');
-                const refJson = await refRes.json();
-                const acceptedOppIds = (refJson.referrals || [])
-                    .filter(r => r.status === 'accepted')
-                    .map(r => r.opportunity_id);
-
-                const res = await fetch(`/api/opportunities/`);
-                const json = await res.json();
-                if (!json.success) return;
-
-                const item = json.data.items.find(o => o.id == id);
-                if (!item) {
-                    showToast("Program details not found.", "info");
-                    return;
-                }
-
-                // Update details view (Section based)
-                const banner = document.getElementById('programDetailsBanner');
-                if (banner) banner.style.backgroundImage = `url('${item.banner_url || "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1974&auto=format&fit=crop"}')`;
-
-                const typeTag = document.getElementById('programDetailsType');
-                if (typeTag) typeTag.textContent = item.type || 'Program';
-
-                const titleElem = document.getElementById('programDetailsTitle');
-                if (titleElem) titleElem.textContent = item.title;
-
-                const descElem = document.getElementById('programDetailsDesc');
-                if (descElem) descElem.textContent = item.description || 'No description available.';
-
-                const eligElem = document.getElementById('programDetailsEligibility');
-                if (eligElem) eligElem.textContent = item.eligibility || 'Open for all relevant startups.';
-
-                const benefitsElem = document.getElementById('programDetailsBenefits');
-                if (benefitsElem) benefitsElem.textContent = item.benefits || 'Check platform for full benefits package.';
-
-                // Sectors
-                const sectorsContainer = document.getElementById('programDetailsSectors');
-                if (sectorsContainer) {
-                    sectorsContainer.innerHTML = (item.sectors || []).map(s => `<span class="tag" style="background: #eef2ff; color: #4f46e5; border: 1px solid #e0e7ff;">${s}</span>`).join('');
-                }
-
-                // Countries
-                const countriesElem = document.getElementById('programDetailsCountries');
-                if (countriesElem) countriesElem.textContent = (item.countries || []).join(', ') || 'Global Access';
-
-                // Deadline
-                const deadElem = document.getElementById('programDetailsDeadline');
-                if (deadElem) {
-                    const deadline = item.deadline ? new Date(item.deadline).toLocaleDateString() : 'Rolling Selection';
-                    deadElem.textContent = deadline;
-                }
-
-                const applyBtn = document.getElementById('applyFromDetailsBtn');
-                const isTaken = acceptedOppIds.includes(item.id);
-
-                if (isTaken) {
-                    applyBtn.innerHTML = '<i class="fa-solid fa-check-circle"></i> Already Applied';
-                    applyBtn.style.background = '#22c55e';
-                    applyBtn.style.cursor = 'default';
-                    applyBtn.disabled = true;
-                    applyBtn.onclick = null;
-                } else {
-                    applyBtn.innerHTML = 'Apply for Program <i class="fa-solid fa-paper-plane"></i>';
-                    applyBtn.style.background = '#000';
-                    applyBtn.style.color = '#fff';
-                    applyBtn.style.cursor = 'pointer';
-                    applyBtn.disabled = false;
-                    applyBtn.onclick = () => {
-                        handleApply(item.id, item.title);
-                    };
-                }
-
-                showSection('program-details');
-            } catch (e) {
-                console.error(e);
-                showToast("Failed to load program details", "info");
-            }
-        }
-
-        async function loadNotifications() {
-            const container = document.getElementById('notificationContainer');
-            if (!container) return;
-
-            try {
-                const res = await fetch('/api/notifications/');
-                const json = await res.json();
-
-                if (json.success && json.notifications.length > 0) {
-                    container.innerHTML = json.notifications.map(n => {
-                        const date = new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                        const icon = n.type === 'success' ? 'fa-check-circle' : 'fa-info-circle';
-                        const color = n.type === 'success' ? '#22c55e' : '#3b82f6';
-
-                        return `
-                        <div class="inbox-item ${n.is_read ? '' : 'unread'}" onclick="markNotifRead(${n.id}, '${n.link}')">
-                            <div class="inbox-avatar" style="color: ${color};">
-                                <i class="fas ${icon}"></i>
-                            </div>
-                            <div class="inbox-content">
-                                <div class="inbox-header">
-                                    <span class="inbox-sender">${n.title}</span>
-                                    <span class="inbox-time">${date}</span>
-                                </div>
-                                <div class="inbox-subject">${n.message}</div>
-                            </div>
-                        </div>
-                        `;
-                    }).join('');
-                } else {
-                    container.innerHTML = `
-                        <div style="padding: 2rem; text-align: center; color: #666;">
-                            <i class="fas fa-envelope-open" style="font-size: 2rem; margin-bottom: 1rem; display: block; opacity: 0.3;"></i>
-                            No notifications
-                        </div>
-                    `;
-                }
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
-        async function markNotifRead(id, link) {
-            try {
-                await fetch(`/api/notifications/${id}/read`, { method: 'POST' });
-                if (link && link !== 'undefined') window.location.href = link;
-                else loadNotifications();
-            } catch (err) { }
-        }
+        });
     </script>
-    <!-- Application Modal -->
-    <div id="applicationModal" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('applicationModal')">&times;</button>
-            <div class="modal-header">
-                <h3 class="modal-title">Apply to Program</h3>
-                <p style="color: #6b7280; margin-top: 0.5rem;" id="appliedOpportunityTitle"></p>
-                <input type="hidden" id="appliedOpportunityId">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Select Startup</label>
-                <select id="startupSelect" class="form-select">
-                    <!-- Populated via JS -->
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Why are you a good fit? (Quick Pitch)</label>
-                <textarea id="shortPitch" class="form-textarea" rows="4"
-                    placeholder="Briefly describe why your startup is suitable for this program..."></textarea>
-            </div>
-
-            <button onclick="submitApplication()"
-                style="width: 100%; padding: 1rem; background: #000; color: white; border: none; border-radius: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s;">
-                Submit Application
-            </button>
-        </div>
-    </div>
-
-    <!-- Program Detail Modal -->
-    <div id="programDetailModal" class="modal">
-        <div class="modal-content" style="max-width: 700px;">
-            <button class="modal-close" onclick="closeModal('programDetailModal')">&times;</button>
-            <div id="programBanner"
-                style="height: 200px; border-radius: 12px; background-size: cover; background-position: center; margin-bottom: 1.5rem; position: relative;">
-                <div id="programDetailLogo"
-                    style="position: absolute; bottom: -30px; left: 2rem; width: 80px; height: 80px; background: white; border-radius: 16px; border: 4px solid white; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: #fcb82e; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                </div>
-            </div>
-            <div style="padding-top: 2rem;">
-                <h2 id="programDetailTitle"
-                    style="font-size: 1.5rem; font-weight: 800; color: #111827; line-height: 1.3; margin-top: 3.5rem; margin-bottom: 0.75rem; word-break: break-word;">
-                </h2>
-                <div id="programDetailOwner" style="color: #64748b; font-weight: 600; margin-bottom: 1rem;"></div>
-
-                <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;" id="programDetailSectors"></div>
-
-                <div style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
-                    <h4
-                        style="font-size: 0.9rem; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 0.5rem;">
-                        Description</h4>
-                    <p id="programDetailDesc" style="color: #334155; line-height: 1.6;"></p>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <button id="applyFromDetailBtn" class="apply-btn" style="width: 100%; border-radius: 8px;">Apply for
-                        Program</button>
-                    <button onclick="closeModal('programDetailModal')"
-                        style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px; font-weight: 600; background: white; cursor: pointer;">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
 
 </html>

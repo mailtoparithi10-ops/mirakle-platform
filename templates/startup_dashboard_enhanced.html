@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon"
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startup Dashboard - InnoBridge</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Enhanced Top Navigation */
+        .top-nav {
+            width: 100%;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-content {
+            margin-top: 80px;
+            flex: 1;
+            background: transparent;
+            min-height: calc(100vh - 80px);
+            padding: 2rem;
+        }
+
+        /* Logo and Brand */
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .nav-brand i {
+            color: #fcb82e;
+        }
+
+        /* Navigation Dropdowns */
+        .nav-dropdowns {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-toggle:hover {
+            background: rgba(252, 184, 46, 0.2);
+            border-color: rgba(252, 184, 46, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .dropdown-toggle.active {
+            background: rgba(252, 184, 46, 0.3);
+            border-color: #fcb82e;
+            color: #fcb82e;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            backdrop-filter: blur(20px);
+        }
+
+        .dropdown.active .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            color: #1e293b;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(252, 184, 46, 0.1);
+            color: #fcb82e;
+        }
+
+        .dropdown-item:first-child {
+            border-radius: 12px 12px 0 0;
+        }
+
+        .dropdown-item:last-child {
+            border-radius: 0 0 12px 12px;
+        }
+
+        .dropdown-item i {
+            width: 18px;
+            font-size: 1rem;
+        }
+
+        .dropdown-item .badge {
+            margin-left: auto;
+            background: #ef4444;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-item .badge.success {
+            background: #10b981;
+        }
+
+        .dropdown-item .badge.warning {
+            background: #f59e0b;
+        }
+
+        /* Profile Dropdown */
+        .profile-dropdown {
+            position: relative;
+        }
+
+        .profile-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 0.5rem 1rem 0.5rem 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .profile-toggle:hover {
+            background: rgba(252, 184, 46, 0.2);
+            border-color: rgba(252, 184, 46, 0.3);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fcb82e, #f97316);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #000000;
+            border: 2px solid #fcb82e;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .profile-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: white;
+            line-height: 1.2;
+        }
+
+        .profile-level {
+            font-size: 0.7rem;
+            color: #fcb82e;
+            font-weight: 500;
+        }
+
+        .profile-dropdown .dropdown-menu {
+            right: 0;
+            left: auto;
+            min-width: 280px;
+        }
+
+        .profile-stats {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            background: linear-gradient(135deg, rgba(252, 184, 46, 0.05), rgba(249, 115, 22, 0.05));
+        }
+
+        .profile-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .progress-info {
+            text-align: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .points-display {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(226, 232, 240, 0.5);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #fcb82e, #f97316);
+            width: 65%;
+            transition: width 0.3s ease;
+        }
+
+        /* Enhanced Dashboard Header */
+        .dashboard-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .dashboard-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #1e293b, #475569);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .dashboard-subtitle {
+            color: #64748b;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* Enhanced Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #fcb82e, #f97316);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .card-icon.gold {
+            background: linear-gradient(135deg, rgba(252, 184, 46, 0.2), rgba(249, 115, 22, 0.2));
+            color: #f59e0b;
+        }
+
+        .card-icon.green {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+            color: #10b981;
+        }
+
+        .card-icon.blue {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2));
+            color: #3b82f6;
+        }
+
+        .card-icon.purple {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.2));
+            color: #8b5cf6;
+        }
+
+        .trend-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            color: #10b981;
+        }
+
+        .trend-down {
+            color: #ef4444;
+        }
+
+        /* Achievement Badges */
+        .achievements-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .achievements-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .badge-item {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .badge-item.earned {
+            background: linear-gradient(135deg, rgba(252, 184, 46, 0.1), rgba(249, 115, 22, 0.1));
+            border-color: #fcb82e;
+        }
+
+        .badge-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.4;
+        }
+
+        .badge-item.earned .badge-icon {
+            opacity: 1;
+            color: #fcb82e;
+        }
+
+        .badge-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .badge-item.earned .badge-name {
+            color: #1e293b;
+        }
+
+        /* Section Styles */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .top-nav {
+                padding: 1rem;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .nav-dropdowns {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .dropdown-toggle {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .main-content {
+                margin-top: 120px;
+                padding: 1rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .dashboard-title {
+                font-size: 1.8rem;
+            }
+
+            .profile-dropdown .dropdown-menu {
+                min-width: 250px;
+            }
+        }
+
+        /* Dropdown Animation */
+        @keyframes dropdownSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dropdown.active .dropdown-menu {
+            animation: dropdownSlide 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top Navigation with Dropdowns -->
+    <nav class="top-nav">
+        <div class="nav-brand">
+            <i class="fas fa-rocket"></i>
+            InnoBridge
+        </div>
+
+        <div class="nav-dropdowns">
+            <!-- Dashboard Dropdown -->
+            <div class="dropdown" id="dashboardDropdown">
+                <button class="dropdown-toggle active" onclick="toggleDropdown('dashboardDropdown')">
+                    <i class="fas fa-gauge-high"></i>
+                    Dashboard
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="showSection('overview')">
+                        <i class="fas fa-home"></i>
+                        Overview
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('analytics')">
+                        <i class="fas fa-chart-line"></i>
+                        Analytics
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('achievements')">
+                        <i class="fas fa-trophy"></i>
+                        Achievements
+                        <span class="badge warning">5</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Applications Dropdown -->
+            <div class="dropdown" id="applicationsDropdown">
+                <button class="dropdown-toggle" onclick="toggleDropdown('applicationsDropdown')">
+                    <i class="fas fa-paper-plane"></i>
+                    Applications
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="showSection('applications')">
+                        <i class="fas fa-list"></i>
+                        My Applications
+                        <span class="badge">8</span>
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('programs')">
+                        <i class="fas fa-rocket"></i>
+                        Available Programs
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('drafts')">
+                        <i class="fas fa-file-alt"></i>
+                        Drafts
+                        <span class="badge warning">2</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Network Dropdown -->
+            <div class="dropdown" id="networkDropdown">
+                <button class="dropdown-toggle" onclick="toggleDropdown('networkDropdown')">
+                    <i class="fas fa-users"></i>
+                    Network
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="showSection('referrals')">
+                        <i class="fas fa-handshake"></i>
+                        Referrals
+                        <span class="badge success">3</span>
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('connections')">
+                        <i class="fas fa-network-wired"></i>
+                        Connections
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('messages')">
+                        <i class="fas fa-envelope"></i>
+                        Messages
+                        <span class="badge">12</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Resources Dropdown -->
+            <div class="dropdown" id="resourcesDropdown">
+                <button class="dropdown-toggle" onclick="toggleDropdown('resourcesDropdown')">
+                    <i class="fas fa-folder"></i>
+                    Resources
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="showSection('documents')">
+                        <i class="fas fa-file-pdf"></i>
+                        Documents
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('templates')">
+                        <i class="fas fa-copy"></i>
+                        Templates
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('guides')">
+                        <i class="fas fa-book"></i>
+                        Guides
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Dropdown -->
+        <div class="dropdown profile-dropdown" id="profileDropdown">
+            <div class="profile-toggle" onclick="toggleDropdown('profileDropdown')">
+                <div class="profile-avatar">{{ current_user.name[0] if current_user.name else 'S' }}</div>
+                <div class="profile-info">
+                    <div class="profile-name">{{ current_user.name }}</div>
+                    <div class="profile-level">Level 3 - Rising Star</div>
+                </div>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="dropdown-menu">
+                <div class="profile-stats">
+                    <div class="profile-stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">1,250</div>
+                            <div class="stat-label">Points</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">Level 3</div>
+                            <div class="stat-label">Rank</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">67%</div>
+                            <div class="stat-label">Success</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">342</div>
+                            <div class="stat-label">Views</div>
+                        </div>
+                    </div>
+                    <div class="progress-info">
+                        <div class="points-display">Next level: 500 points to go</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="dropdown-item" onclick="showSection('profile')">
+                    <i class="fas fa-user"></i>
+                    View Profile
+                </button>
+                <button class="dropdown-item" onclick="showSection('settings')">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </button>
+                <button class="dropdown-item" onclick="showSection('billing')">
+                    <i class="fas fa-credit-card"></i>
+                    Billing
+                </button>
+                <hr style="margin: 0.5rem 0; border: none; border-top: 1px solid rgba(226, 232, 240, 0.8);">
+                <a href="/" class="dropdown-item">
+                    <i class="fas fa-home"></i>
+                    Back to Home
+                </a>
+                <a href="/logout" class="dropdown-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">Welcome back, {{ current_user.name }}!</div>
+            <div class="dashboard-subtitle">Here's what's happening with your startup journey today.</div>
+        </div>
+
+        <!-- OVERVIEW SECTION -->
+        <section id="overview" class="section active">
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Active Applications</div>
+                            <div class="card-value">8</div>
+                        </div>
+                        <div class="card-icon gold">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>2 new this week</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Profile Views</div>
+                            <div class="card-value">342</div>
+                        </div>
+                        <div class="card-icon blue">
+                            <i class="fa-solid fa-eye"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>+18% this month</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Success Rate</div>
+                            <div class="card-value">67%</div>
+                        </div>
+                        <div class="card-icon green">
+                            <i class="fa-solid fa-target"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>Above average</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Flair Points</div>
+                            <div class="card-value">1,250</div>
+                        </div>
+                        <div class="card-icon purple">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>+125 this week</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievements Section -->
+            <div class="achievements-section">
+                <div class="achievements-title">
+                    <i class="fas fa-trophy"></i>
+                    Recent Achievements
+                </div>
+                <div class="badges-grid">
+                    <div class="badge-item earned">
+                        <div class="badge-icon">🚀</div>
+                        <div class="badge-name">First Application</div>
+                    </div>
+                    <div class="badge-item earned">
+                        <div class="badge-icon">👀</div>
+                        <div class="badge-name">Profile Views</div>
+                    </div>
+                    <div class="badge-item earned">
+                        <div class="badge-icon">🤝</div>
+                        <div class="badge-name">First Referral</div>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon">⭐</div>
+                        <div class="badge-name">Rising Star</div>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon">🎯</div>
+                        <div class="badge-name">High Success</div>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon">🏆</div>
+                        <div class="badge-name">Top Performer</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Other sections would go here -->
+        <section id="applications" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">My Applications</div>
+                <div class="dashboard-subtitle">Track your program submissions and progress</div>
+            </div>
+            <!-- Applications content -->
+        </section>
+
+        <section id="referrals" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Referral Network</div>
+                <div class="dashboard-subtitle">Manage your referrals and grow your network</div>
+            </div>
+            <!-- Referrals content -->
+        </section>
+
+        <section id="achievements" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Achievements & Badges</div>
+                <div class="dashboard-subtitle">Your journey milestones and accomplishments</div>
+            </div>
+            <!-- Achievements content -->
+        </section>
+
+        <section id="analytics" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Performance Analytics</div>
+                <div class="dashboard-subtitle">Insights into your startup's growth and engagement</div>
+            </div>
+            <!-- Analytics content -->
+        </section>
+
+        <section id="programs" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Available Programs</div>
+                <div class="dashboard-subtitle">Discover opportunities tailored for your startup</div>
+            </div>
+            <!-- Programs content -->
+        </section>
+
+        <section id="settings" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Account Settings</div>
+                <div class="dashboard-subtitle">Manage your profile and preferences</div>
+            </div>
+            <!-- Settings content -->
+        </section>
+
+        <!-- Additional Sections -->
+        <section id="drafts" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Application Drafts</div>
+                <div class="dashboard-subtitle">Continue working on your saved applications</div>
+            </div>
+            <!-- Drafts content -->
+        </section>
+
+        <section id="connections" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Network Connections</div>
+                <div class="dashboard-subtitle">Manage your professional network</div>
+            </div>
+            <!-- Connections content -->
+        </section>
+
+        <section id="messages" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Messages</div>
+                <div class="dashboard-subtitle">Communication with your network</div>
+            </div>
+            <!-- Messages content -->
+        </section>
+
+        <section id="documents" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Documents</div>
+                <div class="dashboard-subtitle">Manage your startup documents and files</div>
+            </div>
+            <!-- Documents content -->
+        </section>
+
+        <section id="templates" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Application Templates</div>
+                <div class="dashboard-subtitle">Reusable templates for faster applications</div>
+            </div>
+            <!-- Templates content -->
+        </section>
+
+        <section id="guides" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Startup Guides</div>
+                <div class="dashboard-subtitle">Resources and guides for startup success</div>
+            </div>
+            <!-- Guides content -->
+        </section>
+
+        <section id="profile" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">My Profile</div>
+                <div class="dashboard-subtitle">View and manage your startup profile</div>
+            </div>
+            <!-- Profile content -->
+        </section>
+
+        <section id="billing" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Billing & Subscription</div>
+                <div class="dashboard-subtitle">Manage your account billing and subscription</div>
+            </div>
+            <!-- Billing content -->
+        </section>
+    </main>
+
+    <script>
+        let activeDropdown = null;
+
+        function toggleDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            const isCurrentlyActive = dropdown.classList.contains('active');
+
+            // Close all dropdowns
+            document.querySelectorAll('.dropdown').forEach(d => {
+                d.classList.remove('active');
+                d.querySelector('.dropdown-toggle').classList.remove('active');
+            });
+
+            // If the clicked dropdown wasn't active, open it
+            if (!isCurrentlyActive) {
+                dropdown.classList.add('active');
+                dropdown.querySelector('.dropdown-toggle').classList.add('active');
+                activeDropdown = dropdownId;
+            } else {
+                activeDropdown = null;
+            }
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(d => {
+                    d.classList.remove('active');
+                    d.querySelector('.dropdown-toggle').classList.remove('active');
+                });
+                activeDropdown = null;
+            }
+        });
+
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Show target section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            // Close all dropdowns after selection
+            document.querySelectorAll('.dropdown').forEach(d => {
+                d.classList.remove('active');
+                d.querySelector('.dropdown-toggle').classList.remove('active');
+            });
+            activeDropdown = null;
+
+            // Update active dropdown based on section
+            updateActiveDropdown(sectionId);
+        }
+
+        function updateActiveDropdown(sectionId) {
+            // Reset all dropdown toggles
+            document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+                toggle.classList.remove('active');
+            });
+
+            // Set active dropdown based on section
+            const sectionToDropdown = {
+                'overview': 'dashboardDropdown',
+                'analytics': 'dashboardDropdown',
+                'achievements': 'dashboardDropdown',
+                'applications': 'applicationsDropdown',
+                'programs': 'applicationsDropdown',
+                'drafts': 'applicationsDropdown',
+                'referrals': 'networkDropdown',
+                'connections': 'networkDropdown',
+                'messages': 'networkDropdown',
+                'documents': 'resourcesDropdown',
+                'templates': 'resourcesDropdown',
+                'guides': 'resourcesDropdown',
+                'profile': 'profileDropdown',
+                'settings': 'profileDropdown',
+                'billing': 'profileDropdown'
+            };
+
+            const dropdownId = sectionToDropdown[sectionId];
+            if (dropdownId) {
+                const dropdown = document.getElementById(dropdownId);
+                if (dropdown) {
+                    dropdown.querySelector('.dropdown-toggle').classList.add('active');
+                }
+            }
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Enhanced Dropdown Dashboard loaded');
+            
+            // Animate progress bar
+            setTimeout(() => {
+                const progressBar = document.querySelector('.progress-fill');
+                if (progressBar) {
+                    progressBar.style.width = '65%';
+                }
+            }, 500);
+
+            // Set initial active dropdown
+            updateActiveDropdown('overview');
+        });
+
+        // Handle escape key to close dropdowns
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && activeDropdown) {
+                document.querySelectorAll('.dropdown').forEach(d => {
+                    d.classList.remove('active');
+                    d.querySelector('.dropdown-toggle').classList.remove('active');
+                });
+                activeDropdown = null;
+            }
+        });
+    </script>
+</body>
+
+</html>

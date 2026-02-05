@@ -97,7 +97,7 @@ def test_admin_meeting_access():
     print("   🌐 All Users meetings")
     print("   🚀 Startup Only meetings")
     print("   🏢 Corporate Only meetings")
-    print("   🤝 Connector Only meetings")
+    print("   🤝 Enabler Only meetings")
     print("   👥 Specific Users meetings")
     
     print("\n🎊 Admin meeting access is now fully functional!")

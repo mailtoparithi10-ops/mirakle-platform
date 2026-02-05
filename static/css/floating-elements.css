@@ -17,7 +17,7 @@
 .floating-shape,
 .floating-element {
     position: absolute;
-    opacity: 0.12;
+    opacity: 0.25;
     pointer-events: none;
     filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
     transition: opacity 0.5s ease;
@@ -25,7 +25,7 @@
 }
 
 .floating-element:hover {
-    opacity: 0.5 !important;
+    opacity: 0.6 !important;
 }
 
 /* Specific Element Types */
@@ -43,29 +43,29 @@
     border-radius: 8px;
 }
 
-/* Vibrant Color System */
+/* Vibrant Color System - Updated to Light Grey */
 .color-primary {
-    color: #4f46e5;
+    color: #d1d5db;
 }
 
 .color-secondary {
-    color: #fcb82e;
+    color: #d1d5db;
 }
 
 .color-success {
-    color: #10b981;
+    color: #d1d5db;
 }
 
 .color-danger {
-    color: #ef4444;
+    color: #d1d5db;
 }
 
 .color-info {
-    color: #06b6d4;
+    color: #d1d5db;
 }
 
 .color-purple {
-    color: #8b5cf6;
+    color: #d1d5db;
 }
 
 /* Continuous Autonomous Movement (Always Active) */
@@ -163,67 +163,67 @@
     animation: float-up 15s infinite;
 }
 
-/* Innovation Theme Elements */
+/* Innovation Theme Elements - Updated to Light Grey */
 .float-lightbulb {
     font-size: 28px;
-    color: #fcb82e;
-    filter: drop-shadow(0 0 10px rgba(252, 184, 46, 0.3));
+    color: #d1d5db;
+    filter: drop-shadow(0 0 10px rgba(209, 213, 219, 0.3));
     animation: float-diagonal 15s infinite;
 }
 
 .float-rocket {
     font-size: 32px;
-    color: #4f46e5;
-    filter: drop-shadow(0 0 10px rgba(79, 70, 229, 0.3));
+    color: #d1d5db;
+    filter: drop-shadow(0 0 10px rgba(209, 213, 219, 0.3));
     animation: float-up 12s infinite;
 }
 
 .float-gear {
     font-size: 24px;
-    color: #10b981;
-    filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.2));
+    color: #d1d5db;
+    filter: drop-shadow(0 0 8px rgba(209, 213, 219, 0.2));
     animation: rotate-float 20s infinite;
 }
 
 .float-chart {
     font-size: 26px;
-    color: #ef4444;
-    filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.2));
+    color: #d1d5db;
+    filter: drop-shadow(0 0 8px rgba(209, 213, 219, 0.2));
     animation: float-wave 18s infinite;
 }
 
 .float-network {
     font-size: 20px;
-    color: #8b5cf6;
+    color: #d1d5db;
     animation: float-circle 25s infinite;
 }
 
 .float-code {
     font-size: 22px;
-    color: #06b6d4;
+    color: #d1d5db;
     animation: float-zigzag 14s infinite;
 }
 
 .float-coin {
     font-size: 24px;
-    color: #f59e0b;
-    filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.4));
+    color: #d1d5db;
+    filter: drop-shadow(0 0 12px rgba(209, 213, 219, 0.4));
     animation: float-bounce 16s infinite;
 }
 
 .float-connection {
     width: 2px;
     height: 60px;
-    background: linear-gradient(45deg, #fcb82e, transparent);
+    background: linear-gradient(45deg, #d1d5db, transparent);
     animation: float-line 22s infinite;
 }
 
-/* Geometric shapes */
+/* Geometric shapes - Updated to Light Grey with Higher Opacity */
 .float-circle {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: rgba(252, 184, 46, 0.3);
+    background: rgba(209, 213, 219, 0.6);
     animation: float-diagonal 20s infinite;
 }
 
@@ -232,14 +232,14 @@
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-bottom: 14px solid rgba(79, 70, 229, 0.3);
+    border-bottom: 14px solid rgba(209, 213, 219, 0.6);
     animation: float-up 18s infinite;
 }
 
 .float-square {
     width: 10px;
     height: 10px;
-    background: rgba(16, 185, 129, 0.3);
+    background: rgba(209, 213, 219, 0.6);
     transform: rotate(45deg);
     animation: rotate-float 24s infinite;
 }
@@ -252,11 +252,11 @@
     }
 
     10% {
-        opacity: 0.07;
+        opacity: 0.2;
     }
 
     90% {
-        opacity: 0.07;
+        opacity: 0.2;
     }
 
     100% {
@@ -321,11 +321,11 @@
     }
 
     10% {
-        opacity: 0.1;
+        opacity: 0.25;
     }
 
     90% {
-        opacity: 0.1;
+        opacity: 0.25;
     }
 
     100% {
@@ -341,7 +341,7 @@
     }
 
     10% {
-        opacity: 0.08;
+        opacity: 0.25;
     }
 
     25% {
@@ -357,7 +357,7 @@
     }
 
     90% {
-        opacity: 0.08;
+        opacity: 0.25;
     }
 
     100% {
@@ -373,7 +373,7 @@
     }
 
     10% {
-        opacity: 0.07;
+        opacity: 0.2;
     }
 
     25% {
@@ -389,7 +389,7 @@
     }
 
     90% {
-        opacity: 0.07;
+        opacity: 0.2;
     }
 
     100% {
@@ -405,7 +405,7 @@
     }
 
     10% {
-        opacity: 0.07;
+        opacity: 0.2;
     }
 
     20% {
@@ -425,7 +425,7 @@
     }
 
     90% {
-        opacity: 0.07;
+        opacity: 0.2;
     }
 
     100% {
@@ -441,7 +441,7 @@
     }
 
     10% {
-        opacity: 0.08;
+        opacity: 0.25;
     }
 
     25% {
@@ -457,7 +457,7 @@
     }
 
     90% {
-        opacity: 0.08;
+        opacity: 0.25;
     }
 
     100% {
@@ -473,7 +473,7 @@
     }
 
     10% {
-        opacity: 0.07;
+        opacity: 0.2;
     }
 
     50% {
@@ -481,7 +481,7 @@
     }
 
     90% {
-        opacity: 0.07;
+        opacity: 0.2;
     }
 
     100% {
@@ -497,11 +497,11 @@
     }
 
     10% {
-        opacity: 0.06;
+        opacity: 0.15;
     }
 
     90% {
-        opacity: 0.06;
+        opacity: 0.15;
     }
 
     100% {
@@ -631,7 +631,7 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .floating-element {
-        opacity: 0.03;
+        opacity: 0.15;
     }
 
     .float-lightbulb,
@@ -649,7 +649,7 @@
 @media (prefers-reduced-motion: reduce) {
     .floating-element {
         animation: none;
-        opacity: 0.02;
+        opacity: 0.1;
     }
 }
 

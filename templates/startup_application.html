@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startup Application - InnoBridge</title>
+    <link rel="stylesheet" href="/static/css/global.css">
+    <link rel="stylesheet" href="/static/css/startup.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #fcb82e;
+            --primary-dark: #e6a429;
+            --secondary: #1a1a1a;
+            --accent: #333;
+            --background: #f8f9fa;
+            --surface: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --border: #e2e8f0;
+            --success: #48bb78;
+            --error: #f56565;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(252, 184, 46, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(255, 255, 255, 0.5) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* Enforce header styling */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #000;
+        }
+
+        .logo-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--secondary);
+            letter-spacing: -0.03em;
+        }
+
+        .logo-text .accent {
+            color: var(--primary);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--secondary);
+        }
+
+        .application-form {
+            max-width: 900px;
+            margin: 120px auto 4rem;
+            padding: 3.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+            position: relative;
+        }
+
+        .form-header h1 {
+            color: var(--secondary);
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, #1a1a1a 0%, #4a5568 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .program-card {
+            background: linear-gradient(135deg, #fffbeb 0%, #fff 100%);
+            border: 1px solid #fceeb5;
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin: 2rem auto 0;
+            max-width: 700px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            text-align: left;
+        }
+
+        .program-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(252, 184, 46, 0.1));
+            transform: skewX(-20deg);
+        }
+
+        .program-card h3 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .program-card p {
+            color: var(--text-main);
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .form-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: '';
+            display: block;
+            width: 6px;
+            height: 24px;
+            background: var(--primary);
+            margin-right: 12px;
+            border-radius: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .required {
+            color: var(--error);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background-color: white;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            color: var(--text-main);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(252, 184, 46, 0.15);
+        }
+
+        .form-group input:hover,
+        .form-group select:hover,
+        .form-group textarea:hover {
+            border-color: #cbd5e0;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .help-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .character-count {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 0.25rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .file-upload {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.2s;
+            background: #f8fafc;
+            position: relative;
+            display: block;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+            background: #fffaf0;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .btn.btn-secondary {
+            background: white;
+            border: 1px solid #e2e8f0;
+            color: #4a5568;
+            padding: 0.5rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn.btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+            color: #2d3748;
+        }
+
+        .sector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .sector-item {
+            position: relative;
+        }
+
+        .sector-item input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sector-item label {
+            display: block;
+            padding: 0.75rem 1rem;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            font-weight: 500;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            user-select: none;
+        }
+
+        .sector-item label:hover {
+            border-color: #cbd5e0;
+            background-color: #f8fafc;
+        }
+
+        .sector-item input[type="checkbox"]:checked+label {
+            background-color: #fffaf0;
+            border-color: var(--primary);
+            color: #d97706;
+            font-weight: 600;
+            box-shadow: 0 0 0 1px var(--primary);
+        }
+
+        .submit-section {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 1rem;
+            border-top: 1px solid var(--border);
+            padding-top: 2rem;
+            margin-top: 3rem;
+        }
+
+        .submit-btn {
+            background: var(--secondary);
+            color: white;
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-md);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            background: #000;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .submit-btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @media (max-width: 768px) {
+            .application-form {
+                margin: 1rem;
+                padding: 1.5rem;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .submit-section {
+                flex-direction: column-reverse;
+                gap: 1rem;
+            }
+
+            .submit-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">I</div>
+                <div class="logo-text">INNO<span class="accent">BRIDGE</span></div>
+            </a>
+            <nav class="nav-menu">
+                <a href="/" class="nav-link">HOME</a>
+                <a href="/opportunities" class="nav-link">OPPORTUNITIES</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="application-form">
+        <div class="form-header">
+            <h1>Startup Application</h1>
+            {% if program %}
+            <div class="program-card">
+                <h3>Applying for: {{ program.title }}</h3>
+                <p>{{ program.description[:200] }}...</p>
+            </div>
+            <p class="mt-3">Complete your startup profile below to proceed with your application.</p>
+            {% else %}
+            <p>Complete your startup profile to access programs and opportunities on InnoBridge.</p>
+            {% endif %}
+        </div>
+
+        <form id="startupApplicationForm" method="POST" enctype="multipart/form-data">
+            {% if program %}
+            <input type="hidden" name="program_id" value="{{ program.id }}">
+            {% endif %}
+            <!-- Basic Information -->
+            <div class="form-section">
+                <h2 class="section-title">Basic Information</h2>
+
+                <div class="form-group">
+                    <label for="startup_name">What is the name of your startup? <span class="required">*</span></label>
+                    <input type="text" id="startup_name" name="startup_name" required>
+                    <div class="help-text">Please give us the name you usually use for your startup, not the official
+                        legal name.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">What does your startup do in short? <span class="required">*</span></label>
+                    <textarea id="description" name="description" maxlength="1200" required></textarea>
+                    <div class="help-text">In 200 words focus on describing what is the name of your startup, where is
+                        your headquarter located, what technology the the company uses to solve what kind of problem for
+                        what kind of clients. Make your summary is engaging and concise. This is the first thing project
+                        owners will see, so make it count!</div>
+                    <div class="character-count" id="descriptionCount">0/1200</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Where is your startup located? <span class="required">*</span></label>
+                    <input type="text" id="location" name="location" required>
+                    <div class="help-text">Please specify the location of your startup's headquarters. If you have
+                        multiple offices, choose the main office location. If your company isn't registered yet,
+                        indicate where you plan to register it in the future.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="website">What is the company website?</label>
+                    <input type="url" id="website" name="website" placeholder="https://yourcompany.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="linkedin">What is your startup's Linkedin account (optional)</label>
+                    <input type="url" id="linkedin" name="linkedin"
+                        placeholder="https://linkedin.com/company/yourcompany">
+                    <div class="help-text">Please share the LinkedIn account specific to your company, not your personal
+                        account. This information is essential for completing your application profile.</div>
+                </div>
+            </div>
+
+            <!-- Sectors and Industries -->
+            <div class="form-section">
+                <h2 class="section-title">Sectors & Industries</h2>
+
+                <div class="form-group">
+                    <label>What sector or industries does your startup operate in? <span
+                            class="required">*</span></label>
+                    <div class="help-text">Please identify the specific sectors, industries, or technologies your
+                        company is involved in. Selecting multiple sectors can better define your company's direction
+                        and focus.</div>
+                    <div class="sector-grid">
+                        <div class="sector-item">
+                            <input type="checkbox" id="fintech" name="sectors" value="fintech">
+                            <label for="fintech">FinTech</label>
+                        </div>
+                        <div class="sector-item">
+                            <input type="checkbox" id="healthtech" name="sectors" value="healthtech">
+                            <label for="healthtech">HealthTech</label>
+                        </div>
+                        <div class="sector-item">
+                            <input type="checkbox" id="edtech" name="sectors" value="edtech">
+                            <label for="edtech">EdTech</label>
+                        </div>
+                        <div class="sector-item">
+                            <input type="checkbox" id="greentech" name="sectors" value="greentech">
+                            <label for="greentech">GreenTech</label>
+                        </div>
+                        <div class="sector-item">
+                            <input type="checkbox" id="ai" name="sectors" value="ai">
+                            <label for="ai">AI/ML</label>
+                        </div>
+                        <div class="sector-item">
+                            <input type="checkbox" id="blockchain" name="sectors" value="blockchain">
+                            <label for="blockchain">Blockchain</label>
+                        </div>
+                        <div class="sector-item">
+                            <input type="checkbox" id="iot" name="sectors" value="iot">
+                            <label for="iot">IoT</label>
+                        </div>
+                        <div class="sector-item">
+                            <input type="checkbox" id="ecommerce" name="sectors" value="ecommerce">
+                            <label for="ecommerce">E-commerce</label>
+                        </div>
+                        <div class="sector-item">
+                            <input type="checkbox" id="saas" name="sectors" value="saas">
+                            <label for="saas">SaaS</label>
+                        </div>
+                        <div class="sector-item">
+                            <input type="checkbox" id="mobility" name="sectors" value="mobility">
+                            <label for="mobility">Mobility</label>
+                        </div>
+                        <div class="sector-item">
+                            <input type="checkbox" id="foodtech" name="sectors" value="foodtech">
+                            <label for="foodtech">FoodTech</label>
+                        </div>
+                        <div class="sector-item">
+                            <input type="checkbox" id="proptech" name="sectors" value="proptech">
+                            <label for="proptech">PropTech</label>
+                        </div>
+                        <div class="sector-item">
+                            <input type="checkbox" id="other" name="sectors" value="other">
+                            <label for="other">Other</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Company Details -->
+            <div class="form-section">
+                <h2 class="section-title">Company Details</h2>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="stage">What is your startup Stage? <span class="required">*</span></label>
+                        <select id="stage" name="stage" required>
+                            <option value="">Select stage</option>
+                            <option value="idea">Idea - Haven't started yet</option>
+                            <option value="mvp">MVP - Built first version, may have users</option>
+                            <option value="early">Early - Product with paying clients</option>
+                            <option value="growth">Growth - Expanding to multiple markets</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="founding_date">What is the founding date of your startup? <span
+                                class="required">*</span></label>
+                        <input type="date" id="founding_date" name="founding_date" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="team_size">How many employees does your startup have? <span
+                            class="required">*</span></label>
+                    <select id="team_size" name="team_size" required>
+                        <option value="">Select team size</option>
+                        <option value="1">1 (Solo founder)</option>
+                        <option value="2-5">2-5 employees</option>
+                        <option value="6-10">6-10 employees</option>
+                        <option value="11-25">11-25 employees</option>
+                        <option value="26-50">26-50 employees</option>
+                        <option value="51-100">51-100 employees</option>
+                        <option value="100+">100+ employees</option>
+                    </select>
+                    <div class="help-text">Full-time employees, founders, and interns.</div>
+                </div>
+            </div>
+
+            <!-- File Uploads -->
+            <div class="form-section">
+                <h2 class="section-title">Documents</h2>
+
+                <div class="form-group">
+                    <label>Upload your startup logo (limit 10mb) <span class="required">*</span></label>
+                    <div class="file-upload">
+                        <input type="file" id="logo" name="logo" accept="image/*" required style="display: none;">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="document.getElementById('logo').click();">+ Upload</button>
+                        <div id="logo-name" style="margin-top: 5px; font-weight: bold;"></div>
+                        <div class="help-text">Upload your startup logo. Please upload a square version of your logo
+                            with a solid background.</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload your startup pitch deck (limit 10mb) <span class="required">*</span></label>
+                    <div class="file-upload">
+                        <input type="file" id="pitch_deck" name="pitch_deck" accept=".pdf" required
+                            style="display: none;">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="document.getElementById('pitch_deck').click();">+ Upload</button>
+                        <div id="pitch-name" style="margin-top: 5px; font-weight: bold;"></div>
+                        <div class="help-text">Upload your startup pitch deck (limit 10mb). Please provide your pitch
+                            deck in PDF format only. An ideal pitch deck should contain about 10 to 20 pages.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Sections -->
+            <div class="form-section">
+                <h2 class="section-title">Additional Information</h2>
+
+                <div class="form-group">
+                    <label for="business_model">Business Model</label>
+                    <textarea id="business_model" name="business_model" maxlength="500"></textarea>
+                    <div class="help-text">Briefly describe your business model and revenue streams.</div>
+                    <div class="character-count" id="businessModelCount">0/500</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="team_info">The Team</label>
+                    <textarea id="team_info" name="team_info" maxlength="500"></textarea>
+                    <div class="help-text">Tell us about your founding team and key members.</div>
+                    <div class="character-count" id="teamInfoCount">0/500</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="financials">Financials</label>
+                    <textarea id="financials" name="financials" maxlength="500"></textarea>
+                    <div class="help-text">Share key financial information, funding raised, or revenue metrics.</div>
+                    <div class="character-count" id="financialsCount">0/500</div>
+                </div>
+            </div>
+
+            <!-- Terms and Submit -->
+            <div class="form-section">
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="terms" name="terms" required
+                            style="width: auto; margin-right: 0.5rem;">
+                        By submitting this form you agree to share your startup information with Founders Lair and the
+                        program owner. <span class="required">*</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="submit-section">
+                <button type="submit" class="submit-btn" id="submitBtn">Submit Application</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Character counting for textareas
+        function setupCharacterCount(textareaId, countId) {
+            const textarea = document.getElementById(textareaId);
+            const counter = document.getElementById(countId);
+
+            textarea.addEventListener('input', function () {
+                const count = this.value.length;
+                const max = this.getAttribute('maxlength');
+                counter.textContent = `${count}/${max}`;
+
+                if (count > max * 0.9) {
+                    counter.style.color = '#e74c3c';
+                } else {
+                    counter.style.color = '#999';
+                }
+            });
+        }
+
+        setupCharacterCount('description', 'descriptionCount');
+        setupCharacterCount('business_model', 'businessModelCount');
+        setupCharacterCount('team_info', 'teamInfoCount');
+        setupCharacterCount('financials', 'financialsCount');
+
+        // File upload feedback
+        // File upload feedback
+        document.getElementById('logo').addEventListener('change', function () {
+            if (this.files[0]) {
+                document.getElementById('logo-name').textContent = this.files[0].name;
+            }
+        });
+        document.getElementById('pitch_deck').addEventListener('change', function () {
+            if (this.files[0]) {
+                document.getElementById('pitch-name').textContent = this.files[0].name;
+            }
+        });
+
+
+        // Form validation
+        document.getElementById('startupApplicationForm').addEventListener('submit', function (e) {
+            const sectors = document.querySelectorAll('input[name="sectors"]:checked');
+            if (sectors.length === 0) {
+                e.preventDefault();
+                alert('Please select at least one sector or industry.');
+                return;
+            }
+
+            // Disable submit button to prevent double submission
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+        });
+
+        // Auto-resize textareas
+        document.querySelectorAll('textarea').forEach(textarea => {
+            textarea.addEventListener('input', function () {
+                this.style.height = 'auto';
+                this.style.height = this.scrollHeight + 'px';
+            });
+        });
+    </script>
+</body>
+
+</html>

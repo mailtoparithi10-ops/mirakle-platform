@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Meetings - InnoBridge</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .logo i {
+            color: #fcb82e;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            background: rgba(252, 184, 46, 0.2);
+            color: #fcb82e;
+            border: 1px solid rgba(252, 184, 46, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(252, 184, 46, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+
+        /* Notification Banner */
+        .notification-banner {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .notification-banner i {
+            font-size: 1.5rem;
+        }
+
+        .notification-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .notification-content p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            color: #64748b;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+
+        .tab:hover {
+            color: #3b82f6;
+        }
+
+        /* Meeting Cards */
+        .meetings-grid {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .meeting-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .meeting-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .meeting-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .meeting-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .meeting-description {
+            color: #64748b;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .meeting-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-scheduled {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-in_progress {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-completed {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .meeting-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .detail-icon {
+            color: #3b82f6;
+            width: 16px;
+        }
+
+        .meeting-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8fafc;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #64748b;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+
+            .meeting-details {
+                grid-template-columns: 1fr;
+            }
+
+            .meeting-actions {
+                flex-direction: column;
+            }
+
+            .tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-rocket"></i>
+                InnoBridge
+            </div>
+            <div class="user-info">
+                <span>{{ current_user.name }}</span>
+                <a href="/{{ current_user.role }}" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 class="page-title">My Meetings</h1>
+        <p class="page-subtitle">View and manage your scheduled meetings</p>
+
+        <!-- Notification Banner (shown when there are upcoming meetings) -->
+        <div class="notification-banner" id="notificationBanner" style="display: none;">
+            <i class="fas fa-bell"></i>
+            <div class="notification-content">
+                <h3>Upcoming Meeting</h3>
+                <p id="notificationText">You have a meeting starting soon!</p>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('upcoming')">
+                <i class="fas fa-clock"></i>
+                Upcoming
+            </button>
+            <button class="tab" onclick="showTab('past')">
+                <i class="fas fa-history"></i>
+                Past Meetings
+            </button>
+            <button class="tab" onclick="showTab('all')">
+                <i class="fas fa-list"></i>
+                All Meetings
+            </button>
+        </div>
+
+        <!-- Meetings Content -->
+        <div id="upcomingTab" class="tab-content">
+            <div class="meetings-grid" id="upcomingMeetings">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="pastTab" class="tab-content" style="display: none;">
+            <div class="meetings-grid" id="pastMeetings">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="allTab" class="tab-content" style="display: none;">
+            <div class="meetings-grid" id="allMeetings">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'upcoming';
+        let meetingsData = {
+            upcoming: [],
+            past: [],
+            all: []
+        };
+
+        // Load meetings on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMeetings();
+            checkUpcomingMeetings();
+        });
+
+        async function loadMeetings() {
+            try {
+                console.log('🔄 Loading meetings...');
+                const response = await fetch('/api/meetings/my-meetings');
+                console.log('📡 Response status:', response.status);
+                console.log('📡 Response headers:', response.headers);
+                
+                if (!response.ok) {
+                    console.error('❌ Response not OK:', response.status, response.statusText);
+                    const errorText = await response.text();
+                    console.error('❌ Error response body:', errorText);
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('✅ Meetings data received:', data);
+
+                if (data.success) {
+                    meetingsData.upcoming = data.upcoming_meetings || [];
+                    meetingsData.past = data.past_meetings || [];
+                    meetingsData.all = [...meetingsData.upcoming, ...meetingsData.past];
+
+                    console.log(`📊 Loaded ${meetingsData.upcoming.length} upcoming, ${meetingsData.past.length} past meetings`);
+                    displayMeetings(currentTab);
+                } else {
+                    console.error('❌ API returned success=false:', data);
+                    showError('Failed to load meetings: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('❌ Error loading meetings:', error);
+                console.error('❌ Error stack:', error.stack);
+                showError('Error loading meetings: ' + error.message);
+            }
+        }
+
+        function showTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+            document.getElementById(tabName + 'Tab').style.display = 'block';
+
+            currentTab = tabName;
+            displayMeetings(tabName);
+        }
+
+        function displayMeetings(tabName) {
+            const container = document.getElementById(tabName + 'Meetings');
+            const meetings = meetingsData[tabName];
+
+            if (meetings.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-video"></i>
+                        <h3>No meetings found</h3>
+                        <p>You don't have any ${tabName === 'all' ? '' : tabName} meetings at the moment.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = meetings.map(meeting => createMeetingCard(meeting)).join('');
+        }
+
+        function createMeetingCard(meeting) {
+            const scheduledDate = new Date(meeting.scheduled_at);
+            const now = new Date();
+            const isUpcoming = scheduledDate > now;
+            const timeUntil = isUpcoming ? getTimeUntil(scheduledDate) : '';
+
+            return `
+                <div class="meeting-card">
+                    <div class="meeting-header">
+                        <div>
+                            <h3 class="meeting-title">${meeting.title}</h3>
+                            <p class="meeting-description">${meeting.description || 'No description provided'}</p>
+                        </div>
+                        <span class="meeting-status status-${meeting.status}">${meeting.status.replace('_', ' ')}</span>
+                    </div>
+
+                    <div class="meeting-details">
+                        <div class="detail-item">
+                            <i class="fas fa-calendar detail-icon"></i>
+                            <span>${scheduledDate.toLocaleDateString('en-US', { 
+                                weekday: 'long', 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric' 
+                            })}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-clock detail-icon"></i>
+                            <span>${scheduledDate.toLocaleTimeString('en-US', { 
+                                hour: 'numeric', 
+                                minute: '2-digit',
+                                hour12: true 
+                            })}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-hourglass-half detail-icon"></i>
+                            <span>${meeting.duration_minutes} minutes</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-users detail-icon"></i>
+                            <span>${meeting.participant_count} participants</span>
+                        </div>
+                        ${timeUntil ? `
+                        <div class="detail-item">
+                            <i class="fas fa-stopwatch detail-icon"></i>
+                            <span>${timeUntil}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="meeting-actions">
+                        ${isUpcoming && meeting.status === 'scheduled' ? `
+                            <a href="/meeting/join/${meeting.meeting_room_id}" class="btn btn-primary">
+                                <i class="fas fa-video"></i>
+                                Join Meeting
+                            </a>
+                        ` : ''}
+                        <button class="btn btn-secondary" onclick="viewMeetingDetails(${meeting.id})">
+                            <i class="fas fa-info-circle"></i>
+                            Details
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getTimeUntil(date) {
+            const now = new Date();
+            const diff = date - now;
+            
+            if (diff < 0) return 'Started';
+            
+            const minutes = Math.floor(diff / (1000 * 60));
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+            
+            if (days > 0) return `In ${days} day${days > 1 ? 's' : ''}`;
+            if (hours > 0) return `In ${hours} hour${hours > 1 ? 's' : ''}`;
+            if (minutes > 0) return `In ${minutes} minute${minutes > 1 ? 's' : ''}`;
+            return 'Starting now';
+        }
+
+        function checkUpcomingMeetings() {
+            const now = new Date();
+            const upcomingMeeting = meetingsData.upcoming.find(meeting => {
+                const meetingTime = new Date(meeting.scheduled_at);
+                const timeDiff = meetingTime - now;
+                return timeDiff > 0 && timeDiff <= 15 * 60 * 1000; // Within 15 minutes
+            });
+
+            if (upcomingMeeting) {
+                const banner = document.getElementById('notificationBanner');
+                const text = document.getElementById('notificationText');
+                const timeUntil = getTimeUntil(new Date(upcomingMeeting.scheduled_at));
+                
+                text.textContent = `"${upcomingMeeting.title}" ${timeUntil.toLowerCase()}`;
+                banner.style.display = 'flex';
+            }
+        }
+
+        function viewMeetingDetails(meetingId) {
+            // This could open a modal or navigate to a details page
+            alert('Meeting details functionality would be implemented here');
+        }
+
+        function showError(message) {
+            // Simple error display - could be enhanced with a toast system
+            console.error(message);
+            alert(message);
+        }
+
+        // Refresh meetings every 30 seconds to check for updates
+        setInterval(loadMeetings, 30000);
+        setInterval(checkUpcomingMeetings, 60000);
+    </script>
+</body>
+</html>

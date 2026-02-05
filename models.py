@@ -7,7 +7,7 @@ import json
 
 
 # -----------------------------------------
-# USER MODEL (Founder, Connector, Corporate, Admin)
+# USER MODEL (Founder, Enabler, Corporate, Admin)
 # -----------------------------------------
 class User(UserMixin, db.Model):
     __tablename__ = "users"
@@ -15,10 +15,11 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(140), nullable=False)
     email = db.Column(db.String(180), unique=True, nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
+    password_hash = db.Column(db.String(255), nullable=True)  # Nullable for Google users
+    google_id = db.Column(db.String(100), unique=True, nullable=True)  # Google OAuth ID
 
     role = db.Column(db.String(40), default="founder")  
-    # founder, connector, corporate, admin
+    # founder, enabler, corporate, admin
 
     country = db.Column(db.String(120))
     region = db.Column(db.String(120))
@@ -36,6 +37,8 @@ class User(UserMixin, db.Model):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
+        if not self.password_hash:  # Google users don't have passwords
+            return False
         return check_password_hash(self.password_hash, password)
 
     # REQUIRED BY FLASK-LOGIN
@@ -66,23 +69,34 @@ class Startup(db.Model):
 
     name = db.Column(db.String(220), nullable=False)
     website = db.Column(db.String(400))
+    linkedin = db.Column(db.String(400))
 
     country = db.Column(db.String(120))
     region = db.Column(db.String(120))
+    location = db.Column(db.String(200))  # Headquarters location
 
     sectors = db.Column(db.Text)  # JSON list
     stage = db.Column(db.String(120))
     team_size = db.Column(db.String(100))
     funding = db.Column(db.String(100))
+    founding_date = db.Column(db.Date)
 
+    description = db.Column(db.Text)  # Short description (200 words)
     problem = db.Column(db.Text)
     solution = db.Column(db.Text)
     traction = db.Column(db.Text)
+    business_model = db.Column(db.Text)
+    team_info = db.Column(db.Text)
+    financials = db.Column(db.Text)
 
     pitch_deck_url = db.Column(db.String(500))
     demo_url = db.Column(db.String(500))
+    logo_url = db.Column(db.String(500))
 
     tags = db.Column(db.Text)  # JSON list
+
+    # Application status
+    application_status = db.Column(db.String(50), default="draft")  # draft, submitted, approved, rejected
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(
@@ -95,18 +109,27 @@ class Startup(db.Model):
             "founder_id": self.founder_id,
             "name": self.name,
             "website": self.website,
+            "linkedin": self.linkedin,
             "country": self.country,
             "region": self.region,
+            "location": self.location,
             "sectors": json.loads(self.sectors or "[]"),
             "stage": self.stage,
             "team_size": self.team_size,
             "funding": self.funding,
+            "founding_date": self.founding_date.isoformat() if self.founding_date else None,
+            "description": self.description,
             "problem": self.problem,
             "solution": self.solution,
             "traction": self.traction,
+            "business_model": self.business_model,
+            "team_info": self.team_info,
+            "financials": self.financials,
             "pitch_deck_url": self.pitch_deck_url,
             "demo_url": self.demo_url,
+            "logo_url": self.logo_url,
             "tags": json.loads(self.tags or "[]"),
+            "application_status": self.application_status,
         }
 
 
@@ -198,7 +221,7 @@ class Referral(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    connector_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    enabler_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     startup_id = db.Column(db.Integer, db.ForeignKey("startups.id"), nullable=True) # Can be null if startup user not yet matched
     opportunity_id = db.Column(db.Integer, db.ForeignKey("opportunities.id"), nullable=False)
 
@@ -212,7 +235,7 @@ class Referral(db.Model):
     # pending (wait for startup), accepted (confirmed by startup), rejected, successful (rewarded), failed (not selected)
 
     reward_log = db.Column(db.Text)  # JSON list
-    notes = db.Column(db.Text) # Connector notes
+    notes = db.Column(db.Text) # Enabler notes
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -220,7 +243,7 @@ class Referral(db.Model):
         return {
             "id": self.id,
             "token": self.token,
-            "connector_id": self.connector_id,
+            "enabler_id": self.enabler_id,
             "startup_id": self.startup_id,
             "opportunity_id": self.opportunity_id,
             "startup_name": self.startup_name,
@@ -351,7 +374,7 @@ class Meeting(db.Model):
     
     # Meeting access control
     access_type = db.Column(db.String(50), nullable=False)  
-    # 'all_users', 'startup_only', 'corporate_only', 'connector_only', 'specific_users'
+    # 'all_users', 'startup_only', 'corporate_only', 'enabler_only', 'specific_users'
     
     # Meeting features (Zoom-like capabilities)
     video_enabled = db.Column(db.Boolean, default=True)

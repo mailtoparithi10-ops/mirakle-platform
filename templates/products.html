@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InnoBridge Products - Our Ecosystem</title>
     <meta name="description"
-        content="Explore the InnoBridge product suite: Connector Platform, Startup Portal, and Corporate Innovation Suite.">
+        content="Explore the InnoBridge product suite: Enabler Platform, Startup Portal, and Corporate Innovation Suite.">
     <link rel="stylesheet" href="/static/css/index.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap"
@@ -163,8 +163,8 @@
                 <a href="/admin" class="nav-btn primary">DASHBOARD</a>
                 {% elif current_user.role == 'corporate' %}
                 <a href="/corporate" class="nav-btn primary">DASHBOARD</a>
-                {% elif current_user.role == 'connector' or current_user.role == 'enabler' %}
-                <a href="/connector" class="nav-btn primary">DASHBOARD</a>
+                {% elif current_user.role == 'enabler' %}
+                <a href="/enabler" class="nav-btn primary">DASHBOARD</a>
                 {% else %}
                 <a href="/startup" class="nav-btn primary">DASHBOARD</a>
                 {% endif %}
@@ -192,14 +192,14 @@
         </p>
     </section>
 
-    <!-- Product 1: Connector Platform -->
+    <!-- Product 1: Enabler Platform -->
     <section class="product-section">
         <div class="product-container">
             <div class="product-content">
-                <div class="product-badge">FOR CONNECTORS</div>
-                <h2 class="product-title">InnoBridge Connector</h2>
+                <div class="product-badge">FOR ENABLERS</div>
+                <h2 class="product-title">InnoBridge Enabler</h2>
                 <p class="product-description">
-                    Turn your network into net worth. The Connector Platform empowers ecosystem builders to monetize
+                    Turn your network into net worth. The Enabler Platform empowers ecosystem builders to monetize
                     their connections by referring startups to global opportunities.
                 </p>
                 <ul class="feature-list">
@@ -209,12 +209,12 @@
                         analytics</li>
                     <li class="feature-item"><i class="fas fa-check-circle"></i> Access exclusive global programs</li>
                     <li class="feature-item"><i class="fas fa-check-circle"></i> Build your reputation as a
-                        super-connector</li>
+                        super-enabler</li>
                 </ul>
-                <a href="/connector.html" class="hero-btn primary">START EARNING</a>
+                <a href="/enabler.html" class="hero-btn primary">START EARNING</a>
             </div>
             <div class="product-visual">
-                <img src="/static/images/connector_platform.png" alt="Connector Platform" class="product-image">
+                <img src="/static/images/enabler_platform.png" alt="Enabler Platform" class="product-image">
             </div>
         </div>
     </section>
@@ -294,7 +294,7 @@
                 © 2025 InnoBridge. All rights reserved. | Connecting Innovation • Bridging Futures
             </p>
             <div style="margin-top: 2rem; display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center;">
-                <a href="/connector.html" style="color: #666; text-decoration: none;">InnoBridge Connector</a>
+                <a href="/enabler.html" style="color: #666; text-decoration: none;">InnoBridge Enabler</a>
                 <a href="/startup_portal.html" style="color: #666; text-decoration: none;">For Startups</a>
                 <a href="/corporate.html" style="color: #666; text-decoration: none;">For Corporates</a>
             </div>

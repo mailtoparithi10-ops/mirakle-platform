@@ -18,8 +18,8 @@ def test_all_dashboards():
     test_users = [
         {'email': 'test@startup.com', 'role': 'startup', 'dashboard': '/startup'},
         {'email': 'test@corporate.com', 'role': 'corporate', 'dashboard': '/corporate'},
-        {'email': 'test@connector.com', 'role': 'connector', 'dashboard': '/connector'},
-        {'email': 'test@enabler.com', 'role': 'enabler', 'dashboard': '/connector'}
+        {'email': 'test@enabler.com', 'role': 'enabler', 'dashboard': '/enabler'},
+        {'email': 'test@enabler.com', 'role': 'enabler', 'dashboard': '/enabler'}
     ]
     
     with app.app_context():
@@ -84,19 +84,19 @@ def test_all_dashboards():
     print("\n✅ Dashboards with Meeting Inbox:")
     print("   📱 Startup Dashboard (/startup)")
     print("   📱 Corporate Dashboard (/corporate)")
-    print("   📱 Connector Dashboard (/connector)")
+    print("   📱 Enabler Dashboard (/enabler)")
     print("   📱 Admin Dashboard (/admin)")
     
     print("\n✅ Meeting Access Types:")
     print("   🌐 All Users - Visible to everyone")
     print("   🚀 Startup Only - Only startup/founder users")
     print("   🏢 Corporate Only - Only corporate users")
-    print("   🤝 Connector Only - Only connector/enabler users")
+    print("   🤝 Enabler Only - Only enabler users")
     
     print("\n✅ Test Credentials:")
     print("   Startup: test@startup.com / password123")
     print("   Corporate: test@corporate.com / password123")
-    print("   Connector: test@connector.com / password123")
+    print("   Enabler: test@enabler.com / password123")
     print("   Enabler: test@enabler.com / password123")
     
     print(f"\n🌐 Test at: http://localhost:5001")

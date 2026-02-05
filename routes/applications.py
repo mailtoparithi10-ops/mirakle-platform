@@ -49,19 +49,38 @@ def create_application():
 
     db.session.add(app_entry)
     
-    # Notify Opportunity Owner
+    # Notify Opportunity Owner and Administrators
     try:
-        from models import Notification
+        from models import Notification, User
         opp = Opportunity.query.get(opportunity_id)
+        
+        # 1. Notify the Opportunity Owner (e.g., Corporate User)
         if opp and opp.owner_id:
             notif = Notification(
                 user_id=opp.owner_id,
                 title="New Application Received",
                 message=f"Startup {startup.name} has applied to your program: {opp.title}",
                 type="success",
-                link=f"/corporate/dashboard?section=applications&opp_id={opp.id}"
+                link=f"/corporate#applications"
             )
             db.session.add(notif)
+        
+        # 2. Notify all Administrators
+        admins = User.query.filter_by(role="admin").all()
+        for admin in admins:
+            # Skip if admin is also the owner to avoid double notification
+            if opp and admin.id == opp.owner_id:
+                continue
+                
+            admin_notif = Notification(
+                user_id=admin.id,
+                title="Program Application Alert",
+                message=f"New application from {startup.name} for {opp.title if opp else 'Program ID ' + str(opportunity_id)}",
+                type="info",
+                link=f"/admin#programs"
+            )
+            db.session.add(admin_notif)
+            
     except Exception as e:
         print(f"Notification error: {e}")
 
@@ -71,18 +90,15 @@ def create_application():
 
 
 # ---------------------------------------
-# UPDATE APPLICATION STATUS (Corporate / Admin)
+# UPDATE APPLICATION STATUS (Admin Only)
 # ---------------------------------------
 @bp.route("/<int:id>/status", methods=["PUT"])
 @login_required
 def update_status(id):
+    if current_user.role != "admin":
+        return jsonify({"error": "forbidden", "message": "Only administrators can update application status"}), 403
+
     app_entry = Application.query.get_or_404(id)
-    opp = Opportunity.query.get_or_404(app_entry.opportunity_id)
-
-    # Only opportunity owner or admin may update
-    if current_user.id != opp.owner_id and current_user.role != "admin":
-        return jsonify({"error": "forbidden"}), 403
-
     data = request.json or request.form or {}
 
     new_status = data.get("status")
@@ -110,17 +126,15 @@ def update_status(id):
 
 
 # ---------------------------------------
-# GET ALL APPLICATIONS OF AN OPPORTUNITY (Corporate only)
+# GET ALL APPLICATIONS OF AN OPPORTUNITY (Admin Only)
 # ---------------------------------------
 @bp.route("/opportunity/<int:opportunity_id>", methods=["GET"])
 @login_required
 def list_for_opportunity(opportunity_id):
+    if current_user.role != "admin":
+        return jsonify({"error": "forbidden", "message": "Only administrators can view opportunity applications"}), 403
+
     opp = Opportunity.query.get_or_404(opportunity_id)
-
-    # Only corporate owner or admin
-    if current_user.id != opp.owner_id and current_user.role != "admin":
-        return jsonify({"error": "forbidden"}), 403
-
     items = Application.query.filter_by(opportunity_id=opportunity_id).all()
     return jsonify([i.to_dict() for i in items])
 
@@ -153,7 +167,7 @@ def my_applications():
 
 
 # ---------------------------------------
-# CORPORATE VIEW: SEE ALL APPLICATIONS SENT TO YOUR PROGRAMS
+# CORPORATE VIEW: SEE ALL APPLICATIONS SENT TO YOUR PROGRAMS (Read Only)
 # ---------------------------------------
 @bp.route("/corporate/all", methods=["GET"])
 @login_required
@@ -161,6 +175,7 @@ def list_for_corporate():
     if current_user.role != "corporate" and current_user.role != "admin":
         return jsonify({"error": "forbidden"}), 403
 
+    # Corporate users can only view applications, not manage them
     # Get all opportunities owned by this user
     opps = Opportunity.query.filter_by(owner_id=current_user.id).all()
     opp_ids = [o.id for o in opps]
@@ -177,6 +192,7 @@ def list_for_corporate():
         opp = Opportunity.query.get(i.opportunity_id)
         d["startup_name"] = startup.name if startup else "Unknown"
         d["opportunity_title"] = opp.title if opp else "Unknown"
+        d["read_only"] = True  # Indicate this is read-only for corporate users
         results.append(d)
 
     return jsonify(results)

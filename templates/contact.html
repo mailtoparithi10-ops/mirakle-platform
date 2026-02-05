@@ -508,8 +508,8 @@
                 <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
                 <div class="info-content">
                     <h3>Our Headquarters</h3>
-                    <p>InnoBridge Tower, 45 Future Ave<br>Tech District, Singapore 018935</p>
-                    <div class="world-clock" id="clock-singapore">Local Time: Loading...</div>
+                    <p>Rathinam Techzone, Eachanari,<br>Madukkarai, Tamil Nadu - 641021</p>
+                    <div class="world-clock" id="clock-india">Local Time: Loading...</div>
                 </div>
             </div>
 
@@ -517,7 +517,7 @@
                 <div class="info-icon"><i class="fas fa-phone-alt"></i></div>
                 <div class="info-content">
                     <h3>Phone Number</h3>
-                    <a href="tel:+6567890123">+65 6789 0123</a>
+                    <a href="tel:+919842486037">+91 98424 86037</a>
                 </div>
             </div>
 
@@ -525,7 +525,7 @@
                 <div class="info-icon"><i class="fas fa-envelope"></i></div>
                 <div class="info-content">
                     <h3>Email Address</h3>
-                    <a href="mailto:contact@innobridge.com">contact@innobridge.com</a>
+                    <a href="mailto:engagement@startupculture.co.in">engagement@startupculture.co.in</a>
                 </div>
             </div>
 
@@ -622,14 +622,14 @@
             <div class="office-card">
                 <div class="office-image">
                     <img src="https://placehold.co/800x600/f8f9fa/fcb82e?text=Singapore+HQ" alt="Singapore Office">
-                    <div class="office-time-overlay" id="time-sg">00:00</div>
+                    <div class="office-time-overlay" id="time-india">00:00</div>
                 </div>
                 <div class="office-details">
-                    <div class="office-city">Singapore (HQ)</div>
-                    <p>InnoBridge Tower, 45 Future Ave, 018935</p>
+                    <div class="office-city">Tamil Nadu (HQ)</div>
+                    <p>Rathinam Techzone, Eachanari, Tamil Nadu - 641021</p>
                     <div
                         style="margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid #f3f4f6; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size:0.8rem; font-weight:700; color:#d97706; text-transform: uppercase;">APAC
+                        <span style="font-size:0.8rem; font-weight:700; color:#d97706; text-transform: uppercase;">India
                             Region</span>
                         <a href="#" class="office-link">Map <i class="fas fa-arrow-right"
                                 style="font-size: 0.7rem;"></i></a>
@@ -776,20 +776,38 @@
         }
 
         function updateClocks() {
-            const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+            const timeOptions = {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            };
+            const dateOptions = {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            };
+
             const clocks = [
-                { id: 'time-sg', tz: 'Asia/Singapore', clockId: 'clock-singapore' },
+                { id: 'time-india', tz: 'Asia/Kolkata', clockId: 'clock-india' },
                 { id: 'time-sf', tz: 'America/Los_Angeles' },
                 { id: 'time-ldn', tz: 'Europe/London' }
             ];
 
             clocks.forEach(c => {
-                const timeStr = new Intl.DateTimeFormat('en-US', { ...timeOptions, timeZone: c.tz }).format(new Date());
+                const now = new Date();
+                const timeStr = new Intl.DateTimeFormat('en-IN', { ...timeOptions, timeZone: c.tz }).format(now);
+                const dateStr = new Intl.DateTimeFormat('en-IN', { ...dateOptions, timeZone: c.tz }).format(now);
+
                 const el = document.getElementById(c.id);
                 if (el) el.innerHTML = timeStr;
+
                 if (c.clockId) {
                     const clockEl = document.getElementById(c.clockId);
-                    if (clockEl) clockEl.innerHTML = `Local Time: ${timeStr}`;
+                    if (clockEl) {
+                        clockEl.innerHTML = `IST: ${timeStr} | ${dateStr}`;
+                        clockEl.style.fontSize = '0.75rem'; // Slightly smaller to fit date
+                    }
                 }
             });
         }

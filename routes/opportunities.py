@@ -10,13 +10,13 @@ bp = Blueprint("opportunities", __name__, url_prefix="/api/opportunities")
 
 
 # ---------------------------------------
-# CREATE OPPORTUNITY (Corporate / Admin)
+# CREATE OPPORTUNITY (Admin Only)
 # ---------------------------------------
 @bp.route("/", methods=["POST"])
 @login_required
 def create_opportunity():
-    if current_user.role not in ("corporate", "admin"):
-        return jsonify({"error": "forbidden"}), 403
+    if current_user.role != "admin":
+        return jsonify({"error": "forbidden", "message": "Only administrators can create opportunities"}), 403
 
     data = request.json or request.form or {}
 
@@ -42,15 +42,15 @@ def create_opportunity():
 
 
 # ---------------------------------------
-# UPDATE OPPORTUNITY (Owner / Admin)
+# UPDATE OPPORTUNITY (Admin Only)
 # ---------------------------------------
 @bp.route("/<int:id>", methods=["PUT"])
 @login_required
 def update_opportunity(id):
     opp = Opportunity.query.get_or_404(id)
 
-    if opp.owner_id != current_user.id and current_user.role != "admin":
-        return jsonify({"error": "forbidden"}), 403
+    if current_user.role != "admin":
+        return jsonify({"error": "forbidden", "message": "Only administrators can update opportunities"}), 403
 
     data = request.json or request.form or {}
 

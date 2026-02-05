@@ -14,7 +14,7 @@ def verify_users():
         users = [
             ("startup@test.com", "test123", "startup"),
             ("corporate@test.com", "test123", "corporate"),
-            ("connector@test.com", "test123", "connector"),
+            ("enabler@test.com", "test123", "enabler"),
             ("admin@mirakle.local", "admin123", "admin")
         ]
         

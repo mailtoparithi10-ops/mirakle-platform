@@ -268,17 +268,18 @@
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
         }
 
-        .value-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, rgba(252, 184, 46, 0.2), rgba(252, 184, 46, 0.1));
-            border-radius: 14px;
+        .value-header {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .value-icon {
             color: #d97706;
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
         }
 
         /* CTA Section */
@@ -413,9 +414,9 @@
         </div>
         <div class="story-visual">
             <!-- Professional Business Image -->
-            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
-                 alt="Professional business team collaborating on innovation projects" 
-                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;">
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                alt="Professional business team collaborating on innovation projects"
+                style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;">
         </div>
     </section>
 
@@ -451,20 +452,26 @@
 
         <div class="values-grid">
             <div class="value-card">
-                <div class="value-icon"><i class="fas fa-globe"></i></div>
-                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Global First</h3>
+                <div class="value-header">
+                    <div class="value-icon"><i class="fas fa-globe"></i></div>
+                    <h3 style="font-size: 1.5rem; font-weight: 700; margin: 0;">Global First</h3>
+                </div>
                 <p style="color: #666; line-height: 1.6;">Innovation isn't confined to Silicon Valley. We build for the
                     founders in Nairobi, Bangalore, and São Paulo just as much as for those in SF.</p>
             </div>
             <div class="value-card">
-                <div class="value-icon"><i class="fas fa-shield-alt"></i></div>
-                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Radical Integrity</h3>
+                <div class="value-header">
+                    <div class="value-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3 style="font-size: 1.5rem; font-weight: 700; margin: 0;">Radical Integrity</h3>
+                </div>
                 <p style="color: #666; line-height: 1.6;">Trust is the currency of networking. We verify every data
                     point and ensure transparency in every interaction on our platform.</p>
             </div>
             <div class="value-card">
-                <div class="value-icon"><i class="fas fa-rocket"></i></div>
-                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Founder Obsessed</h3>
+                <div class="value-header">
+                    <div class="value-icon"><i class="fas fa-rocket"></i></div>
+                    <h3 style="font-size: 1.5rem; font-weight: 700; margin: 0;">Founder Obsessed</h3>
+                </div>
                 <p style="color: #666; line-height: 1.6;">We exist to make the hard journey of entrepreneurship slightly
                     easier. If a feature doesn't help founders, we don't build it.</p>
             </div>

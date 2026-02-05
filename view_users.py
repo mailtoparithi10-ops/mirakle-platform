@@ -41,7 +41,7 @@ if not users:
     print("No users found in the database.")
     print("\nYou can create test users by:")
     print("1. Going to http://localhost:5000/signup.html")
-    print("2. Registering with different roles (startup, corporate, connector)")
+    print("2. Registering with different roles (startup, corporate, enabler)")
 else:
     print(f"Total users: {len(users)}\n")
     

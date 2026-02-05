@@ -9,13 +9,13 @@ import uuid
 bp = Blueprint("referrals", __name__, url_prefix="/api/referrals")
 
 # ---------------------------------------
-# CONNECTOR: Create a Referral
+# ENABLER: Create a Referral
 # ---------------------------------------
 @bp.route("/", methods=["POST"])
 @login_required
 def create_referral():
-    if current_user.role != "connector":
-        return jsonify({"error": "Only connectors can create referrals"}), 403
+    if current_user.role != "enabler":
+        return jsonify({"error": "Only enablers can create referrals"}), 403
 
     data = request.json or {}
     startup_name = data.get("startup_name")
@@ -38,7 +38,7 @@ def create_referral():
         startup_id = user.startups[0].id
 
     referral = Referral(
-        connector_id=current_user.id,
+        enabler_id=current_user.id,
         startup_id=startup_id,
         opportunity_id=opportunity_id,
         startup_name=startup_name,
@@ -57,13 +57,13 @@ def create_referral():
     }), 201
 
 # ---------------------------------------
-# CONNECTOR: Generate a Shareable Link with QR Code
+# ENABLER: Generate a Shareable Link with QR Code
 # ---------------------------------------
 @bp.route("/generate-link", methods=["POST"])
 @login_required
 def generate_link():
-    if current_user.role not in ("connector", "enabler"):
-        return jsonify({"error": "Only connectors can generate referral links"}), 403
+    if current_user.role not in ("enabler"):
+        return jsonify({"error": "Only enablers can generate referral links"}), 403
 
     data = request.json or {}
     opportunity_id = data.get("opportunity_id")
@@ -78,7 +78,7 @@ def generate_link():
     # Create a "link-based" referral placeholder
     token = str(uuid.uuid4())
     referral = Referral(
-        connector_id=current_user.id,
+        enabler_id=current_user.id,
         opportunity_id=opportunity_id,
         token=token,
         is_link_referral=True,
@@ -160,14 +160,14 @@ def list_incoming_referrals():
     # Find all referrals where startup_email matches current_user.email
     referrals = Referral.query.filter_by(startup_email=current_user.email).all()
     
-    # Enrich with opportunity and connector details
+    # Enrich with opportunity and enabler details
     results = []
     for r in referrals:
         d = r.to_dict()
         opp = Opportunity.query.get(r.opportunity_id)
-        conn = User.query.get(r.connector_id)
+        enabler = User.query.get(r.enabler_id)
         d['opportunity_title'] = opp.title if opp else "Unknown Program"
-        d['connector_name'] = conn.name if conn else "Unknown Connector"
+        d['enabler_name'] = enabler.name if enabler else "Unknown Enabler"
         results.append(d)
 
     return jsonify({"success": True, "referrals": results})
@@ -208,15 +208,15 @@ def referral_action(id):
     return jsonify({"success": True, "message": f"Referral {action}ed."})
 
 # ---------------------------------------
-# CONNECTOR: List My Referrals
+# ENABLER: List My Referrals
 # ---------------------------------------
 @bp.route("/my", methods=["GET"])
 @login_required
 def list_my_referrals():
-    if current_user.role != "connector":
+    if current_user.role != "enabler":
         return jsonify({"error": "Forbidden"}), 403
 
-    referrals = Referral.query.filter_by(connector_id=current_user.id).all()
+    referrals = Referral.query.filter_by(enabler_id=current_user.id).all()
     results = []
     for r in referrals:
         d = r.to_dict()
@@ -252,16 +252,16 @@ def admin_list_referrals():
     for r in referrals:
         d = r.to_dict()
         opp = Opportunity.query.get(r.opportunity_id)
-        conn = User.query.get(r.connector_id)
+        enabler = User.query.get(r.enabler_id)
         d['opportunity_title'] = opp.title if opp else "Unknown Program"
-        d['connector_name'] = conn.name if conn else "Unknown Connector"
+        d['enabler_name'] = enabler.name if enabler else "Unknown Enabler"
         results.append(d)
 
     return jsonify({"success": True, "referrals": results})
 
 
 # ---------------------------------------
-# CONNECTOR: Get Referral Link Statistics
+# ENABLER: Get Referral Link Statistics
 # ---------------------------------------
 @bp.route("/link-stats/<int:referral_id>", methods=["GET"])
 @login_required

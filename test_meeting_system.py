@@ -96,7 +96,7 @@ def test_meeting_system():
         "• all_users - All registered users can join",
         "• startup_only - Only startup/founder users",
         "• corporate_only - Only corporate users", 
-        "• connector_only - Only connector/enabler users",
+        "• enabler_only - Only enabler users",
         "• specific_users - Manually selected users"
     ]
     

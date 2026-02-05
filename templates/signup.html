@@ -61,13 +61,13 @@
 
         .shape {
             position: absolute;
-            opacity: 0.12;
+            opacity: 0.3;
         }
 
         .shape-1 {
             width: 300px;
             height: 300px;
-            background: linear-gradient(135deg, rgba(252, 184, 46, 0.15), rgba(245, 158, 11, 0.1));
+            background: linear-gradient(135deg, rgba(209, 213, 219, 0.35), rgba(209, 213, 219, 0.25));
             border-radius: 50%;
             top: -100px;
             right: -100px;
@@ -77,7 +77,7 @@
         .shape-2 {
             width: 200px;
             height: 200px;
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(252, 184, 46, 0.08));
+            background: linear-gradient(135deg, rgba(209, 213, 219, 0.3), rgba(209, 213, 219, 0.2));
             border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
             bottom: 10%;
             left: 10%;
@@ -87,7 +87,7 @@
         .shape-3 {
             width: 150px;
             height: 150px;
-            background: linear-gradient(135deg, rgba(252, 184, 46, 0.1), rgba(245, 158, 11, 0.15));
+            background: linear-gradient(135deg, rgba(209, 213, 219, 0.25), rgba(209, 213, 219, 0.35));
             border-radius: 50%;
             top: 50%;
             left: -50px;
@@ -410,6 +410,103 @@
             text-decoration: underline;
         }
 
+        /* Google OAuth Styles */
+        .google-signup-section {
+            margin-bottom: 2rem;
+        }
+
+        .google-btn {
+            width: 100%;
+            padding: 14px 16px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .google-btn:hover {
+            border-color: #fcb82e;
+            box-shadow: 0 4px 12px rgba(252, 184, 46, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .google-btn:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            position: relative;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .divider span {
+            background: #fcb82e;
+            padding: 0 1rem;
+            color: #4a5568;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Google signup completion form */
+        .google-completion-form {
+            display: none;
+        }
+
+        .google-completion-form.active {
+            display: block;
+        }
+
+        .google-user-info {
+            background: rgba(252, 184, 46, 0.1);
+            border: 1px solid rgba(252, 184, 46, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .google-user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .google-user-details h4 {
+            margin: 0 0 0.25rem 0;
+            color: #1a202c;
+            font-weight: 600;
+        }
+
+        .google-user-details p {
+            margin: 0;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
         /* Responsive Design */
         @media (max-width: 1024px) {
             .auth-wrapper {
@@ -557,6 +654,27 @@
                 <div id="errorMsg" class="message error"></div>
                 <div id="successMsg" class="message success"></div>
 
+                <!-- Google Sign Up Button -->
+                <div class="google-signup-section" id="googleSignupSection" style="display: none;">
+                    <button type="button" class="google-btn" onclick="signUpWithGoogle()">
+                        <svg width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="#4285F4"
+                                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                            <path fill="#34A853"
+                                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                            <path fill="#FBBC05"
+                                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                            <path fill="#EA4335"
+                                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                        </svg>
+                        Continue with Google
+                    </button>
+
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+                </div>
+
                 <form id="signupForm">
                     <!-- Role Selection -->
                     <div class="role-selector">
@@ -570,10 +688,10 @@
                             <div class="role-icon">🏢</div>
                             <div class="role-label">Corporate</div>
                         </label>
-                        <label class="role-option" onclick="selectRole('connector')">
-                            <input type="radio" name="role" value="connector" required>
+                        <label class="role-option" onclick="selectRole('enabler')">
+                            <input type="radio" name="role" value="enabler" required>
                             <div class="role-icon">🤝</div>
-                            <div class="role-label">Connector</div>
+                            <div class="role-label">Enabler</div>
                         </label>
                     </div>
 
@@ -604,7 +722,7 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">Company Size</label>
-                                <select name="companySize" class="form-select">
+                                <select name="companySize" id="companySize" class="form-select">
                                     <option value="">Select size</option>
                                     <option value="1-10">1-10 employees</option>
                                     <option value="11-50">11-50 employees</option>
@@ -615,7 +733,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Industry / Sector</label>
-                                <select name="industry" class="form-select">
+                                <select name="industry" id="industry" class="form-select">
                                     <option value="">Select industry</option>
                                     <option value="FinTech">FinTech</option>
                                     <option value="HealthTech">HealthTech</option>
@@ -634,7 +752,7 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">Startup Stage</label>
-                                <select name="stage" class="form-select">
+                                <select name="stage" id="stage" class="form-select">
                                     <option value="">Select stage</option>
                                     <option value="Idea">Idea Stage</option>
                                     <option value="MVP">MVP / Prototype</option>
@@ -696,6 +814,7 @@
 
     <script>
         let selectedRole = null;
+        let isGoogleSignup = false;
 
         function selectRole(role) {
             selectedRole = role;
@@ -706,18 +825,56 @@
 
             // Show/hide startup-specific fields
             const startupFields = document.getElementById('startupFields');
+            const startupSelects = startupFields.querySelectorAll('select');
+
             if (role === 'startup') {
                 startupFields.style.display = 'block';
+                startupSelects.forEach(select => select.required = true);
             } else {
                 startupFields.style.display = 'none';
+                startupSelects.forEach(select => {
+                    select.required = false;
+                    select.value = '';
+                });
             }
         }
 
-        // Check for URL parameters (referral link)
+        function signUpWithGoogle() {
+            if (!selectedRole) {
+                const errorMsg = document.getElementById('errorMsg');
+                errorMsg.textContent = '✗ Please select a role first';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            // Redirect to Google OAuth with selected role
+            const referralToken = new URLSearchParams(window.location.search).get('ref');
+            let googleAuthUrl = `/auth/google/login?role=${selectedRole}`;
+
+            if (referralToken) {
+                googleAuthUrl += `&ref=${referralToken}`;
+            }
+
+            window.location.href = googleAuthUrl;
+        }
+
+        // Check for URL parameters (referral link or Google signup)
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const refToken = urlParams.get('ref');
             const roleParam = urlParams.get('role');
+            const isGoogle = urlParams.get('google');
+            const error = urlParams.get('error');
+
+            // Check if Google OAuth is configured by making a test request
+            checkGoogleOAuthConfig();
+
+            // Handle errors
+            if (error === 'oauth_failed') {
+                const errorMsg = document.getElementById('errorMsg');
+                errorMsg.textContent = '✗ Google sign-up failed. Please try again or use email signup.';
+                errorMsg.style.display = 'block';
+            }
 
             // If coming from referral link, pre-select startup role
             if (refToken && roleParam === 'startup') {
@@ -729,7 +886,82 @@
                 successMsg.textContent = '🎉 You\'ve been invited to join an opportunity! Complete signup to access it.';
                 successMsg.style.display = 'block';
             }
+
+            // If coming from Google OAuth, show completion form
+            if (isGoogle === '1') {
+                isGoogleSignup = true;
+                setupGoogleCompletionForm();
+            }
         });
+
+        async function checkGoogleOAuthConfig() {
+            try {
+                const response = await fetch('/auth/google/config-check');
+                const data = await response.json();
+
+                if (data.configured) {
+                    document.getElementById('googleSignupSection').style.display = 'block';
+                }
+            } catch (error) {
+                console.log('Google OAuth not available');
+            }
+        }
+
+        async function setupGoogleCompletionForm() {
+            try {
+                const res = await fetch('/auth/google/signup-data');
+                const json = await res.json();
+
+                if (json.success) {
+                    const userData = json.data;
+
+                    // Pre-fill form fields
+                    if (userData.name) {
+                        const names = userData.name.split(' ');
+                        const firstName = names[0];
+                        const lastName = names.slice(1).join(' ');
+                        document.querySelector('input[name="firstName"]').value = firstName;
+                        document.querySelector('input[name="lastName"]').value = lastName;
+                    }
+
+                    if (userData.email) {
+                        const emailInput = document.querySelector('input[name="email"]');
+                        emailInput.value = userData.email;
+                        emailInput.readOnly = true;
+                        emailInput.style.backgroundColor = '#f3f4f6';
+                    }
+
+                    if (userData.role) {
+                        const roleOpt = document.querySelector(`.role-option input[value="${userData.role}"]`);
+                        if (roleOpt) roleOpt.parentElement.click();
+                    }
+
+                    // Hide password fields (not needed for Google accounts)
+                    const passwordRow = document.getElementById('password').closest('.form-row');
+                    if (passwordRow) passwordRow.style.display = 'none';
+                    document.getElementById('password').required = false;
+                    document.getElementById('confirmPassword').required = false;
+
+                    // Show a welcoming message
+                    const successMsg = document.getElementById('successMsg');
+                    successMsg.textContent = `👋 Welcome, ${userData.name}! Please complete the remaining details.`;
+                    successMsg.style.display = 'block';
+
+                    // Add a Google ID hidden field
+                    const roleSelector = document.querySelector('.role-selector');
+                    const hiddenGoogle = document.createElement('input');
+                    hiddenGoogle.type = 'hidden';
+                    hiddenGoogle.name = 'google_id';
+                    hiddenGoogle.value = userData.google_id;
+                    roleSelector.appendChild(hiddenGoogle);
+
+                    // Crucial: mark this as a Google signup completion
+                    isGoogleSignup = true;
+                }
+            } catch (err) {
+                console.error('Error fetching Google data:', err);
+            }
+        }
 
         function togglePassword(inputId, iconId) {
             const passwordInput = document.getElementById(inputId);
@@ -758,13 +990,20 @@
             errorMsg.style.display = 'none';
             successMsg.style.display = 'none';
 
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
+            // Check if this is Google signup completion
+            const endpoint = isGoogleSignup ? '/auth/google/signup/complete' : '/auth/register';
+            console.log('Submitting signup form to:', endpoint, 'isGoogleSignup:', isGoogleSignup);
 
-            if (password !== confirmPassword) {
-                errorMsg.textContent = '✗ Passwords do not match';
-                errorMsg.style.display = 'block';
-                return;
+            if (!isGoogleSignup) {
+                // Regular signup validation
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                if (password !== confirmPassword) {
+                    errorMsg.textContent = '✗ Passwords do not match';
+                    errorMsg.style.display = 'block';
+                    return;
+                }
             }
 
             if (!selectedRole) {
@@ -781,43 +1020,37 @@
             // Combine firstName and lastName into 'name' for backend
             const firstName = formData.get('firstName');
             const lastName = formData.get('lastName');
-            formData.append('name', `${firstName} ${lastName}`.trim());
+            if (firstName && lastName) {
+                formData.append('name', `${firstName} ${lastName}`.trim());
+            }
 
             try {
-                const response = await fetch('/auth/register', {
+                const response = await fetch(endpoint, {
                     method: 'POST',
                     body: formData
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.success) {
-                        successMsg.textContent = '✓ Account created! Redirecting...';
-                        successMsg.style.display = 'block';
-                        setTimeout(() => {
-                            // Determine redirect URL based on role
-                            let redirectUrl = '/';
-                            if (data.role === 'startup' || data.role === 'founder') redirectUrl = '/startup';
-                            else if (data.role === 'corporate') redirectUrl = '/corporate';
-                            else if (data.role === 'connector' || data.role === 'enabler') redirectUrl = '/connector';
+                let data;
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    data = await response.json();
+                }
 
-                            // Add welcome parameter for the dashboard to show the thank you message
-                            redirectUrl += '?welcome=true';
-
-                            window.location.href = redirectUrl;
-                        }, 1500);
-                    } else {
-                        errorMsg.textContent = '✗ ' + (data.error || 'Registration failed');
-                        errorMsg.style.display = 'block';
-                    }
+                if (response.ok && data && data.success) {
+                    successMsg.textContent = '✓ Account created! Redirecting...';
+                    successMsg.style.display = 'block';
+                    setTimeout(() => {
+                        const redirectUrl = data.redirect_url || '/';
+                        window.location.href = redirectUrl;
+                    }, 1500);
                 } else {
-                    const data = await response.json();
-                    errorMsg.textContent = '✗ ' + (data.error || 'Registration failed');
+                    const message = (data && data.error) ? data.error : 'Registration failed (Server error)';
+                    errorMsg.textContent = '✗ ' + message;
                     errorMsg.style.display = 'block';
                 }
             } catch (error) {
                 console.error('Signup error:', error);
-                errorMsg.textContent = '✗ An error occurred. Please try again.';
+                errorMsg.textContent = '✗ A connection error occurred. Please try again.';
                 errorMsg.style.display = 'block';
             } finally {
                 submitBtn.disabled = false;

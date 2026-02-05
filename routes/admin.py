@@ -1,8 +1,12 @@
 # routes/admin.py
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
 from flask_login import login_required, current_user
 from extensions import db
 from models import User, Startup, Opportunity, Application, Referral
+import json
+from datetime import datetime
+import os
+from werkzeug.utils import secure_filename
 
 bp = Blueprint("admin", __name__, url_prefix="/api/admin")
 
@@ -153,6 +157,147 @@ def get_opportunities():
 
     opps = Opportunity.query.all()
     return jsonify({"success": True, "opportunities": [o.to_dict() for o in opps]})
+
+
+# ---------------------------------------
+# CREATE OPPORTUNITY (Admin Only)
+# ---------------------------------------
+@bp.route("/opportunities", methods=["POST"])
+@login_required
+def create_opportunity():
+    if require_admin():
+        return require_admin()
+
+    data = request.json or request.form or {}
+
+    opp = Opportunity(
+        owner_id=current_user.id,
+        title=data.get("title"),
+        type=data.get("type"),
+        description=data.get("description"),
+        eligibility=data.get("eligibility"),
+        sectors=json.dumps(data.get("sectors", [])),
+        target_stages=json.dumps(data.get("target_stages", [])),
+        countries=json.dumps(data.get("countries", [])),
+        deadline=datetime.fromisoformat(data["deadline"]) if data.get("deadline") else None,
+        benefits=data.get("benefits"),
+        banner_url=data.get("banner_url"),
+        status=data.get("status", "draft"),
+    )
+
+    db.session.add(opp)
+    db.session.commit()
+
+    return jsonify({"success": True, "opportunity": opp.to_dict()}), 201
+
+
+# ---------------------------------------
+# UPDATE OPPORTUNITY (Admin Only)
+# ---------------------------------------
+@bp.route("/opportunities/<int:id>", methods=["PUT"])
+@login_required
+def update_opportunity(id):
+    if require_admin():
+        return require_admin()
+
+    opp = Opportunity.query.get_or_404(id)
+    data = request.json or request.form or {}
+
+    # Update simple fields
+    for key in ["title", "type", "description", "eligibility", "benefits", "status", "banner_url"]:
+        if key in data:
+            setattr(opp, key, data[key])
+
+    # Update JSON fields
+    if "sectors" in data:
+        opp.sectors = json.dumps(data["sectors"])
+    if "target_stages" in data:
+        opp.target_stages = json.dumps(data["target_stages"])
+    if "countries" in data:
+        opp.countries = json.dumps(data["countries"])
+
+    # Update deadline
+    if data.get("deadline"):
+        opp.deadline = datetime.fromisoformat(data["deadline"])
+
+    db.session.commit()
+
+    return jsonify({"success": True, "opportunity": opp.to_dict()})
+
+
+# ---------------------------------------
+# DELETE OPPORTUNITY (Admin Only)
+# ---------------------------------------
+@bp.route("/opportunities/<int:id>", methods=["DELETE"])
+@login_required
+def delete_opportunity(id):
+    if require_admin():
+        return require_admin()
+
+    opp = Opportunity.query.get_or_404(id)
+    db.session.delete(opp)
+    db.session.commit()
+
+    return jsonify({"success": True, "message": "Opportunity deleted successfully"})
+
+
+# ---------------------------------------
+# GET ALL APPLICATIONS (Admin Only)
+# ---------------------------------------
+@bp.route("/applications", methods=["GET"])
+@login_required
+def get_all_applications():
+    if require_admin():
+        return require_admin()
+
+    applications = Application.query.order_by(Application.created_at.desc()).all()
+    results = []
+    
+    for app in applications:
+        d = app.to_dict()
+        startup = Startup.query.get(app.startup_id)
+        opp = Opportunity.query.get(app.opportunity_id)
+        d["startup_name"] = startup.name if startup else "Unknown"
+        d["opportunity_title"] = opp.title if opp else "Unknown"
+        results.append(d)
+
+    return jsonify({"success": True, "applications": results})
+
+
+# ---------------------------------------
+# UPDATE APPLICATION STATUS (Admin Only)
+# ---------------------------------------
+@bp.route("/applications/<int:id>/status", methods=["PUT"])
+@login_required
+def update_application_status(id):
+    if require_admin():
+        return require_admin()
+
+    app_entry = Application.query.get_or_404(id)
+    data = request.json or request.form or {}
+
+    new_status = data.get("status")
+    note = data.get("note", "")
+
+    if not new_status:
+        return jsonify({"error": "status required"}), 400
+
+    # Update status
+    app_entry.status = new_status
+
+    # Append to timeline
+    timeline = json.loads(app_entry.timeline or "[]")
+    timeline.append({
+        "status": new_status,
+        "note": note,
+        "at": datetime.utcnow().isoformat(),
+        "by": current_user.id
+    })
+    app_entry.timeline = json.dumps(timeline)
+
+    db.session.commit()
+
+    return jsonify({"success": True, "application": app_entry.to_dict()})
 
 
 # ---------------------------------------
@@ -472,3 +617,58 @@ def update_user(id):
     
     db.session.commit()
     return jsonify({"message": "user updated", "user": user.to_dict()})
+
+
+# ---------------------------------------
+# UPLOAD POSTER (Admin Only)
+# ---------------------------------------
+@bp.route("/upload-poster", methods=["POST"])
+@login_required
+def upload_poster():
+    if require_admin():
+        return require_admin()
+
+    if 'poster' not in request.files:
+        return jsonify({"error": "No file provided"}), 400
+
+    file = request.files['poster']
+    if file.filename == '':
+        return jsonify({"error": "No file selected"}), 400
+
+    # Check file type
+    allowed_extensions = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+    if not ('.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in allowed_extensions):
+        return jsonify({"error": "Invalid file type. Please upload PNG, JPG, JPEG, GIF, or WEBP files."}), 400
+
+    # Check file size (max 5MB)
+    if len(file.read()) > 5 * 1024 * 1024:
+        return jsonify({"error": "File too large. Maximum size is 5MB."}), 400
+    
+    # Reset file pointer
+    file.seek(0)
+
+    try:
+        # Create uploads directory if it doesn't exist
+        upload_dir = os.path.join(current_app.root_path, 'static', 'uploads', 'posters')
+        os.makedirs(upload_dir, exist_ok=True)
+
+        # Generate secure filename
+        filename = secure_filename(file.filename)
+        # Add timestamp to avoid conflicts
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_')
+        filename = timestamp + filename
+        
+        filepath = os.path.join(upload_dir, filename)
+        file.save(filepath)
+
+        # Return the URL path
+        poster_url = f"/static/uploads/posters/{filename}"
+        
+        return jsonify({
+            "success": True,
+            "poster_url": poster_url,
+            "filename": filename
+        })
+
+    except Exception as e:
+        return jsonify({"error": f"Upload failed: {str(e)}"}), 500
