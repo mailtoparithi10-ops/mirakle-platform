@@ -35,7 +35,7 @@ All necessary files are in place:
   ```
 - **Start Command:**
   ```bash
-  gunicorn --worker-class geventwebsocket.gunicorn.workers.GeventWebSocketWorker -w 1 --bind 0.0.0.0:$PORT wsgi:app
+  gunicorn --worker-class gevent -w 1 --bind 0.0.0.0:$PORT wsgi:app
   ```
 
 ### Step 3: Environment Variables
