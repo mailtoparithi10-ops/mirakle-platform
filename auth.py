@@ -9,7 +9,7 @@ from google_auth_oauthlib.flow import Flow
 import os
 
 # Allow HTTP for development (required for local Google Login)
-if os.environ.get('FLASK_ENV') == 'development' or os.environ.get('OAUTHLIB_INSECURE_TRANSPORT') != '1':
+if os.environ.get('FLASK_ENV') == 'development':
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 # Allow scope changes from Google (prevents 'Scope has changed' errors)
