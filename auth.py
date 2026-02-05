@@ -323,12 +323,18 @@ def google_login():
         scopes=['openid', 'email', 'profile']
     )
     
-    # In development, ensure we use localhost:5001 regardless of how the app was accessed (0.0.0.0/127.0.0.1)
+    # Determine redirect URI
     if os.environ.get('FLASK_ENV') == 'development':
         redirect_uri = f"http://localhost:5001{url_for('auth.google_callback')}"
     else:
-        redirect_uri = url_for('auth.google_callback', _external=True)
-        
+        # On Render, url_for(..., _external=True) might return http due to proxy
+        # Force https or use RENDER_EXTERNAL_URL
+        render_url = os.environ.get('RENDER_EXTERNAL_URL')
+        if render_url:
+            redirect_uri = f"{render_url.rstrip('/')}{url_for('auth.google_callback')}"
+        else:
+            redirect_uri = url_for('auth.google_callback', _external=True, _scheme='https')
+            
     flow.redirect_uri = redirect_uri
     
     # Store role and referral info in session for after OAuth
@@ -367,7 +373,12 @@ def google_callback():
         if os.environ.get('FLASK_ENV') == 'development':
             redirect_uri = f"http://localhost:5001{url_for('auth.google_callback')}"
         else:
-            redirect_uri = url_for('auth.google_callback', _external=True)
+            # Force https on Render
+            render_url = os.environ.get('RENDER_EXTERNAL_URL')
+            if render_url:
+                redirect_uri = f"{render_url.rstrip('/')}{url_for('auth.google_callback')}"
+            else:
+                redirect_uri = url_for('auth.google_callback', _external=True, _scheme='https')
 
         # Create flow instance
         flow = Flow.from_client_config(

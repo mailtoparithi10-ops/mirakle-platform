@@ -4,6 +4,7 @@ from datetime import datetime
 from flask import Flask, render_template, redirect
 from config import Config
 from extensions import db, migrate, login_manager, socketio
+from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_login import login_required, current_user
 from auth import bp as auth_bp
 
@@ -26,6 +27,9 @@ from routes.enablers import bp as enablers_bp
 def create_app():
     app = Flask(__name__, static_folder="static", template_folder="templates")
     app.config.from_object(Config)
+
+    # Apply ProxyFix for Render/Production
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
     # Init extensions
     db.init_app(app)
