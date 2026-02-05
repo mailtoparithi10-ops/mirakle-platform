@@ -427,12 +427,9 @@ def google_callback():
         email = id_info.get('email')
         name = id_info.get('name')
         picture = id_info.get('picture')
-        
-        if not email:
-            return jsonify({"error": "Email not provided by Google"}), 400
-        
-        # Check if user already exists
-        user = User.query.filter_by(email=email).first()
+
+        # Check for existing user by Google ID or email
+        user = User.query.filter((User.google_id == google_id) | (User.email == email)).first()
         
         if user:
             # User exists, log them in
@@ -562,6 +559,10 @@ def google_signup_complete():
             google_id=google_id,
             is_active=True
         )
+        
+        # Safety net: Set a dummy password in case the database still requires it
+        import secrets
+        user.set_password(secrets.token_urlsafe(16))
         
         db.session.add(user)
         db.session.flush()
