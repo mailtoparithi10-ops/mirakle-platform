@@ -469,20 +469,33 @@
 
             </nav>
 
-            <div class="nav-actions">
+            <div class="nav-actions" id="navActions">
                 {% if current_user.is_authenticated %}
-                <span class="nav-btn secondary" style="cursor: default; pointer-events: none;">{{ current_user.name
-                    }}</span>
-                <a href="/auth/logout" class="nav-btn secondary">LOG OUT</a>
-                {% if current_user.role == 'admin' %}
-                <a href="/admin" class="nav-btn primary">DASHBOARD</a>
-                {% elif current_user.role == 'corporate' %}
-                <a href="/corporate" class="nav-btn primary">DASHBOARD</a>
-                {% elif current_user.role == 'connector' or current_user.role == 'enabler' %}
-                <a href="/connector" class="nav-btn primary">DASHBOARD</a>
-                {% else %}
-                <a href="/startup" class="nav-btn primary">DASHBOARD</a>
-                {% endif %}
+                <div class="user-dropdown">
+                    <button class="user-dropdown-btn" id="userMenuBtn">
+                        <div class="user-avatar">
+                            {% if current_user.profile_pic %}
+                            <img src="{{ current_user.profile_pic }}" alt="{{ current_user.name }}">
+                            {% else %}
+                            <span>{{ current_user.name[0] | upper }}</span>
+                            {% endif %}
+                        </div>
+                        <span class="user-name-text">{{ current_user.name }}</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="user-dropdown-content" id="userMenuContent">
+                        <div class="dropdown-header">
+                            <span class="dropdown-role">{{ current_user.role.title() }}</span>
+                        </div>
+                        <a href="{% if current_user.role == 'admin' %}/admin{% elif current_user.role == 'corporate' %}/corporate{% elif current_user.role == 'connector' %}/connector{% else %}/startup{% endif %}"
+                            class="dropdown-item">
+                            <i class="fas fa-th-large"></i> Dashboard
+                        </a>
+                        <a href="/auth/logout" class="dropdown-item logout">
+                            <i class="fas fa-sign-out-alt"></i> Log Out
+                        </a>
+                    </div>
+                </div>
                 {% else %}
                 <a href="/login" class="nav-btn secondary">LOG IN</a>
                 <a href="/signup" class="nav-btn primary">GET STARTED</a>

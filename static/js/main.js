@@ -69,6 +69,29 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
+
+    // 3. User Profile Dropdown Toggle
+    const userMenuBtn = document.getElementById("userMenuBtn");
+    const userMenuContent = document.getElementById("userMenuContent");
+
+    if (userMenuBtn && userMenuContent) {
+        userMenuBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            userMenuContent.classList.toggle("active");
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", (e) => {
+            if (!userMenuBtn.contains(e.target) && !userMenuContent.contains(e.target)) {
+                userMenuContent.classList.remove("active");
+            }
+        });
+
+        // Close on scroll
+        window.addEventListener("scroll", () => {
+            userMenuContent.classList.remove("active");
+        });
+    }
 });
 
 
