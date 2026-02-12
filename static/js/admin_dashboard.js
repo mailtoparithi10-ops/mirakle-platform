@@ -571,68 +571,39 @@ function animateStatChange(elementId, fromValue, toValue) {
 }
 
 function showSection(sectionName) {
-    // Close all dropdowns first - INSTANT
+    // INSTANT: Close all dropdowns
     document.querySelectorAll('.dropdown-menu').forEach(menu => {
         menu.style.display = 'none';
     });
     
-    document.querySelectorAll('.admin-nav-item').forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    // Only add active class if event.target exists (clicked from nav)
-    if (typeof event !== 'undefined' && event.target) {
-        event.target.classList.add('active');
-    }
-
-    // INSTANT: Hide all sections immediately
+    // INSTANT: Hide all sections
     document.querySelectorAll('main section').forEach(section => {
         section.style.display = 'none';
     });
 
+    // INSTANT: Show target section
     const sectionId = sectionName + 'Section';
     const section = document.getElementById(sectionId);
-    
-    // INSTANT: Show section immediately (even if data is loading)
     if (section) {
         section.style.display = 'block';
-        
-        // Load data asynchronously (non-blocking)
-        requestAnimationFrame(() => {
-            if (sectionName === 'users') {
-                if (users.length > 0) {
-                    renderFilteredUsers();
-                } else {
-                    loadRecentUsers();
-                }
-            } else if (sectionName === 'startups') {
-                if (users.length > 0) {
-                    renderStartupUsers();
-                } else {
-                    loadRecentUsers();
-                }
-            } else if (sectionName === 'corporate') {
-                if (users.length > 0) {
-                    renderCorporateUsers();
-                } else {
-                    loadRecentUsers();
-                }
-            } else if (sectionName === 'connectors') {
-                if (users.length > 0) {
-                    renderConnectorUsers();
-                } else {
-                    loadRecentUsers();
-                }
-            } else if (sectionName === 'programs') {
-                loadPrograms();
-            } else if (sectionName === 'analytics') {
-                // Initialize analytics when section is shown
-                if (typeof initializeAnalytics === 'function') {
-                    initializeAnalytics();
-                }
-            }
-        });
     }
+    
+    // THEN: Load data if needed (non-blocking)
+    setTimeout(() => {
+        if (sectionName === 'users' && users.length > 0) {
+            renderFilteredUsers();
+        } else if (sectionName === 'startups' && users.length > 0) {
+            renderStartupUsers();
+        } else if (sectionName === 'corporate' && users.length > 0) {
+            renderCorporateUsers();
+        } else if (sectionName === 'connectors' && users.length > 0) {
+            renderConnectorUsers();
+        } else if (sectionName === 'programs') {
+            loadPrograms();
+        } else if (sectionName === 'analytics' && typeof initializeAnalytics === 'function') {
+            initializeAnalytics();
+        }
+    }, 0);
 }
 
 // Toggle dropdown menus
