@@ -1,0 +1,21 @@
+--- 1. Testing Google OAuth Config ---
+Config Check Status: 200
+Config Detail: {
+  "configured": true,
+  "is_placeholder": false,
+  "missing_client_id": false,
+  "missing_client_secret": false,
+  "redirect_uri": "http://localhost:5001/auth/google/callback"
+}
+
+
+--- 2. Testing Authentication ---
+Login Successful as Startup
+
+--- 3. Testing Startup Dashboard ---
+Startup Dashboard Status: 200
+Successfully accessed Startup Dashboard
+
+--- 4. Testing Opportunities Page ---
+Opportunities Status: 200
+Successfully accessed Opportunities Page

@@ -1,0 +1,2087 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon"
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - InnoBridge</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap/dist/css/jsvectormap.min.css">
+    <link rel="stylesheet" href="/static/css/admin_dashboard.css">
+</head>
+
+<body>
+    <header class="admin-header">
+        <div class="admin-header-left">
+            <h1>
+                <i class="fas fa-tachometer-alt"></i>
+                Admin Dashboard
+                <div class="real-time-indicator"></div>
+            </h1>
+        </div>
+        <div class="admin-header-right">
+            <span class="welcome-text">Welcome back, Admin</span>
+            <button class="admin-btn" onclick="seedMockData()" style="background: #000; color: #fcb82e; border: none;">
+                <i class="fas fa-database"></i> Seed Mock Data
+            </button>
+            <button class="admin-btn" onclick="goToPlatform()">
+                <i class="fas fa-arrow-left"></i> Back to Platform
+            </button>
+            <button class="admin-btn danger" onclick="window.location.href='/logout'">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </header>
+
+    <div class="admin-main">
+        <aside class="admin-sidebar">
+            <a href="/" class="admin-nav-item">
+                <i class="fas fa-arrow-left"></i>
+                Back to Home
+            </a>
+            <a href="#" class="admin-nav-item active" onclick="showSection('dashboard')">
+                <i class="fas fa-chart-line"></i>
+                Dashboard Overview
+            </a>
+            <a href="#" class="admin-nav-item" onclick="showSection('users')">
+                <i class="fas fa-users"></i>
+                All Users
+            </a>
+            <a href="#" class="admin-nav-item" onclick="showSection('startups')">
+                <i class="fas fa-rocket"></i>
+                Startup Users
+            </a>
+            <a href="#" class="admin-nav-item" onclick="showSection('corporate')">
+                <i class="fas fa-building"></i>
+                Corporate Users
+            </a>
+            <a href="#" class="admin-nav-item" onclick="showSection('connectors')">
+                <i class="fas fa-handshake"></i>
+                Connectors
+            </a>
+            <a href="#" class="admin-nav-item" onclick="showSection('programs')">
+                <i class="fas fa-trophy"></i>
+                Programs
+            </a>
+            <a href="#" class="admin-nav-item" onclick="showSection('referrals')">
+                <i class="fas fa-exchange-alt"></i>
+                Referrals
+            </a>
+            <a href="#" class="admin-nav-item" onclick="showSection('meetings')">
+                <i class="fas fa-video"></i>
+                Meetings
+            </a>
+            <a href="#" class="admin-nav-item" onclick="showSection('leads')">
+                <i class="fas fa-hand-holding-heart"></i>
+                Leads & Inquiries
+            </a>
+            <a href="#" class="admin-nav-item" onclick="showSection('inbox')">
+                <i class="fas fa-envelope"></i>
+                Inbox <span id="inboxUnreadCount"
+                    style="margin-left:auto; background:#000; color:#fcb82e; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:800;">3</span>
+            </a>
+        </aside>
+
+        <main class="admin-content">
+            <div class="welcome-banner">
+                <div class="banner-content">
+                    <div class="welcome-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div>
+                        <h2>Welcome to Admin Dashboard!</h2>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                            <span class="live-pulse"></span>
+                            <p style="font-weight: 500; opacity: 0.9;">Live Market Pulse: <span id="marketTrend">Bullish
+                                    (+2.4%)</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DASHBOARD SECTION -->
+            <section id="dashboardSection">
+                <!-- TOP INSIGHTS SECTION -->
+                <div class="content-grid" style="grid-template-columns: 1fr 1.5fr; margin-bottom: 25px;">
+                    <div class="content-card side-insights-card">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-pie"></i>
+                            Live Insights
+                        </h3>
+                        <div class="insight-row">
+                            <span class="insight-label">Concurrent Users</span>
+                            <span class="insight-value" id="liveUsers">--</span>
+                        </div>
+                        <div class="insight-row">
+                            <span class="insight-label">Platform Health</span>
+                            <div class="health-bar-container">
+                                <div class="health-bar-fill" style="width: 98%;"></div>
+                            </div>
+                            <span class="insight-value">98.4%</span>
+                        </div>
+                    </div>
+
+                    <div class="content-card" style="padding: 20px;">
+                        <h3 class="card-title" style="margin-bottom: 15px;">
+                            <i class="fas fa-globe"></i>
+                            Global Activity Visualization
+                        </h3>
+                        <div id="worldMap" style="height: 250px; width: 100%;"></div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card users" onclick="showSection('users')">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-users"></i></div>
+                            <div class="stat-trend"><i class="fas fa-arrow-up"></i> <span id="usersTrend">+12%</span>
+                            </div>
+                        </div>
+                        <div class="stat-title">Total Users</div>
+                        <div class="stat-value" id="totalUsers">248</div>
+                    </div>
+
+                    <div class="stat-card startups" onclick="showSection('startups')">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-rocket"></i></div>
+                            <div class="stat-trend"><i class="fas fa-arrow-up"></i> <span id="startupsTrend">+8%</span>
+                            </div>
+                        </div>
+                        <div class="stat-title">Startup Users</div>
+                        <div class="stat-value" id="totalStartups">156</div>
+                    </div>
+
+                    <div class="stat-card corporate" onclick="showSection('corporate')">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-building"></i></div>
+                            <div class="stat-trend"><i class="fas fa-arrow-up"></i> <span id="corporateTrend">+5%</span>
+                            </div>
+                        </div>
+                        <div class="stat-title">Corporate Users</div>
+                        <div class="stat-value" id="totalCorporate">42</div>
+                    </div>
+
+                    <div class="stat-card connectors" onclick="showSection('connectors')">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-handshake"></i></div>
+                            <div class="stat-trend"><i class="fas fa-arrow-up"></i> <span
+                                    id="connectorsTrend">+3%</span>
+                            </div>
+                        </div>
+                        <div class="stat-title">Connectors</div>
+                        <div class="stat-value" id="totalConnectors">28</div>
+                    </div>
+
+                    <div class="stat-card programs" onclick="showSection('programs')">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                            <div class="stat-trend"><i class="fas fa-arrow-up"></i> <span id="programsTrend">+2%</span>
+                            </div>
+                        </div>
+                        <div class="stat-title">Active Programs</div>
+                        <div class="stat-value" id="totalPrograms">12</div>
+                    </div>
+                </div>
+
+                <!-- Meeting Inbox Widget for Admin -->
+                <div class="meeting-inbox" id="meetingInbox" style="margin-bottom: 2rem;">
+                    <!-- Meeting inbox will be populated by JavaScript -->
+                </div>
+
+                <!-- NEW CHART SECTION -->
+                <div
+                    style="background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="font-size: 1.1rem; font-weight: 700;">Platform Growth Analytics</h3>
+                        <div style="display: flex; gap: 1rem;">
+                            <span
+                                style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: #666;">
+                                <span
+                                    style="display: block; width: 10px; height: 10px; background: #4f46e5; border-radius: 50%;"></span>
+                                Users
+                            </span>
+                            <span
+                                style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: #666;">
+                                <span
+                                    style="display: block; width: 10px; height: 10px; background: #fcb82e; border-radius: 50%;"></span>
+                                Activity
+                            </span>
+                        </div>
+                    </div>
+                    <div style="height: 350px; width: 100%;">
+                        <canvas id="adminChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="content-grid" style="grid-template-columns: 1fr;">
+                    <div class="content-card main-list-card">
+                        <div class="card-header-flex">
+                            <h3 class="card-title">
+                                <i class="fas fa-user-plus"></i>
+                                Recent User Registrations
+                            </h3>
+                            <div class="live-tag">LIVE FEED</div>
+                        </div>
+                        <div class="user-list" id="recentUsers">
+                            <div class="loading" style="margin: 20px auto;"></div>
+                            <p style="text-align: center; margin-top: 10px;">Syncing with network...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Other sections hidden by default -->
+            <!-- ALL USERS SECTION -->
+            <section id="usersSection" style="display: none;">
+                <h2 class="section-title">All Registered Users</h2>
+                <div class="content-card">
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" onclick="filterUsers('all')">
+                            All Users (<span id="allCount">0</span>)
+                        </button>
+                        <button class="filter-tab" onclick="filterUsers('startup')">
+                            Startups (<span id="startupCount">0</span>)
+                        </button>
+                        <button class="filter-tab" onclick="filterUsers('corporate')">
+                            Corporate (<span id="corporateCount">0</span>)
+                        </button>
+                        <button class="filter-tab" onclick="filterUsers('connector')">
+                            Connectors (<span id="connectorCount">0</span>)
+                        </button>
+                        <button class="filter-tab" onclick="filterUsers('admin')">
+                            Admins (<span id="adminCount">0</span>)
+                        </button>
+                    </div>
+                    <div id="allUsersList">
+                        <div class="loading" style="margin: 20px auto;"></div>
+                        <p style="text-align: center; margin-top: 10px;">Loading users...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STARTUP USERS SECTION -->
+            <section id="startupsSection" style="display: none;">
+                <h2 class="section-title">Startup Users</h2>
+                <div class="content-card">
+                    <div class="card-title">
+                        <i class="fas fa-rocket"></i>
+                        All Startup Registrations
+                    </div>
+                    <div id="startupUsersList">
+                        <div class="loading" style="margin: 20px auto;"></div>
+                        <p style="text-align: center; margin-top: 10px;">Loading startup users...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CORPORATE USERS SECTION -->
+            <section id="corporateSection" style="display: none;">
+                <h2 class="section-title">Corporate Users</h2>
+                <div class="content-card">
+                    <div class="card-title">
+                        <i class="fas fa-building"></i>
+                        All Corporate Registrations
+                    </div>
+                    <div id="corporateUsersList">
+                        <div class="loading" style="margin: 20px auto;"></div>
+                        <p style="text-align: center; margin-top: 10px;">Loading corporate users...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CONNECTOR USERS SECTION -->
+            <section id="connectorsSection" style="display: none;">
+                <h2 class="section-title">Connectors</h2>
+                <div class="content-card">
+                    <div class="card-title">
+                        <i class="fas fa-handshake"></i>
+                        All Connector Registrations
+                    </div>
+                    <div id="connectorsUsersList">
+                        <div class="loading" style="margin: 20px auto;"></div>
+                        <p style="text-align: center; margin-top: 10px;">Loading connector users...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PROGRAMS SECTION -->
+            <section id="programsSection" style="display: none;">
+                <h2 class="section-title">Program Management</h2>
+
+                <!-- Create Program Button -->
+                <div style="margin-bottom: 2rem;">
+                    <button class="admin-btn primary" onclick="showCreateProgramModal()"
+                        style="background: #4f46e5; padding: 12px 24px; border-radius: 8px; font-weight: 600;">
+                        <i class="fas fa-plus"></i> Create New Program
+                    </button>
+                </div>
+
+                <!-- Programs Stats -->
+                <div class="stats-grid" style="margin-bottom: 2rem; grid-template-columns: repeat(4, 1fr);">
+                    <div class="stat-card programs">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                            <div class="stat-trend"><i class="fas fa-arrow-up"></i> <span
+                                    id="programsTrendDetail">+2%</span></div>
+                        </div>
+                        <div class="stat-title">Total Programs</div>
+                        <div class="stat-value" id="totalProgramsDetail">0</div>
+                    </div>
+
+                    <div class="stat-card active">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-play"></i></div>
+                            <div class="stat-trend"><i class="fas fa-check"></i> <span id="activeTrend">Live</span>
+                            </div>
+                        </div>
+                        <div class="stat-title">Active Programs</div>
+                        <div class="stat-value" id="activePrograms">0</div>
+                    </div>
+
+                    <div class="stat-card applications">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-paper-plane"></i></div>
+                            <div class="stat-trend"><i class="fas fa-user-plus"></i> <span
+                                    id="applicationsTrend">New</span></div>
+                        </div>
+                        <div class="stat-title">Total Applications</div>
+                        <div class="stat-value" id="totalApplicationsDetail">0</div>
+                    </div>
+
+                    <div class="stat-card draft">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-edit"></i></div>
+                            <div class="stat-trend"><i class="fas fa-clock"></i> <span id="draftTrend">Pending</span>
+                            </div>
+                        </div>
+                        <div class="stat-title">Draft Programs</div>
+                        <div class="stat-value" id="draftPrograms">0</div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-header-flex">
+                        <h3 class="card-title">
+                            <i class="fas fa-trophy"></i>
+                            All Programs
+                        </h3>
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" onclick="filterPrograms('all')">All</button>
+                            <button class="filter-tab" onclick="filterPrograms('published')">Published</button>
+                            <button class="filter-tab" onclick="filterPrograms('draft')">Draft</button>
+                            <button class="filter-tab" onclick="filterPrograms('closed')">Closed</button>
+                        </div>
+                    </div>
+                    <div id="programsList">
+                        <div class="loading" style="margin: 20px auto;"></div>
+                        <p style="text-align: center; margin-top: 10px;">Loading programs...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- REFERRALS SECTION (NEW) -->
+            <section id="referralsSection" style="display: none;">
+                <h2 class="section-title">Referral Tracking</h2>
+                <div class="content-card">
+                    <div class="card-header-flex">
+                        <h3 class="card-title">
+                            <i class="fas fa-exchange-alt"></i>
+                            All Referrals
+                        </h3>
+                        <div class="live-tag">REAL-TIME</div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Connector</th>
+                                    <th>Startup</th>
+                                    <th>Program</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="referralsTableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; padding: 40px;">
+                                        <div class="loading"></div>
+                                        <p>Loading referrals...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MEETINGS SECTION -->
+            <section id="meetingsSection" style="display: none;">
+                <h2 class="section-title">Meeting Management</h2>
+
+                <!-- Meeting Stats -->
+                <div class="stats-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card meetings">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-video"></i></div>
+                            <div class="stat-trend"><i class="fas fa-arrow-up"></i> <span id="meetingsTrend">+15%</span>
+                            </div>
+                        </div>
+                        <div class="stat-title">Total Meetings</div>
+                        <div class="stat-value" id="totalMeetings">0</div>
+                    </div>
+
+                    <div class="stat-card upcoming">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+                            <div class="stat-trend"><i class="fas fa-clock"></i> <span id="upcomingTrend">Today</span>
+                            </div>
+                        </div>
+                        <div class="stat-title">Upcoming</div>
+                        <div class="stat-value" id="upcomingMeetings">0</div>
+                    </div>
+
+                    <div class="stat-card participants">
+                        <div class="stat-header">
+                            <div class="stat-icon"><i class="fas fa-users"></i></div>
+                            <div class="stat-trend"><i class="fas fa-user-plus"></i> <span
+                                    id="participantsTrend">Active</span></div>
+                        </div>
+                        <div class="stat-title">Participants</div>
+                        <div class="stat-value" id="totalParticipants">0</div>
+                    </div>
+                </div>
+
+                <!-- Create Meeting Button -->
+                <div style="margin-bottom: 2rem;">
+                    <button class="admin-btn primary" onclick="showCreateMeetingModal()"
+                        style="background: #4f46e5; padding: 12px 24px; border-radius: 8px; font-weight: 600;">
+                        <i class="fas fa-plus"></i> Create New Meeting
+                    </button>
+                </div>
+
+                <!-- Meetings List -->
+                <div class="content-card">
+                    <div class="card-header-flex">
+                        <h3 class="card-title">
+                            <i class="fas fa-video"></i>
+                            All Meetings
+                        </h3>
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" onclick="filterMeetings('all')">All</button>
+                            <button class="filter-tab" onclick="filterMeetings('upcoming')">Upcoming</button>
+                            <button class="filter-tab" onclick="filterMeetings('completed')">Completed</button>
+                            <button class="filter-tab" onclick="filterMeetings('cancelled')">Cancelled</button>
+                        </div>
+                    </div>
+                    <div id="meetingsList">
+                        <div class="loading" style="margin: 20px auto;"></div>
+                        <p style="text-align: center; margin-top: 10px;">Loading meetings...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LEADS SECTION -->
+            <section id="leadsSection" style="display: none;">
+                <h2 class="section-title">Leads & Inquiries</h2>
+
+                <div class="filter-tabs" style="margin-bottom: 2rem;">
+                    <button class="filter-tab active" onclick="filterLeads('all')">All Leads</button>
+                    <button class="filter-tab" onclick="filterLeads('demo')">Demo Requests</button>
+                    <button class="filter-tab" onclick="filterLeads('investor')">Investor Inquiries</button>
+                    <button class="filter-tab" onclick="filterLeads('contact')">Contact Messages</button>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-header-flex">
+                        <h3 class="card-title"><i class="fas fa-list"></i> Submission Log</h3>
+                        <div class="live-tag">REAL-TIME</div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Name</th>
+                                    <th>Email / Company</th>
+                                    <th>Details</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leadsTableBody">
+                                <!-- Populated by JS -->
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 40px;">
+                                        <div class="loading"></div>
+                                        <p>Searching for leads...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- INBOX SECTION -->
+            <section id="inboxSection" style="display: none;">
+                <h2 class="section-title">Platform Communications</h2>
+                <div class="inbox-list">
+                    <!-- Alert 1 -->
+                    <div class="inbox-item unread" onclick="viewMessage('SR-102')">
+                        <div class="inbox-avatar avatar-system">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="inbox-info">
+                            <div class="inbox-meta">
+                                <span class="inbox-sender">Security Engine <span class="inbox-tag tag-high">High
+                                        Priority</span></span>
+                                <span class="inbox-time">12 mins ago</span>
+                            </div>
+                            <div class="inbox-subject">Failed Login Spikes Detected</div>
+                            <div class="inbox-preview">Our sentinel has detected an unusual pattern of failed login
+                                attempts from IP 192.168.1.45. Automated rate-limiting has been applied, but manual
+                                review is suggested.</div>
+                        </div>
+                    </div>
+
+                    <!-- Alert 2 -->
+                    <div class="inbox-item unread" onclick="viewMessage('UR-554')">
+                        <div class="inbox-avatar avatar-user">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="inbox-info">
+                            <div class="inbox-meta">
+                                <span class="inbox-sender">User Management <span
+                                        class="inbox-tag tag-new">New</span></span>
+                                <span class="inbox-time">2 hours ago</span>
+                            </div>
+                            <div class="inbox-subject">New Corporate Verification Required</div>
+                            <div class="inbox-preview">"Titan Logistics Corp" has requested platform verification. Their
+                                LinkedIn and company registration data has been pre-fetched for your final approval.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alert 3 -->
+                    <div class="inbox-item" onclick="viewMessage('MA-992')">
+                        <div class="inbox-avatar avatar-match">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <div class="inbox-info">
+                            <div class="inbox-meta">
+                                <span class="inbox-sender">Match Engine <span
+                                        class="inbox-tag tag-info">Info</span></span>
+                                <span class="inbox-time">Yesterday</span>
+                            </div>
+                            <div class="inbox-subject">Synchronization Batch Complete</div>
+                            <div class="inbox-preview">The weekly synchronization between startup milestones and
+                                corporate challenge requirements has successfully updated 42 matches across 12 programs.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap/dist/maps/world.js"></script>
+    <script src="/static/js/admin_dashboard.js"></script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/meetings.js"></script>
+    <script src="/static/js/admin_meetings.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // World Map Initialization
+            const map = new jsVectorMap({
+                selector: '#worldMap',
+                map: 'world',
+                draggable: true,
+                zoomButtons: true,
+                zoomOnScroll: false,
+                markers: [
+                    { name: 'Singapore (Hub)', coords: [1.3521, 103.8198] },
+                    { name: 'Brazil (Active)', coords: [-14.2350, -51.9253] },
+                    { name: 'France (Partner)', coords: [46.2276, 2.2137] },
+                    { name: 'USA (Growth)', coords: [37.0902, -95.7129] },
+                    { name: 'Japan (Corporate)', coords: [36.2048, 138.2529] },
+                    { name: 'Germany (Tech)', coords: [51.1657, 10.4515] },
+                    { name: 'UK (Innovation)', coords: [55.3781, -3.4360] },
+                    { name: 'India (Scale)', coords: [20.5937, 78.9629] }
+                ],
+                markerStyle: {
+                    initial: {
+                        fill: '#fcb82e',
+                        stroke: '#000',
+                        strokeWidth: 2,
+                        r: 6
+                    },
+                    hover: {
+                        fill: '#000',
+                        stroke: '#fcb82e'
+                    }
+                },
+                regionStyle: {
+                    initial: {
+                        fill: '#e2e8f0',
+                        stroke: '#cbd5e1',
+                        strokeWidth: 0.5
+                    },
+                    hover: {
+                        fill: '#cbd5e1'
+                    }
+                },
+                onMarkerTooltipShow: function (event, tooltip, code) {
+                    tooltip.text(`Active Node: ${tooltip.text()}`);
+                }
+            });
+
+            // --- FAKE LIVE ACTIVITY SIMULATION ---
+            function simulateLiveActivity() {
+                const mapContainer = document.getElementById('worldMap');
+                if (!mapContainer) return;
+
+                // 1. Create a random ping dot
+                const ping = document.createElement('div');
+                ping.className = 'map-ping';
+
+                // Random position within the map container (avoiding extreme edges)
+                const x = Math.random() * 80 + 10;
+                const y = Math.random() * 60 + 20;
+
+                ping.style.left = `${x}%`;
+                ping.style.top = `${y}%`;
+
+                mapContainer.appendChild(ping);
+
+                // 2. Add fake ticker entry
+                const locations = ['San Francisco', 'London', 'Mumbai', 'Tokyo', 'Berlin', 'Sao Paulo', 'Singapore', 'Dubai', 'Toronto'];
+                const actions = ['logged in', 'requested a demo', 'viewed opportunities', 'sent a message', 'created a program'];
+                const loc = locations[Math.floor(Math.random() * locations.length)];
+                const act = actions[Math.floor(Math.random() * actions.length)];
+
+                const ticker = document.createElement('div');
+                ticker.className = 'live-activity-ticker';
+                ticker.innerHTML = `<i class="fas fa-bolt"></i> Guest from ${loc} ${act}`;
+
+                const sidebar = document.querySelector('.side-insights-card');
+                if (sidebar) {
+                    const oldTicker = sidebar.querySelector('.live-activity-ticker');
+                    if (oldTicker) oldTicker.remove();
+                    sidebar.appendChild(ticker);
+                }
+
+                // Cleanup dot
+                setTimeout(() => {
+                    ping.style.opacity = '0';
+                    ping.style.transition = 'opacity 1s ease';
+                    setTimeout(() => ping.remove(), 1000);
+                }, 3000);
+            }
+
+            // Start simulation
+            setInterval(simulateLiveActivity, 5000);
+            setTimeout(simulateLiveActivity, 1000);
+
+            // Handle Hash Navigation
+            function checkHash() {
+                const hash = window.location.hash.replace('#', '');
+                const validSections = ['dashboard', 'users', 'startups', 'corporate', 'connectors', 'programs', 'referrals', 'meetings', 'leads', 'inbox'];
+                if (hash && validSections.includes(hash)) {
+                    showSection(hash);
+                }
+            }
+
+            checkHash();
+            window.addEventListener('hashchange', checkHash);
+
+            const ctx = document.getElementById('adminChart');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'New Users',
+                            data: [12, 19, 3, 5, 2, 3],
+                            backgroundColor: '#4f46e5',
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Platform Activity',
+                            data: [25, 30, 15, 20, 10, 15],
+                            backgroundColor: '#fcb82e',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    borderDash: [2, 2]
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = ['dashboard', 'users', 'startups', 'corporate', 'connectors', 'programs', 'meetings', 'leads', 'inbox'];
+            sections.forEach(s => {
+                const el = document.getElementById(s + 'Section');
+                if (el) el.style.display = 'none';
+            });
+
+            // Show target
+            const target = document.getElementById(sectionId + 'Section');
+            if (target) target.style.display = 'block';
+
+            // Active Nav
+            document.querySelectorAll('.admin-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Find current button and set active
+            const btns = document.querySelectorAll('.admin-nav-item');
+            btns.forEach(btn => {
+                const clickAttr = btn.getAttribute('onclick');
+                if (clickAttr && clickAttr.includes(sectionId)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Load section-specific data
+            if (sectionId === 'meetings') {
+                loadMeetings();
+                loadMeetingStats();
+            }
+            if (sectionId === 'leads') {
+                loadLeads();
+            }
+            if (sectionId === 'users') renderFilteredUsers();
+            if (sectionId === 'startups') renderStartupUsers();
+            if (sectionId === 'corporate') renderCorporateUsers();
+            if (sectionId === 'connectors') renderConnectorUsers();
+            if (sectionId === 'programs') loadPrograms();
+            if (sectionId === 'referrals') loadReferrals();
+        }
+
+        function viewMessage(id) {
+            showToast(`Accessing secure platform logs for ${id}...`, "info");
+            setTimeout(() => {
+                showToast("Incident report decrypted. Opening log viewer.", "success");
+            }, 1000);
+        }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 40px;
+                right: 40px;
+                background: ${type === 'success' ? '#10b981' : '#3b82f6'};
+                color: white;
+                padding: 16px 28px;
+                border-radius: 16px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                z-index: 10000;
+                transform: translateY(100px);
+                font-family: 'Outfit', sans-serif;
+                font-weight: 600;
+            `;
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i> <span>${msg}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.style.transform = 'translateY(0)', 100);
+            setTimeout(() => {
+                toast.style.transform = 'translateY(100px)';
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
+
+        // Meeting Management Functions
+        async function loadMeetings() {
+            try {
+                const response = await fetch('/api/meetings/');
+                const data = await response.json();
+
+                if (data.success) {
+                    displayMeetings(data.meetings);
+                } else {
+                    showToast('Failed to load meetings', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading meetings:', error);
+                showToast('Error loading meetings', 'error');
+            }
+        }
+
+        async function loadMeetingStats() {
+            try {
+                const response = await fetch('/api/meetings/stats');
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('totalMeetings').textContent = data.stats.total_meetings;
+                    document.getElementById('upcomingMeetings').textContent = data.stats.upcoming_meetings;
+                    document.getElementById('totalParticipants').textContent = data.stats.total_participants;
+                }
+            } catch (error) {
+                console.error('Error loading meeting stats:', error);
+            }
+        }
+
+        // Referral Management Functions
+        async function loadReferrals() {
+            const tableBody = document.getElementById('referralsTableBody');
+            if (!tableBody) return;
+            tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;"><div class="loading"></div><p>Loading...</p></td></tr>`;
+
+            try {
+                const response = await fetch('/api/referrals/admin');
+                const data = await response.json();
+
+                if (data.success) {
+                    displayReferrals(data.referrals);
+                } else {
+                    tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:red;">Failed to load data</td></tr>`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:red;">Error loading referrals</td></tr>`;
+            }
+        }
+
+        function displayReferrals(referrals) {
+            const tableBody = document.getElementById('referralsTableBody');
+
+            if (!referrals || referrals.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px;">No confirmed referrals found.</td></tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = referrals.map(ref => {
+                const statusClass = ref.status === 'accepted' ? 'active' : (ref.status === 'successful' ? 'active' : 'inactive');
+                return `
+                <tr>
+                    <td>
+                        <div style="font-weight: 600;">${ref.connector_name}</div>
+                        <div style="font-size: 0.8em; color: #666;">Connector ID: ${ref.connector_id}</div>
+                    </td>
+                    <td>
+                        <div style="font-weight: 600;">${ref.startup_name}</div>
+                        <div style="font-size: 0.8em; color: #666;">${ref.startup_email}</div>
+                    </td>
+                    <td>${ref.opportunity_title}</td>
+                    <td>
+                        <span class="type-badge type-${statusClass}">
+                            ${ref.status.toUpperCase()}
+                        </span>
+                    </td>
+                    <td>${new Date(ref.created_at).toLocaleDateString()}</td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        function displayMeetings(meetings) {
+            const container = document.getElementById('meetingsList');
+
+            if (meetings.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <i class="fas fa-video" style="font-size: 48px; color: #a0aec0; margin-bottom: 15px;"></i>
+                        <p style="color: #a0aec0;">No meetings created yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = meetings.map(meeting => `
+                <div class="meeting-item" style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 12px; background: white;">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div style="flex: 1;">
+                            <h4 style="margin: 0 0 8px 0; font-weight: 600; color: #1a202c;">${meeting.title}</h4>
+                            <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">${meeting.description || 'No description'}</p>
+                            <div style="display: flex; gap: 16px; font-size: 13px; color: #666;">
+                                <span><i class="fas fa-calendar"></i> ${new Date(meeting.scheduled_at).toLocaleString()}</span>
+                                <span><i class="fas fa-clock"></i> ${meeting.duration_minutes} min</span>
+                                <span><i class="fas fa-users"></i> ${meeting.participant_count} participants</span>
+                                <span><i class="fas fa-shield-alt"></i> ${meeting.access_type.replace('_', ' ')}</span>
+                            </div>
+                            <div style="margin-top: 8px;">
+                                <span class="status-badge status-${meeting.status}" style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">
+                                    ${meeting.status.toUpperCase()}
+                                </span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <a href="${meeting.meeting_url}" style="text-decoration: none;">
+                                <button style="padding: 6px 12px; border: 1px solid #4f46e5; border-radius: 4px; background: #4f46e5; color: white; cursor: pointer;">
+                                    <i class="fas fa-video"></i> Join
+                                </button>
+                            </a>
+                            <button onclick="viewMeeting(${meeting.id})" style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button onclick="editMeeting(${meeting.id})" style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button onclick="deleteMeeting(${meeting.id})" style="padding: 6px 12px; border: 1px solid #ef4444; border-radius: 4px; background: white; color: #ef4444; cursor: pointer;">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showCreateMeetingModal() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            `;
+
+            modal.innerHTML = `
+                <div style="background: white; border-radius: 12px; padding: 24px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0; font-weight: 600;">Create New Meeting</h3>
+                        <button onclick="this.closest('.modal').remove()" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+                    </div>
+                    
+                    <form id="createMeetingForm">
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Meeting Title *</label>
+                            <input type="text" name="title" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Description</label>
+                            <textarea name="description" rows="3" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;"></textarea>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Date & Time *</label>
+                                <input type="datetime-local" name="scheduled_at" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Duration (minutes)</label>
+                                <input type="number" name="duration_minutes" value="60" min="15" max="480" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Access Type *</label>
+                            <select name="access_type" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">
+                                <option value="all_users">All Users</option>
+                                <option value="startup_only">Startup Users Only</option>
+                                <option value="corporate_only">Corporate Users Only</option>
+                                <option value="connector_only">Connector Users Only</option>
+                                <option value="specific_users">Specific Users</option>
+                            </select>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">Meeting Features</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" name="video_enabled" checked> Video Enabled
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" name="audio_enabled" checked> Audio Enabled
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" name="screen_sharing_enabled" checked> Screen Sharing
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" name="chat_enabled" checked> Chat Enabled
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" name="recording_enabled"> Recording Enabled
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" name="waiting_room_enabled"> Waiting Room
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                            <button type="button" onclick="this.closest('.modal').remove()" style="padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;">
+                                Cancel
+                            </button>
+                            <button type="submit" style="padding: 8px 16px; border: none; border-radius: 4px; background: #4f46e5; color: white; cursor: pointer; font-weight: 600;">
+                                Create Meeting
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+
+            modal.className = 'modal';
+            document.body.appendChild(modal);
+
+            // Handle form submission
+            document.getElementById('createMeetingForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await createMeeting(new FormData(e.target));
+                modal.remove();
+            });
+        }
+
+        async function createMeeting(formData) {
+            const meetingData = {
+                title: formData.get('title'),
+                description: formData.get('description'),
+                scheduled_at: formData.get('scheduled_at'),
+                duration_minutes: parseInt(formData.get('duration_minutes')),
+                access_type: formData.get('access_type'),
+                video_enabled: formData.has('video_enabled'),
+                audio_enabled: formData.has('audio_enabled'),
+                screen_sharing_enabled: formData.has('screen_sharing_enabled'),
+                chat_enabled: formData.has('chat_enabled'),
+                recording_enabled: formData.has('recording_enabled'),
+                waiting_room_enabled: formData.has('waiting_room_enabled')
+            };
+
+            try {
+                const response = await fetch('/api/meetings/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(meetingData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Meeting created successfully!');
+                    loadMeetings();
+                    loadMeetingStats();
+                } else {
+                    showToast(data.error || 'Failed to create meeting', 'error');
+                }
+            } catch (error) {
+                console.error('Error creating meeting:', error);
+                showToast('Error creating meeting', 'error');
+            }
+        }
+
+        function filterMeetings(filter) {
+            // Update active tab
+            document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Filter logic would go here
+            loadMeetings(); // For now, just reload all meetings
+        }
+
+        function viewMeeting(meetingId) {
+            showToast(`Viewing meeting ${meetingId}`, 'info');
+        }
+
+        function editMeeting(meetingId) {
+            showToast(`Editing meeting ${meetingId}`, 'info');
+        }
+
+        async function deleteMeeting(meetingId) {
+            if (!confirm('Are you sure you want to delete this meeting?')) return;
+
+            try {
+                const response = await fetch(`/api/meetings/${meetingId}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Meeting deleted successfully!');
+                    loadMeetings();
+                    loadMeetingStats();
+                } else {
+                    showToast('Failed to delete meeting', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting meeting:', error);
+                showToast('Error deleting meeting', 'error');
+            }
+        }
+
+        async function seedMockData() {
+            if (!confirm('This will seed the database with mock users and more programs. Continue?')) return;
+            try {
+                const response = await fetch('/api/admin/seed-all-data', { method: 'POST' });
+                const json = await response.json();
+                if (json.success) {
+                    showToast(json.message);
+                    setTimeout(() => window.location.reload(), 1500);
+                } else {
+                    showToast('Failed to seed data', 'error');
+                }
+            } catch (error) {
+                console.error('Error seeding data:', error);
+                showToast('Error seeding data', 'error');
+            }
+        }
+
+        // --- LEADS MANAGEMENT ---
+        let allLeads = [];
+
+        function filterLeads(type) {
+            document.querySelectorAll('#leadsSection .filter-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (type === 'all') {
+                displayLeads(allLeads);
+            } else {
+                displayLeads(allLeads.filter(l => l.type === type));
+            }
+        }
+
+        async function loadLeads() {
+            const tbody = document.getElementById('leadsTableBody');
+            try {
+                const response = await fetch('/api/admin/leads');
+                const leads = await response.json();
+                allLeads = leads;
+                displayLeads(leads);
+            } catch (error) {
+                console.error('Error loading leads:', error);
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Failed to load leads.</td></tr>';
+            }
+        }
+
+        function displayLeads(leads) {
+            const tbody = document.getElementById('leadsTableBody');
+            if (leads.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:40px; color:#a0aec0;">No leads found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = leads.map(lead => `
+                <tr class="${lead.is_read ? '' : 'unread-row'}" style="${lead.is_read ? '' : 'background: #fffdf5; font-weight: 600;'}">
+                    <td>
+                        <span class="badge" style="background: ${getLeadColor(lead.type)}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; text-transform: uppercase;">
+                            ${lead.type}
+                        </span>
+                    </td>
+                    <td>${lead.name}</td>
+                    <td>
+                        <div>${lead.email}</div>
+                        <div style="font-size: 11px; color: #666;">${lead.company || 'N/A'}</div>
+                    </td>
+                    <td>
+                        <div style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${lead.message}">
+                            <strong>${lead.subject || ''}</strong>: ${lead.message}
+                        </div>
+                    </td>
+                    <td>${new Date(lead.created_at).toLocaleDateString()}</td>
+                    <td>
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="viewLeadDetail(${lead.id})" class="btn-sm" style="background: #edf2f7; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button onclick="markLeadRead(${lead.id})" class="btn-sm" style="background: #edf2f7; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;" title="Mark as Read">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getLeadColor(type) {
+            switch (type) {
+                case 'demo': return '#4f46e5';
+                case 'investor': return '#10b981';
+                case 'contact': return '#fcb82e';
+                default: return '#718096';
+            }
+        }
+
+        async function markLeadRead(id) {
+            try {
+                await fetch(`/api/admin/leads/${id}/read`, { method: 'PUT' });
+                loadLeads();
+                showToast("Marked as read");
+            } catch (e) {
+                showToast("Error", "error");
+            }
+        }
+
+        function viewLeadDetail(id) {
+            const lead = allLeads.find(l => l.id === id);
+            if (!lead) return;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.5); display: flex; justify-content: center;
+                align-items: center; z-index: 10001;
+            `;
+            modal.innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 12px; width: 500px; max-width: 90%;">
+                    <h3 style="margin-top: 0;">Lead Details</h3>
+                    <hr>
+                    <p><strong>From:</strong> ${lead.name} (${lead.email})</p>
+                    <p><strong>Company:</strong> ${lead.company || 'N/A'}</p>
+                    <p><strong>Type:</strong> ${lead.type.toUpperCase()}</p>
+                    <p><strong>Subject:</strong> ${lead.subject || 'N/A'}</p>
+                    <div style="background: #f7fafc; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        ${lead.message}
+                    </div>
+                    ${lead.extra_data && Object.keys(lead.extra_data).length ? `<p><strong>Extra Info:</strong> ${JSON.stringify(lead.extra_data)}</p>` : ''}
+                    <div style="text-align: right;">
+                        <button onclick="this.closest('div.modal-backdrop').remove()" class="admin-btn">Close</button>
+                    </div>
+                </div>
+            `;
+            modal.className = 'modal-backdrop';
+            document.body.appendChild(modal);
+            markLeadRead(id);
+        }
+
+        // --- PROGRAM MANAGEMENT ---
+        let allPrograms = [];
+
+        async function loadPrograms() {
+            const container = document.getElementById('programsList');
+            if (!container) return;
+
+            container.innerHTML = `<div class="loading" style="margin: 20px auto;"></div><p style="text-align: center; margin-top: 10px;">Loading programs...</p>`;
+
+            try {
+                const response = await fetch('/api/admin/opportunities');
+                const data = await response.json();
+
+                if (data.success) {
+                    allPrograms = data.opportunities;
+                    displayPrograms(allPrograms);
+                    updateProgramStats(allPrograms);
+                } else {
+                    container.innerHTML = `<div style="text-align: center; padding: 40px; color: red;">Failed to load programs</div>`;
+                }
+            } catch (error) {
+                console.error('Error loading programs:', error);
+                container.innerHTML = `<div style="text-align: center; padding: 40px; color: red;">Error loading programs</div>`;
+            }
+        }
+
+        function updateProgramStats(programs) {
+            const total = programs.length;
+            const active = programs.filter(p => p.status === 'published').length;
+            const draft = programs.filter(p => p.status === 'draft').length;
+
+            // Get total applications count
+            fetch('/api/admin/applications')
+                .then(response => response.json())
+                .then(data => {
+                    const totalApps = data.success ? data.applications.length : 0;
+                    document.getElementById('totalApplicationsDetail').textContent = totalApps;
+                })
+                .catch(() => {
+                    document.getElementById('totalApplicationsDetail').textContent = '0';
+                });
+
+            document.getElementById('totalProgramsDetail').textContent = total;
+            document.getElementById('activePrograms').textContent = active;
+            document.getElementById('draftPrograms').textContent = draft;
+        }
+
+        function displayPrograms(programs) {
+            const container = document.getElementById('programsList');
+
+            if (programs.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <i class="fas fa-trophy" style="font-size: 48px; color: #a0aec0; margin-bottom: 15px;"></i>
+                        <p style="color: #a0aec0;">No programs found</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = programs.map(program => `
+                <div class="program-item" style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 12px; background: white;">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                <h4 style="margin: 0; font-weight: 600; color: #1a202c;">${program.title}</h4>
+                                <span class="status-badge status-${program.status}" style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; text-transform: uppercase;">
+                                    ${program.status}
+                                </span>
+                                <span class="type-badge type-${program.type}" style="padding: 4px 8px; border-radius: 4px; font-size: 12px; background: #f3f4f6; color: #374151;">
+                                    ${program.type}
+                                </span>
+                            </div>
+                            <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">${program.description || 'No description'}</p>
+                            <div style="display: flex; gap: 16px; font-size: 13px; color: #666; margin-bottom: 8px;">
+                                <span><i class="fas fa-calendar"></i> Created: ${new Date(program.created_at).toLocaleDateString()}</span>
+                                ${program.deadline ? `<span><i class="fas fa-clock"></i> Deadline: ${new Date(program.deadline).toLocaleDateString()}</span>` : ''}
+                                <span><i class="fas fa-user"></i> Owner: ${program.owner_name || 'Admin'}</span>
+                            </div>
+                            ${program.benefits ? `<div style="font-size: 13px; color: #059669; font-weight: 500;"><i class="fas fa-gift"></i> ${program.benefits}</div>` : ''}
+                        </div>
+                        <div style="display: flex; gap: 8px; flex-shrink: 0;">
+                            <button onclick="viewProgram(${program.id})" style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button onclick="editProgram(${program.id})" style="padding: 6px 12px; border: 1px solid #4f46e5; border-radius: 4px; background: #4f46e5; color: white; cursor: pointer;">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button onclick="viewApplications(${program.id})" style="padding: 6px 12px; border: 1px solid #059669; border-radius: 4px; background: #059669; color: white; cursor: pointer;">
+                                <i class="fas fa-paper-plane"></i> Applications
+                            </button>
+                            <button onclick="deleteProgram(${program.id})" style="padding: 6px 12px; border: 1px solid #ef4444; border-radius: 4px; background: white; color: #ef4444; cursor: pointer;">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterPrograms(status) {
+            // Update active tab
+            document.querySelectorAll('#programsSection .filter-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (status === 'all') {
+                displayPrograms(allPrograms);
+            } else {
+                displayPrograms(allPrograms.filter(p => p.status === status));
+            }
+        }
+
+        function showCreateProgramModal() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            `;
+
+            modal.innerHTML = `
+                <div style="background: white; border-radius: 12px; padding: 24px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0; font-weight: 600;">Create New Program</h3>
+                        <button onclick="this.closest('.modal').remove()" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+                    </div>
+                    
+                    <form id="createProgramForm">
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Program Title *</label>
+                            <input type="text" name="title" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" placeholder="e.g. Global Fintech Accelerator 2026">
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Program Type *</label>
+                                <select name="type" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">
+                                    <option value="">Select Type</option>
+                                    <option value="accelerator">Accelerator</option>
+                                    <option value="grant">Grant</option>
+                                    <option value="pilot">Pilot/POC</option>
+                                    <option value="challenge">Challenge</option>
+                                    <option value="corporate_vc">Corporate VC</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Status</label>
+                                <select name="status" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">
+                                    <option value="draft">Draft</option>
+                                    <option value="published">Published</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Description *</label>
+                            <textarea name="description" rows="4" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" placeholder="Describe the program objectives and requirements..."></textarea>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Benefits</label>
+                            <input type="text" name="benefits" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" placeholder="e.g. $50k equity-free grant + mentorship">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Eligibility Criteria</label>
+                            <textarea name="eligibility" rows="3" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" placeholder="Who can apply to this program?"></textarea>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Application Deadline</label>
+                                <input type="datetime-local" name="deadline" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Banner Image URL</label>
+                                <input type="url" name="banner_url" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" placeholder="https://...">
+                            </div>
+                        </div>
+                        
+                        <!-- Poster Upload Section -->
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">Program Poster</label>
+                            <div style="border: 2px dashed #d1d5db; border-radius: 8px; padding: 20px; text-align: center; background: #f9fafb;">
+                                <div id="posterUploadArea">
+                                    <div id="posterDropZone" style="cursor: pointer;">
+                                        <i class="fas fa-cloud-upload-alt" style="font-size: 32px; color: #9ca3af; margin-bottom: 8px;"></i>
+                                        <p style="margin: 0 0 8px 0; color: #6b7280;">Click to upload or drag and drop</p>
+                                        <p style="margin: 0; font-size: 12px; color: #9ca3af;">PNG, JPG, JPEG, GIF, WEBP (Max 5MB)</p>
+                                        <input type="file" id="posterInput" name="poster" accept="image/*" style="display: none;">
+                                    </div>
+                                    <div id="posterPreview" style="display: none; margin-top: 12px;">
+                                        <img id="posterImage" style="max-width: 200px; max-height: 150px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                        <div style="margin-top: 8px;">
+                                            <button type="button" onclick="removePoster()" style="padding: 4px 12px; border: 1px solid #ef4444; border-radius: 4px; background: white; color: #ef4444; cursor: pointer; font-size: 12px;">
+                                                <i class="fas fa-trash"></i> Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="posterUploadProgress" style="display: none; margin-top: 12px;">
+                                    <div style="background: #e5e7eb; border-radius: 4px; height: 8px; overflow: hidden;">
+                                        <div id="posterProgressBar" style="background: #4f46e5; height: 100%; width: 0%;"></div>
+                                    </div>
+                                    <p style="margin: 8px 0 0 0; font-size: 12px; color: #6b7280;">Uploading poster...</p>
+                                </div>
+                            </div>
+                            <input type="hidden" name="poster_url" id="posterUrlInput">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Target Sectors (comma-separated)</label>
+                            <input type="text" name="sectors" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" placeholder="fintech, healthtech, cleantech">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Target Stages (comma-separated)</label>
+                            <input type="text" name="target_stages" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" placeholder="seed, series_a, series_b">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Target Countries (comma-separated)</label>
+                            <input type="text" name="countries" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" placeholder="Global, USA, Singapore, UK">
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                            <button type="button" onclick="this.closest('.modal').remove()" style="padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;">
+                                Cancel
+                            </button>
+                            <button type="submit" style="padding: 8px 16px; border: none; border-radius: 4px; background: #4f46e5; color: white; cursor: pointer; font-weight: 600;">
+                                Create Program
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+
+            modal.className = 'modal';
+            document.body.appendChild(modal);
+
+            // Handle form submission
+            document.getElementById('createProgramForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await createProgram(new FormData(e.target));
+                modal.remove();
+            });
+
+            // Setup poster upload for create form
+            setupPosterUpload('posterDropZone', 'posterInput', 'posterPreview', 'posterImage', 'posterUrlInput', 'posterUploadProgress', 'posterProgressBar');
+        }
+
+        async function createProgram(formData) {
+            const programData = {
+                title: formData.get('title'),
+                type: formData.get('type'),
+                description: formData.get('description'),
+                benefits: formData.get('benefits'),
+                eligibility: formData.get('eligibility'),
+                status: formData.get('status'),
+                deadline: formData.get('deadline'),
+                banner_url: formData.get('poster_url') || formData.get('banner_url'), // Use poster_url if available, fallback to banner_url
+                sectors: formData.get('sectors') ? formData.get('sectors').split(',').map(s => s.trim()) : [],
+                target_stages: formData.get('target_stages') ? formData.get('target_stages').split(',').map(s => s.trim()) : [],
+                countries: formData.get('countries') ? formData.get('countries').split(',').map(s => s.trim()) : []
+            };
+
+            try {
+                const response = await fetch('/api/admin/opportunities', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(programData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Program created successfully!');
+                    loadPrograms();
+                } else {
+                    showToast(data.error || 'Failed to create program', 'error');
+                }
+            } catch (error) {
+                console.error('Error creating program:', error);
+                showToast('Error creating program', 'error');
+            }
+        }
+
+        function viewProgram(programId) {
+            const program = allPrograms.find(p => p.id === programId);
+            if (!program) return;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.5); display: flex; justify-content: center;
+                align-items: center; z-index: 10001;
+            `;
+            modal.innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 12px; width: 600px; max-width: 90%; max-height: 90vh; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0;">Program Details</h3>
+                        <button onclick="this.closest('.modal-backdrop').remove()" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <h4 style="margin: 0 0 8px 0; color: #1a202c;">${program.title}</h4>
+                        <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                            <span class="status-badge status-${program.status}" style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; text-transform: uppercase;">
+                                ${program.status}
+                            </span>
+                            <span class="type-badge" style="padding: 4px 8px; border-radius: 4px; font-size: 12px; background: #f3f4f6; color: #374151;">
+                                ${program.type}
+                            </span>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <strong>Description:</strong>
+                        <p style="margin: 4px 0; color: #666;">${program.description || 'No description'}</p>
+                    </div>
+                    ${program.benefits ? `<div style="margin-bottom: 16px;"><strong>Benefits:</strong><p style="margin: 4px 0; color: #059669;">${program.benefits}</p></div>` : ''}
+                    ${program.eligibility ? `<div style="margin-bottom: 16px;"><strong>Eligibility:</strong><p style="margin: 4px 0; color: #666;">${program.eligibility}</p></div>` : ''}
+                    ${program.deadline ? `<div style="margin-bottom: 16px;"><strong>Deadline:</strong><p style="margin: 4px 0; color: #666;">${new Date(program.deadline).toLocaleString()}</p></div>` : ''}
+                    <div style="margin-bottom: 16px;">
+                        <strong>Created:</strong> ${new Date(program.created_at).toLocaleString()}
+                    </div>
+                    <div style="text-align: right;">
+                        <button onclick="editProgram(${program.id}); this.closest('.modal-backdrop').remove();" style="padding: 8px 16px; border: 1px solid #4f46e5; border-radius: 4px; background: #4f46e5; color: white; cursor: pointer; margin-right: 8px;">
+                            Edit Program
+                        </button>
+                        <button onclick="this.closest('.modal-backdrop').remove()" class="admin-btn">Close</button>
+                    </div>
+                </div>
+            `;
+            modal.className = 'modal-backdrop';
+            document.body.appendChild(modal);
+        }
+
+        function editProgram(programId) {
+            const program = allPrograms.find(p => p.id === programId);
+            if (!program) return;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            `;
+
+            // Parse JSON fields safely
+            let sectors = [];
+            let targetStages = [];
+            let countries = [];
+
+            try {
+                sectors = program.sectors ? JSON.parse(program.sectors) : [];
+                targetStages = program.target_stages ? JSON.parse(program.target_stages) : [];
+                countries = program.countries ? JSON.parse(program.countries) : [];
+            } catch (e) {
+                console.warn('Error parsing program JSON fields:', e);
+            }
+
+            modal.innerHTML = `
+                <div style="background: white; border-radius: 12px; padding: 24px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0; font-weight: 600;">Edit Program</h3>
+                        <button onclick="this.closest('.modal').remove()" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+                    </div>
+                    
+                    <form id="editProgramForm">
+                        <input type="hidden" name="program_id" value="${program.id}">
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Program Title *</label>
+                            <input type="text" name="title" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" value="${program.title}">
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Program Type *</label>
+                                <select name="type" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">
+                                    <option value="accelerator" ${program.type === 'accelerator' ? 'selected' : ''}>Accelerator</option>
+                                    <option value="grant" ${program.type === 'grant' ? 'selected' : ''}>Grant</option>
+                                    <option value="pilot" ${program.type === 'pilot' ? 'selected' : ''}>Pilot/POC</option>
+                                    <option value="challenge" ${program.type === 'challenge' ? 'selected' : ''}>Challenge</option>
+                                    <option value="corporate_vc" ${program.type === 'corporate_vc' ? 'selected' : ''}>Corporate VC</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Status</label>
+                                <select name="status" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">
+                                    <option value="draft" ${program.status === 'draft' ? 'selected' : ''}>Draft</option>
+                                    <option value="published" ${program.status === 'published' ? 'selected' : ''}>Published</option>
+                                    <option value="closed" ${program.status === 'closed' ? 'selected' : ''}>Closed</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Description *</label>
+                            <textarea name="description" rows="4" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">${program.description || ''}</textarea>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Benefits</label>
+                            <input type="text" name="benefits" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" value="${program.benefits || ''}">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Eligibility Criteria</label>
+                            <textarea name="eligibility" rows="3" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;">${program.eligibility || ''}</textarea>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Application Deadline</label>
+                                <input type="datetime-local" name="deadline" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" value="${program.deadline ? new Date(program.deadline).toISOString().slice(0, 16) : ''}">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500;">Banner Image URL</label>
+                                <input type="url" name="banner_url" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" value="${program.banner_url || ''}">
+                            </div>
+                        </div>
+                        
+                        <!-- Poster Upload Section -->
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">Program Poster</label>
+                            <div style="border: 2px dashed #d1d5db; border-radius: 8px; padding: 20px; text-align: center; background: #f9fafb;">
+                                <div id="editPosterUploadArea">
+                                    <div id="editPosterDropZone" style="cursor: pointer;">
+                                        <i class="fas fa-cloud-upload-alt" style="font-size: 32px; color: #9ca3af; margin-bottom: 8px;"></i>
+                                        <p style="margin: 0 0 8px 0; color: #6b7280;">Click to upload or drag and drop</p>
+                                        <p style="margin: 0; font-size: 12px; color: #9ca3af;">PNG, JPG, JPEG, GIF, WEBP (Max 5MB)</p>
+                                        <input type="file" id="editPosterInput" name="poster" accept="image/*" style="display: none;">
+                                    </div>
+                                    <div id="editPosterPreview" style="display: ${program.banner_url ? 'block' : 'none'}; margin-top: 12px;">
+                                        <img id="editPosterImage" src="${program.banner_url || ''}" style="max-width: 200px; max-height: 150px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                        <div style="margin-top: 8px;">
+                                            <button type="button" onclick="removeEditPoster()" style="padding: 4px 12px; border: 1px solid #ef4444; border-radius: 4px; background: white; color: #ef4444; cursor: pointer; font-size: 12px;">
+                                                <i class="fas fa-trash"></i> Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="editPosterUploadProgress" style="display: none; margin-top: 12px;">
+                                    <div style="background: #e5e7eb; border-radius: 4px; height: 8px; overflow: hidden;">
+                                        <div id="editPosterProgressBar" style="background: #4f46e5; height: 100%; width: 0%;"></div>
+                                    </div>
+                                    <p style="margin: 8px 0 0 0; font-size: 12px; color: #6b7280;">Uploading poster...</p>
+                                </div>
+                            </div>
+                            <input type="hidden" name="poster_url" id="editPosterUrlInput" value="${program.banner_url || ''}">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Target Sectors (comma-separated)</label>
+                            <input type="text" name="sectors" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" value="${sectors.join(', ')}">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Target Stages (comma-separated)</label>
+                            <input type="text" name="target_stages" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" value="${targetStages.join(', ')}">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 4px; font-weight: 500;">Target Countries (comma-separated)</label>
+                            <input type="text" name="countries" style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px;" value="${countries.join(', ')}">
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                            <button type="button" onclick="this.closest('.modal').remove()" style="padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 4px; background: white; cursor: pointer;">
+                                Cancel
+                            </button>
+                            <button type="submit" style="padding: 8px 16px; border: none; border-radius: 4px; background: #4f46e5; color: white; cursor: pointer; font-weight: 600;">
+                                Update Program
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+
+            modal.className = 'modal';
+            document.body.appendChild(modal);
+
+            // Handle form submission
+            document.getElementById('editProgramForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await updateProgram(new FormData(e.target));
+                modal.remove();
+            });
+
+            // Setup poster upload for edit form
+            setupPosterUpload('editPosterDropZone', 'editPosterInput', 'editPosterPreview', 'editPosterImage', 'editPosterUrlInput', 'editPosterUploadProgress', 'editPosterProgressBar');
+        }
+
+        async function updateProgram(formData) {
+            const programId = formData.get('program_id');
+            const programData = {
+                title: formData.get('title'),
+                type: formData.get('type'),
+                description: formData.get('description'),
+                benefits: formData.get('benefits'),
+                eligibility: formData.get('eligibility'),
+                status: formData.get('status'),
+                deadline: formData.get('deadline'),
+                banner_url: formData.get('poster_url') || formData.get('banner_url'), // Use poster_url if available, fallback to banner_url
+                sectors: formData.get('sectors') ? formData.get('sectors').split(',').map(s => s.trim()) : [],
+                target_stages: formData.get('target_stages') ? formData.get('target_stages').split(',').map(s => s.trim()) : [],
+                countries: formData.get('countries') ? formData.get('countries').split(',').map(s => s.trim()) : []
+            };
+
+            try {
+                const response = await fetch(`/api/admin/opportunities/${programId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(programData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Program updated successfully!');
+                    loadPrograms();
+                } else {
+                    showToast(data.error || 'Failed to update program', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating program:', error);
+                showToast('Error updating program', 'error');
+            }
+        }
+
+        async function deleteProgram(programId) {
+            if (!confirm('Are you sure you want to delete this program? This action cannot be undone.')) return;
+
+            try {
+                const response = await fetch(`/api/admin/opportunities/${programId}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Program deleted successfully!');
+                    loadPrograms();
+                } else {
+                    showToast('Failed to delete program', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting program:', error);
+                showToast('Error deleting program', 'error');
+            }
+        }
+
+        async function viewApplications(programId) {
+            try {
+                const response = await fetch(`/api/applications/opportunity/${programId}`);
+                const applications = await response.json();
+
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                    background: rgba(0,0,0,0.5); display: flex; justify-content: center;
+                    align-items: center; z-index: 10001;
+                `;
+
+                const program = allPrograms.find(p => p.id === programId);
+                const programTitle = program ? program.title : 'Program';
+
+                modal.innerHTML = `
+                    <div style="background: white; padding: 30px; border-radius: 12px; width: 80%; max-width: 900px; max-height: 90vh; overflow-y: auto;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 style="margin: 0;">Applications for: ${programTitle}</h3>
+                            <button onclick="this.closest('.modal-backdrop').remove()" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+                        </div>
+                        
+                        ${applications.length === 0 ?
+                        `<div style="text-align: center; padding: 40px; color: #666;">
+                                <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 16px; color: #a0aec0;"></i>
+                                <p>No applications received yet</p>
+                            </div>` :
+                        `<div style="overflow-x: auto;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <thead>
+                                        <tr style="background: #f8f9fa;">
+                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6;">Startup</th>
+                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6;">Status</th>
+                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6;">Applied</th>
+                                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6;">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${applications.map(app => `
+                                            <tr>
+                                                <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">
+                                                    <div style="font-weight: 600;">${app.startup_name || 'Unknown Startup'}</div>
+                                                    <div style="font-size: 12px; color: #666;">ID: ${app.startup_id}</div>
+                                                </td>
+                                                <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">
+                                                    <span class="status-badge status-${app.status}" style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; text-transform: uppercase;">
+                                                        ${app.status}
+                                                    </span>
+                                                </td>
+                                                <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">
+                                                    ${new Date(app.created_at).toLocaleDateString()}
+                                                </td>
+                                                <td style="padding: 12px; border-bottom: 1px solid #dee2e6;">
+                                                    <select onchange="updateApplicationStatus(${app.id}, this.value)" style="padding: 4px 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px;">
+                                                        <option value="submitted" ${app.status === 'submitted' ? 'selected' : ''}>Submitted</option>
+                                                        <option value="under_review" ${app.status === 'under_review' ? 'selected' : ''}>Under Review</option>
+                                                        <option value="shortlisted" ${app.status === 'shortlisted' ? 'selected' : ''}>Shortlisted</option>
+                                                        <option value="accepted" ${app.status === 'accepted' ? 'selected' : ''}>Accepted</option>
+                                                        <option value="rejected" ${app.status === 'rejected' ? 'selected' : ''}>Rejected</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>`
+                    }
+                        
+                        <div style="text-align: right; margin-top: 20px;">
+                            <button onclick="this.closest('.modal-backdrop').remove()" class="admin-btn">Close</button>
+                        </div>
+                    </div>
+                `;
+                modal.className = 'modal-backdrop';
+                document.body.appendChild(modal);
+
+            } catch (error) {
+                console.error('Error loading applications:', error);
+                showToast('Error loading applications', 'error');
+            }
+        }
+
+        async function updateApplicationStatus(applicationId, newStatus) {
+            try {
+                const response = await fetch(`/api/admin/applications/${applicationId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        status: newStatus,
+                        note: `Status updated to ${newStatus} by admin`
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast(`Application status updated to ${newStatus}`);
+                } else {
+                    showToast('Failed to update application status', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating application status:', error);
+                showToast('Error updating application status', 'error');
+            }
+        }
+
+        // --- POSTER UPLOAD FUNCTIONALITY ---
+        function setupPosterUpload(dropZoneId, inputId, previewId, imageId, urlInputId, progressId, progressBarId) {
+            const dropZone = document.getElementById(dropZoneId);
+            const fileInput = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            const image = document.getElementById(imageId);
+            const urlInput = document.getElementById(urlInputId);
+            const progress = document.getElementById(progressId);
+            const progressBar = document.getElementById(progressBarId);
+
+            if (!dropZone || !fileInput) return;
+
+            // Click to upload
+            dropZone.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            // File input change
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    uploadPoster(file, preview, image, urlInput, progress, progressBar);
+                }
+            });
+
+            // Drag and drop
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = '#4f46e5';
+                dropZone.style.backgroundColor = '#f0f9ff';
+            });
+
+            dropZone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = '#d1d5db';
+                dropZone.style.backgroundColor = '#f9fafb';
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = '#d1d5db';
+                dropZone.style.backgroundColor = '#f9fafb';
+
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    uploadPoster(files[0], preview, image, urlInput, progress, progressBar);
+                }
+            });
+        }
+
+        async function uploadPoster(file, preview, image, urlInput, progress, progressBar) {
+            // Validate file type
+            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                showToast('Invalid file type. Please upload PNG, JPG, JPEG, GIF, or WEBP files.', 'error');
+                return;
+            }
+
+            // Validate file size (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('File too large. Maximum size is 5MB.', 'error');
+                return;
+            }
+
+            // Show progress
+            progress.style.display = 'block';
+            progressBar.style.width = '0%';
+
+            const formData = new FormData();
+            formData.append('poster', file);
+
+            try {
+                // Simulate progress
+                let progressValue = 0;
+                const progressInterval = setInterval(() => {
+                    progressValue += 10;
+                    progressBar.style.width = progressValue + '%';
+                    if (progressValue >= 90) {
+                        clearInterval(progressInterval);
+                    }
+                }, 100);
+
+                const response = await fetch('/api/admin/upload-poster', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                clearInterval(progressInterval);
+                progressBar.style.width = '100%';
+
+                setTimeout(() => {
+                    progress.style.display = 'none';
+
+                    if (data.success) {
+                        // Show preview
+                        image.src = data.poster_url;
+                        preview.style.display = 'block';
+                        urlInput.value = data.poster_url;
+                        showToast('Poster uploaded successfully!');
+                    } else {
+                        showToast(data.error || 'Upload failed', 'error');
+                    }
+                }, 500);
+
+            } catch (error) {
+                progress.style.display = 'none';
+                console.error('Upload error:', error);
+                showToast('Upload failed. Please try again.', 'error');
+            }
+        }
+
+        function removePoster() {
+            document.getElementById('posterPreview').style.display = 'none';
+            document.getElementById('posterImage').src = '';
+            document.getElementById('posterUrlInput').value = '';
+            document.getElementById('posterInput').value = '';
+        }
+
+        function removeEditPoster() {
+            document.getElementById('editPosterPreview').style.display = 'none';
+            document.getElementById('editPosterImage').src = '';
+            document.getElementById('editPosterUrlInput').value = '';
+            document.getElementById('editPosterInput').value = '';
+        }
+    </script>
+
+</body>
+
+</html>

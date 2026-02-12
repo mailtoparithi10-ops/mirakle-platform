@@ -4,21 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon"
-        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkE8L3RleHQ+Cjwvc3ZnPg==">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to InnoBridge - Success</title>
+    <title>Welcome to Alchemy - Success</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap"
         rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #fcb82e;
-            --primary-dark: #f59e0b;
-            --accent: #fcb82e;
+            --primary: #ffdf00;
+            --primary-dark: #facc15;
+            --accent: #ffdf00;
             --bg-dark: #0a0a0b;
             --card-bg: rgba(255, 255, 255, 0.03);
-            --border: rgba(252, 184, 46, 0.2);
+            --border: rgba(255, 223, 0, 0.2);
             --text-main: #ffffff;
             --text-muted: #94a3b8;
         }
@@ -40,7 +40,21 @@
             justify-content: center;
         }
 
-        /* Animated Background Elements */
+        /* Mesh Background */
+        .mesh-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(255, 223, 0, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(255, 223, 0, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(10, 10, 12, 1) 0%, rgba(5, 5, 7, 1) 100%);
+        }
+
+        /* Animated Glows */
         .bg-glow {
             position: fixed;
             width: 600px;
@@ -48,17 +62,28 @@
             background: radial-gradient(circle, rgba(252, 184, 46, 0.15) 0%, transparent 70%);
             border-radius: 50%;
             z-index: -1;
-            filter: blur(60px);
+            filter: blur(80px);
+            animation: move 20s infinite alternate;
+        }
+
+        @keyframes move {
+            from {
+                transform: translate(-10%, -10%);
+            }
+
+            to {
+                transform: translate(10%, 10%);
+            }
         }
 
         .glow-1 {
             top: -100px;
-            right: -100px;
+            right: -10%;
         }
 
         .glow-2 {
-            bottom: -200px;
-            left: -200px;
+            bottom: -100px;
+            left: -10%;
         }
 
         .page-wrapper {
@@ -76,13 +101,33 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            position: relative;
+            padding: 4rem;
+            border-radius: 40px;
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        .visual-column::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(8, 8, 10, 0.9) 0%, rgba(8, 8, 10, 0.7) 100%),
+                url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            opacity: 0.8;
         }
 
         .success-illustration {
             position: relative;
             width: 100%;
             max-width: 400px;
-            margin-bottom: 3rem;
+            margin-bottom: 2.5rem;
         }
 
         .main-icon-container {
@@ -349,6 +394,7 @@
 </head>
 
 <body>
+    <div class="mesh-bg"></div>
     <div class="bg-glow glow-1"></div>
     <div class="bg-glow glow-2"></div>
 
@@ -356,8 +402,13 @@
         <!-- Visual Section -->
         <div class="visual-column">
             <div class="success-illustration">
-                <div class="main-icon-container">
+                <div class="main-icon-container" style="overflow: hidden;">
+                    {% if user.profile_pic %}
+                    <img src="{{ user.profile_pic }}" alt="Profile"
+                        style="width: 100%; height: 100%; object-fit: cover; transform: rotate(10deg);">
+                    {% else %}
                     <i class="fas fa-rocket"></i>
+                    {% endif %}
                     <div class="badge-verified">
                         <i class="fas fa-check" style="color: white; font-size: 1.5rem;"></i>
                     </div>
@@ -367,7 +418,7 @@
             <div class="visual-text">
                 <h1>YOU'RE ALL SET!</h1>
                 <p>Welcome to the circle of impact. Your journey as a <strong>{{ user.role.title() }}</strong> at
-                    InnoBridge starts now.</p>
+                    Alchemy starts now.</p>
             </div>
         </div>
 

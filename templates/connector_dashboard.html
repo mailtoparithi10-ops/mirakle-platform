@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon"
-        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkE8L3RleHQ+Cjwvc3ZnPg==">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connector Dashboard - InnoBridge</title>
+    <title>Connector Dashboard - Alchemy</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/referral-links.css">
     <style>
@@ -3178,8 +3178,14 @@
 <body>
     <aside class="sidebar">
         <div class="user-profile">
-            <div class="user-avatar-large" id="userAvatar">{{ current_user.name[0].upper() if current_user.name else 'U'
-                }}</div>
+            <div class="user-avatar-large" id="userAvatar" style="overflow: hidden;">
+                {% if current_user.profile_pic %}
+                <img src="{{ current_user.profile_pic }}" alt="Avatar"
+                    style="width: 100%; height: 100%; object-fit: cover;">
+                {% else %}
+                {{ current_user.name[0] if current_user.name else 'C' }}
+                {% endif %}
+            </div>
             <div class="user-name" id="userName">{{ current_user.name if current_user.name else 'User Name' }}</div>
             <div class="user-email" id="userEmail">{{ current_user.email if current_user.email else 'user@example.com'
                 }}</div>
@@ -3750,7 +3756,7 @@
                             Performance Overview
                         </div>
                         <div class="section-subtitle">
-                            A snapshot of your referrals, earnings, and connector impact across InnoBridge.
+                            A snapshot of your referrals, earnings, and connector impact across Alchemy.
                         </div>
                     </div>
                     <div class="section-actions">
@@ -6000,7 +6006,7 @@
                                                 class="inbox-badge badge-system">Notice</span></span>
                                         <span class="inbox-time">Yesterday</span>
                                     </div>
-                                    <div class="inbox-subject">InnoBridge Enabler Level Up!</div>
+                                    <div class="inbox-subject">Alchemy Enabler Level Up!</div>
                                     <div class="inbox-preview">Your impact score has reached 'Level 4'. You now have
                                         access to
                                         exclusive high-tier programs in the FinTech sector. Check your Analytics tab for
@@ -6160,7 +6166,7 @@
                                 <ul
                                     style="padding-left: 1.25rem; color: #64748b; font-size: 0.9rem; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 2rem;">
                                     <li>Self-referrals are not eligible for rewards.</li>
-                                    <li>Startups must be new to the InnoBridge database.</li>
+                                    <li>Startups must be new to the Alchemy database.</li>
                                     <li>Rewards are processed 15 days after program completion.</li>
                                 </ul>
                                 <button class="btn" style="width: 100%;"

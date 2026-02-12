@@ -3,14 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
+    <link rel="icon"
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkE8L3RleHQ+Cjwvc3ZnPg==">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - InnoBridge</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/floating-elements.css">
+    <title>Admin Core-Access - Alchemy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background: #111827;
+            background: #08080a;
             color: white;
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
@@ -18,23 +20,41 @@
             align-items: center;
             justify-content: center;
             margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .mesh-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(252, 184, 46, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(252, 184, 46, 0.03) 0%, transparent 50%);
+            z-index: 0;
         }
 
         .login-card {
-            background: #1f2937;
-            padding: 3rem;
-            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            padding: 3.5rem;
+            border-radius: 24px;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            border: 1px solid #374151;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            z-index: 10;
         }
 
         .logo {
             text-align: center;
-            font-size: 1.5rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
             font-weight: 800;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             letter-spacing: -0.025em;
         }
 
@@ -44,81 +64,104 @@
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.875rem;
-            color: #9ca3af;
+            margin-bottom: 0.6rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #94a3b8;
+            padding-left: 4px;
         }
 
         input {
             width: 100%;
-            padding: 0.75rem;
-            background: #374151;
-            border: 1px solid #4b5563;
-            border-radius: 8px;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
             color: white;
             font-size: 1rem;
             box-sizing: border-box;
+            transition: all 0.3s ease;
         }
 
         input:focus {
             outline: none;
             border-color: #fcb82e;
-            ring: 2px solid rgba(252, 184, 46, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 4px rgba(252, 184, 46, 0.1);
         }
 
         button {
             width: 100%;
-            padding: 0.875rem;
+            padding: 16px;
             background: #fcb82e;
             color: black;
             border: none;
-            border-radius: 8px;
-            font-weight: 600;
+            border-radius: 12px;
+            font-weight: 800;
             font-size: 1rem;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
         }
 
         button:hover {
+            transform: translateY(-2px);
             background: #f59e0b;
+            box-shadow: 0 10px 20px rgba(252, 184, 46, 0.2);
         }
 
         .back-link {
             display: block;
             text-align: center;
-            margin-top: 1.5rem;
-            color: #6b7280;
+            margin-top: 2rem;
+            color: #64748b;
             text-decoration: none;
-            font-size: 0.875rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
         }
 
         .back-link:hover {
-            color: #9ca3af;
+            color: #fcb82e;
+        }
+
+        .admin-badge {
+            display: inline-block;
+            background: rgba(252, 184, 46, 0.1);
+            color: #fcb82e;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 
 <body>
+    <div class="mesh-bg"></div>
     <div class="login-card">
+        <center>
+            <div class="admin-badge">Secure Console</div>
+        </center>
         <div class="logo">
-            ADMIN<span style="color: #fcb82e;">PORTAL</span>
+            ALCH<span style="color: #fcb82e;">EMY</span>
         </div>
         <form action="/auth/login" method="POST">
             <div class="form-group">
-                <label>Admin Email</label>
-                <input type="email" name="email" required placeholder="admin@innobridge.com">
+                <label>Access Terminal (Email)</label>
+                <input type="email" name="email" required placeholder="admin@alchemy.com">
             </div>
             <div class="form-group">
-                <label>Password</label>
+                <label>Security Key (Password)</label>
                 <input type="password" name="password" required placeholder="••••••••">
             </div>
-            <button type="submit">Access Dashboard</button>
+            <button type="submit">Initialize Dashboard</button>
         </form>
-        <a href="/" class="back-link">← Back to Platform</a>
+        <a href="/" class="back-link">← Return to Public Hub</a>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
-    <script src="/static/js/floating-elements.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,2156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon"
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkE8L3RleHQ+Cjwvc3ZnPg==">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startup Dashboard - Alchemy</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Enhanced Top Navigation */
+        .top-nav {
+            width: 100%;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-content {
+            margin-top: 80px;
+            flex: 1;
+            background: transparent;
+            min-height: calc(100vh - 80px);
+            padding: 2rem;
+        }
+
+        /* Logo and Brand */
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .nav-brand i {
+            color: #fcb82e;
+        }
+
+        /* Navigation Dropdowns */
+        .nav-dropdowns {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-toggle:hover {
+            background: rgba(252, 184, 46, 0.2);
+            border-color: rgba(252, 184, 46, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .dropdown-toggle.active {
+            background: rgba(252, 184, 46, 0.3);
+            border-color: #fcb82e;
+            color: #fcb82e;
+        }
+
+        .dropdown.active .dropdown-menu {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateY(0) !important;
+            display: block !important;
+        }
+
+        /* Force visibility for debugging */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            backdrop-filter: blur(20px);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            color: #1e293b;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(252, 184, 46, 0.1);
+            color: #fcb82e;
+        }
+
+        .dropdown-item:first-child {
+            border-radius: 12px 12px 0 0;
+        }
+
+        .dropdown-item:last-child {
+            border-radius: 0 0 12px 12px;
+        }
+
+        .dropdown-item i {
+            width: 18px;
+            font-size: 1rem;
+        }
+
+        .dropdown-item .badge {
+            margin-left: auto;
+            background: #ef4444;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-item .badge.success {
+            background: #10b981;
+        }
+
+        .dropdown-item .badge.warning {
+            background: #f59e0b;
+        }
+
+        /* Profile Dropdown */
+        .profile-dropdown {
+            position: relative;
+        }
+
+        .profile-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 0.5rem 1rem 0.5rem 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .profile-toggle:hover {
+            background: rgba(252, 184, 46, 0.2);
+            border-color: rgba(252, 184, 46, 0.3);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fcb82e, #f97316);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #000000;
+            border: 2px solid #fcb82e;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .profile-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: white;
+            line-height: 1.2;
+        }
+
+        .profile-level {
+            font-size: 0.7rem;
+            color: #fcb82e;
+            font-weight: 500;
+        }
+
+        .profile-dropdown .dropdown-menu {
+            right: 0;
+            left: auto;
+            min-width: 280px;
+        }
+
+        .profile-stats {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            background: linear-gradient(135deg, rgba(252, 184, 46, 0.05), rgba(249, 115, 22, 0.05));
+        }
+
+        .profile-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .progress-info {
+            text-align: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .points-display {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(226, 232, 240, 0.5);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #fcb82e, #f97316);
+            width: 65%;
+            transition: width 0.3s ease;
+        }
+
+        /* Enhanced Dashboard Header */
+        .dashboard-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .dashboard-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #1e293b, #475569);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .dashboard-subtitle {
+            color: #64748b;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* Enhanced Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #fcb82e, #f97316);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .card-icon.gold {
+            background: linear-gradient(135deg, rgba(252, 184, 46, 0.2), rgba(249, 115, 22, 0.2));
+            color: #f59e0b;
+        }
+
+        .card-icon.green {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+            color: #10b981;
+        }
+
+        .card-icon.blue {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2));
+            color: #3b82f6;
+        }
+
+        .card-icon.purple {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.2));
+            color: #8b5cf6;
+        }
+
+        .trend-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            color: #10b981;
+        }
+
+        .trend-down {
+            color: #ef4444;
+        }
+
+        /* Achievement Badges */
+        .achievements-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .achievements-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .badge-item {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .badge-item.earned {
+            background: linear-gradient(135deg, rgba(252, 184, 46, 0.1), rgba(249, 115, 22, 0.1));
+            border-color: #fcb82e;
+        }
+
+        .badge-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.4;
+        }
+
+        .badge-item.earned .badge-icon {
+            opacity: 1;
+            color: #fcb82e;
+        }
+
+        .badge-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .badge-item.earned .badge-name {
+            color: #1e293b;
+        }
+
+        /* Section Styles */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Table Styles for Referrals */
+        .table-container {
+            background: white;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        thead tr {
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th,
+        td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+        }
+
+        th {
+            font-size: 0.8rem;
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        td {
+            color: #111827;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-pill.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-pill.active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pill.rejected {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .top-nav {
+                padding: 1rem;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .nav-dropdowns {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .dropdown-toggle {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .main-content {
+                margin-top: 120px;
+                padding: 1rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .dashboard-title {
+                font-size: 1.8rem;
+            }
+
+            .profile-dropdown .dropdown-menu {
+                min-width: 250px;
+            }
+        }
+
+        /* Dropdown Animation */
+        @keyframes dropdownSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dropdown.active .dropdown-menu {
+            animation: dropdownSlide 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top Navigation with Dropdowns -->
+    <nav class="top-nav">
+        <div class="nav-brand">
+            <i class="fas fa-rocket"></i>
+            Alchemy
+        </div>
+
+        <div class="nav-dropdowns">
+
+
+            <!-- Dashboard Dropdown -->
+            <div class="dropdown" id="dashboardDropdown">
+                <button class="dropdown-toggle active" onclick="toggleDropdown('dashboardDropdown')">
+                    <i class="fas fa-gauge-high"></i>
+                    Dashboard
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="showSection('overview')">
+                        <i class="fas fa-home"></i>
+                        Overview
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('analytics')">
+                        <i class="fas fa-chart-line"></i>
+                        Analytics
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('achievements')">
+                        <i class="fas fa-trophy"></i>
+                        Achievements
+                        <span class="badge warning">5</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Applications Dropdown -->
+            <div class="dropdown" id="applicationsDropdown">
+                <button class="dropdown-toggle" onclick="toggleDropdown('applicationsDropdown')">
+                    <i class="fas fa-paper-plane"></i>
+                    Applications
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="showSection('applications')">
+                        <i class="fas fa-list"></i>
+                        My Applications
+                        <span class="badge">8</span>
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('programs')">
+                        <i class="fas fa-rocket"></i>
+                        Available Programs
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('drafts')">
+                        <i class="fas fa-file-alt"></i>
+                        Drafts
+                        <span class="badge warning">2</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Network Dropdown -->
+            <div class="dropdown" id="networkDropdown">
+                <button class="dropdown-toggle" onclick="toggleDropdown('networkDropdown')">
+                    <i class="fas fa-users"></i>
+                    Network
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <a href="/meetings" class="dropdown-item">
+                        <i class="fas fa-video"></i>
+                        My Meetings
+                    </a>
+                    <button class="dropdown-item" onclick="showSection('referrals')">
+                        <i class="fas fa-handshake"></i>
+                        Referrals
+                        <span class="badge success">3</span>
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('connections')">
+                        <i class="fas fa-network-wired"></i>
+                        Connections
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('messages')">
+                        <i class="fas fa-envelope"></i>
+                        Messages
+                        <span class="badge">12</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Resources Dropdown -->
+            <div class="dropdown" id="resourcesDropdown">
+                <button class="dropdown-toggle" onclick="toggleDropdown('resourcesDropdown')">
+                    <i class="fas fa-folder"></i>
+                    Resources
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="showSection('documents')">
+                        <i class="fas fa-file-pdf"></i>
+                        Documents
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('templates')">
+                        <i class="fas fa-copy"></i>
+                        Templates
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('guides')">
+                        <i class="fas fa-book"></i>
+                        Guides
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Dropdown -->
+        <div class="dropdown profile-dropdown" id="profileDropdown">
+            <div class="profile-toggle" onclick="toggleDropdown('profileDropdown')">
+                <div class="profile-avatar">{{ current_user.name[0] if current_user.name else 'S' }}</div>
+                <div class="profile-info">
+                    <div class="profile-name">{{ current_user.name }}</div>
+                    <div class="profile-level">Level 3 - Rising Star</div>
+                </div>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="dropdown-menu">
+                <div class="profile-stats">
+                    <div class="profile-stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">1,250</div>
+                            <div class="stat-label">Points</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">Level 3</div>
+                            <div class="stat-label">Rank</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">67%</div>
+                            <div class="stat-label">Success</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">342</div>
+                            <div class="stat-label">Views</div>
+                        </div>
+                    </div>
+                    <div class="progress-info">
+                        <div class="points-display">Next level: 500 points to go</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="dropdown-item" onclick="showSection('profile')">
+                    <i class="fas fa-user"></i>
+                    View Profile
+                </button>
+                <button class="dropdown-item" onclick="showSection('settings')">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </button>
+                <button class="dropdown-item" onclick="showSection('billing')">
+                    <i class="fas fa-credit-card"></i>
+                    Billing
+                </button>
+                <hr style="margin: 0.5rem 0; border: none; border-top: 1px solid rgba(226, 232, 240, 0.8);">
+                <a href="/" class="dropdown-item">
+                    <i class="fas fa-home"></i>
+                    Back to Home
+                </a>
+                <a href="/logout" class="dropdown-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="dashboard-header">
+            <div class="dashboard-title">Welcome back, {{ current_user.name }}!</div>
+            <div class="dashboard-subtitle">Here's what's happening with your startup journey today.</div>
+        </div>
+
+        <!-- OVERVIEW SECTION -->
+        <section id="overview" class="section active">
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Active Applications</div>
+                            <div class="card-value">8</div>
+                        </div>
+                        <div class="card-icon gold">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>2 new this week</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Profile Views</div>
+                            <div class="card-value">342</div>
+                        </div>
+                        <div class="card-icon blue">
+                            <i class="fa-solid fa-eye"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>+18% this month</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Success Rate</div>
+                            <div class="card-value">67%</div>
+                        </div>
+                        <div class="card-icon green">
+                            <i class="fa-solid fa-target"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>Above average</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Flair Points</div>
+                            <div class="card-value">1,250</div>
+                        </div>
+                        <div class="card-icon purple">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>+125 this week</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievements Section -->
+            <div class="achievements-section">
+                <div class="achievements-title">
+                    <i class="fas fa-trophy"></i>
+                    Recent Achievements
+                </div>
+                <div class="badges-grid">
+                    <div class="badge-item earned">
+                        <div class="badge-icon">🚀</div>
+                        <div class="badge-name">First Application</div>
+                    </div>
+                    <div class="badge-item earned">
+                        <div class="badge-icon">👀</div>
+                        <div class="badge-name">Profile Views</div>
+                    </div>
+                    <div class="badge-item earned">
+                        <div class="badge-icon">🤝</div>
+                        <div class="badge-name">First Referral</div>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon">⭐</div>
+                        <div class="badge-name">Rising Star</div>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon">🎯</div>
+                        <div class="badge-name">High Success</div>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon">🏆</div>
+                        <div class="badge-name">Top Performer</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- REFERRALS SECTION -->
+        <section id="referrals" class="section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <div>
+                    <h2 style="font-size: 1.5rem; font-weight: 700; color: #111827;">Incoming Referral Requests</h2>
+                    <p style="color: #6b7280; font-size: 0.9rem;">Review and accept program referrals from ecosystem
+                        enablers.</p>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Enabler</th>
+                            <th>Program</th>
+                            <th>Date Received</th>
+                            <th>Status</th>
+                            <th style="text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="referralTableBody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 3rem; color: #6b7280;">
+                                <i class="fa-solid fa-spinner fa-spin"
+                                    style="font-size: 1.5rem; margin-bottom: 1rem; display: block;"></i>
+                                Loading your referrals...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- APPLICATIONS SECTION -->
+        <section id="applications" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">My Applications</div>
+                <div class="dashboard-subtitle">Track your program submissions and progress</div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <div class="table-title">Application Status</div>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i> New Application
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Program</th>
+                            <th>Company</th>
+                            <th>Applied Date</th>
+                            <th>Status</th>
+                            <th>Next Step</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div style="font-weight: 600;">TechStars Accelerator 2024</div>
+                                <div style="font-size: 0.8rem; color: #64748b;">3-month program</div>
+                            </td>
+                            <td>TechStars</td>
+                            <td>Dec 15, 2025</td>
+                            <td><span class="status-pill active">Shortlisted</span></td>
+                            <td>Interview scheduled</td>
+                            <td>
+                                <button class="btn" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight: 600;">Y Combinator W25</div>
+                                <div style="font-size: 0.8rem; color: #64748b;">Batch Winter 2025</div>
+                            </td>
+                            <td>Y Combinator</td>
+                            <td>Nov 28, 2025</td>
+                            <td><span class="status-pill pending">Under Review</span></td>
+                            <td>Awaiting decision</td>
+                            <td>
+                                <button class="btn" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight: 600;">Google for Startups</div>
+                                <div style="font-size: 0.8rem; color: #64748b;">Cloud credits program</div>
+                            </td>
+                            <td>Google</td>
+                            <td>Jan 20, 2026</td>
+                            <td><span class="status-pill active">Accepted</span></td>
+                            <td>Onboarding</td>
+                            <td>
+                                <button class="btn" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">
+                                    <i class="fas fa-external-link-alt"></i> Access
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight: 600;">Microsoft for Startups</div>
+                                <div style="font-size: 0.8rem; color: #64748b;">Founders Hub</div>
+                            </td>
+                            <td>Microsoft</td>
+                            <td>Jan 10, 2026</td>
+                            <td><span class="status-pill rejected">Not Selected</span></td>
+                            <td>Feedback available</td>
+                            <td>
+                                <button class="btn" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">
+                                    <i class="fas fa-comment"></i> Feedback
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight: 600;">AWS Activate Program</div>
+                                <div style="font-size: 0.8rem; color: #64748b;">Cloud infrastructure</div>
+                            </td>
+                            <td>Amazon Web Services</td>
+                            <td>Feb 1, 2026</td>
+                            <td><span class="status-pill pending">Application Submitted</span></td>
+                            <td>Initial review</td>
+                            <td>
+                                <button class="btn" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ACHIEVEMENTS SECTION -->
+        <section id="achievements" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Achievements & Badges</div>
+                <div class="dashboard-subtitle">Your journey milestones and accomplishments</div>
+            </div>
+
+            <!-- Achievement Stats -->
+            <div class="cards-grid" style="margin-bottom: 2rem;">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Total Badges</div>
+                            <div class="card-value">12</div>
+                        </div>
+                        <div class="card-icon gold">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>3 new this month</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Current Level</div>
+                            <div class="card-value">3</div>
+                        </div>
+                        <div class="card-icon purple">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>Rising Star</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Points Earned</div>
+                            <div class="card-value">1,250</div>
+                        </div>
+                        <div class="card-icon blue">
+                            <i class="fa-solid fa-coins"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>+125 this week</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Next Milestone</div>
+                            <div class="card-value">500</div>
+                        </div>
+                        <div class="card-icon green">
+                            <i class="fa-solid fa-target"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>Points to Level 4</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Badges Grid -->
+            <div
+                style="background: white; border-radius: 20px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                <h3 style="font-size: 1.3rem; font-weight: 700; color: #1e293b; margin-bottom: 2rem;">
+                    <i class="fas fa-medal"></i> Achievement Badges
+                </h3>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                    <!-- Earned Badges -->
+                    <div class="badge-item earned"
+                        style="text-align: center; padding: 2rem 1rem; border-radius: 16px; background: linear-gradient(135deg, rgba(252, 184, 46, 0.1), rgba(249, 115, 22, 0.1)); border: 2px solid #fcb82e;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">First
+                            Launch</div>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 1rem;">Submitted your first
+                            application</div>
+                        <div
+                            style="background: #fcb82e; color: white; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                            Earned Jan 15, 2026
+                        </div>
+                    </div>
+
+                    <div class="badge-item earned"
+                        style="text-align: center; padding: 2rem 1rem; border-radius: 16px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); border: 2px solid #10b981;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🎯</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">Sharp
+                            Shooter</div>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 1rem;">Achieved 50%+ success rate
+                        </div>
+                        <div
+                            style="background: #10b981; color: white; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                            Earned Jan 28, 2026
+                        </div>
+                    </div>
+
+                    <div class="badge-item earned"
+                        style="text-align: center; padding: 2rem 1rem; border-radius: 16px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1)); border: 2px solid #3b82f6;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">👥</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">Network
+                            Builder</div>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 1rem;">Connected with 50+ people
+                        </div>
+                        <div
+                            style="background: #3b82f6; color: white; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                            Earned Feb 2, 2026
+                        </div>
+                    </div>
+
+                    <div class="badge-item earned"
+                        style="text-align: center; padding: 2rem 1rem; border-radius: 16px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.1)); border: 2px solid #8b5cf6;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">⚡</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">Speed
+                            Demon</div>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 1rem;">Applied to 5 programs in
+                            one day</div>
+                        <div
+                            style="background: #8b5cf6; color: white; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                            Earned Feb 3, 2026
+                        </div>
+                    </div>
+
+                    <!-- Locked Badges -->
+                    <div class="badge-item"
+                        style="text-align: center; padding: 2rem 1rem; border-radius: 16px; background: linear-gradient(135deg, #f8fafc, #e2e8f0); border: 2px solid #e2e8f0; opacity: 0.6;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem; filter: grayscale(100%);">🏆</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; color: #64748b; margin-bottom: 0.5rem;">
+                            Champion</div>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 1rem;">Get accepted to 10 programs
+                        </div>
+                        <div
+                            style="background: #e2e8f0; color: #64748b; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                            7/10 Progress
+                        </div>
+                    </div>
+
+                    <div class="badge-item"
+                        style="text-align: center; padding: 2rem 1rem; border-radius: 16px; background: linear-gradient(135deg, #f8fafc, #e2e8f0); border: 2px solid #e2e8f0; opacity: 0.6;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem; filter: grayscale(100%);">🌟</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; color: #64748b; margin-bottom: 0.5rem;">Rising
+                            Star</div>
+                        <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 1rem;">Reach Level 4</div>
+                        <div
+                            style="background: #e2e8f0; color: #64748b; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                            500 points needed
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard -->
+            <div
+                style="background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                <h3 style="font-size: 1.3rem; font-weight: 700; color: #1e293b; margin-bottom: 2rem;">
+                    <i class="fas fa-ranking-star"></i> Community Leaderboard
+                </h3>
+
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div
+                        style="display: flex; align-items: center; padding: 1rem; background: linear-gradient(135deg, #fef3c7, #fbbf24); border-radius: 12px;">
+                        <div
+                            style="width: 40px; height: 40px; background: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; margin-right: 1rem;">
+                            1</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 700; color: #92400e;">Sarah Chen</div>
+                            <div style="font-size: 0.8rem; color: #92400e; opacity: 0.8;">Level 7 - Ecosystem Leader
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 700; color: #92400e;">3,450 pts</div>
+                            <div style="font-size: 0.8rem; color: #92400e; opacity: 0.8;">18 badges</div>
+                        </div>
+                    </div>
+
+                    <div
+                        style="display: flex; align-items: center; padding: 1rem; background: #f8fafc; border-radius: 12px;">
+                        <div
+                            style="width: 40px; height: 40px; background: #64748b; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; margin-right: 1rem;">
+                            2</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 700; color: #1e293b;">Michael Ross</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">Level 5 - Expert</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 700; color: #1e293b;">2,890 pts</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">15 badges</div>
+                        </div>
+                    </div>
+
+                    <div
+                        style="display: flex; align-items: center; padding: 1rem; background: #f8fafc; border-radius: 12px;">
+                        <div
+                            style="width: 40px; height: 40px; background: #64748b; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; margin-right: 1rem;">
+                            3</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 700; color: #1e293b;">Alex Kumar</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">Level 4 - Advanced</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 700; color: #1e293b;">2,340 pts</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">12 badges</div>
+                        </div>
+                    </div>
+
+                    <div
+                        style="display: flex; align-items: center; padding: 1rem; background: linear-gradient(135deg, rgba(252, 184, 46, 0.1), rgba(249, 115, 22, 0.1)); border-radius: 12px; border: 2px solid #fcb82e;">
+                        <div
+                            style="width: 40px; height: 40px; background: #fcb82e; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; margin-right: 1rem;">
+                            8</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 700; color: #1e293b;">You ({{ current_user.name }})</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">Level 3 - Rising Star</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 700; color: #1e293b;">1,250 pts</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">8 badges</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ANALYTICS SECTION -->
+        <section id="analytics" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Performance Analytics</div>
+                <div class="dashboard-subtitle">Insights into your startup's growth and engagement</div>
+            </div>
+
+            <!-- Analytics Cards -->
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Application Success Rate</div>
+                            <div class="card-value">67%</div>
+                        </div>
+                        <div class="card-icon green">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>+12% vs last month</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Profile Engagement</div>
+                            <div class="card-value">8.4</div>
+                        </div>
+                        <div class="card-icon blue">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>Engagement score</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Network Growth</div>
+                            <div class="card-value">156</div>
+                        </div>
+                        <div class="card-icon purple">
+                            <i class="fa-solid fa-network-wired"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <span>+23 this month</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Response Time</div>
+                            <div class="card-value">2.3d</div>
+                        </div>
+                        <div class="card-icon gold">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="trend-indicator trend-up">
+                        <i class="fa-solid fa-arrow-down"></i>
+                        <span>Faster responses</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                <!-- Main Chart -->
+                <div
+                    style="background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h3 style="font-size: 1.2rem; font-weight: 700; color: #1e293b;">Application Activity</h3>
+                        <div style="display: flex; gap: 1rem;">
+                            <button
+                                style="padding: 0.5rem 1rem; border: 1px solid #e2e8f0; border-radius: 8px; background: white; cursor: pointer;">7D</button>
+                            <button
+                                style="padding: 0.5rem 1rem; border: 1px solid #fcb82e; border-radius: 8px; background: #fcb82e; color: white; cursor: pointer;">30D</button>
+                            <button
+                                style="padding: 0.5rem 1rem; border: 1px solid #e2e8f0; border-radius: 8px; background: white; cursor: pointer;">90D</button>
+                        </div>
+                    </div>
+                    <div style="height: 300px; display: flex; align-items: end; gap: 1rem; padding: 1rem 0;">
+                        <!-- Mock Chart Bars -->
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                            <div
+                                style="width: 100%; height: 120px; background: linear-gradient(to top, #fcb82e, #f97316); border-radius: 4px 4px 0 0; margin-bottom: 0.5rem;">
+                            </div>
+                            <span style="font-size: 0.8rem; color: #64748b;">Jan</span>
+                        </div>
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                            <div
+                                style="width: 100%; height: 180px; background: linear-gradient(to top, #fcb82e, #f97316); border-radius: 4px 4px 0 0; margin-bottom: 0.5rem;">
+                            </div>
+                            <span style="font-size: 0.8rem; color: #64748b;">Feb</span>
+                        </div>
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                            <div
+                                style="width: 100%; height: 90px; background: linear-gradient(to top, #fcb82e, #f97316); border-radius: 4px 4px 0 0; margin-bottom: 0.5rem;">
+                            </div>
+                            <span style="font-size: 0.8rem; color: #64748b;">Mar</span>
+                        </div>
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                            <div
+                                style="width: 100%; height: 220px; background: linear-gradient(to top, #fcb82e, #f97316); border-radius: 4px 4px 0 0; margin-bottom: 0.5rem;">
+                            </div>
+                            <span style="font-size: 0.8rem; color: #64748b;">Apr</span>
+                        </div>
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                            <div
+                                style="width: 100%; height: 160px; background: linear-gradient(to top, #fcb82e, #f97316); border-radius: 4px 4px 0 0; margin-bottom: 0.5rem;">
+                            </div>
+                            <span style="font-size: 0.8rem; color: #64748b;">May</span>
+                        </div>
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                            <div
+                                style="width: 100%; height: 200px; background: linear-gradient(to top, #fcb82e, #f97316); border-radius: 4px 4px 0 0; margin-bottom: 0.5rem;">
+                            </div>
+                            <span style="font-size: 0.8rem; color: #64748b;">Jun</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Side Stats -->
+                <div
+                    style="background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                    <h3 style="font-size: 1.2rem; font-weight: 700; color: #1e293b; margin-bottom: 2rem;">Key Metrics
+                    </h3>
+
+                    <div style="margin-bottom: 2rem;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.9rem; color: #64748b;">Conversion Rate</span>
+                            <span style="font-size: 1.1rem; font-weight: 700; color: #10b981;">23%</span>
+                        </div>
+                        <div style="width: 100%; height: 6px; background: #e2e8f0; border-radius: 3px;">
+                            <div style="width: 23%; height: 100%; background: #10b981; border-radius: 3px;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 2rem;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.9rem; color: #64748b;">Profile Completion</span>
+                            <span style="font-size: 1.1rem; font-weight: 700; color: #fcb82e;">89%</span>
+                        </div>
+                        <div style="width: 100%; height: 6px; background: #e2e8f0; border-radius: 3px;">
+                            <div style="width: 89%; height: 100%; background: #fcb82e; border-radius: 3px;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 2rem;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.9rem; color: #64748b;">Network Activity</span>
+                            <span style="font-size: 1.1rem; font-weight: 700; color: #3b82f6;">76%</span>
+                        </div>
+                        <div style="width: 100%; height: 6px; background: #e2e8f0; border-radius: 3px;">
+                            <div style="width: 76%; height: 100%; background: #3b82f6; border-radius: 3px;"></div>
+                        </div>
+                    </div>
+
+                    <div
+                        style="padding: 1.5rem; background: linear-gradient(135deg, rgba(252, 184, 46, 0.1), rgba(249, 115, 22, 0.1)); border-radius: 12px; text-align: center;">
+                        <div style="font-size: 1.5rem; font-weight: 800; color: #fcb82e; margin-bottom: 0.5rem;">A+
+                        </div>
+                        <div style="font-size: 0.9rem; color: #64748b;">Overall Score</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROGRAMS SECTION -->
+        <section id="programs" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Available Programs</div>
+                <div class="dashboard-subtitle">Discover opportunities tailored for your startup</div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div
+                style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                    <div class="search-input" style="flex: 1; min-width: 250px;">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search programs..." style="width: 100%;">
+                    </div>
+                    <select style="padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+                        <option>All Industries</option>
+                        <option>FinTech</option>
+                        <option>HealthTech</option>
+                        <option>AI/ML</option>
+                        <option>SaaS</option>
+                    </select>
+                    <select style="padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+                        <option>All Stages</option>
+                        <option>Pre-Seed</option>
+                        <option>Seed</option>
+                        <option>Series A</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Programs Grid -->
+            <div class="programs-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+                <!-- Program 1 -->
+                <div class="program-card"
+                    style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); transition: transform 0.3s ease;">
+                    <div
+                        style="height: 160px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.5rem; color: white; position: relative;">
+                        <div
+                            style="position: absolute; top: 1rem; right: 1rem; background: rgba(255, 255, 255, 0.2); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">
+                            Accelerator
+                        </div>
+                        <div style="position: absolute; bottom: 1rem; left: 1.5rem;">
+                            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem;">Plug and Play Tech
+                                Center</h3>
+                            <p style="opacity: 0.9; font-size: 0.9rem;">3-month acceleration program</p>
+                        </div>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                            <span
+                                style="background: #e0f2fe; color: #0277bd; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">FinTech</span>
+                            <span
+                                style="background: #f3e5f5; color: #7b1fa2; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">AI/ML</span>
+                        </div>
+                        <p style="color: #64748b; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+                            Join our 12-week program with $100K investment, mentorship from industry experts, and access
+                            to corporate partners.
+                        </p>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <div style="font-size: 0.8rem; color: #64748b;">
+                                <i class="fas fa-calendar"></i> Deadline: Mar 15, 2026
+                            </div>
+                            <div style="font-size: 0.8rem; color: #10b981; font-weight: 600;">
+                                <i class="fas fa-users"></i> 23 spots left
+                            </div>
+                        </div>
+                        <button onclick="window.location.href='/startup/apply/program/1'"
+                            style="width: 100%; padding: 0.8rem; background: #667eea; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Program 2 -->
+                <div class="program-card"
+                    style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                    <div
+                        style="height: 160px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 1.5rem; color: white; position: relative;">
+                        <div
+                            style="position: absolute; top: 1rem; right: 1rem; background: rgba(255, 255, 255, 0.2); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">
+                            Incubator
+                        </div>
+                        <div style="position: absolute; bottom: 1rem; left: 1.5rem;">
+                            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem;">500 Global Batch #30
+                            </h3>
+                            <p style="opacity: 0.9; font-size: 0.9rem;">4-month intensive program</p>
+                        </div>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                            <span
+                                style="background: #fff3e0; color: #ef6c00; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">SaaS</span>
+                            <span
+                                style="background: #e8f5e8; color: #2e7d32; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">B2B</span>
+                        </div>
+                        <p style="color: #64748b; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+                            $150K investment, global network access, and demo day presentation to 500+ investors
+                            worldwide.
+                        </p>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <div style="font-size: 0.8rem; color: #64748b;">
+                                <i class="fas fa-calendar"></i> Deadline: Apr 1, 2026
+                            </div>
+                            <div style="font-size: 0.8rem; color: #f59e0b; font-weight: 600;">
+                                <i class="fas fa-fire"></i> Hot opportunity
+                            </div>
+                        </div>
+                        <button onclick="window.location.href='/startup/apply/program/2'"
+                            style="width: 100%; padding: 0.8rem; background: #f5576c; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Program 3 -->
+                <div class="program-card"
+                    style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                    <div
+                        style="height: 160px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 1.5rem; color: white; position: relative;">
+                        <div
+                            style="position: absolute; top: 1rem; right: 1rem; background: rgba(255, 255, 255, 0.2); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">
+                            Corporate PoC
+                        </div>
+                        <div style="position: absolute; bottom: 1rem; left: 1.5rem;">
+                            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem;">IBM PartnerPlus</h3>
+                            <p style="opacity: 0.9; font-size: 0.9rem;">Enterprise partnership program</p>
+                        </div>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                            <span
+                                style="background: #e1f5fe; color: #0277bd; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">Enterprise</span>
+                            <span
+                                style="background: #f3e5f5; color: #7b1fa2; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">AI</span>
+                        </div>
+                        <p style="color: #64748b; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+                            Partner with IBM for enterprise solutions. Access to Watson AI, cloud credits, and
+                            enterprise sales channels.
+                        </p>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <div style="font-size: 0.8rem; color: #64748b;">
+                                <i class="fas fa-calendar"></i> Rolling basis
+                            </div>
+                            <div style="font-size: 0.8rem; color: #10b981; font-weight: 600;">
+                                <i class="fas fa-check-circle"></i> Fast track
+                            </div>
+                        </div>
+                        <button onclick="window.location.href='/startup/apply/program/3'"
+                            style="width: 100%; padding: 0.8rem; background: #4facfe; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Program 4 -->
+                <div class="program-card"
+                    style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                    <div
+                        style="height: 160px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); padding: 1.5rem; color: white; position: relative;">
+                        <div
+                            style="position: absolute; top: 1rem; right: 1rem; background: rgba(255, 255, 255, 0.2); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">
+                            Grant
+                        </div>
+                        <div style="position: absolute; bottom: 1rem; left: 1.5rem;">
+                            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem;">SBIR Phase I</h3>
+                            <p style="opacity: 0.9; font-size: 0.9rem;">Government research grant</p>
+                        </div>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                            <span
+                                style="background: #fff3e0; color: #ef6c00; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">Research</span>
+                            <span
+                                style="background: #e8f5e8; color: #2e7d32; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">Deep
+                                Tech</span>
+                        </div>
+                        <p style="color: #64748b; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+                            Up to $275K non-dilutive funding for innovative research and development projects with
+                            commercial potential.
+                        </p>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <div style="font-size: 0.8rem; color: #64748b;">
+                                <i class="fas fa-calendar"></i> Deadline: May 20, 2026
+                            </div>
+                            <div style="font-size: 0.8rem; color: #10b981; font-weight: 600;">
+                                <i class="fas fa-dollar-sign"></i> Non-dilutive
+                            </div>
+                        </div>
+                        <button onclick="window.location.href='/startup/apply/program/4'"
+                            style="width: 100%; padding: 0.8rem; background: #fa709a; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="settings" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Account Settings</div>
+                <div class="dashboard-subtitle">Manage your profile and preferences</div>
+            </div>
+            <!-- Settings content -->
+        </section>
+
+        <!-- DRAFTS SECTION -->
+        <section id="drafts" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Application Drafts</div>
+                <div class="dashboard-subtitle">Continue working on your saved applications</div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+                <!-- Draft 1 -->
+                <div
+                    style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border-left: 4px solid #f59e0b;">
+                    <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 1rem;">
+                        <div style="flex: 1;">
+                            <h3 style="font-size: 1.2rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">
+                                Sequoia Capital Seed Program</h3>
+                            <p style="color: #64748b; font-size: 0.9rem;">Early-stage investment program</p>
+                        </div>
+                        <span
+                            style="background: #fef3c7; color: #92400e; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Draft</span>
+                    </div>
+
+                    <div style="margin-bottom: 1.5rem;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.9rem; color: #64748b;">Completion Progress</span>
+                            <span style="font-size: 0.9rem; font-weight: 600; color: #f59e0b;">75%</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px;">
+                            <div style="width: 75%; height: 100%; background: #f59e0b; border-radius: 4px;"></div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                        <span
+                            style="background: #e0f2fe; color: #0277bd; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">FinTech</span>
+                        <span
+                            style="background: #f3e5f5; color: #7b1fa2; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">Seed
+                            Stage</span>
+                    </div>
+
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 0.8rem; color: #64748b;">
+                            <i class="fas fa-clock"></i> Last edited: 2 hours ago
+                        </div>
+                        <div style="font-size: 0.8rem; color: #ef4444; font-weight: 600;">
+                            <i class="fas fa-exclamation-triangle"></i> Deadline: Mar 1
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem;">
+                        <button
+                            style="flex: 1; padding: 0.8rem; background: #fcb82e; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            <i class="fas fa-edit"></i> Continue
+                        </button>
+                        <button
+                            style="padding: 0.8rem; background: #f1f5f9; color: #64748b; border: none; border-radius: 8px; cursor: pointer;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Draft 2 -->
+                <div
+                    style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border-left: 4px solid #10b981;">
+                    <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 1rem;">
+                        <div style="flex: 1;">
+                            <h3 style="font-size: 1.2rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">
+                                NVIDIA Inception Program</h3>
+                            <p style="color: #64748b; font-size: 0.9rem;">AI startup acceleration</p>
+                        </div>
+                        <span
+                            style="background: #dcfce7; color: #166534; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Ready</span>
+                    </div>
+
+                    <div style="margin-bottom: 1.5rem;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.9rem; color: #64748b;">Completion Progress</span>
+                            <span style="font-size: 0.9rem; font-weight: 600; color: #10b981;">100%</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px;">
+                            <div style="width: 100%; height: 100%; background: #10b981; border-radius: 4px;"></div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                        <span
+                            style="background: #f3e5f5; color: #7b1fa2; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">AI/ML</span>
+                        <span
+                            style="background: #e8f5e8; color: #2e7d32; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">Deep
+                            Tech</span>
+                    </div>
+
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 0.8rem; color: #64748b;">
+                            <i class="fas fa-check-circle"></i> Ready to submit
+                        </div>
+                        <div style="font-size: 0.8rem; color: #10b981; font-weight: 600;">
+                            <i class="fas fa-calendar-check"></i> No deadline
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem;">
+                        <button
+                            style="flex: 1; padding: 0.8rem; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            <i class="fas fa-paper-plane"></i> Submit
+                        </button>
+                        <button
+                            style="padding: 0.8rem; background: #f1f5f9; color: #64748b; border: none; border-radius: 8px; cursor: pointer;">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div
+                    style="background: white; border-radius: 16px; padding: 3rem 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 2px dashed #e2e8f0; text-align: center;">
+                    <div style="font-size: 3rem; color: #e2e8f0; margin-bottom: 1rem;">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <h3 style="font-size: 1.1rem; font-weight: 600; color: #64748b; margin-bottom: 0.5rem;">Start New
+                        Draft</h3>
+                    <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem;">Save time by creating reusable
+                        application templates</p>
+                    <button
+                        style="padding: 0.8rem 1.5rem; background: #fcb82e; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                        <i class="fas fa-plus"></i> New Draft
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="connections" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Network Connections</div>
+                <div class="dashboard-subtitle">Manage your professional network</div>
+            </div>
+            <!-- Connections content -->
+        </section>
+
+        <section id="messages" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Messages</div>
+                <div class="dashboard-subtitle">Communication with your network</div>
+            </div>
+            <!-- Messages content -->
+        </section>
+
+        <section id="documents" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Documents</div>
+                <div class="dashboard-subtitle">Manage your startup documents and files</div>
+            </div>
+            <!-- Documents content -->
+        </section>
+
+        <section id="templates" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Application Templates</div>
+                <div class="dashboard-subtitle">Reusable templates for faster applications</div>
+            </div>
+            <!-- Templates content -->
+        </section>
+
+        <section id="guides" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Startup Guides</div>
+                <div class="dashboard-subtitle">Resources and guides for startup success</div>
+            </div>
+            <!-- Guides content -->
+        </section>
+
+        <section id="profile" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">My Profile</div>
+                <div class="dashboard-subtitle">View and manage your startup profile</div>
+            </div>
+            <!-- Profile content -->
+        </section>
+
+        <section id="billing" class="section">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Billing & Subscription</div>
+                <div class="dashboard-subtitle">Manage your account billing and subscription</div>
+            </div>
+            <!-- Billing content -->
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/js/meetings.js"></script>
+    <script>
+        // Simplified dropdown functionality
+        function toggleDropdown(dropdownId) {
+            console.log('Toggle called for:', dropdownId);
+
+            const dropdown = document.getElementById(dropdownId);
+            if (!dropdown) {
+                console.error('Dropdown not found:', dropdownId);
+                return;
+            }
+
+            const menu = dropdown.querySelector('.dropdown-menu');
+            // Handle both .dropdown-toggle and .profile-toggle
+            const toggle = dropdown.querySelector('.dropdown-toggle') || dropdown.querySelector('.profile-toggle');
+
+            if (!menu || !toggle) {
+                console.error('Menu or toggle not found in dropdown:', dropdownId);
+                return;
+            }
+
+            // Close all other dropdowns first
+            document.querySelectorAll('.dropdown').forEach(d => {
+                if (d.id !== dropdownId) {
+                    d.classList.remove('active');
+                    const otherToggle = d.querySelector('.dropdown-toggle') || d.querySelector('.profile-toggle');
+                    if (otherToggle) otherToggle.classList.remove('active');
+                }
+            });
+
+            // Toggle current dropdown
+            const isActive = dropdown.classList.contains('active');
+            if (isActive) {
+                dropdown.classList.remove('active');
+                toggle.classList.remove('active');
+                console.log('Closed dropdown:', dropdownId);
+            } else {
+                dropdown.classList.add('active');
+                toggle.classList.add('active');
+                console.log('Opened dropdown:', dropdownId);
+            }
+        }
+
+        function showSection(sectionId) {
+            console.log('Showing section:', sectionId);
+
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show target section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                console.log('Section shown:', sectionId);
+            } else {
+                console.error('Section not found:', sectionId);
+            }
+
+            // Close all dropdowns
+            document.querySelectorAll('.dropdown').forEach(d => {
+                d.classList.remove('active');
+                const toggle = d.querySelector('.dropdown-toggle') || d.querySelector('.profile-toggle');
+                if (toggle) toggle.classList.remove('active');
+            });
+
+            // Update active dropdown indicator
+            updateActiveDropdown(sectionId);
+
+            // Load referrals if needed
+            if (sectionId === 'referrals') {
+                loadReferrals();
+            }
+        }
+
+        function updateActiveDropdown(sectionId) {
+            const mapping = {
+                'overview': 'dashboardDropdown',
+                'analytics': 'dashboardDropdown',
+                'achievements': 'dashboardDropdown',
+                'applications': 'applicationsDropdown',
+                'programs': 'applicationsDropdown',
+                'drafts': 'applicationsDropdown',
+                'referrals': 'networkDropdown',
+                'connections': 'networkDropdown',
+                'messages': 'networkDropdown',
+                'documents': 'resourcesDropdown',
+                'templates': 'resourcesDropdown',
+                'guides': 'resourcesDropdown'
+            };
+
+            // Reset all
+            document.querySelectorAll('.dropdown-toggle, .profile-toggle').forEach(toggle => {
+                toggle.classList.remove('active');
+            });
+
+            // Set active
+            const dropdownId = mapping[sectionId];
+            if (dropdownId) {
+                const dropdown = document.getElementById(dropdownId);
+                if (dropdown) {
+                    const toggle = dropdown.querySelector('.dropdown-toggle') || dropdown.querySelector('.profile-toggle');
+                    if (toggle) toggle.classList.add('active');
+                }
+            }
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(d => {
+                    d.classList.remove('active');
+                    const toggle = d.querySelector('.dropdown-toggle') || d.querySelector('.profile-toggle');
+                    if (toggle) toggle.classList.remove('active');
+                });
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('Dashboard loaded');
+            updateActiveDropdown('overview');
+            loadReferrals();
+        });
+
+        // Referrals loading function
+        async function loadReferrals() {
+            const tbody = document.getElementById('referralTableBody');
+            if (!tbody) return;
+
+            try {
+                const res = await fetch('/api/referrals/incoming');
+                const json = await res.json();
+                let referrals = json.referrals || [];
+
+                if (referrals.length > 0) {
+                    tbody.innerHTML = referrals.map(r => {
+                        const date = new Date(r.created_at).toLocaleDateString();
+                        let statusClass = 'pending';
+                        if (r.status === 'accepted') statusClass = 'active';
+                        if (r.status === 'rejected') statusClass = 'rejected';
+
+                        const statusLabel = r.status.replace('_', ' ').charAt(0).toUpperCase() + r.status.replace('_', ' ').slice(1);
+
+                        let actions = `
+                            <div style="display: flex; gap: 0.5rem; justify-content: flex-end; align-items: center;">
+                                <button onclick="viewProgram(${r.opportunity_id})" class="btn-icon" style="background:#f3f4f6; color:#374151; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: 1px solid #d1d5db; cursor: pointer;"><i class="fa-solid fa-eye"></i> View</button>
+                        `;
+
+                        if (r.status === 'pending') {
+                            actions += `
+                                <button onclick="handleReferralAction(${r.id}, 'accept')" class="btn-icon" style="background:#10b981; color:white; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer;">Accept</button>
+                                <button onclick="handleReferralAction(${r.id}, 'reject')" class="btn-icon" style="background:#ef4444; color:white; width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer;">Decline</button>
+                            `;
+                        }
+
+                        actions += `</div>`;
+
+                        return `
+                        <tr>
+                            <td>
+                                <div style="font-weight:600;">${r.enabler_name}</div>
+                                <div style="font-size:0.75rem; color:#64748b;">Ecosystem Enabler</div>
+                            </td>
+                            <td>${r.opportunity_title}</td>
+                            <td>${date}</td>
+                            <td><span class="status-pill ${statusClass}">${statusLabel}</span></td>
+                            <td style="text-align: right;">${actions}</td>
+                        </tr>
+                        `;
+                    }).join('');
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 3rem; color: #64748b;">No referral requests found.</td></tr>`;
+                }
+            } catch (err) {
+                console.error(err);
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 3rem; color: #ef4444;">Failed to load referrals.</td></tr>`;
+            }
+        }
+
+        async function handleReferralAction(id, action) {
+            try {
+                const res = await fetch(`/api/referrals/${id}/action`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action })
+                });
+                const json = await res.json();
+                if (json.success) {
+                    showToast(`Referral ${action}ed successfully!`, "success");
+                    loadReferrals();
+                } else {
+                    showToast(json.error || "Action failed", "info");
+                }
+            } catch (err) {
+                showToast("Error processing referral action", "info");
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                background: ${type === 'success' ? '#10b981' : '#3b82f6'};
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+                z-index: 10000;
+                transform: translateY(100px);
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            `;
+
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-info-circle';
+            toast.innerHTML = `<i class="fas ${icon}"></i> <span>${message}</span>`;
+
+            document.body.appendChild(toast);
+            setTimeout(() => toast.style.transform = 'translateY(0)', 100);
+
+            setTimeout(() => {
+                toast.style.transform = 'translateY(100px)';
+                setTimeout(() => toast.remove(), 400);
+            }, 3500);
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('Enhanced Dropdown Dashboard loaded');
+
+            // Test dropdown functionality
+            const dropdowns = document.querySelectorAll('.dropdown');
+            console.log('Found dropdowns:', dropdowns.length);
+
+            dropdowns.forEach((dropdown, index) => {
+                console.log(`Dropdown ${index}:`, dropdown.id);
+                const toggle = dropdown.querySelector('.dropdown-toggle') || dropdown.querySelector('.profile-toggle');
+                const menu = dropdown.querySelector('.dropdown-menu');
+                console.log(`  - Toggle:`, toggle ? 'found' : 'missing');
+                console.log(`  - Menu:`, menu ? 'found' : 'missing');
+            });
+
+            // Animate progress bar
+            setTimeout(() => {
+                const progressBar = document.querySelector('.progress-fill');
+                if (progressBar) {
+                    progressBar.style.width = '65%';
+                }
+            }, 500);
+
+            // Set initial active dropdown
+            updateActiveDropdown('overview');
+
+            // Load referrals on page load
+            loadReferrals();
+        });
+
+        // Handle escape key to close dropdowns
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && activeDropdown) {
+                console.log('Escape key pressed, closing dropdowns');
+                document.querySelectorAll('.dropdown').forEach(d => {
+                    d.classList.remove('active');
+                    const toggle = d.querySelector('.dropdown-toggle') || d.querySelector('.profile-toggle');
+                    if (toggle) {
+                        toggle.classList.remove('active');
+                    }
+                });
+                activeDropdown = null;
+            }
+        });
+    </script>
+</body>
+
+</html>

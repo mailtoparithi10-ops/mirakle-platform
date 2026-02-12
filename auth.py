@@ -1,7 +1,7 @@
 # auth.py
 from flask import Blueprint, request, redirect, url_for, render_template, jsonify, session, current_app
 from models import User, Referral, Startup
-from extensions import db, login_manager
+from extensions import db, login_manager, limiter
 from flask_login import login_user, logout_user, login_required, current_user
 import google.auth.transport.requests
 import google.oauth2.id_token
@@ -22,6 +22,7 @@ bp = Blueprint("auth", __name__, url_prefix="/auth")
 # LOGIN
 # -----------------------------------------
 @bp.route("/login", methods=["GET", "POST"])
+@limiter.limit("5 per minute")  # Rate limit: 5 login attempts per minute
 def login():
     # If GET request → show login page
     if request.method == "GET":
@@ -65,6 +66,13 @@ def login():
 
     login_user(user)
     print(f"SUCCESS: User logged in - {user.email}")
+    
+    # Set Sentry user context for error tracking
+    try:
+        from sentry_config import set_user_context
+        set_user_context(user)
+    except Exception as e:
+        print(f"Warning: Could not set Sentry context: {e}")
 
     # --- REFERRAL TRACKING ---
     token = session.get('referral_token')
@@ -94,6 +102,7 @@ def login():
 # REGISTER
 # -----------------------------------------
 @bp.route("/register", methods=["GET", "POST"])
+@limiter.limit("3 per minute")  # Rate limit: 3 registration attempts per minute
 def register():
     # Show signup page
     if request.method == "GET":
@@ -207,6 +216,15 @@ def register():
         db.session.commit()
         print("REGISTRATION: Database commit successful")
 
+        # Send welcome email
+        try:
+            from email_service import send_welcome_email
+            send_welcome_email(user)
+            print("REGISTRATION: Welcome email sent")
+        except Exception as e:
+            print(f"REGISTRATION: Warning - Could not send welcome email: {e}")
+            # Don't fail registration if email fails
+
         # Auto-login the user after registration
         from flask_login import login_user
         login_user(user)
@@ -250,6 +268,13 @@ def register():
 @bp.route("/logout")
 @login_required
 def logout():
+    # Clear Sentry user context
+    try:
+        from sentry_config import clear_user_context
+        clear_user_context()
+    except Exception as e:
+        print(f"Warning: Could not clear Sentry context: {e}")
+    
     logout_user()
     return redirect("/")
 
@@ -436,10 +461,11 @@ def google_callback():
             if not user.is_active:
                 return jsonify({"error": "Account disabled"}), 403
             
-            # Update Google ID if not set
+            # Update Google ID and Profile Pic if needed
+            user.profile_pic = picture  # Always update/sync picture
             if not user.google_id:
                 user.google_id = google_id
-                db.session.commit()
+            db.session.commit()
             
             login_user(user)
             
@@ -557,6 +583,7 @@ def google_signup_complete():
             country=country,
             company=company,
             google_id=google_id,
+            profile_pic=google_data.get('picture'),
             is_active=True
         )
         
@@ -640,3 +667,212 @@ def google_signup_complete():
         print(f"CRITICAL: Google signup completion error: {e}")
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
+
+
+# -----------------------------------------
+# FORGOT PASSWORD - OTP SYSTEM
+# -----------------------------------------
+import random
+import string
+from datetime import datetime, timedelta
+from email_service import send_email
+
+@bp.route("/forgot-password", methods=["GET", "POST"])
+def forgot_password():
+    if request.method == "GET":
+        return render_template("forgot_password.html")
+    
+    # POST - Send OTP
+    data = request.get_json()
+    email = data.get("email")
+    
+    if not email:
+        return jsonify({"error": "Email is required"}), 400
+    
+    # Check if user exists
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"error": "No account found with this email"}), 404
+    
+    # Generate 6-digit OTP
+    otp = ''.join(random.choices(string.digits, k=6))
+    
+    # Store OTP in database (expires in 10 minutes)
+    expires_at = datetime.utcnow() + timedelta(minutes=10)
+    
+    try:
+        # Delete any existing OTPs for this user
+        db.session.execute(
+            db.text("DELETE FROM password_reset_otp WHERE user_id = :user_id"),
+            {"user_id": user.id}
+        )
+        
+        # Insert new OTP
+        db.session.execute(
+            db.text("""
+                INSERT INTO password_reset_otp (user_id, email, otp, expires_at, is_used)
+                VALUES (:user_id, :email, :otp, :expires_at, 0)
+            """),
+            {
+                "user_id": user.id,
+                "email": email,
+                "otp": otp,
+                "expires_at": expires_at
+            }
+        )
+        db.session.commit()
+        
+        # Send OTP via email
+        subject = "Password Reset Code - Alchemy"
+        text_body = f"""
+Hi {user.name},
+
+You requested to reset your password for your Alchemy account.
+
+Your verification code is: {otp}
+
+This code will expire in 10 minutes.
+
+If you didn't request this, please ignore this email.
+
+Best regards,
+The Alchemy Team
+"""
+        
+        html_body = f"""
+<html>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h2 style="color: #000;">Password Reset Request</h2>
+        <p>Hi <strong>{user.name}</strong>,</p>
+        <p>You requested to reset your password for your Alchemy account.</p>
+        <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
+            <p style="margin: 0; font-size: 14px; color: #666;">Your verification code is:</p>
+            <h1 style="margin: 10px 0; font-size: 36px; letter-spacing: 8px; color: #000;">{otp}</h1>
+            <p style="margin: 0; font-size: 14px; color: #666;">This code will expire in 10 minutes</p>
+        </div>
+        <p>If you didn't request this, please ignore this email.</p>
+        <p>Best regards,<br><strong>The Alchemy Team</strong></p>
+    </div>
+</body>
+</html>
+"""
+        
+        send_email(email, subject, text_body, html_body)
+        
+        return jsonify({"message": "Verification code sent to your email"}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error sending OTP: {e}")
+        return jsonify({"error": "Failed to send verification code"}), 500
+
+
+@bp.route("/verify-otp", methods=["GET", "POST"])
+def verify_otp():
+    if request.method == "GET":
+        return render_template("verify_otp.html")
+    
+    # POST - Verify OTP
+    data = request.get_json()
+    email = data.get("email")
+    otp = data.get("otp")
+    
+    if not email or not otp:
+        return jsonify({"error": "Email and OTP are required"}), 400
+    
+    try:
+        # Check if OTP is valid
+        result = db.session.execute(
+            db.text("""
+                SELECT id, user_id, expires_at, is_used 
+                FROM password_reset_otp 
+                WHERE email = :email AND otp = :otp
+                ORDER BY created_at DESC
+                LIMIT 1
+            """),
+            {"email": email, "otp": otp}
+        ).fetchone()
+        
+        if not result:
+            return jsonify({"error": "Invalid verification code"}), 400
+        
+        otp_id, user_id, expires_at, is_used = result
+        
+        # Check if already used
+        if is_used:
+            return jsonify({"error": "This code has already been used"}), 400
+        
+        # Check if expired
+        if datetime.utcnow() > expires_at:
+            return jsonify({"error": "Verification code has expired"}), 400
+        
+        return jsonify({"message": "Code verified successfully"}), 200
+        
+    except Exception as e:
+        print(f"Error verifying OTP: {e}")
+        return jsonify({"error": "Failed to verify code"}), 500
+
+
+@bp.route("/reset-password", methods=["GET", "POST"])
+def reset_password():
+    if request.method == "GET":
+        return render_template("reset_password.html")
+    
+    # POST - Reset password
+    data = request.get_json()
+    email = data.get("email")
+    otp = data.get("otp")
+    password = data.get("password")
+    
+    if not email or not otp or not password:
+        return jsonify({"error": "All fields are required"}), 400
+    
+    if len(password) < 6:
+        return jsonify({"error": "Password must be at least 6 characters"}), 400
+    
+    try:
+        # Verify OTP one more time
+        result = db.session.execute(
+            db.text("""
+                SELECT id, user_id, expires_at, is_used 
+                FROM password_reset_otp 
+                WHERE email = :email AND otp = :otp
+                ORDER BY created_at DESC
+                LIMIT 1
+            """),
+            {"email": email, "otp": otp}
+        ).fetchone()
+        
+        if not result:
+            return jsonify({"error": "Invalid verification code"}), 400
+        
+        otp_id, user_id, expires_at, is_used = result
+        
+        if is_used:
+            return jsonify({"error": "This code has already been used"}), 400
+        
+        if datetime.utcnow() > expires_at:
+            return jsonify({"error": "Verification code has expired"}), 400
+        
+        # Get user and update password
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+        
+        user.set_password(password)
+        
+        # Mark OTP as used
+        db.session.execute(
+            db.text("UPDATE password_reset_otp SET is_used = 1 WHERE id = :otp_id"),
+            {"otp_id": otp_id}
+        )
+        
+        db.session.commit()
+        
+        return jsonify({"message": "Password reset successfully"}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error resetting password: {e}")
+        return jsonify({"error": "Failed to reset password"}), 500

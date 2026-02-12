@@ -125,7 +125,7 @@ window.addEventListener('error', function (e) {
 /* -------------------------------
    PREFETCH CRITICAL ROUTES
 ---------------------------------- */
-['/innobridge', '/corporate'].forEach(url => {
+['/alchemy', '/corporate'].forEach(url => {
     const link = document.createElement('link');
     link.rel = 'prefetch';
     link.href = url;
@@ -140,7 +140,7 @@ function redirectToCorporate() {
 }
 
 function navigateToApp() {
-    window.location.href = '/innobridge';
+    window.location.href = '/alchemy';
 }
 
 // Export globally

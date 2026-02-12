@@ -275,4 +275,4 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-console.log('📈 InnoBridge Investor Hub Loaded Successfully!');
+console.log('📈 Alchemy Investor Hub Loaded Successfully!');

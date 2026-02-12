@@ -177,7 +177,7 @@ document.getElementById('signupForm').addEventListener('submit', async function 
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 2000));
 
-        showAlert('Corporate account created successfully! Welcome to InnoBridge Enterprise!', 'success', 'signup');
+        showAlert('Corporate account created successfully! Welcome to Alchemy Enterprise!', 'success', 'signup');
         setTimeout(() => {
             window.location.href = '/corporate/dashboard';
         }, 2000);
@@ -231,4 +231,4 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-console.log('🏢 InnoBridge Corporate Hub Loaded Successfully!');
+console.log('🏢 Alchemy Corporate Hub Loaded Successfully!');

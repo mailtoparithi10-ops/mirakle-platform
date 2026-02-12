@@ -399,7 +399,7 @@ function updateTimers() {
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('InnoBridge Platform Loaded Successfully!');
+    console.log('Alchemy Platform Loaded Successfully!');
 
     // Check authentication status first
     checkAuthStatus();

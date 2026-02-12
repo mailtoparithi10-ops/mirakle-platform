@@ -3,146 +3,147 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 from models import Referral, Startup, Opportunity, User, Application
 from extensions import db
-import random
+from enabler_service import EnablerService
 
 bp = Blueprint("enablers", __name__, url_prefix="/api/enabler")
 
 @bp.route("/dashboard/overview", methods=["GET"])
 @login_required
 def get_overview():
+    """Get enabler dashboard overview with real data"""
     if current_user.role not in ("enabler", "admin"):
         return jsonify({"success": False, "message": "Unauthorized"}), 403
 
     timeframe = request.args.get('timeframe', '30d')
-    page = int(request.args.get('page', 1))
     
-    # Calculate real stats
-    referrals = Referral.query.filter_by(enabler_id=current_user.id).order_by(Referral.created_at.desc()).all()
-    total_referrals = len(referrals)
-    
-    # Mocking conversion and earnings for now based on referral count
-    confirmed_earnings = total_referrals * 2500 
-    flc_points = total_referrals * 120
-    
-    referral_list = []
-    for r in referrals[:5]: # Last 5
-        opp = Opportunity.query.get(r.opportunity_id)
-        
-        # Cross-reference with Applications
-        app_status = None
-        if r.startup_id:
-            app = Application.query.filter_by(startup_id=r.startup_id, opportunity_id=r.opportunity_id).first()
-            if app:
-                app_status = app.status
-
-        referral_list.append({
-            "startup_name": r.startup_name,
-            "program_name": opp.title if opp else "Unknown Program",
-            "status": "successful" if r.status == 'accepted' else ("failed" if r.status == 'rejected' else "open"),
-            "application_status": app_status,
-            "created_at": r.created_at.isoformat(),
-            "reward": "₹2,500"
-        })
-
-    return jsonify({
-        "success": True,
-        "data": {
-            "summary": {
-                "total_referrals": total_referrals,
-                "confirmed_earnings": confirmed_earnings,
-                "flc_points": flc_points,
-                "conversion_rate": 0.32 if total_referrals > 0 else 0
-            },
-            "recent_referrals": referral_list
-        }
-    })
+    result = EnablerService.get_dashboard_overview(current_user.id, timeframe)
+    return jsonify(result)
 
 @bp.route("/rewards/summary", methods=["GET"])
 @login_required
 def get_rewards_summary():
+    """Get rewards summary with real calculations"""
     if current_user.role not in ("enabler", "admin"):
         return jsonify({"success": False, "message": "Unauthorized"}), 403
 
-    return jsonify({
-        "success": True,
-        "data": {
-            "available_balance": 32600,
-            "pending_rewards": 18800,
-            "all_time_earnings": 124200,
-            "total_points": 3420,
-            "average_reward_per_completed_referral": 4000
-        }
-    })
+    result = EnablerService.get_rewards_summary(current_user.id)
+    return jsonify(result)
 
 @bp.route("/rewards/history", methods=["GET"])
 @login_required
 def get_rewards_history():
+    """Get rewards transaction history"""
     if current_user.role not in ("enabler", "admin"):
         return jsonify({"success": False, "message": "Unauthorized"}), 403
 
     r_type = request.args.get('type', 'all').lower()
     page = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 10))
     
-    if page == 1:
-        all_items = [
-            {"created_at": "2026-03-14", "startup_name": "FarmLink Labs", "program_name": "Retail Innovation Sprint", "reward_type": "cash", "amount_money": 8500, "status": "Settled", "payout_method": "Wallet"},
-            {"created_at": "2026-03-05", "startup_name": "InnoBridge", "program_name": "Monthly Bonus", "reward_type": "points", "amount_points": 400, "status": "Posted", "payout_method": "Points"},
-            {"created_at": "2026-02-12", "startup_name": "-", "program_name": "-", "reward_type": "payout", "amount_money": -15000, "status": "Completed", "payout_method": "Bank Transfer"},
-            {"created_at": "2026-01-28", "startup_name": "NovaGrid Analytics", "program_name": "Smart City Innovation", "reward_type": "cash", "amount_money": 12000, "status": "Settled", "payout_method": "Wallet"},
-            {"created_at": "2026-01-15", "startup_name": "MedSync Health", "program_name": "Health Pilot", "reward_type": "cash", "amount_money": 15000, "status": "Settled", "payout_method": "Wallet"}
-        ]
-    else:
-        all_items = [
-            {"created_at": "2025-12-20", "startup_name": "EcoFlow", "program_name": "Sustainability Grant", "reward_type": "cash", "amount_money": 5000, "status": "Settled", "payout_method": "Wallet"},
-            {"created_at": "2025-11-15", "startup_name": "CyberShield", "program_name": "Cybersecurity Cohort", "reward_type": "cash", "amount_money": 10000, "status": "Settled", "payout_method": "Bank"},
-            {"created_at": "2025-10-05", "startup_name": "InnoBridge", "program_name": "Q3 Top Enabler", "reward_type": "points", "amount_points": 1200, "status": "Posted", "payout_method": "Points"},
-            {"created_at": "2025-09-12", "startup_name": "UrbanLift", "program_name": "Mobility Program", "reward_type": "cash", "amount_money": 4500, "status": "Settled", "payout_method": "Wallet"}
-        ]
-
-    filtered_items = all_items
-    if r_type != 'all':
-        if r_type == 'bonuses':
-             filtered_items = [i for i in all_items if 'bonus' in i['program_name'].lower()]
-        else:
-             filtered_items = [i for i in all_items if i['reward_type'] == r_type]
-
-    return jsonify({
-        "success": True,
-        "data": {
-            "items": filtered_items,
-            "pagination": {
-                "page": page,
-                "total_pages": 4
-            }
-        }
-    })
+    result = EnablerService.get_rewards_history(current_user.id, r_type, page, per_page)
+    return jsonify(result)
 
 @bp.route("/analytics", methods=["GET"])
 @login_required
 def get_analytics():
+    """Get detailed analytics with real data"""
     if current_user.role not in ("enabler", "admin"):
         return jsonify({"success": False, "message": "Unauthorized"}), 403
 
-    return jsonify({
-        "success": True,
-        "data": {
-            "referral_stats": {
-                "submitted": 28,
-                "shortlisted": 14,
-                "completed": 9,
-                "conversion": 32,
-                "avg_programs_per_startup": 1.3,
-                "avg_decision_time": 21
-            },
-            "sectors": [
-                {"name": "HealthTech", "conversion": 48},
-                {"name": "FinTech", "conversion": 36},
-                {"name": "AgriTech", "conversion": 25}
-            ],
-            "signals": {
-                "emerging": "Climate & sustainability programs",
-                "best_days": "Tue–Thu",
-                "best_time": "10am–1pm IST"
-            }
-        }
-    })
+    result = EnablerService.get_analytics(current_user.id)
+    return jsonify(result)
+
+@bp.route("/referrals", methods=["GET"])
+@login_required
+def get_referrals():
+    """Get all referrals for enabler"""
+    if current_user.role not in ("enabler", "admin"):
+        return jsonify({"success": False, "message": "Unauthorized"}), 403
+
+    status = request.args.get('status')
+    limit = request.args.get('limit', type=int)
+    
+    result = EnablerService.get_enabler_referrals(current_user.id, status, limit)
+    return jsonify(result)
+
+@bp.route("/referrals/create", methods=["POST"])
+@login_required
+def create_referral():
+    """Create a new referral"""
+    if current_user.role not in ("enabler", "admin"):
+        return jsonify({"success": False, "message": "Unauthorized"}), 403
+
+    data = request.get_json()
+    
+    required_fields = ["opportunity_id", "startup_name", "startup_email"]
+    if not all(field in data for field in required_fields):
+        return jsonify({"success": False, "message": "Missing required fields"}), 400
+
+    result = EnablerService.create_referral(
+        enabler_id=current_user.id,
+        opportunity_id=data["opportunity_id"],
+        startup_name=data["startup_name"],
+        startup_email=data["startup_email"],
+        notes=data.get("notes")
+    )
+    
+    return jsonify(result)
+
+@bp.route("/links/generate", methods=["POST"])
+@login_required
+def generate_link():
+    """Generate a referral link"""
+    if current_user.role not in ("enabler", "admin"):
+        return jsonify({"success": False, "message": "Unauthorized"}), 403
+
+    data = request.get_json()
+    
+    if "opportunity_id" not in data:
+        return jsonify({"success": False, "message": "opportunity_id required"}), 400
+
+    result = EnablerService.generate_referral_link(
+        enabler_id=current_user.id,
+        opportunity_id=data["opportunity_id"]
+    )
+    
+    return jsonify(result)
+
+@bp.route("/links/stats", methods=["GET"])
+@login_required
+def get_link_stats():
+    """Get referral link tracking statistics"""
+    if current_user.role not in ("enabler", "admin"):
+        return jsonify({"success": False, "message": "Unauthorized"}), 403
+
+    result = EnablerService.get_link_tracking_stats(current_user.id)
+    return jsonify(result)
+
+@bp.route("/level", methods=["GET"])
+@login_required
+def get_level():
+    """Get enabler level and gamification stats"""
+    if current_user.role not in ("enabler", "admin"):
+        return jsonify({"success": False, "message": "Unauthorized"}), 403
+
+    result = EnablerService.get_enabler_level(current_user.id)
+    return jsonify(result)
+
+@bp.route("/payout/request", methods=["POST"])
+@login_required
+def request_payout():
+    """Request a payout"""
+    if current_user.role not in ("enabler", "admin"):
+        return jsonify({"success": False, "message": "Unauthorized"}), 403
+
+    data = request.get_json()
+    
+    if "amount" not in data:
+        return jsonify({"success": False, "message": "amount required"}), 400
+
+    result = EnablerService.request_payout(
+        enabler_id=current_user.id,
+        amount=data["amount"],
+        payout_method=data.get("payout_method", "bank_transfer")
+    )
+    
+    return jsonify(result)

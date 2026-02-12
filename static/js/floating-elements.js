@@ -1,4 +1,4 @@
-// Floating Elements JavaScript - Dynamic Animation System for InnoBridge Platform
+// Floating Elements JavaScript - Dynamic Animation System for Alchemy Platform
 // Integrated with Startup Culture logic (Parallax, 3D Tilt, Reveal)
 
 class FloatingElementsManager {

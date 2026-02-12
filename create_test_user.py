@@ -1,51 +1,36 @@
-#!/usr/bin/env python3
-"""
-Create a test user for testing the meeting system
-"""
 
 from app import create_app
 from extensions import db
-from models import User
+from models import User, Startup
+import json
 
-def create_test_user():
-    """Create a test startup user"""
-    app = create_app()
-    
-    with app.app_context():
-        try:
-            # Check if test user already exists
-            test_user = User.query.filter_by(email="test@startup.com").first()
-            
-            if test_user:
-                print("✅ Test user already exists")
-                print(f"   Email: test@startup.com")
-                print(f"   Password: password123")
-                print(f"   Role: {test_user.role}")
-                return True
-            
-            # Create test user
-            test_user = User(
-                name="Test Startup User",
-                email="test@startup.com",
-                role="startup",
-                company="Test Startup Inc",
-                country="USA"
-            )
-            test_user.set_password("password123")
-            
-            db.session.add(test_user)
-            db.session.commit()
-            
-            print("✅ Test user created successfully!")
-            print(f"   Email: test@startup.com")
-            print(f"   Password: password123")
-            print(f"   Role: startup")
-            
-        except Exception as e:
-            print(f"❌ Error creating test user: {e}")
-            return False
-    
-    return True
+app = create_app()
 
-if __name__ == "__main__":
-    create_test_user()
+with app.app_context():
+    # Create a test founder
+    user = User.query.filter_by(email='founder@test.com').first()
+    if not user:
+        user = User(name='Test Founder', email='founder@test.com', role='founder')
+        user.set_password('password')
+        db.session.add(user)
+        db.session.commit()
+        print(f"Created user: {user.email}")
+    else:
+        print(f"User exists: {user.email}")
+
+    # Create a test startup
+    startup = Startup.query.filter_by(founder_id=user.id).first()
+    if not startup:
+        startup = Startup(
+            founder_id=user.id,
+            name='Test Startup',
+            description='A test startup description',
+            sectors=json.dumps(['AI', 'FinTech']),
+            stage='seed',
+            application_status='draft'
+        )
+        db.session.add(startup)
+        db.session.commit()
+        print(f"Created startup: {startup.name}")
+    else:
+        print(f"Startup exists: {startup.name}")

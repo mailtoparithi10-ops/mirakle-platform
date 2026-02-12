@@ -1,101 +1,82 @@
+#!/usr/bin/env python3
 """
-Initialize database with all required tables from models.py
+Initialize the database with all tables using SQLAlchemy models
 """
-import os
+
 from app import create_app
 from extensions import db
-from models import User, Startup, Opportunity, Application, Referral, Meeting, MeetingParticipant, ContactMessage
-from werkzeug.security import generate_password_hash
-from datetime import datetime
+from models import User, Startup, Opportunity, Application, Referral, Lead, ContactMessage, Meeting, MeetingParticipant, Notification, ReferralClick
 
-print("Initializing database...")
-print("=" * 80)
-
-app = create_app()
-
-with app.app_context():
-    try:
-        # Create all tables
+def init_database():
+    app = create_app()
+    
+    with app.app_context():
         print("Creating all database tables...")
+        
+        # Drop all tables first (fresh start)
+        db.drop_all()
+        print("✓ Dropped existing tables")
+        
+        # Create all tables
         db.create_all()
-        print("✓ Tables created successfully\n")
+        print("✓ Created all tables")
         
-        # Check if admin user exists
-        admin = User.query.filter_by(email='admin@test.com').first()
+        # Create test users
+        print("\nCreating test users...")
         
-        if not admin:
-            print("Creating test users...")
-            
-            # Create test users
-            test_users = [
-                User(
-                    name='Admin User',
-                    email='admin@test.com',
-                    password_hash=generate_password_hash('admin123'),
-                    role='admin',
-                    company='InnoBridge',
-                    is_active=True
-                ),
-                User(
-                    name='John Startup',
-                    email='startup@test.com',
-                    password_hash=generate_password_hash('startup123'),
-                    role='startup',
-                    company='Test Startup Inc.',
-                    is_active=True
-                ),
-                User(
-                    name='Jane Corporate',
-                    email='corporate@test.com',
-                    password_hash=generate_password_hash('corporate123'),
-                    role='corporate',
-                    company='Test Corporation',
-                    is_active=True
-                ),
-                User(
-                    name='Bob Connector',
-                    email='connector@test.com',
-                    password_hash=generate_password_hash('connector123'),
-                    role='connector',
-                    company='Connector Network',
-                    is_active=True
-                )
-            ]
-            
-            for user in test_users:
-                db.session.add(user)
-                print(f"  ✓ Created {user.role}: {user.email}")
-            
-            db.session.commit()
-            print("\n✓ All test users created successfully!")
-        else:
-            print("Test users already exist")
+        # Admin user
+        admin = User(
+            name="Admin User",
+            email="admin@test.com",
+            role="admin",
+            is_active=True
+        )
+        admin.set_password("admin123")
+        db.session.add(admin)
         
-        # Display all users
-        all_users = User.query.all()
+        # Startup user
+        startup_user = User(
+            name="Startup Founder",
+            email="startup@test.com",
+            role="startup",
+            is_active=True
+        )
+        startup_user.set_password("startup123")
+        db.session.add(startup_user)
+        
+        # Corporate user
+        corporate = User(
+            name="Corporate User",
+            email="corporate@test.com",
+            role="corporate",
+            company="Tech Corp",
+            is_active=True
+        )
+        corporate.set_password("corporate123")
+        db.session.add(corporate)
+        
+        # Enabler user
+        enabler = User(
+            name="Enabler User",
+            email="enabler@test.com",
+            role="enabler",
+            is_active=True
+        )
+        enabler.set_password("enabler123")
+        db.session.add(enabler)
+        
+        db.session.commit()
+        print("✓ Created test users")
+        
         print("\n" + "=" * 80)
-        print("ALL USERS IN DATABASE:")
+        print("Database initialized successfully!")
         print("=" * 80)
-        for user in all_users:
-            print(f"ID: {user.id} | Name: {user.name} | Email: {user.email} | Role: {user.role}")
+        print("\nTest Credentials:")
+        print("  Admin:     admin@test.com / admin123")
+        print("  Startup:   startup@test.com / startup123")
+        print("  Corporate: corporate@test.com / corporate123")
+        print("  Enabler:   enabler@test.com / enabler123")
+        print("\nYou can now run: python run_local.py")
 
-        print("\n" + "=" * 80)
-        print("DATABASE INITIALIZED SUCCESSFULLY!")
-        print("=" * 80)
-        
-        # Only show test credentials in development
-        if not os.environ.get('DATABASE_URL'):
-            print("\nTest Credentials:")
-            print("  Admin:     admin@test.com / admin123")
-            print("  Startup:   startup@test.com / startup123")
-            print("  Corporate: corporate@test.com / corporate123")
-            print("  Connector: connector@test.com / connector123")
-            print("\nLogin at: http://localhost:5000/login.html")
-        else:
-            print("\nProduction database initialized successfully!")
-        
-        print("=" * 80)
-        
-    except Exception as e:
-        print(f"Error initializing database: {e}")
-        raise
+if __name__ == "__main__":
+    init_database()

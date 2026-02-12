@@ -142,6 +142,6 @@ document.addEventListener('keydown', (e) => {
     // Alert on PrintScreen
     if (e.key === 'PrintScreen') {
         navigator.clipboard.writeText(""); // Clear clipboard
-        alert('Screenshots are discouraged on InnoBridge for data protection.');
+        alert('Screenshots are discouraged on Alchemy for data protection.');
     }
 });

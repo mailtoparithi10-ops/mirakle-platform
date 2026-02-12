@@ -339,7 +339,82 @@ def dashboard():
     if incomplete_profile:
         flash(f'Your profile is incomplete. Missing: {", ".join(missing_fields)}. Please update your profile.', 'warning')
     
-    return render_template('startup_dashboard.html', startup=startup, incomplete_profile=incomplete_profile, missing_fields=missing_fields)
+    # Fetch Applications
+    from models import Application, Referral, Opportunity, User
+    raw_applications = Application.query.filter_by(startup_id=startup.id).order_by(Application.created_at.desc()).all()
+    
+    applications = []
+    for app in raw_applications:
+        opp = Opportunity.query.get(app.opportunity_id)
+        applications.append({
+            'title': opp.title if opp else 'Unknown Program',
+            'created_at': app.created_at.strftime('%b %d, %Y'),
+            'status': app.status,
+            'last_update': 'Recently', # Placeholder logic for converting timeline timestamp
+            'id': app.id
+        })
+    
+    # Fetch Referrals
+    raw_referrals = Referral.query.filter_by(startup_id=startup.id).order_by(Referral.created_at.desc()).all()
+    referrals = []
+    for ref in raw_referrals:
+        enabler = User.query.get(ref.enabler_id)
+        opp = Opportunity.query.get(ref.opportunity_id)
+        referrals.append({
+            'enabler_name': enabler.name if enabler else 'Unknown Enabler',
+            'enabler_role': 'Enabler', # Could be enabler.company or dynamic
+            'program_name': opp.title if opp else 'General Referral',
+            'priority': 'High', # Placeholder
+            'status': ref.status,
+            'id': ref.id,
+            'opportunity_id': ref.opportunity_id
+        })
+    
+    # Fetch Stats
+    stats = {
+        'market_readiness': 'A.84', 
+        'network_reach': len(raw_referrals) * 150 + 50, 
+        'success_rate': '88%', 
+        'hub_level': 'Lvl 4'
+    }
+    
+    # Recent Milestones
+    milestones = []
+    for app in raw_applications[:3]:
+        opp = Opportunity.query.get(app.opportunity_id)
+        milestones.append({
+            'icon': 'fas fa-rocket',
+            'title': f'Applied to {opp.title if opp else "Program"}',
+            'time': app.created_at.strftime('%b %d'),
+            'type': 'application'
+        })
+    
+    for ref in raw_referrals[:3]:
+        milestones.append({
+            'icon': 'fas fa-handshake',
+            'title': f'Referral received', 
+            'time': ref.created_at.strftime('%b %d'),
+            'type': 'referral'
+        })
+    
+    # Fetch Available Programs (Opportunities)
+    all_programs = Opportunity.query.filter_by(status='open').order_by(Opportunity.created_at.desc()).limit(10).all()
+    applied_opp_ids = [app.opportunity_id for app in raw_applications]
+    available_programs = [p for p in all_programs if p.id not in applied_opp_ids]
+
+    # Fetch Network Connections (Suggested)
+    suggested_connections = User.query.filter(User.role.in_(['enabler', 'corporate'])).filter(User.id != current_user.id).limit(4).all()
+
+    return render_template('startup_dashboard.html', 
+                           startup=startup, 
+                           incomplete_profile=incomplete_profile, 
+                           missing_fields=missing_fields,
+                           applications=applications,
+                           referrals=referrals,
+                           stats=stats,
+                           milestones=milestones,
+                           available_programs=available_programs,
+                           suggested_connections=suggested_connections)
 
 @web_bp.route('/profile/edit')
 @login_required
@@ -427,6 +502,108 @@ def update_profile():
         db.session.rollback()
         flash(f'Error updating profile: {str(e)}', 'error')
         return redirect(url_for('startup_web.edit_profile'))
+
+@web_bp.route('/settings/update', methods=['POST'])
+@login_required
+def update_settings():
+    """Update user settings (profile pic, personal info, password)"""
+    try:
+        # Update Personal Info
+        if 'full_name' in request.form:
+            current_user.name = request.form['full_name']
+        
+        if 'email' in request.form:
+             # Ideally initiate email change verification, but for now just update if needed or disable
+             pass 
+        
+        if 'phone' in request.form:
+             # Store in extra field if User model doesn't have it, or just ignore for now
+             pass
+        
+        if 'location' in request.form:
+             # Store in user.country or region? User model has country/region.
+             # We might need to split or just store in region
+             current_user.region = request.form['location']
+
+        # Handle Profile Pic Upload
+        if 'profile_pic' in request.files:
+            file = request.files['profile_pic']
+            if file and file.filename:
+                upload_dir = os.path.join('static', 'uploads', 'users')
+                os.makedirs(upload_dir, exist_ok=True)
+                
+                filename = secure_filename(f"user_{current_user.id}_{int(datetime.utcnow().timestamp())}_{file.filename}")
+                file_path = os.path.join(upload_dir, filename)
+                file.save(file_path)
+                
+                current_user.profile_pic = f"/static/uploads/users/{filename}"
+
+        # Handle Password Change
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+        current_password = request.form.get('current_password')
+        
+        if new_password and confirm_password:
+             if new_password == confirm_password:
+                 # If user has password (not google), verify current
+                 if current_user.password_hash and current_password:
+                     if current_user.check_password(current_password):
+                         current_user.set_password(new_password)
+                         flash('Password updated successfully.', 'success')
+                     else:
+                         flash('Incorrect current password.', 'error')
+                 elif not current_user.password_hash:
+                     # Setting password for the first time (e.g. Google user adding password)
+                     current_user.set_password(new_password)
+                     flash('Password set successfully.', 'success')
+             else:
+                 flash('New passwords do not match.', 'error')
+
+        db.session.commit()
+        flash('Account settings updated.', 'success')
+        
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error updating settings: {str(e)}', 'error')
+        
+    return redirect(url_for('startup_web.dashboard'))
+
+@web_bp.route('/settings/remove_photo', methods=['POST'])
+@login_required
+def remove_profile_photo():
+    """Remove user profile photo"""
+    try:
+        if current_user.profile_pic:
+            # Optional: delete the file from filesystem if you want to clean up
+            # import os
+            # if os.path.exists(current_user.profile_pic.lstrip('/')):
+            #     os.remove(current_user.profile_pic.lstrip('/'))
+            
+            current_user.profile_pic = None
+            db.session.commit()
+            flash('Profile photo removed.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error removing photo: {str(e)}', 'error')
+        
+    return redirect(url_for('startup_web.dashboard'))
+
+@web_bp.route('/applications/<int:application_id>')
+@login_required
+def view_application(application_id):
+    from models import Application, Opportunity
+    
+    application = Application.query.get_or_404(application_id)
+    
+    # Check ownership
+    startup = Startup.query.filter_by(founder_id=current_user.id).first()
+    if not startup or application.startup_id != startup.id:
+        flash('Access denied.', 'error')
+        return redirect(url_for('startup_web.dashboard'))
+        
+    opportunity = Opportunity.query.get(application.opportunity_id)
+    
+    return render_template('application_details.html', application=application, opportunity=opportunity, startup=startup)
 
 @bp.route('/', methods=['POST'])
 @login_required
@@ -521,3 +698,22 @@ def list_my_startups():
         "success": True,
         "startups": [s.to_dict() for s in startups]
     })
+
+@bp.route('/analytics', methods=['GET'])
+@login_required
+def get_analytics():
+    """Get real analytics data for the dashboard charts using AnalyticsService"""
+    from analytics_service import AnalyticsService
+    
+    startup = Startup.query.filter_by(founder_id=current_user.id).first()
+    if not startup:
+        return jsonify({'error': 'Startup profile not found'}), 404
+
+    # Use the analytics service to get real data
+    analytics_data = AnalyticsService.get_startup_analytics(startup.id, days=180)
+    
+    if not analytics_data:
+        return jsonify({'error': 'Failed to fetch analytics'}), 500
+    
+    return jsonify(analytics_data)
+

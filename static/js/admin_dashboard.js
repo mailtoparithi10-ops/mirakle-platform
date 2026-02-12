@@ -595,6 +595,11 @@ function showSection(sectionName) {
             renderConnectorUsers();
         } else if (sectionName === 'programs') {
             loadPrograms();
+        } else if (sectionName === 'analytics') {
+            // Initialize analytics when section is shown
+            if (typeof initializeAnalytics === 'function') {
+                initializeAnalytics();
+            }
         }
     }
 }

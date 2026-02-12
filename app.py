@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 from flask import Flask, render_template, redirect
 from config import Config
-from extensions import db, migrate, login_manager, socketio
+from extensions import db, migrate, login_manager, socketio, limiter
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_login import login_required, current_user
 from auth import bp as auth_bp
@@ -16,9 +16,15 @@ from routes.referrals import bp as referrals_bp
 from routes.admin import bp as admin_bp
 from routes.meetings import bp as meetings_bp, web_bp as meetings_web_bp
 from routes.notifications import bp as notifications_bp
-
+from routes.messages import bp as messages_bp, web_bp as messages_web_bp
+from routes.connections import bp as connections_bp
 
 from routes.enablers import bp as enablers_bp
+from routes.corporate import corporate_bp
+
+# NEW: Payment and Messaging routes
+from routes.payments import bp as payments_bp
+from routes.messaging import bp as messaging_bp
 
 
 # -----------------------------------------
@@ -31,11 +37,37 @@ def create_app():
     # Apply ProxyFix for Render/Production
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
+    # Initialize Sentry (must be done early)
+    from sentry_config import init_sentry
+    init_sentry(app)
+
     # Init extensions
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
     socketio.init_app(app)
+    limiter.init_app(app)
+    
+    # Initialize Flask-Mail
+    from extensions import mail
+    mail.init_app(app)
+
+    # Custom rate limit error handler
+    @app.errorhandler(429)
+    def ratelimit_handler(e):
+        """Handle rate limit exceeded errors"""
+        from flask import jsonify, request
+        
+        # Check if it's an API request
+        if request.path.startswith('/api/'):
+            return jsonify({
+                "error": "Rate limit exceeded",
+                "message": "Too many requests. Please try again later.",
+                "retry_after": e.description
+            }), 429
+        
+        # For web requests, show a friendly page
+        return render_template("429.html", retry_after=e.description), 429
 
     # Add custom Jinja2 filters
     @app.template_filter('strftime')
@@ -56,7 +88,15 @@ def create_app():
     app.register_blueprint(meetings_bp)
     app.register_blueprint(meetings_web_bp)
     app.register_blueprint(enablers_bp)
+    app.register_blueprint(corporate_bp)
     app.register_blueprint(notifications_bp)
+    app.register_blueprint(messages_bp)
+    app.register_blueprint(messages_web_bp)
+    app.register_blueprint(connections_bp)
+    
+    # NEW: Payment and Messaging blueprints
+    app.register_blueprint(payments_bp)
+    app.register_blueprint(messaging_bp)
 
     # Import WebRTC signaling events
     from routes import webrtc

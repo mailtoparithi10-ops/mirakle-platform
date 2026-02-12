@@ -4,13 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon"
-        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkk8L3RleHQ+Cjwvc3ZnPg==">
+        href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iI2ZmZGYwMCIvPgo8dGV4dCB4PSI1IiB5PSIyMiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJibGFjayIgZm9udC13ZWlnaHQ9ImJvbGQiPkE8L3RleHQ+Cjwvc3ZnPg==">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connector Dashboard - InnoBridge</title>
+    <title>Enabler Dashboard - Alchemy</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/referral-links.css">
     <style>
-        .timeline-meta {
+        :root {
+            --primary: #ffdf00;
+            --primary-dark: #e6c800;
+            --bg-dark: #000000;
+            --bg-page: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+                .timeline-meta {
             font-size: 0.75rem;
             color: #6b7280;
             display: flex;
@@ -20,7 +32,7 @@
         /* Inbox Style */
         .inbox-list {
             background: white;
-            border-radius: 1rem;
+            border-radius: 22px;
             border: 1px solid #e2e8f0;
             overflow: hidden;
             box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
@@ -125,13 +137,185 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #ffffff;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-page);
+            color: var(--text-main);
             min-height: 100vh;
             display: flex;
         }
 
+
+        /* Top Navigation */
+        .top-nav {
+            width: 100%;
+            background: #000;
+            padding: 0.75rem 2.5rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fff;
+            font-size: 1.4rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-brand i {
+            color: var(--primary);
+        }
+
+        .nav-dropdowns {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            background: rgba(255, 255, 255, 0.05);
+            color: #94a3b8;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.7rem 1.1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .dropdown-toggle:hover,
+        .dropdown-toggle.active {
+            color: var(--primary);
+            background: rgba(255, 223, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 115%;
+            left: 0;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+            min-width: 240px;
+            padding: 0.75rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: var(--transition);
+            z-index: 1001;
+        }
+
+        .dropdown.active .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.8rem 1rem;
+            color: var(--text-main);
+            text-decoration: none;
+            transition: var(--transition);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .dropdown-item:hover {
+            background: #f8fafc;
+            color: #000;
+        }
+
+        .dropdown-item.active {
+            background: rgba(255, 223, 0, 0.15);
+            color: #000;
+        }
+
+        .dropdown-item.active i {
+            color: var(--primary-dark);
+        }
+
+        .dropdown-item i {
+            width: 18px;
+            color: var(--text-dim);
+        }
+
+        .dropdown-item:hover i {
+            color: var(--primary-dark);
+        }
+
+        .profile-dropdown {
+            position: relative;
+        }
+
+        .profile-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 5px 15px 5px 6px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .profile-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: #000;
+            font-size: 0.9rem;
+            overflow: hidden;
+        }
+
+        .profile-name {
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* Hide sidebar */
         .sidebar {
+            display: none;
+        }
+
+        .sidebar-old {
             width: 240px;
             background: #000000;
             padding: 0;
@@ -141,12 +325,13 @@
         }
 
         .main-content {
-            margin-left: 240px;
+            margin-top: 74px;
             flex: 1;
-            background: white;
-            min-height: 100vh;
-            border-radius: 20px 0 0 20px;
-            overflow: hidden;
+            padding: 2.5rem 3.5rem;
+            width: 100%;
+            max-width: 1440px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .user-profile {
@@ -278,27 +463,27 @@
         }
 
         .dashboard-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid #e2e8f0;
-            background: white;
+            margin-bottom: 2.5rem;
         }
 
         .dashboard-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #000000;
-            margin-bottom: 0.5rem;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+            margin-bottom: 0.4rem;
         }
 
         .dashboard-subtitle {
-            color: #666666;
-            font-size: 1rem;
+            color: var(--text-dim);
+            font-size: 1.05rem;
+            font-weight: 500;
         }
 
         .dashboard-content {
             padding: 1.25rem 1.5rem;
             overflow-y: auto;
-            height: calc(100vh - 88px);
+            min-height: calc(100vh - 150px);
             background: #f9fafb;
         }
 
@@ -319,7 +504,7 @@
 
         .card {
             background: white;
-            border-radius: 1rem;
+            border-radius: 22px;
             padding: 1.15rem;
             border: 1px solid #e2e8f0;
             box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
@@ -411,7 +596,7 @@
         .reward-card {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(8px);
-            border-radius: 1rem;
+            border-radius: 22px;
             border: 1px solid #e2e8f0;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
@@ -759,6 +944,26 @@
             font-weight: 500;
         }
 
+        .btn {
+            padding: 10px 18px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 800;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .btn-black {
+            background: var(--text-main);
+            color: var(--primary);
+        }
+
+        .btn-black:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
         .btn-primary {
             background: #fcb82e;
             border-color: #fbbf24;
@@ -767,6 +972,7 @@
 
         .btn-primary:hover {
             background: #e5a629;
+            transform: translateY(-2px);
         }
 
         .btn-ghost {
@@ -799,7 +1005,7 @@
 
         .table-container {
             background: white;
-            border-radius: 1rem;
+            border-radius: 22px;
             border: 1px solid #e2e8f0;
             box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
             overflow: hidden;
@@ -1573,7 +1779,7 @@
 
         .insights-card {
             background: white;
-            border-radius: 1rem;
+            border-radius: 22px;
             border: 1px solid #e2e8f0;
             padding: 1.3rem 1.4rem;
             box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
@@ -2407,7 +2613,7 @@
 
         .secondary-card {
             background: white;
-            border-radius: 1rem;
+            border-radius: 22px;
             border: 1px solid #e2e8f0;
             padding: 1.1rem;
             box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
@@ -2857,7 +3063,178 @@
                 flex-direction: column;
             }
 
-            .sidebar {
+    
+        /* Top Navigation */
+        .top-nav {
+            width: 100%;
+            background: #000;
+            padding: 0.75rem 2.5rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fff;
+            font-size: 1.4rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-brand i {
+            color: var(--primary);
+        }
+
+        .nav-dropdowns {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            background: rgba(255, 255, 255, 0.05);
+            color: #94a3b8;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.7rem 1.1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .dropdown-toggle:hover,
+        .dropdown-toggle.active {
+            color: var(--primary);
+            background: rgba(255, 223, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 115%;
+            left: 0;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+            min-width: 240px;
+            padding: 0.75rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: var(--transition);
+            z-index: 1001;
+        }
+
+        .dropdown.active .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.8rem 1rem;
+            color: var(--text-main);
+            text-decoration: none;
+            transition: var(--transition);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .dropdown-item:hover {
+            background: #f8fafc;
+            color: #000;
+        }
+
+        .dropdown-item.active {
+            background: rgba(255, 223, 0, 0.15);
+            color: #000;
+        }
+
+        .dropdown-item.active i {
+            color: var(--primary-dark);
+        }
+
+        .dropdown-item i {
+            width: 18px;
+            color: var(--text-dim);
+        }
+
+        .dropdown-item:hover i {
+            color: var(--primary-dark);
+        }
+
+        .profile-dropdown {
+            position: relative;
+        }
+
+        .profile-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 5px 15px 5px 6px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .profile-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: #000;
+            font-size: 0.9rem;
+            overflow: hidden;
+        }
+
+        .profile-name {
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* Hide sidebar */
+        .sidebar {
+            display: none;
+        }
+
+        .sidebar-old {
                 position: static;
                 width: 100%;
                 height: auto;
@@ -3060,7 +3437,7 @@
 
         .program-card {
             background: white;
-            border-radius: 1rem;
+            border-radius: 22px;
             border: 1px solid #e2e8f0;
             overflow: hidden;
             transition: all 0.3s ease;
@@ -3176,70 +3553,81 @@
 </head>
 
 <body>
-    <aside class="sidebar">
-        <div class="user-profile">
-            <div class="user-avatar-large" id="userAvatar">{{ current_user.name[0].upper() if current_user.name else 'U'
-                }}</div>
-            <div class="user-name" id="userName">{{ current_user.name if current_user.name else 'User Name' }}</div>
-            <div class="user-email" id="userEmail">{{ current_user.email if current_user.email else 'user@example.com'
-                }}</div>
-            <button class="edit-profile-btn" onclick="showSection('profile')">
-                <i class="fa-solid fa-user-pen"></i>
-                Edit Profile
-            </button>
+    <!-- Top Nav -->
+    <nav class="top-nav">
+        <a href="/" class="nav-brand" style="text-decoration: none;">
+            <i class="fas fa-hexagon-nodes"></i>
+            ALCHEMY
+        </a>
+
+        <div class="nav-dropdowns">
+            <!-- Dashboard Dropdown -->
+            <div class="dropdown" id="dashboardDropdown">
+                <button class="dropdown-toggle active" onclick="toggleDropdown('dashboardDropdown')">
+                    <i class="fas fa-grid-2"></i> Dashboard <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="showSection('overview')"><i class="fas fa-home"></i> Overview</button>
+                    <button class="dropdown-item" onclick="showSection('analytics')"><i class="fas fa-chart-line"></i> Analytics</button>
+                    <button class="dropdown-item" onclick="showSection('rewards')"><i class="fas fa-coins"></i> Rewards</button>
+                </div>
+            </div>
+
+            <!-- Programs Dropdown -->
+            <div class="dropdown" id="programsDropdown">
+                <button class="dropdown-toggle" onclick="toggleDropdown('programsDropdown')">
+                    <i class="fas fa-rocket"></i> Programs <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="showSection('programs')"><i class="fas fa-list"></i> Explore Programs</button>
+                    <button class="dropdown-item" onclick="showSection('program-details')"><i class="fas fa-info-circle"></i> Program Details</button>
+                </div>
+            </div>
+
+            <!-- Referrals Dropdown -->
+            <div class="dropdown" id="referralsDropdown">
+                <button class="dropdown-toggle" onclick="toggleDropdown('referralsDropdown')">
+                    <i class="fas fa-handshake"></i> Referrals <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="showSection('referrals')"><i class="fas fa-users"></i> My Referrals <span class="badge">12</span></button>
+                    <button class="dropdown-item" onclick="showSection('referral-tracking')"><i class="fas fa-chart-bar"></i> Link Tracking</button>
+                    <button class="dropdown-item" onclick="showSection('guide')"><i class="fas fa-book"></i> Guide</button>
+                </div>
+            </div>
+
+            <!-- Messages Dropdown -->
+            <div class="dropdown" id="messagesDropdown">
+                <button class="dropdown-toggle" onclick="toggleDropdown('messagesDropdown')">
+                    <i class="fas fa-envelope"></i> Messages <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="showSection('inbox')"><i class="fas fa-inbox"></i> Inbox <span class="badge">4</span></button>
+                </div>
+            </div>
         </div>
-        <nav class="nav-menu">
-            <a href="/" class="nav-item" style="text-decoration: none;">
-                <i class="fa-solid fa-arrow-left"></i> Back to Home
-            </a>
-            <button class="nav-item active" onclick="showSection('programs')" id="tab-programs">
-                <i class="fa-solid fa-compass"></i>
-                Explore Programs
-                <span class="badge-outline" style="color: #6366f1; border-color: #6366f1;">New</span>
-            </button>
-            <button class="nav-item" onclick="showSection('referrals')" id="tab-referrals">
-                <i class="fa-solid fa-share-nodes"></i>
-                My Referrals
-                <span class="badge">12</span>
-            </button>
-            <button class="nav-item" onclick="showSection('referral-tracking')" id="tab-referral-tracking">
-                <i class="fa-solid fa-link"></i>
-                Referral Link Tracking
-                <span class="badge-outline" style="color: #10b981; border-color: #10b981;">Live</span>
-            </button>
-            <button class="nav-item" onclick="showSection('overview')" id="tab-overview">
-                <i class="fa-solid fa-gauge-high"></i>
-                Overview
-                <span class="badge-outline">Live</span>
-            </button>
-            <button class="nav-item" onclick="showSection('rewards')" id="tab-rewards">
-                <i class="fa-solid fa-trophy"></i>
-                Rewards & Earnings
-                <span class="rewards-badge">New</span>
-            </button>
-            <button class="nav-item" onclick="showSection('analytics')" id="tab-analytics">
-                <i class="fa-solid fa-chart-line"></i>
-                Analytics
-            </button>
-            <button class="nav-item" onclick="showSection('inbox')" id="tab-inbox">
-                <i class="fa-solid fa-envelope"></i>
-                Inbox <span class="badge">4</span>
-            </button>
-            <button class="nav-item" onclick="showSection('profile')" id="tab-profile">
-                <i class="fa-solid fa-user"></i>
-                Profile & Settings
-            </button>
-            <button class="nav-item" onclick="showSection('guide')" id="tab-guide"
-                style="margin-top: auto; border-top: 1px solid #e2e8f0; border-radius: 0;">
-                <i class="fa-solid fa-book"></i>
-                Referral Guide
-            </button>
-        </nav>
-        <button class="logout-btn" onclick="window.location.href='/logout'">
-            <i class="fa-solid fa-right-from-bracket"></i>
-            Logout
-        </button>
-    </aside>
+
+        <!-- Profile Dropdown -->
+        <div class="dropdown profile-dropdown" id="profileDropdown">
+            <div class="profile-toggle dropdown-toggle" onclick="toggleDropdown('profileDropdown')">
+                <div class="avatar">
+                    {% if current_user.profile_pic %}
+                    <img src="{{ current_user.profile_pic }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% else %}
+                    {{ current_user.name[0] if current_user.name else 'E' }}
+                    {% endif %}
+                </div>
+                <span class="profile-name">{{ current_user.name }}</span>
+                <i class="fas fa-chevron-down" style="color: rgba(255,255,255,0.4); font-size: 0.7rem; margin-left: 5px;"></i>
+            </div>
+            <div class="dropdown-menu" style="left: auto; right: 0; min-width: 200px;">
+                <button class="dropdown-item" onclick="showSection('profile')"><i class="fas fa-user"></i> Profile</button>
+                <a href="/" class="dropdown-item" style="text-decoration: none;"><i class="fas fa-house"></i> Back to Home</a>
+                <div style="border-top: 1px solid #f1f5f9; margin: 0.5rem 0;"></div>
+                <a href="/logout" class="dropdown-item" style="color: #ef4444; text-decoration: none;"><i class="fas fa-right-from-bracket"></i> Sign Out</a>
+            </div>
+        </div>
+    </nav>
 
     <main class="main-content">
         <div class="dashboard-header">
@@ -3747,7 +4135,7 @@
                             Performance Overview
                         </div>
                         <div class="section-subtitle">
-                            A snapshot of your referrals, earnings, and connector impact across InnoBridge.
+                            A snapshot of your referrals, earnings, and connector impact across Alchemy.
                         </div>
                     </div>
                     <div class="section-actions">
@@ -5183,7 +5571,7 @@
                                     </div>
 
                                     <button id="referFromDetailsBtn"
-                                        style="width: 100%; padding: 1.25rem; background: #000; color: white; border: none; border-radius: 1rem; font-size: 1.1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem; transition: transform 0.2s;">
+                                        style="width: 100%; padding: 1.25rem; background: #000; color: white; border: none; border-radius: 22px; font-size: 1.1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem; transition: transform 0.2s;">
                                         <i class="fa-solid fa-share-alt"></i> Refer a Startup
                                     </button>
                                     <p
@@ -5587,7 +5975,7 @@
                                 style="margin-bottom: 1rem; text-align: left; font-weight: 600; color: #374151; font-size: 0.9rem;">
                                 Your Unique Link</div>
                             <div
-                                style="background: white; border: 2px dashed #fcb82e; padding: 1.25rem; border-radius: 1rem; margin-bottom: 2.5rem; display: flex; align-items: center; gap: 1rem; background: #fffdf5;">
+                                style="background: white; border: 2px dashed #fcb82e; padding: 1.25rem; border-radius: 22px; margin-bottom: 2.5rem; display: flex; align-items: center; gap: 1rem; background: #fffdf5;">
                                 <input type="text" id="referralUrlInput" readonly
                                     style="flex: 1; background: transparent; border: none; font-family: 'DM Mono', monospace; font-size: 0.9rem; color: #1e293b; font-weight: 600;" />
                                 <button onclick="copyReferralLink()"
@@ -5736,7 +6124,7 @@
                             </div>
 
                             <div
-                                style="margin-top: 3rem; background: #f8fafc; border-radius: 1rem; padding: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
+                                style="margin-top: 3rem; background: #f8fafc; border-radius: 22px; padding: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
                                 <div style="display: flex; align-items: center; gap: 1rem;">
                                     <div
                                         style="width: 40px; height: 40px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #475569;">
@@ -5774,7 +6162,7 @@
                             </div>
 
                             <!-- Requirements Checklist -->
-                            <div style="background: #f8fafc; border-radius: 1rem; padding: 2rem; margin-bottom: 2rem;">
+                            <div style="background: #f8fafc; border-radius: 22px; padding: 2rem; margin-bottom: 2rem;">
                                 <h3
                                     style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
                                     <i class="fa-solid fa-clipboard-check" style="color: #fcb82e;"></i>
@@ -5865,7 +6253,7 @@
 
                             <!-- Verification Process -->
                             <div
-                                style="background: #fff; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 2rem; margin-bottom: 2rem;">
+                                style="background: #fff; border: 1px solid #e2e8f0; border-radius: 22px; padding: 2rem; margin-bottom: 2rem;">
                                 <h3
                                     style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
                                     <i class="fa-solid fa-shield-halved" style="color: #3b82f6;"></i>
@@ -5911,7 +6299,7 @@
 
                             <!-- Important Notes -->
                             <div
-                                style="background: #fffbeb; border: 1px solid #fbbf24; border-radius: 1rem; padding: 1.5rem; margin-bottom: 2rem;">
+                                style="background: #fffbeb; border: 1px solid #fbbf24; border-radius: 22px; padding: 1.5rem; margin-bottom: 2rem;">
                                 <h4
                                     style="font-size: 1rem; font-weight: 700; color: #92400e; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
                                     <i class="fa-solid fa-lightbulb"></i>
@@ -5997,7 +6385,7 @@
                                                 class="inbox-badge badge-system">Notice</span></span>
                                         <span class="inbox-time">Yesterday</span>
                                     </div>
-                                    <div class="inbox-subject">InnoBridge Enabler Level Up!</div>
+                                    <div class="inbox-subject">Alchemy Enabler Level Up!</div>
                                     <div class="inbox-preview">Your impact score has reached 'Level 4'. You now have
                                         access to
                                         exclusive high-tier programs in the FinTech sector. Check your Analytics tab for
@@ -6157,7 +6545,7 @@
                                 <ul
                                     style="padding-left: 1.25rem; color: #64748b; font-size: 0.9rem; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 2rem;">
                                     <li>Self-referrals are not eligible for rewards.</li>
-                                    <li>Startups must be new to the InnoBridge database.</li>
+                                    <li>Startups must be new to the Alchemy database.</li>
                                     <li>Rewards are processed 15 days after program completion.</li>
                                 </ul>
                                 <button class="btn" style="width: 100%;"
@@ -7204,7 +7592,7 @@
                     console.error("❌ Failed to load programs:", json);
                     if (programsGrid) {
                         programsGrid.innerHTML = `
-                            <div style="grid-column: 1/-1; text-align: center; padding: 3rem; background: #fff; border-radius: 1rem; border: 1px dashed #e2e8f0;">
+                            <div style="grid-column: 1/-1; text-align: center; padding: 3rem; background: #fff; border-radius: 22px; border: 1px dashed #e2e8f0;">
                                 <i class="fa-solid fa-circle-exclamation" style="font-size: 2rem; color: #ef4444; margin-bottom: 1rem;"></i>
                                 <p style="color: #666; font-weight: 500;">Failed to synchronize programs. Please try again.</p>
                             </div>
@@ -7264,7 +7652,7 @@
                 console.error('❌ Programs error:', err);
                 if (programsGrid) {
                     programsGrid.innerHTML = `
-                        <div style="grid-column: 1/-1; text-align: center; padding: 3rem; background: #fff; border-radius: 1rem; border: 1px dashed #e2e8f0;">
+                        <div style="grid-column: 1/-1; text-align: center; padding: 3rem; background: #fff; border-radius: 22px; border: 1px dashed #e2e8f0;">
                             <i class="fa-solid fa-circle-exclamation" style="font-size: 2rem; color: #ef4444; margin-bottom: 1rem;"></i>
                             <p style="color: #666; font-weight: 500;">Critical error loading programs: ${err.message}</p>
                         </div>
@@ -7617,6 +8005,60 @@
 
     <!-- Referral Link Manager -->
     <script src="/static/js/referral-links.js"></script>
+
+    <script>
+        // Dropdown functionality
+        function toggleDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            const allDropdowns = document.querySelectorAll('.dropdown');
+            
+            // Close all other dropdowns
+            allDropdowns.forEach(d => {
+                if (d.id !== dropdownId) {
+                    d.classList.remove('active');
+                }
+            });
+            
+            // Toggle current dropdown
+            dropdown.classList.toggle('active');
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(d => {
+                    d.classList.remove('active');
+                });
+            }
+        });
+
+        // Section switching (preserve existing functionality)
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Close all dropdowns
+            document.querySelectorAll('.dropdown').forEach(d => {
+                d.classList.remove('active');
+            });
+            
+            // Update active dropdown toggle
+            document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+                toggle.classList.remove('active');
+            });
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
 </body>
 
 </html>

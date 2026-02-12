@@ -1,6 +1,6 @@
 /**
  * INDEX.JS
- * Clean, optimized, modular script for the InnoBridge landing page.
+ * Clean, optimized, modular script for the Alchemy landing page.
  * ZERO UI/UX changes — only improved internal structure & performance.
  *
  * Sections:
@@ -24,7 +24,7 @@ function redirectToCorporate() {
 }
 
 function navigateToApp() {
-    window.location.href = "/innobridge";
+    window.location.href = "/alchemy";
 }
 
 // Attach events safely (avoid inline JS)
@@ -177,7 +177,7 @@ document.addEventListener("keydown", e => {
 // ------------------------------------------------
 
 (function prefetchResources() {
-    const links = ["/innobridge", "/corporate"];
+    const links = ["/alchemy", "/corporate"];
 
     links.forEach(href => {
         const linkEl = document.createElement("link");
@@ -192,7 +192,7 @@ document.addEventListener("keydown", e => {
 // ------------------------------------------------
 
 window.addEventListener("error", e => {
-    console.error("🔥 InnoBridge Error:", e.error || e.message);
+    console.error("🔥 Alchemy Error:", e.error || e.message);
 });
 // ------------------------------------------------------------
 // 10. PERFORMANCE ENHANCEMENTS & SAFETY CHECKS
@@ -218,7 +218,7 @@ window.addEventListener("scroll", safeUpdateFloatingShapes);
 // -------------------------------------------------------------------
 
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("🚀 InnoBridge Landing Page JS Loaded Successfully!");
+    console.log("🚀 Alchemy Landing Page JS Loaded Successfully!");
 });
 
 // -------------------------------------------------------------------

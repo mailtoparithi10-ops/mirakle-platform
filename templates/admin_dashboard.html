@@ -13,95 +13,145 @@
 </head>
 
 <body>
-    <header class="admin-header">
-        <div class="admin-header-left">
-            <h1>
-                <i class="fas fa-tachometer-alt"></i>
-                Admin Dashboard
-                <div class="real-time-indicator"></div>
-            </h1>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-brand">
+            <i class="fas fa-shield-alt"></i>
+            ADMIN
         </div>
-        <div class="admin-header-right">
-            <span class="welcome-text">Welcome back, Admin</span>
-            <button class="admin-btn" onclick="seedMockData()" style="background: #000; color: #fcb82e; border: none;">
-                <i class="fas fa-database"></i> Seed Mock Data
-            </button>
-            <button class="admin-btn" onclick="goToPlatform()">
-                <i class="fas fa-arrow-left"></i> Back to Platform
-            </button>
-            <button class="admin-btn danger" onclick="window.location.href='/logout'">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </div>
-    </header>
-
-    <div class="admin-main">
-        <aside class="admin-sidebar">
-            <a href="/" class="admin-nav-item">
-                <i class="fas fa-arrow-left"></i>
-                Back to Home
-            </a>
-            <a href="#" class="admin-nav-item active" onclick="showSection('dashboard')">
-                <i class="fas fa-chart-line"></i>
-                Dashboard Overview
-            </a>
-            <a href="#" class="admin-nav-item" onclick="showSection('users')">
-                <i class="fas fa-users"></i>
-                All Users
-            </a>
-            <a href="#" class="admin-nav-item" onclick="showSection('startups')">
-                <i class="fas fa-rocket"></i>
-                Startup Users
-            </a>
-            <a href="#" class="admin-nav-item" onclick="showSection('corporate')">
-                <i class="fas fa-building"></i>
-                Corporate Users
-            </a>
-            <a href="#" class="admin-nav-item" onclick="showSection('connectors')">
-                <i class="fas fa-handshake"></i>
-                Connectors
-            </a>
-            <a href="#" class="admin-nav-item" onclick="showSection('programs')">
-                <i class="fas fa-trophy"></i>
-                Programs
-            </a>
-            <a href="#" class="admin-nav-item" onclick="showSection('referrals')">
-                <i class="fas fa-exchange-alt"></i>
-                Referrals
-            </a>
-            <a href="#" class="admin-nav-item" onclick="showSection('meetings')">
-                <i class="fas fa-video"></i>
-                Meetings
-            </a>
-            <a href="#" class="admin-nav-item" onclick="showSection('leads')">
-                <i class="fas fa-hand-holding-heart"></i>
-                Leads & Inquiries
-            </a>
-            <a href="#" class="admin-nav-item" onclick="showSection('inbox')">
-                <i class="fas fa-envelope"></i>
-                Inbox <span id="inboxUnreadCount"
-                    style="margin-left:auto; background:#000; color:#fcb82e; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:800;">3</span>
-            </a>
-        </aside>
-
-        <main class="admin-content">
-            <div class="welcome-banner">
-                <div class="banner-content">
-                    <div class="welcome-icon">
-                        <i class="fas fa-crown"></i>
-                    </div>
-                    <div>
-                        <h2>Welcome to Admin Dashboard!</h2>
-                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
-                            <span class="live-pulse"></span>
-                            <p style="font-weight: 500; opacity: 0.9;">Live Market Pulse: <span id="marketTrend">Bullish
-                                    (+2.4%)</span></p>
-                        </div>
-                    </div>
+        
+        <div class="nav-dropdowns">
+            <!-- Dashboard Dropdown -->
+            <div class="dropdown" id="dashboardDropdown">
+                <button class="dropdown-toggle" onclick="toggleDropdown('dashboardDropdown')">
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard
+                    <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 4px;"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="showSection('dashboard')">
+                        <i class="fas fa-home"></i>
+                        Overview
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('analytics')">
+                        <i class="fas fa-chart-bar"></i>
+                        Analytics
+                    </button>
                 </div>
             </div>
 
-            <!-- DASHBOARD SECTION -->
+            <!-- Users Dropdown -->
+            <div class="dropdown" id="usersDropdown">
+                <button class="dropdown-toggle" onclick="toggleDropdown('usersDropdown')">
+                    <i class="fas fa-users"></i>
+                    Users
+                    <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 4px;"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="showSection('users')">
+                        <i class="fas fa-users"></i>
+                        All Users
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('startups')">
+                        <i class="fas fa-rocket"></i>
+                        Startups
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('corporate')">
+                        <i class="fas fa-building"></i>
+                        Corporate
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('connectors')">
+                        <i class="fas fa-handshake"></i>
+                        Connectors
+                    </button>
+                </div>
+            </div>
+
+            <!-- Programs Dropdown -->
+            <div class="dropdown" id="programsDropdown">
+                <button class="dropdown-toggle" onclick="toggleDropdown('programsDropdown')">
+                    <i class="fas fa-trophy"></i>
+                    Programs
+                    <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 4px;"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="showSection('programs')">
+                        <i class="fas fa-trophy"></i>
+                        All Programs
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('referrals')">
+                        <i class="fas fa-exchange-alt"></i>
+                        Referrals
+                    </button>
+                </div>
+            </div>
+
+            <!-- Activity Dropdown -->
+            <div class="dropdown" id="activityDropdown">
+                <button class="dropdown-toggle" onclick="toggleDropdown('activityDropdown')">
+                    <i class="fas fa-bolt"></i>
+                    Activity
+                    <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 4px;"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="showSection('meetings')">
+                        <i class="fas fa-video"></i>
+                        Meetings
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('leads')">
+                        <i class="fas fa-hand-holding-heart"></i>
+                        Leads
+                    </button>
+                    <button class="dropdown-item" onclick="showSection('inbox')">
+                        <i class="fas fa-envelope"></i>
+                        Inbox
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tools Dropdown -->
+            <div class="dropdown" id="toolsDropdown">
+                <button class="dropdown-toggle" onclick="toggleDropdown('toolsDropdown')">
+                    <i class="fas fa-tools"></i>
+                    Tools
+                    <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 4px;"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="seedMockData()">
+                        <i class="fas fa-database"></i>
+                        Seed Mock Data
+                    </button>
+                    <button class="dropdown-item" onclick="document.getElementById('globalSearchInput')?.focus()">
+                        <i class="fas fa-search"></i>
+                        Global Search
+                    </button>
+                </div>
+            </div>
+
+            <!-- Profile Dropdown -->
+            <div class="dropdown profile-dropdown" id="profileDropdown">
+                <button class="profile-toggle" onclick="toggleDropdown('profileDropdown')">
+                    <div class="avatar">A</div>
+                    <span class="profile-name">Admin</span>
+                    <i class="fas fa-chevron-down" style="font-size: 0.7rem; color: #94a3b8;"></i>
+                </button>
+                <div class="dropdown-menu" style="right: 0; left: auto;">
+                    <button class="dropdown-item" onclick="goToPlatform()">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Platform
+                    </button>
+                    <button class="dropdown-item" onclick="window.location.href='/logout'">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+<!-- DASHBOARD SECTION -->
             <section id="dashboardSection">
                 <!-- TOP INSIGHTS SECTION -->
                 <div class="content-grid" style="grid-template-columns: 1fr 1.5fr; margin-bottom: 25px;">
@@ -746,46 +796,66 @@
             }
         });
 
+        // Track which sections have been loaded
+        const loadedSections = new Set(['dashboard']); // Dashboard loads on page load
+
         function showSection(sectionId) {
-            // Hide all sections
-            const sections = ['dashboard', 'users', 'startups', 'corporate', 'connectors', 'programs', 'meetings', 'leads', 'inbox'];
+            // Hide all sections instantly
+            const sections = ['dashboard', 'analytics', 'users', 'startups', 'corporate', 'connectors', 'programs', 'referrals', 'meetings', 'leads', 'inbox'];
             sections.forEach(s => {
                 const el = document.getElementById(s + 'Section');
                 if (el) el.style.display = 'none';
             });
 
-            // Show target
+            // Show target section instantly
             const target = document.getElementById(sectionId + 'Section');
-            if (target) target.style.display = 'block';
-
-            // Active Nav
-            document.querySelectorAll('.admin-nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-
-            // Find current button and set active
-            const btns = document.querySelectorAll('.admin-nav-item');
-            btns.forEach(btn => {
-                const clickAttr = btn.getAttribute('onclick');
-                if (clickAttr && clickAttr.includes(sectionId)) {
-                    btn.classList.add('active');
+            if (target) {
+                target.style.display = 'block';
+                
+                // Load data only once per section (lazy loading)
+                if (!loadedSections.has(sectionId)) {
+                    loadedSections.add(sectionId);
+                    
+                    // Use setTimeout to load data after UI update (non-blocking)
+                    setTimeout(() => {
+                        if (sectionId === 'meetings') {
+                            loadMeetings();
+                            loadMeetingStats();
+                        } else if (sectionId === 'leads') {
+                            loadLeads();
+                        } else if (sectionId === 'users') {
+                            renderFilteredUsers();
+                        } else if (sectionId === 'startups') {
+                            renderStartupUsers();
+                        } else if (sectionId === 'corporate') {
+                            renderCorporateUsers();
+                        } else if (sectionId === 'connectors') {
+                            renderConnectorUsers();
+                        } else if (sectionId === 'programs') {
+                            loadPrograms();
+                        } else if (sectionId === 'referrals') {
+                            loadReferrals();
+                        } else if (sectionId === 'analytics') {
+                            refreshAnalytics();
+                        }
+                    }, 0);
                 }
-            });
+            }
 
-            // Load section-specific data
-            if (sectionId === 'meetings') {
-                loadMeetings();
-                loadMeetingStats();
-            }
-            if (sectionId === 'leads') {
-                loadLeads();
-            }
-            if (sectionId === 'users') renderFilteredUsers();
-            if (sectionId === 'startups') renderStartupUsers();
-            if (sectionId === 'corporate') renderCorporateUsers();
-            if (sectionId === 'connectors') renderConnectorUsers();
-            if (sectionId === 'programs') loadPrograms();
-            if (sectionId === 'referrals') loadReferrals();
+            // Update active nav state (non-blocking)
+            requestAnimationFrame(() => {
+                document.querySelectorAll('.admin-nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                const btns = document.querySelectorAll('.admin-nav-item');
+                btns.forEach(btn => {
+                    const clickAttr = btn.getAttribute('onclick');
+                    if (clickAttr && clickAttr.includes(sectionId)) {
+                        btn.classList.add('active');
+                    }
+                });
+            });
         }
 
         function viewMessage(id) {
@@ -2080,8 +2150,58 @@
             document.getElementById('editPosterUrlInput').value = '';
             document.getElementById('editPosterInput').value = '';
         }
+
+        // Dropdown functionality - optimized for instant response
+        function toggleDropdown(dropdownId) {
+            event.stopPropagation(); // Prevent event bubbling
+            
+            const dropdown = document.getElementById(dropdownId);
+            if (!dropdown) return;
+            
+            const isActive = dropdown.classList.contains('active');
+            
+            // Close all dropdowns instantly
+            document.querySelectorAll('.dropdown.active').forEach(d => {
+                d.classList.remove('active');
+            });
+            
+            // Toggle current dropdown if it wasn't active
+            if (!isActive) {
+                dropdown.classList.add('active');
+            }
+        }
+
+        // Close dropdowns when clicking outside - optimized
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropdown')) {
+                const activeDropdowns = document.querySelectorAll('.dropdown.active');
+                if (activeDropdowns.length > 0) {
+                    activeDropdowns.forEach(d => d.classList.remove('active'));
+                }
+            }
+        }, { passive: true });
+
+        // Wrap showSection to close dropdowns and scroll
+        const originalShowSection = window.showSection;
+        if (originalShowSection) {
+            window.showSection = function(sectionId) {
+                // Close dropdowns instantly
+                document.querySelectorAll('.dropdown.active').forEach(d => {
+                    d.classList.remove('active');
+                });
+                
+                // Call original function
+                originalShowSection(sectionId);
+                
+                // Smooth scroll to top (non-blocking)
+                requestAnimationFrame(() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            };
+        }
     </script>
 
+</main>
 </body>
 
 </html>
