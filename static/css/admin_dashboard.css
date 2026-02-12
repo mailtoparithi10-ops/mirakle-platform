@@ -94,10 +94,11 @@ body {
     border: 1px solid var(--border);
     min-width: 240px;
     padding: 0.75rem;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
-    transition: var(--transition);
+    display: none;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity 0.2s ease, transform 0.2s ease;
     z-index: 1001;
 }
 
@@ -1301,4 +1302,31 @@ input[type="file"] {
     background-color: #ef4444 !important;
     color: white !important;
     box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+/* Smooth section transitions */
+main section {
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Instant dropdown toggle */
+.dropdown-menu {
+    will-change: display;
+}
+
+/* Optimize rendering */
+.dropdown-toggle,
+.dropdown-item {
+    will-change: background-color, color;
 }

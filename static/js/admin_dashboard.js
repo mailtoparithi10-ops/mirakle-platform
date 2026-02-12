@@ -571,7 +571,7 @@ function animateStatChange(elementId, fromValue, toValue) {
 }
 
 function showSection(sectionName) {
-    // Close all dropdowns first
+    // Close all dropdowns first - INSTANT
     document.querySelectorAll('.dropdown-menu').forEach(menu => {
         menu.style.display = 'none';
     });
@@ -585,31 +585,53 @@ function showSection(sectionName) {
         event.target.classList.add('active');
     }
 
+    // INSTANT: Hide all sections immediately
     document.querySelectorAll('main section').forEach(section => {
         section.style.display = 'none';
     });
 
     const sectionId = sectionName + 'Section';
     const section = document.getElementById(sectionId);
+    
+    // INSTANT: Show section immediately (even if data is loading)
     if (section) {
         section.style.display = 'block';
-
-        if (sectionName === 'users') {
-            renderFilteredUsers();
-        } else if (sectionName === 'startups') {
-            renderStartupUsers();
-        } else if (sectionName === 'corporate') {
-            renderCorporateUsers();
-        } else if (sectionName === 'connectors') {
-            renderConnectorUsers();
-        } else if (sectionName === 'programs') {
-            loadPrograms();
-        } else if (sectionName === 'analytics') {
-            // Initialize analytics when section is shown
-            if (typeof initializeAnalytics === 'function') {
-                initializeAnalytics();
+        
+        // Load data asynchronously (non-blocking)
+        requestAnimationFrame(() => {
+            if (sectionName === 'users') {
+                if (users.length > 0) {
+                    renderFilteredUsers();
+                } else {
+                    loadRecentUsers();
+                }
+            } else if (sectionName === 'startups') {
+                if (users.length > 0) {
+                    renderStartupUsers();
+                } else {
+                    loadRecentUsers();
+                }
+            } else if (sectionName === 'corporate') {
+                if (users.length > 0) {
+                    renderCorporateUsers();
+                } else {
+                    loadRecentUsers();
+                }
+            } else if (sectionName === 'connectors') {
+                if (users.length > 0) {
+                    renderConnectorUsers();
+                } else {
+                    loadRecentUsers();
+                }
+            } else if (sectionName === 'programs') {
+                loadPrograms();
+            } else if (sectionName === 'analytics') {
+                // Initialize analytics when section is shown
+                if (typeof initializeAnalytics === 'function') {
+                    initializeAnalytics();
+                }
             }
-        }
+        });
     }
 }
 
