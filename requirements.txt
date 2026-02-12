@@ -20,6 +20,9 @@ google-auth==2.23.4
 google-auth-oauthlib==1.1.0
 google-auth-httplib2==0.2.0
 
+# Python 3.13 compatibility
+setuptools>=69.0.0
+
 # Payment Processing
 razorpay==1.4.1
 
