@@ -23,7 +23,8 @@ from routes.enablers import bp as enablers_bp
 from routes.corporate import corporate_bp
 
 # NEW: Payment and Messaging routes
-from routes.payments import bp as payments_bp
+# Payment routes temporarily disabled - razorpay integration removed
+# from routes.payments import bp as payments_bp
 from routes.messaging import bp as messaging_bp
 
 
@@ -95,7 +96,8 @@ def create_app():
     app.register_blueprint(connections_bp)
     
     # NEW: Payment and Messaging blueprints
-    app.register_blueprint(payments_bp)
+    # Payment routes temporarily disabled - razorpay integration removed
+    # app.register_blueprint(payments_bp)
     app.register_blueprint(messaging_bp)
 
     # Import WebRTC signaling events

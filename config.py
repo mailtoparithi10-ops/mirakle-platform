@@ -15,11 +15,11 @@ class Config:
     GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
     GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
     
-    # Razorpay Configuration
-    RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID')
-    RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET')
-    RAZORPAY_WEBHOOK_SECRET = os.environ.get('RAZORPAY_WEBHOOK_SECRET')
-    RAZORPAY_ACCOUNT_NUMBER = os.environ.get('RAZORPAY_ACCOUNT_NUMBER')
+    # Razorpay Configuration (Disabled - integration removed)
+    # RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID')
+    # RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET')
+    # RAZORPAY_WEBHOOK_SECRET = os.environ.get('RAZORPAY_WEBHOOK_SECRET')
+    # RAZORPAY_ACCOUNT_NUMBER = os.environ.get('RAZORPAY_ACCOUNT_NUMBER')
     
     # Sentry Configuration
     SENTRY_DSN = os.environ.get('SENTRY_DSN')
