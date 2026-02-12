@@ -14,47 +14,72 @@
         :root {
             --primary: #fcb82e;
             --primary-dark: #e6a429;
+            --primary-light: #ffd666;
             --secondary: #1a1a1a;
             --accent: #333;
-            --background: #f8f9fa;
+            --background: #f5f7fa;
             --surface: #ffffff;
-            --text-main: #2d3748;
+            --text-main: #1a202c;
+            --text-secondary: #2d3748;
             --text-muted: #718096;
             --border: #e2e8f0;
+            --border-light: #edf2f7;
             --success: #48bb78;
             --error: #f56565;
+            --warning: #ed8936;
+            --info: #4299e1;
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --radius-xl: 20px;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background-color: var(--background);
+            background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
-            background-image:
-                radial-gradient(at 0% 0%, rgba(252, 184, 46, 0.05) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(255, 255, 255, 0.5) 0px, transparent 50%);
-            background-attachment: fixed;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
         }
 
-        /* Enforce header styling */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(252, 184, 46, 0.08) 0%, rgba(252, 184, 46, 0.02) 100%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Header */
         .header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             height: 80px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             z-index: 1000;
             display: flex;
             align-items: center;
-            border-bottom: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
+            border-bottom: 1px solid var(--border-light);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         .nav-container {
@@ -118,132 +143,179 @@
         }
 
         .application-form {
-            max-width: 900px;
-            margin: 120px auto 4rem;
-            padding: 3.5rem;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            max-width: 960px;
+            margin: 120px auto 5rem;
+            padding: 0;
             position: relative;
             z-index: 1;
         }
 
+        .form-container {
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+
         .form-header {
             text-align: center;
-            margin-bottom: 3.5rem;
+            padding: 4rem 3rem 3rem;
+            background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+            border-bottom: 1px solid var(--border-light);
             position: relative;
+        }
+
+        .form-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 2px;
         }
 
         .form-header h1 {
             color: var(--secondary);
-            font-size: 2.5rem;
+            font-size: 2.75rem;
             font-weight: 800;
-            margin-bottom: 0.75rem;
-            letter-spacing: -0.025em;
+            margin-bottom: 1rem;
+            letter-spacing: -0.03em;
             background: linear-gradient(135deg, #1a1a1a 0%, #4a5568 100%);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .form-header p {
             color: var(--text-muted);
-            font-size: 1.1rem;
-            max-width: 600px;
+            font-size: 1.125rem;
+            max-width: 650px;
             margin: 0 auto;
+            line-height: 1.7;
         }
 
         .program-card {
-            background: linear-gradient(135deg, #fffbeb 0%, #fff 100%);
-            border: 1px solid #fceeb5;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 2px solid #fde68a;
             border-radius: var(--radius-md);
-            padding: 1.5rem;
-            margin: 2rem auto 0;
+            padding: 2rem;
+            margin: 2.5rem auto 0;
             max-width: 700px;
             position: relative;
             overflow: hidden;
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 4px 12px rgba(252, 184, 46, 0.15);
             text-align: left;
         }
 
-        .program-card::after {
-            content: '';
+        .program-card::before {
+            content: '🎯';
             position: absolute;
-            top: 0;
-            right: 0;
-            width: 150px;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(252, 184, 46, 0.1));
-            transform: skewX(-20deg);
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            opacity: 0.5;
         }
 
         .program-card h3 {
             color: var(--secondary);
-            margin-bottom: 0.5rem;
-            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.35rem;
             font-weight: 700;
+            padding-right: 3rem;
         }
 
         .program-card p {
-            color: var(--text-main);
+            color: var(--text-secondary);
             margin: 0;
             font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .form-content {
+            padding: 3rem 3.5rem 4rem;
         }
 
         .form-section {
-            margin-bottom: 3rem;
+            margin-bottom: 3.5rem;
+        }
+
+        .form-section:last-of-type {
+            margin-bottom: 0;
         }
 
         .section-title {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--secondary);
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid var(--border);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-light);
             display: flex;
             align-items: center;
+            position: relative;
         }
 
         .section-title::before {
             content: '';
             display: block;
-            width: 6px;
-            height: 24px;
-            background: var(--primary);
+            width: 5px;
+            height: 28px;
+            background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+            margin-right: 14px;
+            border-radius: 3px;
+            box-shadow: 0 2px 4px rgba(252, 184, 46, 0.3);
+        }
+
+        .section-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: #000;
+            border-radius: 50%;
+            font-size: 0.875rem;
+            font-weight: 700;
             margin-right: 12px;
-            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(252, 184, 46, 0.3);
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .form-group label {
-            font-size: 0.95rem;
+            font-size: 0.975rem;
             font-weight: 600;
-            color: var(--text-main);
-            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.625rem;
             display: block;
+            line-height: 1.5;
         }
 
         .required {
             color: var(--error);
+            font-weight: 700;
         }
 
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 0.875rem 1rem;
-            border: 1px solid var(--border);
+            padding: 0.95rem 1.125rem;
+            border: 2px solid var(--border);
             border-radius: var(--radius-sm);
             background-color: white;
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
+            font-size: 0.975rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             font-family: inherit;
             color: var(--text-main);
+            line-height: 1.5;
         }
 
         .form-group input:focus,
@@ -251,18 +323,20 @@
         .form-group textarea:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(252, 184, 46, 0.15);
+            box-shadow: 0 0 0 4px rgba(252, 184, 46, 0.12);
+            background-color: #fffef9;
         }
 
-        .form-group input:hover,
-        .form-group select:hover,
-        .form-group textarea:hover {
+        .form-group input:hover:not(:focus),
+        .form-group select:hover:not(:focus),
+        .form-group textarea:hover:not(:focus) {
             border-color: #cbd5e0;
         }
 
         .form-group textarea {
             resize: vertical;
-            min-height: 120px;
+            min-height: 130px;
+            line-height: 1.6;
         }
 
         .form-row {
@@ -272,66 +346,133 @@
         }
 
         .help-text {
-            font-size: 0.85rem;
+            font-size: 0.875rem;
             color: var(--text-muted);
-            margin-top: 0.5rem;
-            line-height: 1.4;
+            margin-top: 0.625rem;
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .help-text::before {
+            content: 'ℹ️';
+            font-size: 0.875rem;
+            flex-shrink: 0;
+            margin-top: 0.125rem;
         }
 
         .character-count {
-            font-size: 0.75rem;
+            font-size: 0.8125rem;
             color: var(--text-muted);
             text-align: right;
-            margin-top: 0.25rem;
+            margin-top: 0.375rem;
             font-variant-numeric: tabular-nums;
+            font-weight: 500;
+        }
+
+        .character-count.warning {
+            color: var(--warning);
+        }
+
+        .character-count.danger {
+            color: var(--error);
         }
 
         .file-upload {
             border: 2px dashed var(--border);
             border-radius: var(--radius-md);
-            padding: 2rem;
+            padding: 2.5rem;
             text-align: center;
-            transition: all 0.2s;
-            background: #f8fafc;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, #fafbfc 0%, #ffffff 100%);
             position: relative;
             display: block;
+            cursor: pointer;
         }
 
         .file-upload:hover {
             border-color: var(--primary);
-            background: #fffaf0;
+            background: linear-gradient(135deg, #fffef9 0%, #fffbf0 100%);
+            box-shadow: 0 4px 12px rgba(252, 184, 46, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .file-upload.has-file {
+            border-color: var(--success);
+            background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
         }
 
         .file-upload input[type="file"] {
             display: none;
         }
 
+        .file-upload-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.6;
+        }
+
+        .file-name {
+            margin-top: 1rem;
+            font-weight: 600;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .file-name::before {
+            content: '✓';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: var(--success);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            line-height: 20px;
+        }
+
         .btn.btn-secondary {
             background: white;
-            border: 1px solid #e2e8f0;
-            color: #4a5568;
-            padding: 0.5rem 1.5rem;
-            border-radius: 6px;
+            border: 2px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.75rem 2rem;
+            border-radius: var(--radius-sm);
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            gap: 0.625rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            font-size: 0.95rem;
+        }
+
+        .btn.btn-secondary::before {
+            content: '📎';
+            font-size: 1.125rem;
         }
 
         .btn.btn-secondary:hover {
-            background: #f7fafc;
-            border-color: #cbd5e0;
-            color: #2d3748;
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #000;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(252, 184, 46, 0.3);
+        }
+
+        .btn.btn-secondary:active {
+            transform: translateY(0);
         }
 
         .sector-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 0.75rem;
-            margin-top: 0.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 0.875rem;
+            margin-top: 1rem;
         }
 
         .sector-item {
@@ -349,65 +490,126 @@
 
         .sector-item label {
             display: block;
-            padding: 0.75rem 1rem;
+            padding: 1rem 1.125rem;
             background: white;
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
             border-radius: var(--radius-sm);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             text-align: center;
             font-weight: 500;
             color: var(--text-muted);
             font-size: 0.9rem;
             user-select: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sector-item label::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .sector-item label:hover {
             border-color: #cbd5e0;
-            background-color: #f8fafc;
+            background-color: #fafbfc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
         }
 
         .sector-item input[type="checkbox"]:checked+label {
-            background-color: #fffaf0;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
             border-color: var(--primary);
-            color: #d97706;
+            color: #92400e;
             font-weight: 600;
-            box-shadow: 0 0 0 1px var(--primary);
+            box-shadow: 0 0 0 1px var(--primary), 0 4px 12px rgba(252, 184, 46, 0.2);
+        }
+
+        .sector-item input[type="checkbox"]:checked+label::before {
+            transform: scaleX(1);
         }
 
         .submit-section {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
-            gap: 1rem;
-            border-top: 1px solid var(--border);
-            padding-top: 2rem;
-            margin-top: 3rem;
+            justify-content: space-between;
+            gap: 1.5rem;
+            background: linear-gradient(135deg, #fafbfc 0%, #ffffff 100%);
+            border-top: 2px solid var(--border-light);
+            padding: 2.5rem 3.5rem;
+            margin: 0 -3.5rem -4rem;
+            border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+        }
+
+        .submit-info {
+            flex: 1;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .submit-info::before {
+            content: '🔒';
+            font-size: 1.125rem;
         }
 
         .submit-btn {
-            background: var(--secondary);
+            background: linear-gradient(135deg, var(--secondary) 0%, #000 100%);
             color: white;
-            padding: 0.875rem 2rem;
+            padding: 1rem 3rem;
             border: none;
             border-radius: var(--radius-sm);
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: var(--shadow-md);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
         }
 
         .submit-btn:hover {
-            transform: translateY(-1px);
-            background: #000;
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
         }
 
         .submit-btn:disabled {
-            background: #cbd5e0;
+            background: linear-gradient(135deg, #cbd5e0 0%, #a0aec0 100%);
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
+        }
+
+        .submit-btn:disabled::before {
+            display: none;
         }
 
         @media (max-width: 768px) {
@@ -451,26 +653,28 @@
     </header>
 
     <div class="application-form">
-        <div class="form-header">
-            <h1>Startup Application</h1>
-            {% if program %}
-            <div class="program-card">
-                <h3>Applying for: {{ program.title }}</h3>
-                <p>{{ program.description[:200] }}...</p>
+        <div class="form-container">
+            <div class="form-header">
+                <h1>Startup Application</h1>
+                {% if program %}
+                <div class="program-card">
+                    <h3>Applying for: {{ program.title }}</h3>
+                    <p>{{ program.description[:200] }}...</p>
+                </div>
+                <p style="margin-top: 1.5rem;">Complete your startup profile below to proceed with your application.</p>
+                {% else %}
+                <p>Complete your startup profile to access programs and opportunities on Alchemy.</p>
+                {% endif %}
             </div>
-            <p class="mt-3">Complete your startup profile below to proceed with your application.</p>
-            {% else %}
-            <p>Complete your startup profile to access programs and opportunities on Alchemy.</p>
-            {% endif %}
-        </div>
 
-        <form id="startupApplicationForm" method="POST" enctype="multipart/form-data">
-            {% if program %}
-            <input type="hidden" name="program_id" value="{{ program.id }}">
-            {% endif %}
+            <div class="form-content">
+                <form id="startupApplicationForm" method="POST" enctype="multipart/form-data">
+                    {% if program %}
+                    <input type="hidden" name="program_id" value="{{ program.id }}">
+                    {% endif %}
             <!-- Basic Information -->
             <div class="form-section">
-                <h2 class="section-title">Basic Information</h2>
+                <h2 class="section-title"><span class="section-number">1</span>Basic Information</h2>
 
                 <div class="form-group">
                     <label for="startup_name">What is the name of your startup? <span class="required">*</span></label>
@@ -513,7 +717,7 @@
 
             <!-- Sectors and Industries -->
             <div class="form-section">
-                <h2 class="section-title">Sectors & Industries</h2>
+                <h2 class="section-title"><span class="section-number">2</span>Sectors & Industries</h2>
 
                 <div class="form-group">
                     <label>What sector or industries does your startup operate in? <span
@@ -580,7 +784,7 @@
 
             <!-- Company Details -->
             <div class="form-section">
-                <h2 class="section-title">Company Details</h2>
+                <h2 class="section-title"><span class="section-number">3</span>Company Details</h2>
 
                 <div class="form-row">
                     <div class="form-group">
@@ -620,37 +824,34 @@
 
             <!-- File Uploads -->
             <div class="form-section">
-                <h2 class="section-title">Documents</h2>
+                <h2 class="section-title"><span class="section-number">4</span>Documents</h2>
 
                 <div class="form-group">
                     <label>Upload your startup logo (limit 10mb) <span class="required">*</span></label>
-                    <div class="file-upload">
-                        <input type="file" id="logo" name="logo" accept="image/*" required style="display: none;">
-                        <button type="button" class="btn btn-secondary"
-                            onclick="document.getElementById('logo').click();">+ Upload</button>
-                        <div id="logo-name" style="margin-top: 5px; font-weight: bold;"></div>
-                        <div class="help-text">Upload your startup logo. Please upload a square version of your logo
-                            with a solid background.</div>
+                    <div class="file-upload" id="logoUpload" onclick="document.getElementById('logo').click();">
+                        <input type="file" id="logo" name="logo" accept="image/*" required>
+                        <div class="file-upload-icon">📄</div>
+                        <button type="button" class="btn btn-secondary">Choose File</button>
+                        <div id="logo-name" class="file-name" style="display: none;"></div>
+                        <div class="help-text" style="margin-top: 1rem; justify-content: center;">Upload your startup logo. Please upload a square version with a solid background.</div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label>Upload your startup pitch deck (limit 10mb) <span class="required">*</span></label>
-                    <div class="file-upload">
-                        <input type="file" id="pitch_deck" name="pitch_deck" accept=".pdf" required
-                            style="display: none;">
-                        <button type="button" class="btn btn-secondary"
-                            onclick="document.getElementById('pitch_deck').click();">+ Upload</button>
-                        <div id="pitch-name" style="margin-top: 5px; font-weight: bold;"></div>
-                        <div class="help-text">Upload your startup pitch deck (limit 10mb). Please provide your pitch
-                            deck in PDF format only. An ideal pitch deck should contain about 10 to 20 pages.</div>
+                    <div class="file-upload" id="pitchUpload" onclick="document.getElementById('pitch_deck').click();">
+                        <input type="file" id="pitch_deck" name="pitch_deck" accept=".pdf" required>
+                        <div class="file-upload-icon">📊</div>
+                        <button type="button" class="btn btn-secondary">Choose File</button>
+                        <div id="pitch-name" class="file-name" style="display: none;"></div>
+                        <div class="help-text" style="margin-top: 1rem; justify-content: center;">Upload your pitch deck in PDF format (10-20 pages recommended).</div>
                     </div>
                 </div>
             </div>
 
             <!-- Additional Sections -->
             <div class="form-section">
-                <h2 class="section-title">Additional Information</h2>
+                <h2 class="section-title"><span class="section-number">5</span>Additional Information</h2>
 
                 <div class="form-group">
                     <label for="business_model">Business Model</label>
@@ -677,19 +878,24 @@
             <!-- Terms and Submit -->
             <div class="form-section">
                 <div class="form-group">
-                    <label>
+                    <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer;">
                         <input type="checkbox" id="terms" name="terms" required
-                            style="width: auto; margin-right: 0.5rem;">
-                        By submitting this form you agree to share your startup information with Founders Lair and the
-                        program owner. <span class="required">*</span>
+                            style="width: 20px; height: 20px; margin-top: 0.125rem; cursor: pointer; flex-shrink: 0;">
+                        <span style="flex: 1;">By submitting this form you agree to share your startup information with the
+                        program owner and accept our terms of service. <span class="required">*</span></span>
                     </label>
                 </div>
             </div>
 
             <div class="submit-section">
+                <div class="submit-info">
+                    Your information is secure and encrypted
+                </div>
                 <button type="submit" class="submit-btn" id="submitBtn">Submit Application</button>
             </div>
         </form>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -703,10 +909,12 @@
                 const max = this.getAttribute('maxlength');
                 counter.textContent = `${count}/${max}`;
 
+                // Update counter styling based on usage
+                counter.classList.remove('warning', 'danger');
                 if (count > max * 0.9) {
-                    counter.style.color = '#e74c3c';
-                } else {
-                    counter.style.color = '#999';
+                    counter.classList.add('danger');
+                } else if (count > max * 0.75) {
+                    counter.classList.add('warning');
                 }
             });
         }
@@ -716,19 +924,38 @@
         setupCharacterCount('team_info', 'teamInfoCount');
         setupCharacterCount('financials', 'financialsCount');
 
-        // File upload feedback
-        // File upload feedback
-        document.getElementById('logo').addEventListener('change', function () {
+        // File upload feedback with enhanced UI
+        document.getElementById('logo').addEventListener('change', function (e) {
+            e.stopPropagation();
+            const upload = document.getElementById('logoUpload');
+            const nameDiv = document.getElementById('logo-name');
+            
             if (this.files[0]) {
-                document.getElementById('logo-name').textContent = this.files[0].name;
-            }
-        });
-        document.getElementById('pitch_deck').addEventListener('change', function () {
-            if (this.files[0]) {
-                document.getElementById('pitch-name').textContent = this.files[0].name;
+                nameDiv.textContent = this.files[0].name;
+                nameDiv.style.display = 'flex';
+                upload.classList.add('has-file');
             }
         });
 
+        document.getElementById('pitch_deck').addEventListener('change', function (e) {
+            e.stopPropagation();
+            const upload = document.getElementById('pitchUpload');
+            const nameDiv = document.getElementById('pitch-name');
+            
+            if (this.files[0]) {
+                nameDiv.textContent = this.files[0].name;
+                nameDiv.style.display = 'flex';
+                upload.classList.add('has-file');
+            }
+        });
+
+        // Prevent form submission when clicking upload buttons
+        document.querySelectorAll('.file-upload .btn-secondary').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+        });
 
         // Form validation
         document.getElementById('startupApplicationForm').addEventListener('submit', function (e) {
@@ -752,6 +979,16 @@
                 this.style.height = this.scrollHeight + 'px';
             });
         });
+
+        // Smooth scroll to first error
+        document.getElementById('startupApplicationForm').addEventListener('invalid', function(e) {
+            e.preventDefault();
+            const firstInvalid = this.querySelector(':invalid');
+            if (firstInvalid) {
+                firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstInvalid.focus();
+            }
+        }, true);
     </script>
 </body>
 
