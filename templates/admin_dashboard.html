@@ -9,7 +9,7 @@
     <title>Admin Dashboard - InnoBridge</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap/dist/css/jsvectormap.min.css">
-    <link rel="stylesheet" href="/static/css/admin_dashboard.css">
+    <link rel="stylesheet" href="/static/css/admin_dashboard.css?v=5.0">
 </head>
 
 <body>
@@ -117,10 +117,6 @@
                     <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 4px;"></i>
                 </button>
                 <div class="dropdown-menu">
-                    <button class="dropdown-item" onclick="seedMockData()">
-                        <i class="fas fa-database"></i>
-                        Seed Mock Data
-                    </button>
                     <button class="dropdown-item" onclick="document.getElementById('globalSearchInput')?.focus()">
                         <i class="fas fa-search"></i>
                         Global Search
@@ -640,7 +636,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap/dist/maps/world.js"></script>
-    <script src="/static/js/admin_dashboard.js?v=2.0"></script>
+    <script src="/static/js/admin_dashboard.js?v=5.0"></script>
     <script src="/static/js/api.js"></script>
     <script src="/static/js/auth.js"></script>
     <script src="/static/js/main.js"></script>
@@ -811,51 +807,63 @@
             const target = document.getElementById(sectionId + 'Section');
             if (target) {
                 target.style.display = 'block';
-                
-                // Load data only once per section (lazy loading)
-                if (!loadedSections.has(sectionId)) {
-                    loadedSections.add(sectionId);
-                    
-                    // Use setTimeout to load data after UI update (non-blocking)
-                    setTimeout(() => {
-                        if (sectionId === 'meetings') {
-                            loadMeetings();
-                            loadMeetingStats();
-                        } else if (sectionId === 'leads') {
-                            loadLeads();
-                        } else if (sectionId === 'users') {
-                            renderFilteredUsers();
-                        } else if (sectionId === 'startups') {
-                            renderStartupUsers();
-                        } else if (sectionId === 'corporate') {
-                            renderCorporateUsers();
-                        } else if (sectionId === 'connectors') {
-                            renderConnectorUsers();
-                        } else if (sectionId === 'programs') {
-                            loadPrograms();
-                        } else if (sectionId === 'referrals') {
-                            loadReferrals();
-                        } else if (sectionId === 'analytics') {
-                            refreshAnalytics();
-                        }
-                    }, 0);
-                }
             }
 
-            // Update active nav state (non-blocking)
-            requestAnimationFrame(() => {
-                document.querySelectorAll('.admin-nav-item').forEach(item => {
-                    item.classList.remove('active');
-                });
+            // Load data only once per section (lazy loading) - async to not block UI
+            if (!loadedSections.has(sectionId)) {
+                loadedSections.add(sectionId);
+                
+                // Use requestIdleCallback for non-critical rendering
+                if ('requestIdleCallback' in window) {
+                    requestIdleCallback(() => {
+                        loadSectionDataAsync(sectionId);
+                    });
+                } else {
+                    // Fallback for browsers that don't support requestIdleCallback
+                    requestAnimationFrame(() => {
+                        loadSectionDataAsync(sectionId);
+                    });
+                }
+            }
+        }
 
-                const btns = document.querySelectorAll('.admin-nav-item');
-                btns.forEach(btn => {
-                    const clickAttr = btn.getAttribute('onclick');
-                    if (clickAttr && clickAttr.includes(sectionId)) {
-                        btn.classList.add('active');
-                    }
-                });
-            });
+        function loadSectionDataAsync(sectionId) {
+            if (sectionId === 'meetings') {
+                loadMeetings();
+                loadMeetingStats();
+            } else if (sectionId === 'leads') {
+                loadLeads();
+            } else if (sectionId === 'users') {
+                if (users && users.length > 0) {
+                    renderFilteredUsers();
+                } else {
+                    loadRecentUsers();
+                }
+            } else if (sectionId === 'startups') {
+                if (users && users.length > 0) {
+                    renderStartupUsers();
+                } else {
+                    loadRecentUsers();
+                }
+            } else if (sectionId === 'corporate') {
+                if (users && users.length > 0) {
+                    renderCorporateUsers();
+                } else {
+                    loadRecentUsers();
+                }
+            } else if (sectionId === 'connectors') {
+                if (users && users.length > 0) {
+                    renderConnectorUsers();
+                } else {
+                    loadRecentUsers();
+                }
+            } else if (sectionId === 'programs') {
+                loadPrograms();
+            } else if (sectionId === 'referrals') {
+                loadReferrals();
+            } else if (sectionId === 'analytics') {
+                refreshAnalytics();
+            }
         }
 
         function viewMessage(id) {
@@ -1216,19 +1224,6 @@
             if (!confirm('This will seed the database with mock users and more programs. Continue?')) return;
             try {
                 const response = await fetch('/api/admin/seed-all-data', { method: 'POST' });
-                const json = await response.json();
-                if (json.success) {
-                    showToast(json.message);
-                    setTimeout(() => window.location.reload(), 1500);
-                } else {
-                    showToast('Failed to seed data', 'error');
-                }
-            } catch (error) {
-                console.error('Error seeding data:', error);
-                showToast('Error seeding data', 'error');
-            }
-        }
-
         // --- LEADS MANAGEMENT ---
         let allLeads = [];
 
@@ -2193,10 +2188,8 @@
                 // Call original function
                 originalShowSection(sectionId);
                 
-                // Smooth scroll to top (non-blocking)
-                requestAnimationFrame(() => {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
+                // Instant scroll to top
+                window.scrollTo(0, 0);
             };
         }
     </script>

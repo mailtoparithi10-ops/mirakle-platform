@@ -269,7 +269,7 @@ function renderFilteredUsers() {
         }
 
         return `
-            <div class="user-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden;">
+            <div class="user-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem; transition: none; position: relative; overflow: hidden;">
                 <div style="position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: ${headerGradient};"></div>
                 
                 <div style="display: flex; align-items: flex-start; margin-bottom: 1.25rem;">
@@ -310,10 +310,10 @@ function renderFilteredUsers() {
                 </div>
 
                 <div class="user-actions" style="display: flex; gap: 10px; border-top: 1px solid #f1f5f9; padding-top: 1.25rem;">
-                    <button onclick="editUser(${user.id})" style="flex: 1; padding: 8px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; color: #475569; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                    <button onclick="editUser(${user.id})" style="flex: 1; padding: 8px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; color: #475569; display: flex; align-items: center; justify-content: center; gap: 6px; transition: none;">
                         <i class="fas fa-pen"></i> Edit
                     </button>
-                    <button onclick="deleteUser(${user.id})" style="flex: 1; padding: 8px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; cursor: pointer; font-weight: 600; color: #e11d48; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                    <button onclick="deleteUser(${user.id})" style="flex: 1; padding: 8px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; cursor: pointer; font-weight: 600; color: #e11d48; display: flex; align-items: center; justify-content: center; gap: 6px; transition: none;">
                         <i class="fas fa-trash"></i> Delete
                     </button>
                 </div>
@@ -571,39 +571,64 @@ function animateStatChange(elementId, fromValue, toValue) {
 }
 
 function showSection(sectionName) {
-    // INSTANT: Close all dropdowns
+    // Close all dropdowns
     document.querySelectorAll('.dropdown-menu').forEach(menu => {
         menu.style.display = 'none';
     });
     
-    // INSTANT: Hide all sections
-    document.querySelectorAll('main section').forEach(section => {
-        section.style.display = 'none';
-    });
-
-    // INSTANT: Show target section
-    const sectionId = sectionName + 'Section';
-    const section = document.getElementById(sectionId);
-    if (section) {
-        section.style.display = 'block';
-    }
+    // Get all sections
+    const allSections = document.querySelectorAll('main section');
+    const targetSectionId = sectionName + 'Section';
+    const targetSection = document.getElementById(targetSectionId);
     
-    // THEN: Load data if needed (non-blocking)
-    setTimeout(() => {
-        if (sectionName === 'users' && users.length > 0) {
-            renderFilteredUsers();
-        } else if (sectionName === 'startups' && users.length > 0) {
-            renderStartupUsers();
-        } else if (sectionName === 'corporate' && users.length > 0) {
-            renderCorporateUsers();
-        } else if (sectionName === 'connectors' && users.length > 0) {
-            renderConnectorUsers();
-        } else if (sectionName === 'programs') {
-            loadPrograms();
-        } else if (sectionName === 'analytics' && typeof initializeAnalytics === 'function') {
-            initializeAnalytics();
-        }
-    }, 0);
+    if (!targetSection) return;
+    
+    // Find currently visible section
+    const currentSection = Array.from(allSections).find(s => s.style.display !== 'none');
+    
+    if (currentSection && currentSection !== targetSection) {
+        // Fade out current section
+        currentSection.classList.add('fade-out');
+        
+        // After fade out, switch sections
+        setTimeout(() => {
+            currentSection.style.display = 'none';
+            currentSection.classList.remove('fade-out');
+            
+            // Show target section
+            targetSection.style.display = 'block';
+            targetSection.classList.add('fade-in');
+            
+            // Remove fade-in class after animation
+            setTimeout(() => {
+                targetSection.classList.remove('fade-in');
+            }, 300);
+            
+            // Load data
+            loadSectionData(sectionName);
+        }, 300);
+    } else {
+        // First load or same section
+        allSections.forEach(s => s.style.display = 'none');
+        targetSection.style.display = 'block';
+        loadSectionData(sectionName);
+    }
+}
+
+function loadSectionData(sectionName) {
+    if (sectionName === 'users' && users.length > 0) {
+        renderFilteredUsers();
+    } else if (sectionName === 'startups' && users.length > 0) {
+        renderStartupUsers();
+    } else if (sectionName === 'corporate' && users.length > 0) {
+        renderCorporateUsers();
+    } else if (sectionName === 'connectors' && users.length > 0) {
+        renderConnectorUsers();
+    } else if (sectionName === 'programs') {
+        loadPrograms();
+    } else if (sectionName === 'analytics' && typeof initializeAnalytics === 'function') {
+        initializeAnalytics();
+    }
 }
 
 // Toggle dropdown menus
@@ -663,20 +688,13 @@ function renderPrograms(programs) {
             <div style="text-align: center; padding: 40px;">
                 <i class="fas fa-rocket" style="font-size: 48px; color: #a0aec0; margin-bottom: 15px;"></i>
                 <p style="color: #a0aec0; margin-bottom: 20px;">No programs created yet</p>
-                <button onclick="seedAllDemoData()" style="padding: 10px 20px; background: #4f46e5; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                    <i class="fas fa-magic"></i> Seed All Demo Data
-                </button>
+                <p style="color: #64748b; font-size: 0.9rem;">Create your first program using the button above</p>
             </div>
         `;
         return;
     }
 
     container.innerHTML = `
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem;">
-            <button onclick="seedAllDemoData()" style="font-size: 0.8rem; padding: 5px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer;">
-                <i class="fas fa-plus"></i> Add More Demos
-            </button>
-        </div>
         <div class="programs-grid" style="display: grid; gap: 1.5rem;">
             ${programs.map(p => `
                 <div class="program-card" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; display: flex; justify-content: space-between; align-items: flex-start;">
@@ -700,25 +718,6 @@ function renderPrograms(programs) {
             `).join('')}
         </div>
     `;
-}
-
-async function seedAllDemoData() {
-    try {
-        const response = await fetch('/api/admin/seed-all-data', { method: 'POST' });
-        const data = await response.json();
-
-        if (data.success) {
-            showToast(data.message, 'success');
-            loadDashboardStats(); // Refresh stats
-            loadRecentUsers(); // Refresh user list
-            loadPrograms(); // Refresh programs list
-        } else {
-            showToast(data.message || 'Failed to seed data', 'error');
-        }
-    } catch (error) {
-        console.error('Error seeding data:', error);
-        showToast('Error seeding demo data', 'error');
-    }
 }
 
 function formatTimeAgo(dateString) {

@@ -21,6 +21,7 @@ body {
     background: var(--bg-page);
     color: var(--text-main);
     min-height: 100vh;
+    contain: layout style paint;
 }
 
 /* Top Navigation */
@@ -74,7 +75,7 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: var(--transition);
+    transition: none;
 }
 
 .dropdown-toggle:hover,
@@ -98,7 +99,7 @@ body {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: none;
     z-index: 1001;
 }
 
@@ -115,7 +116,7 @@ body {
     padding: 0.8rem 1rem;
     color: var(--text-main);
     text-decoration: none;
-    transition: var(--transition);
+    transition: none;
     border-radius: 10px;
     cursor: pointer;
     font-size: 0.9rem;
@@ -153,7 +154,7 @@ body {
     border-radius: 30px;
     padding: 5px 15px 5px 6px;
     cursor: pointer;
-    transition: var(--transition);
+    transition: none;
 }
 
 .profile-toggle:hover {
@@ -1306,13 +1307,28 @@ input[type="file"] {
 
 /* Smooth section transitions */
 main section {
-    animation: fadeIn 0.2s ease-in-out;
+    transition: none;
 }
 
-@keyframes fadeIn {
+/* Ensure sections are visible by default */
+main section#dashboardSection {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+main section.fade-out {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+main section.fade-in {
+    animation: none;
+}
+
+@keyframes fadeInUp {
     from {
-        opacity: 0;
-        transform: translateY(10px);
+        opacity: 1;
+        transform: translateY(0);
     }
     to {
         opacity: 1;

@@ -4920,6 +4920,13 @@
                                     <i class="fa-solid fa-camera"></i>
                                     Update photo
                                 </button>
+                                {% if current_user.profile_pic %}
+                                <button class="quick-action-btn" style="color: #ef4444;"
+                                    onclick="if(confirm('Remove your profile photo?')) document.getElementById('removePhotoForm').submit()">
+                                    <i class="fa-solid fa-trash"></i>
+                                    Remove photo
+                                </button>
+                                {% endif %}
                                 <span class="pill-soft-gold">
                                     <i class="fa-solid fa-ranking-star"></i>
                                     Level 3
@@ -5100,6 +5107,9 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Hidden Form for Photo Removal -->
+                <form id="removePhotoForm" action="/connector/settings/remove_photo" method="POST" style="display: none;"></form>
             </section>
 
 

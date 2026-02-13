@@ -4,12 +4,15 @@ API routes for corporate dashboard
 Handles startup discovery, deal flow, applications, and analytics
 """
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from corporate_service import CorporateService
 from decorators import role_required
 
 corporate_bp = Blueprint('corporate', __name__, url_prefix='/api/corporate')
+
+# Web Blueprint for corporate settings routes
+corporate_web_bp = Blueprint('corporate_web', __name__, url_prefix='/corporate')
 
 
 # ==========================================
@@ -238,6 +241,74 @@ def update_notification_settings():
         "success": True,
         "message": "Notification settings updated"
     })
+
+
+@corporate_web_bp.route('/settings/remove_photo', methods=['POST'])
+@login_required
+def remove_profile_photo():
+    """Remove user profile photo"""
+    try:
+        if current_user.role not in ('corporate', 'admin'):
+            flash('Unauthorized', 'error')
+            return redirect(url_for('corporate_dealflow_page'))
+        
+        if current_user.profile_pic:
+            current_user.profile_pic = None
+            from extensions import db as db_ext
+            db_ext.session.commit()
+            flash('Profile photo removed.', 'success')
+    except Exception as e:
+        from extensions import db as db_ext
+        db_ext.session.rollback()
+        flash(f'Error removing photo: {str(e)}', 'error')
+        
+    return redirect(url_for('corporate_dealflow_page'))
+
+
+@corporate_web_bp.route('/settings/upload_photo', methods=['POST'])
+@login_required
+def upload_photo():
+    """Upload profile photo"""
+    try:
+        if current_user.role not in ('corporate', 'admin'):
+            return jsonify({"success": False, "message": "Unauthorized"}), 403
+        
+        if 'profile_pic' not in request.files:
+            return jsonify({"success": False, "message": "No file part"}), 400
+        
+        file = request.files['profile_pic']
+        
+        if file.filename == '':
+            return jsonify({"success": False, "message": "No selected file"}), 400
+        
+        if file and file.filename.rsplit('.', 1)[1].lower() in ['jpg', 'jpeg', 'png', 'gif']:
+            # Save the file
+            import os
+            from werkzeug.utils import secure_filename
+            
+            filename = secure_filename(f"profile_{current_user.id}_{file.filename}")
+            upload_folder = 'static/uploads/profiles'
+            os.makedirs(upload_folder, exist_ok=True)
+            
+            file_path = os.path.join(upload_folder, filename)
+            file.save(file_path)
+            
+            # Update user profile
+            from extensions import db as db_ext
+            current_user.profile_pic = f"/{file_path}"
+            db_ext.session.commit()
+            
+            return jsonify({
+                "success": True,
+                "message": "Photo uploaded successfully",
+                "profile_pic_url": f"/{file_path}"
+            })
+        else:
+            return jsonify({"success": False, "message": "Invalid file type"}), 400
+    except Exception as e:
+        from extensions import db as db_ext
+        db_ext.session.rollback()
+        return jsonify({"success": False, "message": str(e)}), 500
 
 
 # ==========================================

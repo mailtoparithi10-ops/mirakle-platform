@@ -1,11 +1,14 @@
 # routes/enablers.py
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from models import Referral, Startup, Opportunity, User, Application
 from extensions import db
 from enabler_service import EnablerService
 
 bp = Blueprint("enablers", __name__, url_prefix="/api/enabler")
+
+# Web Blueprint for connector settings routes
+connector_web_bp = Blueprint('connector_web', __name__, url_prefix='/connector')
 
 @bp.route("/dashboard/overview", methods=["GET"])
 @login_required
@@ -147,3 +150,109 @@ def request_payout():
     )
     
     return jsonify(result)
+
+
+@bp.route("/settings/upload_photo", methods=["POST"])
+@login_required
+def upload_photo_api():
+    """Upload profile photo via API"""
+    try:
+        if current_user.role not in ("enabler", "admin"):
+            return jsonify({"success": False, "message": "Unauthorized"}), 403
+        
+        if 'profile_pic' not in request.files:
+            return jsonify({"success": False, "message": "No file part"}), 400
+        
+        file = request.files['profile_pic']
+        
+        if file.filename == '':
+            return jsonify({"success": False, "message": "No selected file"}), 400
+        
+        if file and file.filename.rsplit('.', 1)[1].lower() in ['jpg', 'jpeg', 'png', 'gif']:
+            import os
+            from werkzeug.utils import secure_filename
+            
+            filename = secure_filename(f"profile_{current_user.id}_{file.filename}")
+            upload_folder = 'static/uploads/profiles'
+            os.makedirs(upload_folder, exist_ok=True)
+            
+            file_path = os.path.join(upload_folder, filename)
+            file.save(file_path)
+            
+            current_user.profile_pic = f"/{file_path}"
+            db.session.commit()
+            
+            return jsonify({
+                "success": True,
+                "message": "Photo uploaded successfully",
+                "profile_pic_url": f"/{file_path}"
+            })
+        else:
+            return jsonify({"success": False, "message": "Invalid file type"}), 400
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+@connector_web_bp.route("/settings/remove_photo", methods=["POST"])
+@login_required
+def remove_profile_photo():
+    """Remove user profile photo"""
+    try:
+        if current_user.role not in ("enabler", "admin"):
+            return redirect(url_for('index'))
+        
+        if current_user.profile_pic:
+            current_user.profile_pic = None
+            db.session.commit()
+            flash('Profile photo removed successfully.', 'success')
+        else:
+            flash('No profile photo to remove.', 'info')
+        
+        return redirect(url_for('enabler_page'))
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error removing photo: {str(e)}', 'error')
+        return redirect(url_for('enabler_page'))
+
+
+@connector_web_bp.route("/settings/upload_photo", methods=["POST"])
+@login_required
+def upload_photo():
+    """Upload profile photo"""
+    try:
+        if current_user.role not in ("enabler", "admin"):
+            return jsonify({"success": False, "message": "Unauthorized"}), 403
+        
+        if 'profile_pic' not in request.files:
+            return jsonify({"success": False, "message": "No file part"}), 400
+        
+        file = request.files['profile_pic']
+        
+        if file.filename == '':
+            return jsonify({"success": False, "message": "No selected file"}), 400
+        
+        if file and file.filename.rsplit('.', 1)[1].lower() in ['jpg', 'jpeg', 'png', 'gif']:
+            import os
+            from werkzeug.utils import secure_filename
+            
+            filename = secure_filename(f"profile_{current_user.id}_{file.filename}")
+            upload_folder = 'static/uploads/profiles'
+            os.makedirs(upload_folder, exist_ok=True)
+            
+            file_path = os.path.join(upload_folder, filename)
+            file.save(file_path)
+            
+            current_user.profile_pic = f"/{file_path}"
+            db.session.commit()
+            
+            return jsonify({
+                "success": True,
+                "message": "Photo uploaded successfully",
+                "profile_pic_url": f"/{file_path}"
+            })
+        else:
+            return jsonify({"success": False, "message": "Invalid file type"}), 400
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": str(e)}), 500

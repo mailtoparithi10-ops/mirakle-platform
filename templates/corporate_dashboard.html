@@ -1347,6 +1347,50 @@
                         style="margin-bottom: 1.5rem; font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">
                         Profile Information</h3>
 
+                    <!-- Profile Picture Section -->
+                    <div
+                        style="display: flex; align-items: center; gap: 2rem; margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid #eee;">
+                        <div style="position: relative;">
+                            <div
+                                style="width: 100px; height: 100px; border-radius: 50%; background: #fcb82e; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 900; color: #000; overflow: hidden; border: 4px solid #eee;">
+                                {% if current_user.profile_pic %}
+                                <img src="{{ current_user.profile_pic }}" alt="Profile"
+                                    style="width: 100%; height: 100%; object-fit: cover;">
+                                {% else %}
+                                {{ current_user.name[0] if current_user.name else 'C' }}
+                                {% endif %}
+                            </div>
+                            <input type="file" id="profile_pic_input" style="display: none;"
+                                accept="image/*" onchange="previewProfileImage(this)">
+                            <button type="button" onclick="document.getElementById('profile_pic_input').click()"
+                                style="position: absolute; bottom: 0; right: 0; width: 32px; height: 32px; border-radius: 50%; background: #000; color: #fcb82e; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                                <i class="fas fa-camera" style="font-size: 0.8rem;"></i>
+                            </button>
+                        </div>
+                        <div>
+                            <h4 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 0.5rem;">Profile
+                                Picture
+                            </h4>
+                            <p style="font-size: 0.85rem; color: #666; margin-bottom: 1rem;">
+                                PNG, JPG or GIF. Max 2MB.
+                            </p>
+                            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                                <button type="button" class="btn btn-black"
+                                    style="padding: 8px 16px; font-size: 0.85rem;"
+                                    onclick="document.getElementById('profile_pic_input').click()">Upload
+                                    New</button>
+
+                                {% if current_user.profile_pic %}
+                                <button type="button" class="btn btn-outline"
+                                    style="padding: 8px 16px; font-size: 0.85rem; color: #ef4444; border-color: #ef4444;"
+                                    onclick="if(confirm('Are you sure you want to remove your profile photo?')) document.getElementById('removePhotoForm').submit();">
+                                    Remove Photo
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
                         <div>
                             <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Full
@@ -1403,6 +1447,11 @@
 
                     <button type="button" onclick="saveSettings()" class="btn btn-black">Save
                         Changes</button>
+                </form>
+
+                <!-- Hidden Form for Profile Photo Removal -->
+                <form id="removePhotoForm" action="/corporate/settings/remove_photo" method="POST"
+                    style="display: none;">
                 </form>
             </div>
         </section>
@@ -1838,6 +1887,76 @@
         }
 
         window.addEventListener('hashchange', checkHash);
+
+        function previewProfileImage(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                
+                // Check file size (max 2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('File size must not exceed 2MB');
+                    input.value = '';
+                    return;
+                }
+
+                // Check file type
+                if (!file.type.match('image.*')) {
+                    alert('Please select a valid image file');
+                    input.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Create form data and upload
+                    const formData = new FormData();
+                    formData.append('profile_pic', file);
+
+                    fetch('/corporate/settings/upload_photo', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Update the avatar display
+                            const avatarDiv = input.closest('.position-relative') || input.parentElement.querySelector('[style*="border-radius: 50%"]');
+                            if (avatarDiv) {
+                                const img = document.createElement('img');
+                                img.src = data.profile_pic_url || e.target.result;
+                                img.style.cssText = 'width: 100%; height: 100%; object-fit: cover;';
+                                
+                                const existingImg = avatarDiv.querySelector('img');
+                                if (existingImg) {
+                                    existingImg.src = img.src;
+                                } else {
+                                    const textNode = avatarDiv.querySelector('div');
+                                    if (textNode) {
+                                        textNode.remove();
+                                    }
+                                    avatarDiv.appendChild(img);
+                                }
+                            }
+                            
+                            // Show remove button if it's hidden
+                            const removeBtn = document.querySelector('[onclick*="removePhotoForm"]');
+                            if (removeBtn && removeBtn.style.display === 'none') {
+                                removeBtn.style.display = 'inline-block';
+                            }
+                            
+                            alert('Profile photo uploaded successfully!');
+                        } else {
+                            alert('Error uploading photo: ' + (data.message || 'Unknown error'));
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Upload error:', err);
+                        alert('Error uploading photo');
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        }
     </script>
 </body>
 

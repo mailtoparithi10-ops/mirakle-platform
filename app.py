@@ -19,8 +19,8 @@ from routes.notifications import bp as notifications_bp
 from routes.messages import bp as messages_bp, web_bp as messages_web_bp
 from routes.connections import bp as connections_bp
 
-from routes.enablers import bp as enablers_bp
-from routes.corporate import corporate_bp
+from routes.enablers import bp as enablers_bp, connector_web_bp
+from routes.corporate import corporate_bp, corporate_web_bp
 
 # NEW: Payment and Messaging routes
 # Payment routes temporarily disabled - razorpay integration removed
@@ -89,7 +89,9 @@ def create_app():
     app.register_blueprint(meetings_bp)
     app.register_blueprint(meetings_web_bp)
     app.register_blueprint(enablers_bp)
+    app.register_blueprint(connector_web_bp)
     app.register_blueprint(corporate_bp)
+    app.register_blueprint(corporate_web_bp)
     app.register_blueprint(notifications_bp)
     app.register_blueprint(messages_bp)
     app.register_blueprint(messages_web_bp)
@@ -231,6 +233,13 @@ def create_app():
         if current_user.role not in ("enabler", "admin"):
             return render_template("403.html"), 403
         return render_template("enabler_dashboard.html")
+
+    @app.route("/connector")
+    @login_required
+    def connector_page():
+        if current_user.role not in ("enabler", "admin"):
+            return render_template("403.html"), 403
+        return render_template("connector_dashboard.html")
 
     @app.route("/admin")
     @login_required
