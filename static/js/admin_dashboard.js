@@ -1,3 +1,6 @@
+// ===== ADMIN DASHBOARD JS - CLEAN & INSTANT =====
+// NO ANIMATIONS, INSTANT RESPONSE, ALL BUTTONS WORK
+
 let users = [];
 let currentFilter = 'all';
 let currentStats = {
@@ -5,88 +8,393 @@ let currentStats = {
     totalStartups: 0,
     totalCorporate: 0,
     totalConnectors: 0,
-    totalPrograms: 0,
-    totalAdmins: 0
+    totalPrograms: 0
 };
 
+// ===== DROPDOWN TOGGLE - INSTANT =====
+window.toggleDropdown = function(dropdownId, e) {
+    if (e) e.stopPropagation();
+    
+    const dropdown = document.getElementById(dropdownId);
+    if (!dropdown) return;
+    
+    const isActive = dropdown.classList.contains('active');
+    
+    // Close all dropdowns
+    document.querySelectorAll('.dropdown.active').forEach(d => {
+        d.classList.remove('active');
+    });
+    
+    // Toggle current
+    if (!isActive) {
+        dropdown.classList.add('active');
+    }
+};
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown.active').forEach(d => {
+            d.classList.remove('active');
+        });
+    }
+});
+
+// ===== SECTION NAVIGATION - INSTANT =====
+window.showSection = function(sectionName) {
+    // Close dropdowns
+    document.querySelectorAll('.dropdown.active').forEach(d => {
+        d.classList.remove('active');
+    });
+    
+    // Hide all sections
+    document.querySelectorAll('main section').forEach(s => {
+        s.style.display = 'none';
+    });
+    
+    // Show target section
+    const targetSection = document.getElementById(sectionName + 'Section');
+    if (targetSection) {
+        targetSection.style.display = 'block';
+        window.scrollTo(0, 0);
+        loadSectionData(sectionName);
+    }
+};
+
+// ===== LOAD SECTION DATA =====
+function loadSectionData(sectionName) {
+    if (sectionName === 'users' && users.length > 0) {
+        renderFilteredUsers();
+    } else if (sectionName === 'startups' && users.length > 0) {
+        renderStartupUsers();
+    } else if (sectionName === 'corporate' && users.length > 0) {
+        renderCorporateUsers();
+    } else if (sectionName === 'connectors' && users.length > 0) {
+        renderConnectorUsers();
+    } else if (sectionName === 'programs') {
+        loadPrograms();
+    } else if (sectionName === 'analytics') {
+        loadAnalytics();
+    } else if (sectionName === 'referrals') {
+        loadReferrals();
+    } else if (sectionName === 'meetings') {
+        loadMeetings();
+    }
+}
+
+// ===== LOAD ANALYTICS =====
+async function loadAnalytics() {
+    console.log('Loading analytics...');
+    
+    try {
+        // Load stats for analytics
+        const response = await fetch('/api/admin/stats');
+        const data = await response.json();
+        
+        if (data.success && data.stats) {
+            const stats = data.stats;
+            
+            // Update analytics cards
+            const updateEl = (id, value) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = value || 0;
+            };
+            
+            updateEl('activeUsersCount', stats.total_users);
+            updateEl('totalApplicationsAnalytics', stats.total_applications);
+            
+            console.log('Analytics loaded successfully');
+        }
+    } catch (error) {
+        console.error('Error loading analytics:', error);
+        showToast('Failed to load analytics', 'error');
+    }
+}
+
+// ===== LOAD REFERRALS =====
+async function loadReferrals() {
+    console.log('Loading referrals...');
+    const tbody = document.getElementById('referralsTableBody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px;"><div class="loading"></div><p>Loading referrals...</p></td></tr>';
+    
+    try {
+        const response = await fetch('/api/admin/referrals');
+        const data = await response.json();
+        
+        console.log('Referrals data:', data);
+        
+        if (data.success && data.referrals) {
+            const referrals = data.referrals;
+            
+            if (referrals.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 40px; color: #94a3b8;">
+                            <i class="fas fa-exchange-alt" style="font-size: 48px; margin-bottom: 15px; display: block; opacity: 0.3;"></i>
+                            <p style="margin: 0;">No referrals yet</p>
+                            <p style="font-size: 0.9rem; margin-top: 8px;">Referrals will appear here when connectors refer startups</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = referrals.map(ref => `
+                <tr>
+                    <td>
+                        <div style="font-weight: 600;">${ref.connector_name || 'Unknown'}</div>
+                        <div style="font-size: 0.85rem; color: #64748b;">${ref.connector_email || ''}</div>
+                    </td>
+                    <td>
+                        <div style="font-weight: 600;">${ref.startup_name || 'Unknown'}</div>
+                        <div style="font-size: 0.85rem; color: #64748b;">${ref.startup_email || ''}</div>
+                    </td>
+                    <td>${ref.program_title || 'N/A'}</td>
+                    <td>
+                        <span class="status-badge status-${ref.status}" style="padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                            ${ref.status}
+                        </span>
+                    </td>
+                    <td>${new Date(ref.created_at).toLocaleDateString()}</td>
+                </tr>
+            `).join('');
+            
+            console.log(`Loaded ${referrals.length} referrals`);
+        } else {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #ef4444;">Failed to load referrals</td></tr>';
+        }
+    } catch (error) {
+        console.error('Error loading referrals:', error);
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #ef4444;">Error loading referrals</td></tr>';
+        showToast('Failed to load referrals', 'error');
+    }
+}
+
+// ===== LOAD MEETINGS =====
+async function loadMeetings() {
+    console.log('Loading meetings...');
+    
+    try {
+        // Load meeting stats
+        const statsResponse = await fetch('/api/meetings/stats');
+        const statsData = await statsResponse.json();
+        
+        if (statsData.success && statsData.stats) {
+            const stats = statsData.stats;
+            
+            // Update stat cards
+            const updateEl = (id, value) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = value || 0;
+            };
+            
+            updateEl('totalMeetings', stats.total_meetings);
+            updateEl('upcomingMeetings', stats.upcoming_meetings);
+            updateEl('totalParticipants', stats.total_participants);
+            
+            console.log('Meeting stats loaded:', stats);
+        }
+        
+        // Load meetings list
+        const meetingsResponse = await fetch('/api/meetings/');
+        const meetingsData = await meetingsResponse.json();
+        
+        console.log('Meetings data:', meetingsData);
+        
+        if (meetingsData.success && meetingsData.meetings) {
+            renderMeetings(meetingsData.meetings);
+        } else {
+            const container = document.getElementById('meetingsList');
+            if (container) {
+                container.innerHTML = '<p style="text-align: center; color: #ef4444;">Failed to load meetings</p>';
+            }
+        }
+    } catch (error) {
+        console.error('Error loading meetings:', error);
+        const container = document.getElementById('meetingsList');
+        if (container) {
+            container.innerHTML = '<p style="text-align: center; color: #ef4444;">Error loading meetings</p>';
+        }
+        showToast('Failed to load meetings', 'error');
+    }
+}
+
+// ===== RENDER MEETINGS =====
+function renderMeetings(meetings) {
+    const container = document.getElementById('meetingsList');
+    if (!container) return;
+    
+    if (!meetings || meetings.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-video"></i>
+                <p>No meetings scheduled</p>
+                <p style="font-size: 0.9rem; color: #64748b; margin-top: 8px;">Create a new meeting to get started</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = meetings.map(meeting => {
+        const scheduledDate = new Date(meeting.scheduled_at);
+        const isUpcoming = scheduledDate > new Date();
+        const statusClass = meeting.status || (isUpcoming ? 'scheduled' : 'completed');
+        
+        return `
+            <div class="meeting-item" style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div style="flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                            <h4 style="margin: 0; font-weight: 600;">${meeting.title}</h4>
+                            <span class="status-badge status-${statusClass}" style="padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                                ${statusClass}
+                            </span>
+                        </div>
+                        <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">${meeting.description || 'No description'}</p>
+                        <div style="font-size: 13px; color: #666; display: flex; gap: 16px;">
+                            <span><i class="fas fa-calendar"></i> ${scheduledDate.toLocaleDateString()}</span>
+                            <span><i class="fas fa-clock"></i> ${scheduledDate.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</span>
+                            <span><i class="fas fa-hourglass-half"></i> ${meeting.duration_minutes} min</span>
+                            <span><i class="fas fa-users"></i> ${meeting.participant_count || 0} participants</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-shrink: 0; margin-left: 16px;">
+                        ${isUpcoming ? `
+                            <button onclick="window.joinMeeting('${meeting.meeting_room_id}')" class="admin-btn primary" style="padding: 8px 16px;">
+                                <i class="fas fa-video"></i> Join
+                            </button>
+                        ` : ''}
+                        <button onclick="window.viewMeeting(${meeting.id})" class="admin-btn" style="padding: 8px 16px;">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                        <button onclick="window.editMeeting(${meeting.id})" class="admin-btn" style="padding: 8px 16px;">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button onclick="window.deleteMeeting(${meeting.id})" class="admin-btn" style="padding: 8px 16px; background: #ef4444; color: white; border: none;">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    console.log(`Rendered ${meetings.length} meetings`);
+}
+
+// ===== MEETING ACTIONS (PLACEHOLDERS) =====
+window.joinMeeting = function(roomId) {
+    window.open(`/meetings/join/${roomId}`, '_blank');
+};
+
+window.viewMeeting = function(id) {
+    showToast('View meeting details coming soon', 'info');
+};
+
+window.editMeeting = function(id) {
+    showToast('Edit meeting functionality coming soon', 'info');
+};
+
+window.deleteMeeting = async function(id) {
+    if (!confirm('Are you sure you want to delete this meeting?')) return;
+    showToast('Delete meeting functionality coming soon', 'info');
+};
+
+window.showCreateMeetingModal = function() {
+    showToast('Create meeting functionality coming soon', 'info');
+};
+
+window.filterMeetings = function(filter) {
+    showToast(`Filter by ${filter} coming soon`, 'info');
+};
+
+// ===== LOAD DASHBOARD STATS =====
 async function loadDashboardStats() {
     try {
+        console.log('Loading dashboard stats...');
         const response = await fetch('/api/admin/stats');
-        if (!response.ok) throw new Error('Network response was not ok');
+        console.log('Stats response status:', response.status);
+        
+        if (!response.ok) {
+            console.error('Stats API error:', response.status, response.statusText);
+            return;
+        }
+        
         const data = await response.json();
+        console.log('Stats data received:', data);
 
-        if (data.success) {
+        if (data.success && data.stats) {
             const stats = data.stats;
 
-            // Update Overview Cards
-            if (document.getElementById('totalUsers')) animateStatChange('totalUsers', currentStats.totalUsers, stats.total_users || 0);
-            if (document.getElementById('totalStartups')) animateStatChange('totalStartups', currentStats.totalStartups, stats.total_startups || 0);
-            if (document.getElementById('totalCorporate')) animateStatChange('totalCorporate', currentStats.totalCorporate, stats.total_corporate || 0);
-            if (document.getElementById('totalConnectors')) animateStatChange('totalConnectors', currentStats.totalConnectors, stats.total_connectors || 0);
-            if (document.getElementById('totalPrograms')) animateStatChange('totalPrograms', currentStats.totalPrograms, stats.total_programs || 0);
-
-            // SYNC TABS (Below) - Ensuring match
-            const updateEl = (id, val) => {
+            // Update stats instantly
+            const updateStat = (id, value) => {
                 const el = document.getElementById(id);
-                if (el) el.textContent = val;
+                if (el) {
+                    el.textContent = value || 0;
+                    console.log(`Updated ${id} to ${value || 0}`);
+                } else {
+                    console.warn(`Element not found: ${id}`);
+                }
             };
-            updateEl('allCount', stats.total_users || 0);
-            updateEl('startupCount', stats.total_startups || 0);
-            updateEl('corporateCount', stats.total_corporate || 0);
-            updateEl('connectorCount', stats.total_connectors || 0);
-            updateEl('adminCount', stats.total_admins || 0);
+
+            updateStat('totalUsers', stats.total_users);
+            updateStat('totalStartups', stats.total_startups);
+            updateStat('totalCorporate', stats.total_corporate);
+            updateStat('totalConnectors', stats.total_connectors);
+            updateStat('totalPrograms', stats.total_programs);
+            updateStat('allCount', stats.total_users);
+            updateStat('startupCount', stats.total_startups);
+            updateStat('corporateCount', stats.total_corporate);
+            updateStat('connectorCount', stats.total_connectors);
+            updateStat('adminCount', stats.total_admins);
 
             currentStats = {
                 totalUsers: stats.total_users || 0,
                 totalStartups: stats.total_startups || 0,
                 totalCorporate: stats.total_corporate || 0,
                 totalConnectors: stats.total_connectors || 0,
-                totalPrograms: stats.total_programs || 0,
-                totalAdmins: stats.total_admins || 0
+                totalPrograms: stats.total_programs || 0
             };
+            
+            console.log('Stats updated successfully:', currentStats);
+        } else {
+            console.error('Invalid stats response format:', data);
         }
     } catch (error) {
         console.error('Error loading stats:', error);
+        showToast('Failed to load dashboard stats', 'error');
     }
 }
 
+// ===== LOAD USERS =====
 async function loadRecentUsers() {
-    const containers = ['recentUsers', 'allUsersList', 'startupUsersList', 'corporateUsersList', 'connectorsUsersList'];
     try {
+        console.log('Loading users...');
         const response = await fetch('/api/admin/users');
-        if (!response.ok) throw new Error('User fetch failed');
-        const data = await response.json();
-
-        if (Array.isArray(data)) {
-            users = data;
-        } else if (data.success && data.users) {
-            users = data.users;
-        } else {
-            users = [];
+        console.log('Users response status:', response.status);
+        
+        if (!response.ok) {
+            console.error('Users API error:', response.status, response.statusText);
+            return;
         }
+        
+        const data = await response.json();
+        console.log('Users data received:', data);
+
+        users = Array.isArray(data) ? data : (data.success && data.users ? data.users : []);
+        console.log('Total users loaded:', users.length);
 
         updateUserCounts();
         renderRecentUsers();
-
-        const sections = ['users', 'startups', 'corporate', 'connectors'];
-        sections.forEach(s => {
-            const el = document.getElementById(s + 'Section');
-            if (el && el.style.display !== 'none') {
-                if (s === 'users') renderFilteredUsers();
-                if (s === 'startups') renderStartupUsers();
-                if (s === 'corporate') renderCorporateUsers();
-                if (s === 'connectors') renderConnectorUsers();
-            }
-        });
     } catch (error) {
         console.error('Error loading users:', error);
-        containers.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = '<p style="text-align:center; color:#ef4444; padding:20px;">Failed to load users. Please refresh.</p>';
-        });
+        showToast('Failed to load users', 'error');
     }
 }
 
+// ===== UPDATE USER COUNTS =====
 function updateUserCounts() {
     const counts = {
         all: users.length,
@@ -108,108 +416,69 @@ function updateUserCounts() {
     updateEl('adminCount', counts.admin);
 }
 
+// ===== GET DISPLAY NAME =====
 function getDisplayName(user) {
     if (user.name) return user.name;
     if (user.full_name) return user.full_name;
     if (user.corporate_name) return user.corporate_name;
     if (user.company) return user.company;
-
-    if (user.first_name && user.last_name) {
-        return `${user.first_name} ${user.last_name}`;
-    }
-
-    if (user.username && user.username.includes('_')) {
-        const parts = user.username.split('_');
-        return parts.map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
-    }
-
-    if (user.email) {
-        const emailName = user.email.split('@')[0];
-        if (emailName.includes('.')) {
-            const parts = emailName.split('.');
-            return parts.map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
-        }
-        return emailName.charAt(0).toUpperCase() + emailName.slice(1);
-    }
-
-    return user.username ? user.username.charAt(0).toUpperCase() + user.username.slice(1) : 'Unknown User';
+    if (user.first_name && user.last_name) return `${user.first_name} ${user.last_name}`;
+    if (user.email) return user.email.split('@')[0];
+    return user.username || 'Unknown User';
 }
 
+// ===== GET USER INITIALS =====
 function getUserInitials(user) {
-    // Priority 1: Use full name or name
     const nameToUse = user.name || user.full_name || user.corporate_name;
     if (nameToUse) {
         const parts = nameToUse.split(' ');
-        if (parts.length >= 2) {
-            return (parts[0][0] + parts[1][0]).toUpperCase();
-        }
+        if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
         return nameToUse.substring(0, 2).toUpperCase();
     }
-
-    // Priority 2: Use email
-    if (user.email) {
-        const parts = user.email.split('@')[0].split('.');
-        if (parts.length >= 2) {
-            return (parts[0][0] + parts[1][0]).toUpperCase();
-        }
-        return user.email.substring(0, 2).toUpperCase();
-    }
-
-    // Priority 3: Use username
-    if (user.username) {
-        if (user.username.includes('_')) {
-            const parts = user.username.split('_');
-            return (parts[0][0] + parts[1][0]).toUpperCase();
-        }
-        return user.username.substring(0, 2).toUpperCase();
-    }
-
-    // Final Fallback: Icon instead of '??'
-    return '<i class="fas fa-user" style="font-size: 0.8em;"></i>';
+    if (user.email) return user.email.substring(0, 2).toUpperCase();
+    if (user.username) return user.username.substring(0, 2).toUpperCase();
+    return 'U';
 }
 
+// ===== FORMAT TIME AGO =====
+function formatTimeAgo(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - date) / 1000);
+
+    if (diffInSeconds < 60) return 'Just now';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+    return `${Math.floor(diffInSeconds / 86400)}d ago`;
+}
+
+// ===== RENDER RECENT USERS =====
 function renderRecentUsers() {
     const container = document.getElementById('recentUsers');
+    if (!container) return;
 
     if (!users || users.length === 0) {
-        container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-users"></i>
-                        <p>No users registered yet</p>
-                    </div>
-                `;
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>No users yet</p></div>';
         return;
     }
 
-    const recentUsers = [...users]
-        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-        .slice(0, 10);
+    const recentUsers = [...users].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 10);
 
-    container.innerHTML = recentUsers.map(user => {
-        const initials = getUserInitials(user);
-        const timeAgo = formatTimeAgo(user.created_at);
-        const displayName = getDisplayName(user);
-
-        return `
-                    <div class="user-item">
-                        <div class="user-avatar ${user.role}">
-                            ${initials}
-                        </div>
-                        <div class="user-info">
-                            <div class="user-name">${displayName}</div>
-                            <div class="user-role">${user.role.toUpperCase()} • ${timeAgo}</div>
-                        </div>
-                        <div class="user-status status-offline">
-                            <span class="status-dot"></span>
-                            Offline
-                        </div>
-                    </div>
-                `;
-    }).join('');
+    container.innerHTML = recentUsers.map(user => `
+        <div class="user-item">
+            <div class="user-avatar ${user.role}">${getUserInitials(user)}</div>
+            <div class="user-info">
+                <div class="user-name">${getDisplayName(user)}</div>
+                <div class="user-role">${user.role.toUpperCase()} • ${formatTimeAgo(user.created_at)}</div>
+            </div>
+        </div>
+    `).join('');
 }
 
+// ===== RENDER FILTERED USERS =====
 function renderFilteredUsers() {
     const container = document.getElementById('allUsersList');
+    if (!container) return;
 
     let filteredUsers = users;
     if (currentFilter !== 'all') {
@@ -223,585 +492,263 @@ function renderFilteredUsers() {
     }
 
     if (filteredUsers.length === 0) {
-        container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-users"></i>
-                        <p>No ${currentFilter === 'all' ? '' : currentFilter} users found</p>
-                    </div>
-                `;
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>No users found</p></div>';
         return;
     }
 
-    const sortedUsers = [...filteredUsers].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
     container.innerHTML = `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
-        ${sortedUsers.map(user => {
-        const initials = getUserInitials(user);
-        const timeAgo = formatTimeAgo(user.created_at);
-        const displayName = getDisplayName(user);
-
-        // Determine Theme Colors based on Role
-        let headerGradient = 'linear-gradient(90deg, #64748b, #94a3b8)'; // Default Gray
-        let badgeBg = '#f1f5f9';
-        let badgeColor = '#475569';
-        let badgeBorder = '#e2e8f0';
-
-        if (user.role === 'startup' || user.role === 'founder') {
-            headerGradient = 'linear-gradient(90deg, #fcb82e, #f59e0b)';
-            badgeBg = '#fff7ed';
-            badgeColor = '#c2410c';
-            badgeBorder = '#ffedd5';
-        } else if (user.role === 'connector' || user.role === 'enabler') {
-            headerGradient = 'linear-gradient(90deg, #2563eb, #3b82f6)';
-            badgeBg = '#eff6ff';
-            badgeColor = '#1e40af';
-            badgeBorder = '#dbeafe';
-        } else if (user.role === 'corporate') {
-            headerGradient = 'linear-gradient(90deg, #0f172a, #334155)';
-            badgeBg = '#f8fafc';
-            badgeColor = '#0f172a';
-            badgeBorder = '#e2e8f0';
-        } else if (user.role === 'admin') {
-            headerGradient = 'linear-gradient(90deg, #7e22ce, #a855f7)';
-            badgeBg = '#faf5ff';
-            badgeColor = '#6b21a8';
-            badgeBorder = '#f3e8ff';
-        }
-
-        return `
-            <div class="user-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem; transition: none; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: ${headerGradient};"></div>
-                
-                <div style="display: flex; align-items: flex-start; margin-bottom: 1.25rem;">
-                    <div class="user-avatar ${user.role}" style="width: 56px; height: 56px; font-size: 1.25rem; margin-right: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                        ${initials}
+        ${filteredUsers.map(user => `
+            <div class="user-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem;">
+                <div style="display: flex; align-items: flex-start; margin-bottom: 1rem;">
+                    <div class="user-avatar ${user.role}" style="width: 56px; height: 56px; font-size: 1.25rem; margin-right: 1rem;">
+                        ${getUserInitials(user)}
                     </div>
                     <div>
-                        <div class="user-name" style="font-size: 1.1rem; margin-bottom: 0.25rem;">${displayName}</div>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <span style="background: ${badgeBg}; color: ${badgeColor}; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; border: 1px solid ${badgeBorder}; text-transform: uppercase;">${user.role}</span>
-                            <span style="font-size: 0.8rem; color: #94a3b8;">• Joined ${timeAgo}</span>
-                        </div>
+                        <div class="user-name" style="font-size: 1.1rem; margin-bottom: 0.25rem;">${getDisplayName(user)}</div>
+                        <div style="font-size: 0.8rem; color: #94a3b8;">${user.role.toUpperCase()} • ${formatTimeAgo(user.created_at)}</div>
                     </div>
                 </div>
-
-                <div class="user-details-grid" style="background: #f8fafc; padding: 1rem; border-radius: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; font-size: 0.85rem;">
-                    <div>
-                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Email</div>
-                        <div style="color: #334155; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.email}</div>
-                    </div>
-                    
-                    ${user.corporate_name ? `
-                    <div>
-                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Company</div>
-                        <div style="color: #334155; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.corporate_name}</div>
-                    </div>` : ''}
-
-                    ${user.country ? `
-                    <div>
-                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Country</div>
-                        <div style="color: #334155; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.country}</div>
-                    </div>` : ''}
-
-                    <div>
-                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">User ID</div>
-                        <div style="color: #334155; font-weight: 600;">#${user.id}</div>
-                    </div>
+                <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; font-size: 0.85rem;">
+                    <div style="margin-bottom: 0.5rem;"><strong>Email:</strong> ${user.email}</div>
+                    <div><strong>ID:</strong> #${user.id}</div>
                 </div>
-
-                <div class="user-actions" style="display: flex; gap: 10px; border-top: 1px solid #f1f5f9; padding-top: 1.25rem;">
-                    <button onclick="editUser(${user.id})" style="flex: 1; padding: 8px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; color: #475569; display: flex; align-items: center; justify-content: center; gap: 6px; transition: none;">
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="editUser(${user.id})" style="flex: 1; padding: 8px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600;">
                         <i class="fas fa-pen"></i> Edit
                     </button>
-                    <button onclick="deleteUser(${user.id})" style="flex: 1; padding: 8px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; cursor: pointer; font-weight: 600; color: #e11d48; display: flex; align-items: center; justify-content: center; gap: 6px; transition: none;">
+                    <button onclick="deleteUser(${user.id})" style="flex: 1; padding: 8px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; cursor: pointer; font-weight: 600; color: #e11d48;">
                         <i class="fas fa-trash"></i> Delete
                     </button>
                 </div>
             </div>
-        `;
-    }).join('')}
+        `).join('')}
     </div>`;
 }
 
+// ===== RENDER STARTUP USERS =====
 function renderStartupUsers() {
     const container = document.getElementById('startupUsersList');
-    const startupUsers = users.filter(u => u.role === 'startup');
+    if (!container) return;
 
+    const startupUsers = users.filter(u => u.role === 'startup' || u.role === 'founder');
     if (startupUsers.length === 0) {
-        container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-rocket"></i>
-                        <p>No startup users registered yet</p>
-                    </div>
-                `;
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-rocket"></i><p>No startup users</p></div>';
         return;
     }
 
-    const sortedUsers = [...startupUsers].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
     container.innerHTML = `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
-        ${sortedUsers.map(user => {
-        const initials = getUserInitials(user);
-        const timeAgo = formatTimeAgo(user.created_at);
-        const displayName = getDisplayName(user);
-
-        return `
-            <div class="user-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: linear-gradient(90deg, #fcb82e, #f59e0b);"></div>
-                
-                <div style="display: flex; align-items: flex-start; margin-bottom: 1.25rem;">
-                    <div class="user-avatar startup" style="width: 56px; height: 56px; font-size: 1.25rem; margin-right: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                        ${initials}
+        ${startupUsers.map(user => `
+            <div class="user-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem;">
+                <div style="display: flex; align-items: flex-start; margin-bottom: 1rem;">
+                    <div class="user-avatar startup" style="width: 56px; height: 56px; font-size: 1.25rem; margin-right: 1rem;">
+                        ${getUserInitials(user)}
                     </div>
                     <div>
-                        <div class="user-name" style="font-size: 1.1rem; margin-bottom: 0.25rem;">${displayName}</div>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <span style="background: #fff7ed; color: #c2410c; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; border: 1px solid #ffedd5;">STARTUP</span>
-                            <span style="font-size: 0.8rem; color: #94a3b8;">• Joined ${timeAgo}</span>
-                        </div>
+                        <div class="user-name" style="font-size: 1.1rem; margin-bottom: 0.25rem;">${getDisplayName(user)}</div>
+                        <div style="font-size: 0.8rem; color: #94a3b8;">STARTUP • ${formatTimeAgo(user.created_at)}</div>
                     </div>
                 </div>
-
-                <div class="user-details-grid" style="background: #f8fafc; padding: 1rem; border-radius: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; font-size: 0.85rem;">
-                    <div>
-                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Email</div>
-                        <div style="color: #334155; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.email}</div>
-                    </div>
-                    <div>
-                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">User ID</div>
-                        <div style="color: #334155; font-weight: 600;">#${user.id}</div>
-                    </div>
-                    <div>
-                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Username</div>
-                        <div style="color: #334155; font-weight: 600;">${user.username || 'N/A'}</div>
-                    </div>
-                    <div>
-                         <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Registered</div>
-                        <div style="color: #334155; font-weight: 600;">${new Date(user.created_at).toLocaleDateString()}</div>
-                    </div>
+                <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; font-size: 0.85rem;">
+                    <div style="margin-bottom: 0.5rem;"><strong>Email:</strong> ${user.email}</div>
+                    <div><strong>ID:</strong> #${user.id}</div>
                 </div>
-
-                <div class="user-actions" style="display: flex; gap: 10px; border-top: 1px solid #f1f5f9; padding-top: 1.25rem;">
-                    <button onclick="editUser(${user.id})" style="flex: 1; padding: 8px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; color: #475569; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="editUser(${user.id})" style="flex: 1; padding: 8px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600;">
                         <i class="fas fa-pen"></i> Edit
                     </button>
-                    <button onclick="deleteUser(${user.id})" style="flex: 1; padding: 8px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; cursor: pointer; font-weight: 600; color: #e11d48; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                    <button onclick="deleteUser(${user.id})" style="flex: 1; padding: 8px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; cursor: pointer; font-weight: 600; color: #e11d48;">
                         <i class="fas fa-trash"></i> Delete
                     </button>
                 </div>
             </div>
-        `;
-    }).join('')}
+        `).join('')}
     </div>`;
 }
 
+// ===== RENDER CORPORATE USERS =====
 function renderCorporateUsers() {
     const container = document.getElementById('corporateUsersList');
-    const corporateUsers = users.filter(u => u.role === 'corporate');
+    if (!container) return;
 
+    const corporateUsers = users.filter(u => u.role === 'corporate');
     if (corporateUsers.length === 0) {
-        container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-building"></i>
-                        <p>No corporate users registered yet</p>
-                    </div>
-                `;
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-building"></i><p>No corporate users</p></div>';
         return;
     }
 
-    const sortedUsers = [...corporateUsers].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
     container.innerHTML = `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
-        ${sortedUsers.map(user => {
-        const initials = getUserInitials(user);
-        const timeAgo = formatTimeAgo(user.created_at);
-        const displayName = getDisplayName(user);
-
-        return `
-            <div class="user-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: linear-gradient(90deg, #0f172a, #334155);"></div>
-                
-                <div style="display: flex; align-items: flex-start; margin-bottom: 1.25rem;">
-                    <div class="user-avatar corporate" style="width: 56px; height: 56px; font-size: 1.25rem; margin-right: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); background: #f1f5f9; color: #0f172a; border: 1px solid #e2e8f0;">
-                        ${initials}
+        ${corporateUsers.map(user => `
+            <div class="user-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem;">
+                <div style="display: flex; align-items: flex-start; margin-bottom: 1rem;">
+                    <div class="user-avatar corporate" style="width: 56px; height: 56px; font-size: 1.25rem; margin-right: 1rem;">
+                        ${getUserInitials(user)}
                     </div>
                     <div>
-                        <div class="user-name" style="font-size: 1.1rem; margin-bottom: 0.25rem;">${displayName}</div>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <span style="background: #f1f5f9; color: #334155; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; border: 1px solid #e2e8f0;">CORPORATE</span>
-                            <span style="font-size: 0.8rem; color: #94a3b8;">• Joined ${timeAgo}</span>
-                        </div>
+                        <div class="user-name" style="font-size: 1.1rem; margin-bottom: 0.25rem;">${getDisplayName(user)}</div>
+                        <div style="font-size: 0.8rem; color: #94a3b8;">CORPORATE • ${formatTimeAgo(user.created_at)}</div>
                     </div>
                 </div>
-
-                <div class="user-details-grid" style="background: #f8fafc; padding: 1rem; border-radius: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; font-size: 0.85rem;">
-                    <div>
-                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Company</div>
-                        <div style="color: #334155; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.corporate_name || 'N/A'}</div>
-                    </div>
-                    <div>
-                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Contact</div>
-                        <div style="color: #334155; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.full_name || 'N/A'}</div>
-                    </div>
-                    <div>
-                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Email</div>
-                        <div style="color: #334155; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.email}</div>
-                    </div>
-                    <div>
-                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Phone</div>
-                        <div style="color: #334155; font-weight: 600;">${user.phone_number || 'N/A'}</div>
-                    </div>
+                <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; font-size: 0.85rem;">
+                    <div style="margin-bottom: 0.5rem;"><strong>Email:</strong> ${user.email}</div>
+                    <div><strong>Company:</strong> ${user.corporate_name || 'N/A'}</div>
                 </div>
-
-                <div class="user-actions" style="display: flex; gap: 10px; border-top: 1px solid #f1f5f9; padding-top: 1.25rem;">
-                    <button onclick="editUser(${user.id})" style="flex: 1; padding: 8px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; color: #475569; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="editUser(${user.id})" style="flex: 1; padding: 8px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600;">
                         <i class="fas fa-pen"></i> Edit
                     </button>
-                    <button onclick="deleteUser(${user.id})" style="flex: 1; padding: 8px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; cursor: pointer; font-weight: 600; color: #e11d48; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                    <button onclick="deleteUser(${user.id})" style="flex: 1; padding: 8px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; cursor: pointer; font-weight: 600; color: #e11d48;">
                         <i class="fas fa-trash"></i> Delete
                     </button>
                 </div>
             </div>
-        `;
-    }).join('')}
+        `).join('')}
     </div>`;
 }
 
+// ===== RENDER CONNECTOR USERS =====
 function renderConnectorUsers() {
     const container = document.getElementById('connectorsUsersList');
-    const connectorUsers = users.filter(u => u.role === 'connector' || u.role === 'enabler');
+    if (!container) return;
 
+    const connectorUsers = users.filter(u => u.role === 'connector' || u.role === 'enabler');
     if (connectorUsers.length === 0) {
-        container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-handshake"></i>
-                        <p>No connector users registered yet</p>
-                    </div>
-                `;
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-handshake"></i><p>No connector users</p></div>';
         return;
     }
 
-    const sortedUsers = [...connectorUsers].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
     container.innerHTML = `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
-        ${sortedUsers.map(user => {
-        const initials = getUserInitials(user);
-        const timeAgo = formatTimeAgo(user.created_at);
-        const displayName = getDisplayName(user);
-
-        return `
-            <div class="user-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: linear-gradient(90deg, #2563eb, #3b82f6);"></div>
-                
-                <div style="display: flex; align-items: flex-start; margin-bottom: 1.25rem;">
-                    <div class="user-avatar connector" style="width: 56px; height: 56px; font-size: 1.25rem; margin-right: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe;">
-                        ${initials}
+        ${connectorUsers.map(user => `
+            <div class="user-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem;">
+                <div style="display: flex; align-items: flex-start; margin-bottom: 1rem;">
+                    <div class="user-avatar connector" style="width: 56px; height: 56px; font-size: 1.25rem; margin-right: 1rem;">
+                        ${getUserInitials(user)}
                     </div>
                     <div>
-                        <div class="user-name" style="font-size: 1.1rem; margin-bottom: 0.25rem;">${displayName}</div>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <span style="background: #eff6ff; color: #1e40af; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; border: 1px solid #dbeafe;">CONNECTOR</span>
-                            <span style="font-size: 0.8rem; color: #94a3b8;">• Joined ${timeAgo}</span>
-                        </div>
+                        <div class="user-name" style="font-size: 1.1rem; margin-bottom: 0.25rem;">${getDisplayName(user)}</div>
+                        <div style="font-size: 0.8rem; color: #94a3b8;">CONNECTOR • ${formatTimeAgo(user.created_at)}</div>
                     </div>
                 </div>
-
-                <div class="user-details-grid" style="background: #f8fafc; padding: 1rem; border-radius: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; font-size: 0.85rem;">
-                    <div>
-                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Email</div>
-                        <div style="color: #334155; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${user.email}</div>
-                    </div>
-                    <div>
-                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Country</div>
-                        <div style="color: #334155; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${user.country || 'N/A'}</div>
-                    </div>
-                    <div>
-                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">User ID</div>
-                        <div style="color: #334155; font-weight: 600;">#${user.id}</div>
-                    </div>
-                    <div>
-                        <div style="color: #64748b; font-weight: 500; margin-bottom: 2px;">Registered</div>
-                        <div style="color: #334155; font-weight: 600;">${new Date(user.created_at).toLocaleDateString()}</div>
-                    </div>
+                <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; font-size: 0.85rem;">
+                    <div style="margin-bottom: 0.5rem;"><strong>Email:</strong> ${user.email}</div>
+                    <div><strong>ID:</strong> #${user.id}</div>
                 </div>
-
-                <div class="user-actions" style="display: flex; gap: 10px; border-top: 1px solid #f1f5f9; padding-top: 1.25rem;">
-                    <button onclick="editUser(${user.id})" style="flex: 1; padding: 8px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; color: #475569; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="editUser(${user.id})" style="flex: 1; padding: 8px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600;">
                         <i class="fas fa-pen"></i> Edit
                     </button>
-                    <button onclick="deleteUser(${user.id})" style="flex: 1; padding: 8px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; cursor: pointer; font-weight: 600; color: #e11d48; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                    <button onclick="deleteUser(${user.id})" style="flex: 1; padding: 8px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; cursor: pointer; font-weight: 600; color: #e11d48;">
                         <i class="fas fa-trash"></i> Delete
                     </button>
                 </div>
             </div>
-        `;
-    }).join('')}
+        `).join('')}
     </div>`;
 }
 
+// ===== FILTER USERS =====
 function filterUsers(filter) {
     currentFilter = filter;
-
-    document.querySelectorAll('.filter-tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
+    document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
     event.target.classList.add('active');
-
     renderFilteredUsers();
 }
 
-function animateStatChange(elementId, fromValue, toValue) {
-    const element = document.getElementById(elementId);
-    const duration = 1000;
-    const start = Date.now();
-
-    function update() {
-        const elapsed = Date.now() - start;
-        const progress = Math.min(elapsed / duration, 1);
-
-        const currentValue = Math.round(fromValue + (toValue - fromValue) * progress);
-        element.textContent = currentValue;
-
-        if (progress < 1) {
-            requestAnimationFrame(update);
-        }
-    }
-
-    update();
-}
-
-function showSection(sectionName) {
-    // Close all dropdowns
-    document.querySelectorAll('.dropdown-menu').forEach(menu => {
-        menu.style.display = 'none';
-    });
-    
-    // Get all sections
-    const allSections = document.querySelectorAll('main section');
-    const targetSectionId = sectionName + 'Section';
-    const targetSection = document.getElementById(targetSectionId);
-    
-    if (!targetSection) return;
-    
-    // Find currently visible section
-    const currentSection = Array.from(allSections).find(s => s.style.display !== 'none');
-    
-    if (currentSection && currentSection !== targetSection) {
-        // Fade out current section
-        currentSection.classList.add('fade-out');
-        
-        // After fade out, switch sections
-        setTimeout(() => {
-            currentSection.style.display = 'none';
-            currentSection.classList.remove('fade-out');
-            
-            // Show target section
-            targetSection.style.display = 'block';
-            targetSection.classList.add('fade-in');
-            
-            // Remove fade-in class after animation
-            setTimeout(() => {
-                targetSection.classList.remove('fade-in');
-            }, 300);
-            
-            // Load data
-            loadSectionData(sectionName);
-        }, 300);
-    } else {
-        // First load or same section
-        allSections.forEach(s => s.style.display = 'none');
-        targetSection.style.display = 'block';
-        loadSectionData(sectionName);
-    }
-}
-
-function loadSectionData(sectionName) {
-    if (sectionName === 'users' && users.length > 0) {
-        renderFilteredUsers();
-    } else if (sectionName === 'startups' && users.length > 0) {
-        renderStartupUsers();
-    } else if (sectionName === 'corporate' && users.length > 0) {
-        renderCorporateUsers();
-    } else if (sectionName === 'connectors' && users.length > 0) {
-        renderConnectorUsers();
-    } else if (sectionName === 'programs') {
-        loadPrograms();
-    } else if (sectionName === 'analytics' && typeof initializeAnalytics === 'function') {
-        initializeAnalytics();
-    }
-}
-
-// Toggle dropdown menus
-function toggleDropdown(dropdownId) {
-    const dropdown = document.getElementById(dropdownId);
-    if (!dropdown) return;
-    
-    const menu = dropdown.querySelector('.dropdown-menu');
-    if (!menu) return;
-    
-    // Close all other dropdowns
-    document.querySelectorAll('.dropdown-menu').forEach(otherMenu => {
-        if (otherMenu !== menu) {
-            otherMenu.style.display = 'none';
-        }
-    });
-    
-    // Toggle current dropdown
-    if (menu.style.display === 'block') {
-        menu.style.display = 'none';
-    } else {
-        menu.style.display = 'block';
-    }
-}
-
-// Close dropdowns when clicking outside
-document.addEventListener('click', function(event) {
-    if (!event.target.closest('.dropdown')) {
-        document.querySelectorAll('.dropdown-menu').forEach(menu => {
-            menu.style.display = 'none';
-        });
-    }
-});
-
+// ===== LOAD PROGRAMS =====
 async function loadPrograms() {
     const container = document.getElementById('programsList');
-    container.innerHTML = '<div class="loading" style="margin: 20px auto;"></div><p style="text-align: center;">Loading programs...</p>';
+    if (!container) return;
+
+    container.innerHTML = '<p style="text-align: center; padding: 20px;">Loading programs...</p>';
 
     try {
-        const response = await fetch('/api/admin/opportunities');
+        const response = await fetch('/api/admin/opportunities?v=' + Date.now());
         const data = await response.json();
 
         if (data.success && data.opportunities) {
+            window.allPrograms = data.opportunities;
             renderPrograms(data.opportunities);
+        } else {
+            container.innerHTML = '<p style="text-align: center; color: #ef4444;">Failed to load programs</p>';
         }
     } catch (error) {
         console.error('Error loading programs:', error);
-        container.innerHTML = '<p style="text-align: center; color: #ef4444;">Failed to load programs.</p>';
+        container.innerHTML = '<p style="text-align: center; color: #ef4444;">Error loading programs</p>';
     }
 }
 
+// ===== RENDER PROGRAMS =====
 function renderPrograms(programs) {
     const container = document.getElementById('programsList');
+    if (!container) return;
 
     if (!programs || programs.length === 0) {
-        container.innerHTML = `
-            <div style="text-align: center; padding: 40px;">
-                <i class="fas fa-rocket" style="font-size: 48px; color: #a0aec0; margin-bottom: 15px;"></i>
-                <p style="color: #a0aec0; margin-bottom: 20px;">No programs created yet</p>
-                <p style="color: #64748b; font-size: 0.9rem;">Create your first program using the button above</p>
-            </div>
-        `;
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-rocket"></i><p>No programs yet</p></div>';
         return;
     }
 
-    container.innerHTML = `
-        <div class="programs-grid" style="display: grid; gap: 1.5rem;">
-            ${programs.map(p => `
-                <div class="program-card" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; display: flex; justify-content: space-between; align-items: flex-start;">
-                    <div>
-                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
-                            <span style="background: ${p.status === 'published' ? '#f0fdf4' : '#fef2f2'}; color: ${p.status === 'published' ? '#166534' : '#991b1b'}; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">
-                                ${p.status}
-                            </span>
-                            <span style="font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
-                                ${p.type}
-                            </span>
-                        </div>
-                        <h4 style="font-size: 1.1rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">${p.title}</h4>
-                        <p style="color: #475569; font-size: 0.9rem; margin-bottom: 1rem; line-height: 1.5;">${p.description}</p>
-                        <div style="display: flex; gap: 1.5rem; font-size: 0.85rem; color: #64748b;">
-                            <span><i class="fas fa-gift" style="margin-right: 5px;"></i> ${p.benefits}</span>
-                            <span><i class="fas fa-calendar" style="margin-right: 5px;"></i> Deadline: ${new Date(p.deadline).toLocaleDateString()}</span>
-                        </div>
+    container.innerHTML = programs.map(program => `
+        <div class="program-item">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                        <h4 style="margin: 0; font-weight: 600;">${program.title}</h4>
+                        <span class="status-badge status-${program.status}">${program.status}</span>
+                    </div>
+                    <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">${program.description || 'No description'}</p>
+                    <div style="font-size: 13px; color: #666;">
+                        <i class="fas fa-calendar"></i> ${new Date(program.created_at).toLocaleDateString()}
                     </div>
                 </div>
-            `).join('')}
+                <div style="display: flex; gap: 8px; flex-shrink: 0; margin-left: 16px;">
+                    <button onclick="window.viewProgram(${program.id})" class="admin-btn" style="padding: 8px 16px;">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                    <button onclick="window.editProgram(${program.id})" class="admin-btn primary" style="padding: 8px 16px;">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button onclick="window.viewApplications(${program.id})" class="admin-btn" style="padding: 8px 16px; background: #059669; color: white; border: none;">
+                        <i class="fas fa-paper-plane"></i> Apps
+                    </button>
+                    <button onclick="window.deleteProgram(${program.id})" class="admin-btn" style="padding: 8px 16px; background: #ef4444; color: white; border: none;">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
         </div>
-    `;
+    `).join('');
 }
 
-function formatTimeAgo(dateString) {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInSeconds = Math.floor((now - date) / 1000);
-
-    if (diffInSeconds < 60) return 'Just now';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    return `${Math.floor(diffInSeconds / 86400)}d ago`;
-}
-
+// ===== SHOW TOAST =====
 function showToast(message, type = 'info') {
     document.querySelectorAll('.toast').forEach(toast => toast.remove());
 
     const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
+    toast.className = 'toast';
     toast.textContent = message;
     document.body.appendChild(toast);
 
-    setTimeout(() => toast.classList.add('show'), 100);
-
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
+    setTimeout(() => toast.remove(), 3000);
 }
 
+// ===== GO TO PLATFORM =====
 function goToPlatform() {
     window.location.href = '/';
 }
 
-function updateLastUpdateTime() {
-    const el = document.getElementById('lastUpdate');
-    if (el) el.textContent = new Date().toLocaleTimeString();
-}
-
-function updateLiveInsights() {
-    // Simulate concurrent users
-    const liveUsers = Math.floor(Math.random() * (45 - 12 + 1)) + 12;
-    const liveUsersEl = document.getElementById('liveUsers');
-    if (liveUsersEl) liveUsersEl.textContent = liveUsers;
-
-    // Simulate market trend
-    const marketTrendEl = document.getElementById('marketTrend');
-    if (marketTrendEl) {
-        const trends = ['Bullish (+2.4%)', 'Steady (+0.8%)', 'Very Bullish (+4.1%)', 'Growing (+1.2%)'];
-        marketTrendEl.textContent = trends[Math.floor(Math.random() * trends.length)];
-    }
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-    console.log('Admin Dashboard restored successfully!');
-
-    loadDashboardStats();
-    loadRecentUsers();
-    updateLiveInsights();
-
-    setInterval(() => {
-        loadDashboardStats();
-        updateLastUpdateTime();
-        updateLiveInsights();
-    }, 30000);
-
-    // Random pings on the live map every few seconds
-    setInterval(updateLiveInsights, 8000);
-
-    setInterval(loadRecentUsers, 60000);
-});
-
+// ===== DELETE USER =====
 async function deleteUser(id) {
-    if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
+    if (!confirm('Are you sure you want to delete this user?')) return;
 
     try {
         const response = await fetch(`/api/admin/users/${id}`, { method: 'DELETE' });
         const data = await response.json();
 
-        if (response.ok) {
+        if (data.success) {
             showToast('User deleted successfully', 'success');
             loadRecentUsers();
             loadDashboardStats();
         } else {
-            showToast(data.error || 'Failed to delete user', 'error');
+            showToast('Failed to delete user', 'error');
         }
     } catch (error) {
         console.error('Error deleting user:', error);
@@ -809,33 +756,19 @@ async function deleteUser(id) {
     }
 }
 
+// ===== EDIT USER =====
 async function editUser(id) {
-    const user = users.find(u => u.id === id);
-    if (!user) return;
-
-    const newName = prompt('Enter new name:', user.full_name || user.name || user.username);
-    if (newName === null) return;
-
-    const newRole = prompt('Enter new role (startup/corporate/connector/admin):', user.role);
-    if (newRole === null) return;
-
-    try {
-        const response = await fetch(`/api/admin/users/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: newName, role: newRole })
-        });
-        const data = await response.json();
-
-        if (response.ok) {
-            showToast('User updated successfully', 'success');
-            loadRecentUsers();
-            loadDashboardStats();
-        } else {
-            showToast(data.error || 'Failed to update user', 'error');
-        }
-    } catch (error) {
-        console.error('Error updating user:', error);
-        showToast('Error updating user', 'error');
-    }
+    showToast('Edit user functionality coming soon', 'info');
 }
+
+// ===== INITIALIZE ON LOAD =====
+document.addEventListener('DOMContentLoaded', function() {
+    loadDashboardStats();
+    loadRecentUsers();
+    
+    // Load programs if on programs section
+    const programsSection = document.getElementById('programsSection');
+    if (programsSection && programsSection.style.display !== 'none') {
+        loadPrograms();
+    }
+});

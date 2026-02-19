@@ -3682,7 +3682,7 @@
                 <i class="fas fa-chevron-down" style="color: rgba(255,255,255,0.4); font-size: 0.7rem; margin-left: 5px;"></i>
             </div>
             <div class="dropdown-menu" style="left: auto; right: 0; min-width: 200px;">
-                <button class="dropdown-item" onclick="event.stopPropagation(); showSection('profile'); this.closest('.dropdown').classList.remove('active');"><i class="fas fa-user"></i> Profile</button>
+                <button class="dropdown-item" onclick="showSection('profile'); console.log('Profile button clicked');"><i class="fas fa-user"></i> Profile</button>
                 <a href="/" class="dropdown-item" style="text-decoration: none;"><i class="fas fa-house"></i> Back to Home</a>
                 <div style="border-top: 1px solid #f1f5f9; margin: 0.5rem 0;"></div>
                 <a href="/logout" class="dropdown-item" style="color: #ef4444; text-decoration: none;"><i class="fas fa-right-from-bracket"></i> Sign Out</a>
@@ -4792,7 +4792,7 @@
                         <div class="card-header">
                             <div>
                                 <span class="card-title">Total Referrals</span>
-                                <span class="card-value" id="analyticsTotal Referrals">0</span>
+                                <span class="card-value" id="analyticsTotalReferrals">0</span>
                             </div>
                             <div class="card-icon blue">
                                 <i class="fa-solid fa-paper-plane"></i>
@@ -4905,6 +4905,7 @@
 
             <!-- PROFILE & SETTINGS SECTION -->
             <section id="profile" class="section">
+                
                 <div class="profile-grid">
                     <!-- Left Column - Profile Information -->
                     <div>
@@ -4980,7 +4981,7 @@
                                 
                                 <div>
                                     <label for="profileOrganization" style="display: block; font-size: 0.85rem; font-weight: 600; color: #64748b; margin-bottom: 0.5rem;">Organization</label>
-                                    <input type="text" id="profileOrganization" name="organization" value="{{ current_user.organization or '' }}" 
+                                    <input type="text" id="profileOrganization" name="organization" value="{{ current_user.company or '' }}" 
                                            maxlength="200"
                                            style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.95rem;"
                                            placeholder="Enter your organization name (optional)">
@@ -5132,63 +5133,6 @@
     </main>
 
     <script>
-        function showSection(sectionId) {
-            console.log('showSection called with:', sectionId);
-            
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
-            });
-
-            const targetSection = document.getElementById(sectionId);
-            console.log('Target section found:', targetSection !== null);
-            
-            if (targetSection) {
-                targetSection.classList.add('active');
-                console.log('Section classes after adding active:', targetSection.classList);
-                console.log('Section display style:', window.getComputedStyle(targetSection).display);
-            }
-
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-
-            // Map sub-pages to parent tabs
-            let tabId = 'tab-' + sectionId;
-
-            const activeTab = document.getElementById(tabId);
-            if (activeTab) activeTab.classList.add('active');
-
-            const sectionTitle = document.getElementById('sectionTitle');
-            const sectionSubtitle = document.getElementById('sectionSubtitle');
-
-            if (sectionId === 'overview') {
-                sectionTitle.textContent = 'Connector Overview';
-                sectionSubtitle.textContent = 'Track your referrals, rewards, and impact across the ecosystem';
-            } else if (sectionId === 'programs') {
-                sectionTitle.textContent = 'Explore Programs';
-                sectionSubtitle.textContent = 'Discover and apply to ecosystem programs relevant to your network.';
-            } else if (sectionId === 'referrals') {
-                sectionTitle.textContent = 'My Referrals';
-                sectionSubtitle.textContent = 'Detailed view of all startups you have referred across programs.';
-            } else if (sectionId === 'referral-tracking') {
-                sectionTitle.textContent = 'Referral Link Tracking';
-                sectionSubtitle.textContent = 'Monitor clicks, conversions, and performance of your referral links.';
-            } else if (sectionId === 'rewards') {
-                sectionTitle.textContent = 'Rewards & Earnings';
-                sectionSubtitle.textContent = 'Monitor your earnings, pending rewards, and payout history.';
-            } else if (sectionId === 'analytics') {
-                sectionTitle.textContent = 'Connector Analytics';
-                sectionSubtitle.textContent = 'Understand which programs and sectors perform best for your referrals.';
-            } else if (sectionId === 'profile') {
-                sectionTitle.textContent = 'Profile & Settings';
-                sectionSubtitle.textContent = 'Manage your account information and notification preferences.';
-                console.log('Profile section title set');
-            } else if (sectionId === 'inbox') {
-                sectionTitle.textContent = 'Notification Inbox';
-                sectionSubtitle.textContent = 'Track referral successes, earning alerts, and network news.';
-            }
-        }
-
         // Profile Photo Upload Handler
         function handleProfilePhotoUpload(event) {
             const file = event.target.files[0];
@@ -6795,6 +6739,14 @@
 
         // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
+            // Debug: Check if profile section exists
+            const profileSection = document.getElementById('profile');
+            console.log('Profile section exists:', !!profileSection);
+            if (profileSection) {
+                console.log('Profile section HTML length:', profileSection.innerHTML.length);
+                console.log('Profile section display:', window.getComputedStyle(profileSection).display);
+            }
+            
             showSection('overview');
             loadEnablerOverview();
             loadRewardsSummary();
@@ -7137,6 +7089,8 @@
 
         // Section switching (preserve existing functionality)
         function showSection(sectionId) {
+            console.log('showSection called with:', sectionId);
+            
             // Hide all sections
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
@@ -7144,8 +7098,12 @@
             
             // Show selected section
             const targetSection = document.getElementById(sectionId);
+            console.log('Target section found:', targetSection);
             if (targetSection) {
                 targetSection.classList.add('active');
+                console.log('Active class added to section:', sectionId);
+            } else {
+                console.error('Section not found:', sectionId);
             }
             
             // Close all dropdowns

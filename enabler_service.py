@@ -477,6 +477,7 @@ class EnablerService:
                         "shortlisted": shortlisted,
                         "completed": completed,
                         "conversion": round(conversion, 1),
+                        "unique_startups": unique_startups,
                         "avg_programs_per_startup": round(avg_programs, 1),
                         "avg_decision_time": 21
                     },

@@ -1,4 +1,5 @@
 # routes/enablers.py
+import re
 from flask import Blueprint, jsonify, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from models import Referral, Startup, Opportunity, User, Application
@@ -150,6 +151,40 @@ def request_payout():
     )
     
     return jsonify(result)
+
+
+@bp.route("/profile", methods=["PUT"])
+@login_required
+def update_profile():
+    """Update enabler profile (name, phone, company)"""
+    if current_user.role not in ("enabler", "admin"):
+        return jsonify({"success": False, "message": "Unauthorized"}), 403
+
+    data = request.get_json()
+    if not data:
+        return jsonify({"success": False, "error": "Invalid request"}), 400
+
+    name = (data.get("name") or "").strip()
+    phone = (data.get("phone") or "").strip()
+    organization = (data.get("organization") or "").strip()
+
+    # Validation
+    if len(name) < 2:
+        return jsonify({"success": False, "error": "Name must be at least 2 characters"}), 400
+    if not phone:
+        return jsonify({"success": False, "error": "Phone number is required"}), 400
+    if not re.match(r"^[0-9]{10,15}$", phone):
+        return jsonify({"success": False, "error": "Phone must be 10-15 digits (numbers only)"}), 400
+
+    try:
+        current_user.name = name
+        current_user.phone = phone
+        current_user.company = organization
+        db.session.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 @bp.route("/settings/upload_photo", methods=["POST"])

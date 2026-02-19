@@ -314,39 +314,26 @@ def get_referrals():
     results = []
     
     for ref in referrals:
-        connector = User.query.get(ref.connector_id)
-        startup = Startup.query.get(ref.startup_id)
-        program = Opportunity.query.get(ref.opportunity_id)
+        # Get enabler (connector) info
+        enabler = User.query.get(ref.enabler_id) if ref.enabler_id else None
+        enabler_name = enabler.name if enabler else "Unknown"
+        enabler_email = enabler.email if enabler else ""
         
-        # Get startup name (Startup model might not have company_name, check User)
-        # Assuming Startup model has a OneToOne with User or fields. 
-        # Let's check models.py again for Startup field if needed, but for now we'll assume it's linked or has fields.
-        # Actually, looking at models.py earlier, Startup is a model.
-        # Let's double check Startup model to be safe.
+        # Get startup info
+        startup = Startup.query.get(ref.startup_id) if ref.startup_id else None
+        startup_name = ref.startup_name or "Unknown Startup"
+        startup_email = ref.startup_email or ""
         
-        # Re-fetching for safety in this loop
-        connector_name = connector.name if connector else "Unknown"
-        
-        # Startup Name: The Startup model usually links to a User or has its own name.
-        # Based on previous knowledge, Startup might use 'user.company' or similar. 
-        # Let's look at how Startup is defined.
-        
-        startup_name = "Unknown Startup"
-        if startup:
-             if hasattr(startup, 'name'):
-                 startup_name = startup.name
-             elif hasattr(startup, 'company_name'):
-                 startup_name = startup.company_name
-             elif hasattr(startup, 'founder') and startup.founder:
-                 startup_name = startup.founder.company
-
+        # Get program info
+        program = Opportunity.query.get(ref.opportunity_id) if ref.opportunity_id else None
         program_title = program.title if program else "Unknown Program"
         
         results.append({
             "id": ref.id,
-            "connector_name": connector_name,
-            "startup_id": ref.startup_id, # return ID just in case
+            "connector_name": enabler_name,
+            "connector_email": enabler_email,
             "startup_name": startup_name,
+            "startup_email": startup_email,
             "program_title": program_title,
             "status": ref.status,
             "created_at": ref.created_at.isoformat()
@@ -593,6 +580,73 @@ def seed_all_data():
         "programs_added": programs_added,
         "meetings_added": meetings_added
     })
+
+
+# ---------------------------------------
+# ADMIN PROFILE PHOTO
+# ---------------------------------------
+@bp.route("/profile/photo", methods=["POST"])
+@login_required
+def upload_admin_profile_photo():
+    if current_user.role != "admin":
+        return jsonify({"success": False, "message": "Unauthorized"}), 403
+    if 'profile_pic' not in request.files:
+        return jsonify({"success": False, "message": "No file part"}), 400
+    file = request.files['profile_pic']
+    if file.filename == '':
+        return jsonify({"success": False, "message": "No file selected"}), 400
+    ext = file.filename.rsplit('.', 1)[-1].lower() if '.' in file.filename else ''
+    if ext not in ['jpg', 'jpeg', 'png', 'gif']:
+        return jsonify({"success": False, "message": "Invalid file type. Use JPG, PNG, or GIF."}), 400
+    try:
+        filename = secure_filename(f"admin_{current_user.id}_{file.filename}")
+        upload_dir = os.path.join(current_app.root_path, 'static', 'uploads', 'profiles')
+        os.makedirs(upload_dir, exist_ok=True)
+        filepath = os.path.join(upload_dir, filename)
+        file.save(filepath)
+        current_user.profile_pic = f"/static/uploads/profiles/{filename}"
+        db.session.commit()
+        return jsonify({"success": True, "profile_pic_url": current_user.profile_pic})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+@bp.route("/profile/photo", methods=["DELETE"])
+@login_required
+def delete_admin_profile_photo():
+    if current_user.role != "admin":
+        return jsonify({"success": False, "message": "Unauthorized"}), 403
+    try:
+        current_user.profile_pic = None
+        db.session.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+# ---------------------------------------
+# ADMIN PROFILE (update own profile)
+# ---------------------------------------
+@bp.route("/profile", methods=["PUT"])
+@login_required
+def update_admin_profile():
+    if current_user.role != "admin":
+        return jsonify({"error": "forbidden"}), 403
+    data = request.get_json() or {}
+    name = (data.get("name") or "").strip()
+    phone = (data.get("phone") or "").strip()
+    if len(name) < 2:
+        return jsonify({"success": False, "error": "Name must be at least 2 characters"}), 400
+    try:
+        current_user.name = name
+        current_user.phone = phone if phone else None
+        db.session.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 # ---------------------------------------

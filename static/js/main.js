@@ -19,11 +19,14 @@ function smoothScrollTo(targetId) {
 // Navbar scroll shrink effect
 window.addEventListener("scroll", () => {
     const header = document.querySelector(".header");
-
-    if (window.scrollY > 120) {
-        header.classList.add("header-small");
-    } else {
-        header.classList.remove("header-small");
+    
+    // Only apply if header exists (not on admin dashboard)
+    if (header) {
+        if (window.scrollY > 120) {
+            header.classList.add("header-small");
+        } else {
+            header.classList.remove("header-small");
+        }
     }
 });
 
