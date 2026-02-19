@@ -273,8 +273,8 @@ def get_link_stats(referral_id):
 
     referral = Referral.query.get_or_404(referral_id)
     
-    # Security check: must be the connector who created it (or admin)
-    if current_user.role != "admin" and referral.connector_id != current_user.id:
+    # Security check: must be the enabler who created it (or admin)
+    if current_user.role != "admin" and referral.enabler_id != current_user.id:
         return jsonify({"error": "Not your referral"}), 403
 
     # Get click statistics

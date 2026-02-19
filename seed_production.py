@@ -59,19 +59,24 @@ def seed_users():
                 # Create new user
                 user = User(
                     email=user_data['email'],
-                    password_hash=generate_password_hash(user_data['password']),
                     name=user_data['name'],
                     role=user_data['role'],
                     phone=user_data.get('phone'),
                     is_active=True,
                     created_at=datetime.utcnow()
                 )
+                # Use set_password method instead of password_hash directly
+                user.set_password(user_data['password'])
                 db.session.add(user)
                 created_count += 1
                 print(f"✅ Created: {user_data['email']} ({user_data['role']})")
             else:
+                # Update existing user password to ensure it works
+                existing.set_password(user_data['password'])
+                existing.is_active = True
+                db.session.commit()
                 existing_count += 1
-                print(f"⏭️  Exists: {user_data['email']} ({user_data['role']})")
+                print(f"⏭️  Exists (password updated): {user_data['email']} ({user_data['role']})")
         
         # Commit all changes
         try:

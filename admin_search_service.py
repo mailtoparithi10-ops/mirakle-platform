@@ -295,7 +295,7 @@ class AdminSearchService:
         if query:
             search_term = f"%{query}%"
             search = search.join(
-                User, User.id == Referral.connector_id
+                User, User.id == Referral.enabler_id
             ).filter(
                 User.full_name.ilike(search_term)
             )
@@ -306,7 +306,7 @@ class AdminSearchService:
         
         # Enabler filter
         if enabler_id:
-            search = search.filter(Referral.connector_id == enabler_id)
+            search = search.filter(Referral.enabler_id == enabler_id)
         
         # Date range filter
         if date_from:
@@ -324,7 +324,7 @@ class AdminSearchService:
             'results': [
                 {
                     'id': ref.id,
-                    'connector_id': ref.connector_id,
+                    'enabler_id': ref.enabler_id,
                     'startup_id': ref.startup_id,
                     'status': ref.status,
                     'commission_earned': float(ref.commission_earned) if ref.commission_earned else 0,
